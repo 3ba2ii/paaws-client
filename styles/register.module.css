@@ -1,0 +1,25 @@
+.main-page-container {
+  display: flex;
+}
+.main-page-content-wrapper {
+  height: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  width: clamp(350px, 350px + 5vw, 500px);
+}
+.signup-options {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 0rem;
+  gap: 20px;
+  width: 100%;
+}
+.signup-options button {
+  padding: 1.7rem 1rem;
+}
+.apple-button {
+}
