@@ -6,6 +6,8 @@
   --gray-500: #718096;
   --gray-700: #2d3748;
 
+  --blue-400: #4299e1;
+
   --color-primary: #2d3748;
   --color-primary-dark: rgba(255, 255, 255, 0.92);
   --color-primary-light: #2d3748;
@@ -17,6 +19,11 @@
   --color-accent: #38b2ac;
 
   --stroke-color: var(--gray-400);
+
+  --color-link: var(--blue-400);
+  --color-link-dark: #00acc1;
+  --color-link-light: var(--blue-400);
+
   /* 
 
   --color-background: #ffffff;
@@ -34,6 +41,11 @@
   --color-link-active: #00bcd4;
   --color-link-active-dark: #00acc1; */
 }
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
 
 html,
 body {
@@ -47,10 +59,8 @@ a {
   text-decoration: none;
 }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
+ul {
+  list-style: none;
 }
 .divider-with-centered-value {
   position: relative;

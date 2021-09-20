@@ -1,6 +1,7 @@
-import { Flex, useColorMode, FlexProps } from '@chakra-ui/react';
-import styles from '../styles/Home.module.css';
+import { Box, Flex, useColorMode } from '@chakra-ui/react';
 import Head from 'next/head';
+import styles from '../styles/Home.module.css';
+import Footer from './footer';
 import NavBar from './NavBar';
 
 interface containerProps {
@@ -37,7 +38,8 @@ export const Layout = ({
         color={color[colorMode]}
       >
         <NavBar />
-        {children}
+        <Box className={styles.main}>{children}</Box>
+        <Footer />
       </Flex>
     </>
   );
