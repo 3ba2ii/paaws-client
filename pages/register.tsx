@@ -1,14 +1,40 @@
 import { Button } from '@chakra-ui/button';
-import { Divider, Flex, Heading } from '@chakra-ui/layout';
+import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode';
+import { Heading } from '@chakra-ui/layout';
 import React from 'react';
-import { FaApple, FaFacebook, FaFacebookF, FaHeart } from 'react-icons/fa';
+import { FaApple, FaFacebook, FaHeart } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { Layout } from '../components/Layout';
 import registerS from '../styles/register.module.css';
 
 interface loginProps {}
 
+const CustomColorScheme = {
+  facebook: {
+    light: {
+      colorScheme: 'facebook',
+    },
+    dark: {
+      bg: 'facebook.500',
+      color: 'whiteAlpha.900',
+      _hover: { bg: 'same', filter: 'brightness(1.1)' },
+    },
+  },
+  apple: {
+    light: {
+      bg: 'black',
+      color: 'whiteAlpha.900',
+      _hover: { bg: 'same', filter: 'brightness(1.5)' },
+    },
+    dark: {
+      bg: 'whiteAlpha.900',
+      color: 'gray.900',
+      _hover: { bg: 'same', filter: 'brightness(1.3)' },
+    },
+  },
+};
 const RegisterPage: React.FC<loginProps> = ({}) => {
+  const { colorMode } = useColorMode();
   return (
     <Layout title={'Create Account and Join Paaws'}>
       <main className={registerS['main-page-content-wrapper']}>
@@ -25,10 +51,10 @@ const RegisterPage: React.FC<loginProps> = ({}) => {
           </Button>
           <Button
             borderRadius='lg'
-            colorScheme='facebook'
             boxShadow='sm'
             w={'100%'}
             leftIcon={<FaFacebook size='20px' />}
+            {...CustomColorScheme.facebook[colorMode]}
           >
             Sign up with Facebook
           </Button>
@@ -39,21 +65,17 @@ const RegisterPage: React.FC<loginProps> = ({}) => {
             leftIcon={<FaApple size='20px' />}
             w={'100%'}
             variant='solid'
+            {...CustomColorScheme.apple[colorMode]}
           >
             Sign up with Apple
           </Button>
 
-          <Flex flexDirection='row' alignItems='center'>
-            <Divider />
-            <small>or</small>
-            <Divider />
-          </Flex>
+          <p className='divider-with-centered-value'>or</p>
           <Button
             borderRadius='lg'
             boxShadow='sm'
             className={registerS['apple-button']}
             leftIcon={<FaHeart color={'red'} size='20px' />}
-            colorScheme='gray'
             w={'100%'}
             variant='solid'
           >
