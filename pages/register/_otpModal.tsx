@@ -1,10 +1,10 @@
-import { IconButton } from '@chakra-ui/button';
-import Icon from '@chakra-ui/icon';
+import { Button, IconButton } from '@chakra-ui/button';
 import { HStack, Text } from '@chakra-ui/layout';
 import { PinInput, PinInputField } from '@chakra-ui/pin-input';
 import GenericModal from 'components/GenericModal';
 import { FormikErrors } from 'formik';
 import { useRegisterMutation } from 'generated/graphql';
+import Router from 'next/router';
 import React, { useState } from 'react';
 import { FaHeart } from 'react-icons/fa';
 import { toErrorMap } from 'utils/toErrorMap';
@@ -30,6 +30,8 @@ type OTPModalProps = {
       otp: null;
     }>
   ) => void;
+
+  isSubmitting: boolean;
 };
 export function OTPModal({
   isOpen,
@@ -37,6 +39,7 @@ export function OTPModal({
   userInfo,
   handleResendOTP,
   setErrors,
+  isSubmitting,
 }: OTPModalProps) {
   console.log(`🚀 ~ file: _otpModal.tsx ~ line 39 ~ userInfo`, userInfo);
   const [createUserAccount] = useRegisterMutation();
@@ -65,23 +68,26 @@ export function OTPModal({
       return setOTPError('Invalid OTP');
     }
     setOTPError('');
-    return onClose();
+    onClose();
+    //Redirect to login page for now
+    Router.push('/login');
   };
 
   const OtpModalBody = () => (
     <>
-      <Text textAlign='center' color='gray.500'>
-        {`Enter the OTP sent to ${userInfo.phone}`}, didn't receive one?{' '}
+      <Text lineHeight='4' textAlign='center' color='gray.500'>
+        {`Enter the OTP sent to ${userInfo.phone}`},<br /> didn't receive one?{' '}
         {
-          <Text
-            as='button'
-            color='blue.500'
+          <Button
+            colorScheme='blue'
             fontWeight={500}
             variant='ghost'
             onClick={handleResendOTP}
+            isLoading={isSubmitting}
+            p={0}
           >
             Resend
-          </Text>
+          </Button>
         }
       </Text>
 
@@ -107,7 +113,7 @@ export function OTPModal({
       <IconButton
         aria-label='verify-otp'
         icon={<FaHeart color='teal' />}
-        bg='teal.100'
+        bg='green.100'
         rounded='full'
         mt={4}
         _hover={{ bg: 'teal.100' }}
@@ -123,6 +129,7 @@ export function OTPModal({
       isOpen={isOpen}
       onClose={onClose}
       body={<OtpModalBody />}
+      confirmText='Verify'
     />
   );
 }

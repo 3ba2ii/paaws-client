@@ -1,14 +1,14 @@
 import { Button } from '@chakra-ui/button';
 import {
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
+  ModalCloseButton,
+  ModalContent,
   ModalFooter,
+  ModalHeader,
+  ModalOverlay,
 } from '@chakra-ui/modal';
-import React, { InputHTMLAttributes } from 'react';
+import React from 'react';
 
 type ModalProps = {
   title?: string | JSX.Element | React.ReactChildren;

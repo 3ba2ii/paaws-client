@@ -119,6 +119,7 @@ export type MutationRegisterArgs = {
 
 
 export type MutationSendOtpArgs = {
+  email: Scalars['String'];
   phone: Scalars['String'];
 };
 
@@ -310,6 +311,7 @@ export type RegisterMutation = { __typename?: 'Mutation', register: { __typename
 
 export type SendOtpMutationVariables = Exact<{
   sendOtpPhone: Scalars['String'];
+  email: Scalars['String'];
 }>;
 
 
@@ -362,8 +364,8 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const SendOtpDocument = gql`
-    mutation SendOTP($sendOtpPhone: String!) {
-  sendOTP(phone: $sendOtpPhone) {
+    mutation SendOTP($sendOtpPhone: String!, $email: String!) {
+  sendOTP(phone: $sendOtpPhone, email: $email) {
     success
     errors {
       message
@@ -389,6 +391,7 @@ export type SendOtpMutationFn = Apollo.MutationFunction<SendOtpMutation, SendOtp
  * const [sendOtpMutation, { data, loading, error }] = useSendOtpMutation({
  *   variables: {
  *      sendOtpPhone: // value for 'sendOtpPhone'
+ *      email: // value for 'email'
  *   },
  * });
  */

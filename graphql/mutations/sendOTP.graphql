@@ -1,5 +1,5 @@
-mutation SendOTP($sendOtpPhone: String!) {
-  sendOTP(phone: $sendOtpPhone) {
+mutation SendOTP($sendOtpPhone: String!, $email: String!) {
+  sendOTP(phone: $sendOtpPhone, email: $email) {
     success
     errors {
       message
