@@ -2,7 +2,7 @@
   display: flex;
 }
 .main-page-content-wrapper {
-  height: 80%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -16,10 +16,15 @@
   align-items: center;
   padding: 2rem 0rem;
   gap: 20px;
-  width: 100%;
 }
 .signup-options button {
   padding: 1.7rem 1rem;
 }
-.apple-button {
+/* REGISTER BY EMAIL SECTION*/
+.register-form {
+  padding: 2rem 0 0rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
 }

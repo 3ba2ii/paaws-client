@@ -1,7 +1,7 @@
 import { Box, Flex, useColorMode } from '@chakra-ui/react';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
-import Footer from './footer';
+import Footer from './Footer';
 import NavBar from './NavBar';
 
 interface containerProps {

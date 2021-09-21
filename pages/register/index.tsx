@@ -1,11 +1,13 @@
 import { Button } from '@chakra-ui/button';
 import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode';
 import { Heading } from '@chakra-ui/layout';
+import Link from 'next/link';
+
 import React from 'react';
 import { FaApple, FaFacebook, FaHeart } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
-import { Layout } from '../components/Layout';
-import registerS from '../styles/register.module.css';
+import { Layout } from '../../components/Layout';
+import registerS from '../../styles/register.module.css';
 
 interface loginProps {}
 
@@ -71,16 +73,19 @@ const RegisterPage: React.FC<loginProps> = ({}) => {
           </Button>
 
           <p className='divider-with-centered-value'>or</p>
-          <Button
-            borderRadius='lg'
-            boxShadow='sm'
-            className={registerS['apple-button']}
-            leftIcon={<FaHeart color={'red'} size='20px' />}
-            w={'100%'}
-            variant='solid'
-          >
-            Sign up with Email
-          </Button>
+          <Link href='/register/email'>
+            <Button
+              as={Button}
+              borderRadius='lg'
+              boxShadow='sm'
+              className={registerS['apple-button']}
+              leftIcon={<FaHeart color={'red'} size='20px' />}
+              w={'100%'}
+              variant='solid'
+            >
+              Sign up with Email
+            </Button>
+          </Link>
         </div>
       </main>
     </Layout>

@@ -1,0 +1,12 @@
+mutation Register($registerRegisterOptions: RegisterOptions!) {
+  register(registerOptions: $registerRegisterOptions) {
+    errors {
+      field
+      message
+      code
+    }
+    user {
+      id
+    }
+  }
+}

@@ -1,0 +1,10 @@
+mutation SendOTP($sendOtpPhone: String!) {
+  sendOTP(phone: $sendOtpPhone) {
+    success
+    errors {
+      message
+      code
+      field
+    }
+  }
+}
