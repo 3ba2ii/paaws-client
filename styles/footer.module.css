@@ -9,8 +9,9 @@
   gap: 1rem;
 
   width: 100%;
-  height: 100px;
+  height: 80px;
   border-top: 1px solid #eaeaea;
+  font-size: 0.875rem;
 }
 .copyright {
   color: var(--gray-400);
