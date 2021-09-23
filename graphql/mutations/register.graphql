@@ -6,7 +6,7 @@ mutation Register($registerRegisterOptions: RegisterOptions!) {
       code
     }
     user {
-      id
+      ...RequiredUserInfo
     }
   }
 }

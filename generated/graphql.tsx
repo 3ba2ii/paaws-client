@@ -253,7 +253,7 @@ export type User = {
   favorites?: Maybe<Array<UserFavorites>>;
   full_name: Scalars['String'];
   id: Scalars['Int'];
-  last_login: Scalars['DateTime'];
+  last_login?: Maybe<Scalars['DateTime']>;
   location?: Maybe<Scalars['String']>;
   pets?: Maybe<Array<Pet>>;
   phone: Scalars['String'];
@@ -302,7 +302,7 @@ export enum UserTagsType {
   DogPerson = 'DOG_PERSON'
 }
 
-export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, location?: Maybe<string>, bio?: Maybe<string>, last_login: any, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number> };
+export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, location?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number> };
 
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
@@ -316,7 +316,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number }> } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, location?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number> }> } };
 
 export type SendOtpMutationVariables = Exact<{
   sendOtpPhone: Scalars['String'];
@@ -329,7 +329,7 @@ export type SendOtpMutation = { __typename?: 'Mutation', sendOTP: { __typename?:
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, location?: Maybe<string>, bio?: Maybe<string>, last_login: any, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number> }> };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, location?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number> }> };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -402,11 +402,11 @@ export const RegisterDocument = gql`
       code
     }
     user {
-      id
+      ...RequiredUserInfo
     }
   }
 }
-    `;
+    ${RequiredUserInfoFragmentDoc}`;
 export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
 
 /**

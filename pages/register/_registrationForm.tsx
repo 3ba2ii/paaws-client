@@ -41,10 +41,7 @@ export const RegistrationFormComponent = () => {
           otp: null,
         }}
         validationSchema={SignupSchema}
-        onSubmit={async (
-          { full_name, password, confirmPassword, phone, agree, email },
-          { setErrors }
-        ) => {
+        onSubmit={async ({ phone, agree, email }, { setErrors }) => {
           //Check for agree
           if (!agree)
             return setErrors({

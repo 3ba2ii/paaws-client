@@ -52,7 +52,6 @@ interface UserDropdownProps {
   userInfo: User | null;
 }
 const UserDropdownMenu: React.FC<UserDropdownProps> = ({ userInfo }) => {
-  console.log(`🚀 ~ file: NavBar.tsx ~ line 53 ~ userInfo`, userInfo);
   const AvatarOrInitials = () => {
     return <Avatar size='sm' as={MenuButton} name={userInfo?.full_name} />;
   };

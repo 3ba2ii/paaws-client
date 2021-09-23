@@ -3,7 +3,12 @@ import { HStack, Text } from '@chakra-ui/layout';
 import { PinInput, PinInputField } from '@chakra-ui/pin-input';
 import GenericModal from 'components/GenericModal';
 import { FormikErrors } from 'formik';
-import { useRegisterMutation } from 'generated/graphql';
+import {
+  MeDocument,
+  MeQuery,
+  User,
+  useRegisterMutation,
+} from 'generated/graphql';
 import Router, { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { FaHeart } from 'react-icons/fa';
@@ -41,7 +46,6 @@ export function OTPModal({
   setErrors,
   isSubmitting,
 }: OTPModalProps) {
-  console.log(`🚀 ~ file: _otpModal.tsx ~ line 39 ~ userInfo`, userInfo);
   const [createUserAccount] = useRegisterMutation();
   const [otpError, setOTPError] = useState('');
   const router = useRouter();
@@ -58,6 +62,16 @@ export function OTPModal({
           otp: parseInt(otp),
         },
       },
+      update: (cache, { data }) => {
+        if (data?.register?.user)
+          cache.writeQuery<MeQuery>({
+            query: MeDocument,
+            data: {
+              __typename: 'Query',
+              me: data?.register?.user as User,
+            },
+          });
+      },
     });
 
     if (data?.register?.errors) {
@@ -70,7 +84,7 @@ export function OTPModal({
     }
     setOTPError('');
     onClose();
-    //Redirect to home for now
+    //Redirect to home page for now
     router.push('/');
   };
 
