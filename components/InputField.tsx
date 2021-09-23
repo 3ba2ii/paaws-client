@@ -5,7 +5,6 @@ import {
   FormLabel,
 } from '@chakra-ui/form-control';
 import { Input } from '@chakra-ui/input';
-import { Box } from '@chakra-ui/layout';
 import { Textarea } from '@chakra-ui/textarea';
 import { useField } from 'formik';
 import React, { InputHTMLAttributes } from 'react';

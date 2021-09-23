@@ -1,12 +1,11 @@
 import {
   ApolloClient,
   ApolloProvider,
-  DefaultOptions,
   HttpLink,
   InMemoryCache,
 } from '@apollo/client';
-import { useRouter } from 'next/router';
 import nextWithApollo from 'next-with-apollo';
+import { useRouter } from 'next/router';
 import { isServer } from './isServer';
 
 const withApollo = nextWithApollo(
@@ -15,10 +14,12 @@ const withApollo = nextWithApollo(
       ssrMode: isServer(),
       link: new HttpLink({
         uri: 'http://localhost:4000/graphql',
+        credentials: 'include',
+        headers: {
+          ...(headers as Record<string, string>),
+        },
       }),
-      headers: {
-        ...(headers as Record<string, string>),
-      },
+
       cache: new InMemoryCache().restore(initialState || {}),
     });
   },

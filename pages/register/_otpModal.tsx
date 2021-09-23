@@ -4,7 +4,7 @@ import { PinInput, PinInputField } from '@chakra-ui/pin-input';
 import GenericModal from 'components/GenericModal';
 import { FormikErrors } from 'formik';
 import { useRegisterMutation } from 'generated/graphql';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { FaHeart } from 'react-icons/fa';
 import { toErrorMap } from 'utils/toErrorMap';
@@ -44,6 +44,7 @@ export function OTPModal({
   console.log(`🚀 ~ file: _otpModal.tsx ~ line 39 ~ userInfo`, userInfo);
   const [createUserAccount] = useRegisterMutation();
   const [otpError, setOTPError] = useState('');
+  const router = useRouter();
 
   const handleCreateUserAccount = async (otp: string) => {
     //create account with otp
@@ -69,8 +70,8 @@ export function OTPModal({
     }
     setOTPError('');
     onClose();
-    //Redirect to login page for now
-    Router.push('/login');
+    //Redirect to home for now
+    router.push('/');
   };
 
   const OtpModalBody = () => (

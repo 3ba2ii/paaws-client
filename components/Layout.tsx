@@ -11,6 +11,13 @@ interface containerProps {
 }
 //Container will be the main container of each page in the app
 
+const sizes = {
+  sm: '300px',
+  md: '600px',
+  lg: '1048px',
+  xl: '1440px',
+  'full-width': '100%',
+};
 export const Layout = ({
   children,
   className,

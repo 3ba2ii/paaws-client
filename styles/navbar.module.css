@@ -4,4 +4,50 @@
   align-items: center;
   justify-content: space-between;
   height: 90px;
+  gap: 50px;
+}
+.logo-container {
+}
+
+.nav-items-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 50px;
+}
+.search-input-field-styles {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-items {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+
+  /* Styles*/
+  font-weight: 600;
+  font-size: 1rem;
+}
+.nav-items li {
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -ms-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  white-space: nowrap;
+}
+.nav-items li:hover::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-accent);
 }

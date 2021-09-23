@@ -1,31 +1,156 @@
+import { Avatar } from '@chakra-ui/avatar';
 import { Button } from '@chakra-ui/button';
 import { useColorModeValue } from '@chakra-ui/color-mode';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon, SearchIcon } from '@chakra-ui/icons';
 import { Image } from '@chakra-ui/image';
+import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
 import { Flex, Text } from '@chakra-ui/layout';
+import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu';
+import { Portal } from '@chakra-ui/portal';
+import { CircularProgress } from '@chakra-ui/progress';
+import { useMeQuery, User } from 'generated/graphql';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
-import NavBarStyles from '../styles/navbar.module.css';
+import { FaHeart } from 'react-icons/fa';
+import navbarStyles from 'styles/navbar.module.css';
+import { isServer } from 'utils/isServer';
+import withApollo from 'utils/withApollo';
 import { DarkModeSwitch } from './DarkModeSwitch';
 
-interface NavBarProps {
-  variant?: 'logged-in' | 'not-logged-in' | 'login-page' | 'sign-up' | 'none';
+function JoinUsNavbarItems(
+  isRegisterScreen: boolean,
+  isLoginScreen: boolean
+): any {
+  return (
+    <Flex alignItems='center'>
+      <Text color={'gray.500'} mr={4}>
+        {isRegisterScreen
+          ? 'Already a member?'
+          : isLoginScreen
+          ? 'Not a member?'
+          : ''}
+      </Text>
+      <Link
+        href={isRegisterScreen ? '/login' : isLoginScreen ? '/register' : '/'}
+      >
+        <Button
+          px={6}
+          variant='outline'
+          mr={4}
+          rightIcon={<ArrowForwardIcon />}
+        >
+          {isRegisterScreen ? 'Login' : isLoginScreen ? 'Register' : ''}
+        </Button>
+      </Link>
+      <DarkModeSwitch />
+    </Flex>
+  );
 }
 
-const NavBar: React.FC<NavBarProps> = ({ variant = 'not-logged-in' }) => {
+interface UserDropdownProps {
+  userInfo: User | null;
+}
+const UserDropdownMenu: React.FC<UserDropdownProps> = ({ userInfo }) => {
+  console.log(`🚀 ~ file: NavBar.tsx ~ line 53 ~ userInfo`, userInfo);
+  const AvatarOrInitials = () => {
+    return <Avatar size='sm' as={MenuButton} name={userInfo?.full_name} />;
+  };
+  return (
+    <Menu>
+      <AvatarOrInitials />
+      <Portal>
+        <MenuList>
+          <MenuItem>My Profile</MenuItem>
+          <MenuItem>New Window</MenuItem>
+          <MenuItem>Open Closed Tab</MenuItem>
+          <MenuItem>Logout</MenuItem>
+        </MenuList>
+      </Portal>
+    </Menu>
+  );
+};
+const NavBarItems = () => {
+  const { data, loading } = useMeQuery({
+    skip: isServer(),
+  });
+
+  const { pathname } = useRouter();
+  const isLoginScreen = pathname.includes('/login');
+  const isRegisterScreen = pathname.includes('/register');
+
+  let body;
+  if (isLoginScreen || isRegisterScreen) {
+    //set body to Register or Login
+    body = JoinUsNavbarItems(isRegisterScreen, isLoginScreen);
+    //return body
+    return body;
+  }
+
+  // then its a regular page and we have two cases
+  // 1. user is authenticated -> Show his information along side with the navbar items
+  // 2. user not authenticated -> show the navbar items without his info and add Join Us Button
+  body = (
+    <section className={navbarStyles['nav-items-container']}>
+      <div className={navbarStyles['search-input-field-styles']}>
+        <InputGroup alignItems='center' justify='center' maxW={450}>
+          <InputLeftElement
+            px={7}
+            pointerEvents='none'
+            children={<SearchIcon color='gray.500' />}
+          />
+          <Input
+            shadow='base'
+            pl={12}
+            rounded='lg'
+            variant='filled'
+            placeholder='Search for pets, people or anything...'
+          />
+        </InputGroup>
+      </div>
+      <ul className={navbarStyles['nav-items']}>
+        <Link href='/explore'>
+          <li>Explore</li>
+        </Link>
+        <Link href='/missing'>
+          <li>Missing Pets</li>
+        </Link>
+        <Link href='/adoption'>
+          <li aria-expanded='true'>Adoption</li>
+        </Link>
+        {loading ? (
+          <CircularProgress size='20px' isIndeterminate color='gray.700' />
+        ) : data?.me?.id ? (
+          <UserDropdownMenu userInfo={data?.me} />
+        ) : (
+          <Link href='/register'>
+            <Button leftIcon={<FaHeart color='red' />}>Join us</Button>
+          </Link>
+        )}
+        <DarkModeSwitch />
+      </ul>
+    </section>
+  );
+  return body;
+};
+const NavBar = () => {
   const logo = useColorModeValue('light', 'dark');
   return (
-    <nav className={NavBarStyles['navbar-container']}>
-      <Image src={`/images/logo-${logo}.svg`} alt='paaws' maxW='145px' />
-      <Flex alignItems='center'>
-        <Text color={'gray.500'} mr={4}>
-          Already a Member?
-        </Text>
-        <Button px={6} variant='outline' rightIcon={<ArrowForwardIcon />}>
-          Login
-        </Button>
-        <DarkModeSwitch />
-      </Flex>
+    <nav className={navbarStyles['navbar-container']}>
+      <Link href='/'>
+        <Image
+          tabIndex={0}
+          role='img'
+          className={navbarStyles['logo-container']}
+          cursor='pointer'
+          src={`/images/logo-${logo}.svg`}
+          alt='paaws'
+          maxW='120px'
+        />
+      </Link>
+
+      <NavBarItems />
     </nav>
   );
 };
-export default NavBar;
+export default withApollo(NavBar);

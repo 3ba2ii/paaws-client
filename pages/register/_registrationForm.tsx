@@ -57,6 +57,7 @@ export const RegistrationFormComponent = () => {
               email,
             },
           });
+
           //Check if the phone number is already in use
           if (data?.sendOTP?.errors) {
             const errorsMap = toErrorMap(data?.sendOTP?.errors);
@@ -74,6 +75,7 @@ export const RegistrationFormComponent = () => {
               placeholder='example@gmail.com'
               label='Email'
               autoFocus={true}
+              type='email'
             />
             <InputField
               name='full_name'
@@ -85,7 +87,7 @@ export const RegistrationFormComponent = () => {
               placeholder='*********'
               label='Password'
               type='password'
-              autoComplete='password'
+              autoComplete='new-password'
             />
             <InputField
               name='confirmPassword'

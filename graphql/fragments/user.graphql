@@ -1,0 +1,15 @@
+fragment RequiredUserInfo on User {
+  id
+  email
+  phone
+  full_name
+  confirmed
+  blocked
+  location
+  bio
+  last_login
+  createdAt
+  updatedAt
+  provider
+  provider_id
+}
