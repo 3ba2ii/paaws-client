@@ -120,7 +120,12 @@ const NavBarItems = () => {
         {loading ? (
           <CircularProgress size='20px' isIndeterminate color='gray.700' />
         ) : data?.me?.id ? (
-          <UserDropdownMenu userInfo={data?.me} />
+          <>
+            <Link href='/favorites'>
+              <li aria-expanded='true'>My Favorites</li>
+            </Link>
+            <UserDropdownMenu userInfo={data?.me} />
+          </>
         ) : (
           <Link href='/register'>
             <Button leftIcon={<FaHeart color='red' />}>Join us</Button>
