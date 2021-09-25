@@ -24,6 +24,8 @@
   --color-link-dark: #00acc1;
   --color-link-light: var(--blue-400);
 
+  --speed: 300ms;
+
   /* 
 
   --color-background: #ffffff;
@@ -61,6 +63,10 @@ a {
 
 ul {
   list-style: none;
+  list-style-type: none;
+}
+li {
+  list-style-type: none;
 }
 .divider-with-centered-value {
   position: relative;
@@ -103,4 +109,73 @@ ul {
 .custom-hover-button:focus {
   filter: brightness(1.05) !important;
   -webkit-filter: brightness(1.05) !important;
+}
+/* Navbar Avatar*/
+.chakra-avatar .css-xl71ch {
+  aspect-ratio: 1;
+}
+
+.complete-info-steps-enter {
+  position: absolute;
+  transform: translateX(-110%);
+}
+.complete-info-steps-enter-active {
+  transform: translateX(0%);
+  transition: all var(--speed) ease;
+  -webkit-transition: all var(--speed) ease;
+  -moz-transition: all var(--speed) ease;
+  -ms-transition: all var(--speed) ease;
+  -o-transition: all var(--speed) ease;
+}
+.complete-info-steps-exit {
+  position: absolute;
+  opacity: 1;
+}
+.complete-info-steps-exit-active {
+  transform: translateX(-110%);
+  transition: transform var(--speed) ease;
+  -webkit-transition: transform var(--speed) ease;
+  -moz-transition: transform var(--speed) ease;
+  -ms-transition: transform var(--speed) ease;
+  -o-transition: transform var(--speed) ease;
+  -webkit-transform: translateX(-110%);
+  -moz-transform: translateX(-110%);
+  -ms-transform: translateX(-110%);
+  -o-transform: translateX(-110%);
+
+  opacity: 0;
+}
+
+/* STEP 2 */
+
+.complete-info-step-2-enter {
+  position: absolute;
+  transform: translateX(110%);
+  -webkit-transform: translateX(110%);
+  -moz-transform: translateX(110%);
+  -ms-transform: translateX(110%);
+  -o-transform: translateX(110%);
+}
+.complete-info-step-2-enter-active {
+  transform: translateX(0%);
+  transition: transform var(--speed) ease;
+  -webkit-transition: transform var(--speed) ease;
+  -moz-transition: transform var(--speed) ease;
+  -ms-transition: transform var(--speed) ease;
+  -o-transition: transform var(--speed) ease;
+}
+.complete-info-step-2-exit {
+  position: absolute;
+}
+.complete-info-step-2-exit-active {
+  transform: translateX(110%);
+  transition: all var(--speed) ease;
+  -webkit-transform: translateX(110%);
+  -moz-transform: translateX(110%);
+  -ms-transform: translateX(110%);
+  -o-transform: translateX(110%);
+  -webkit-transition: all var(--speed) ease;
+  -moz-transition: all var(--speed) ease;
+  -ms-transition: all var(--speed) ease;
+  -o-transition: all var(--speed) ease;
 }

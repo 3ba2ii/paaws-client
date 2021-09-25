@@ -74,7 +74,8 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   register: UserResponse;
   sendOTP: RegularResponse;
-  uploadAvatar: Scalars['Boolean'];
+  updateUser: Scalars['Boolean'];
+  uploadAvatar: UploadImageResponse;
 };
 
 
@@ -121,6 +122,11 @@ export type MutationRegisterArgs = {
 export type MutationSendOtpArgs = {
   email: Scalars['String'];
   phone: Scalars['String'];
+};
+
+
+export type MutationUpdateUserArgs = {
+  updateOptions: UpdateUserInfo;
 };
 
 
@@ -201,6 +207,7 @@ export type Photo = {
   isThumbnail: Scalars['Boolean'];
   path: Scalars['String'];
   updatedAt: Scalars['DateTime'];
+  url?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
@@ -209,6 +216,7 @@ export type Query = {
   me?: Maybe<User>;
   pet?: Maybe<Pet>;
   pets: Array<Pet>;
+  photos: Array<Photo>;
   user?: Maybe<User>;
   users: Array<User>;
 };
@@ -242,9 +250,20 @@ export type RegularResponse = {
   success?: Maybe<Scalars['Boolean']>;
 };
 
+export type UpdateUserInfo = {
+  avatar?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['String']>;
+};
+
+export type UploadImageResponse = {
+  __typename?: 'UploadImageResponse';
+  errors?: Maybe<Array<FieldError>>;
+  url?: Maybe<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
-  avatars?: Maybe<Array<UserAvatar>>;
+  avatar?: Maybe<Photo>;
   bio?: Maybe<Scalars['String']>;
   blocked: Scalars['Boolean'];
   confirmed: Scalars['Boolean'];
@@ -262,13 +281,6 @@ export type User = {
   provider_id?: Maybe<Scalars['Int']>;
   tags?: Maybe<Array<UserTag>>;
   updatedAt: Scalars['DateTime'];
-};
-
-export type UserAvatar = {
-  __typename?: 'UserAvatar';
-  id: Scalars['Int'];
-  image: Photo;
-  user: User;
 };
 
 export type UserFavorites = {
@@ -302,7 +314,7 @@ export enum UserTagsType {
   DogPerson = 'DOG_PERSON'
 }
 
-export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, location?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number> };
+export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, location?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> };
 
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
@@ -316,7 +328,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, location?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number> }> } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, location?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }> } };
 
 export type SendOtpMutationVariables = Exact<{
   sendOtpPhone: Scalars['String'];
@@ -326,10 +338,24 @@ export type SendOtpMutationVariables = Exact<{
 
 export type SendOtpMutation = { __typename?: 'Mutation', sendOTP: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, code: number, field: string }>> } };
 
+export type UpdateUserMutationVariables = Exact<{
+  updateUserUpdateOptions: UpdateUserInfo;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser: boolean };
+
+export type UploadAvatarMutationVariables = Exact<{
+  uploadAvatarImage: Scalars['Upload'];
+}>;
+
+
+export type UploadAvatarMutation = { __typename?: 'Mutation', uploadAvatar: { __typename?: 'UploadImageResponse', url?: Maybe<string>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, location?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number> }> };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, location?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', path: string, url?: Maybe<string> }> }> };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -351,6 +377,9 @@ export const RequiredUserInfoFragmentDoc = gql`
   updatedAt
   provider
   provider_id
+  avatar {
+    url
+  }
 }
     `;
 export const LoginDocument = gql`
@@ -472,10 +501,82 @@ export function useSendOtpMutation(baseOptions?: Apollo.MutationHookOptions<Send
 export type SendOtpMutationHookResult = ReturnType<typeof useSendOtpMutation>;
 export type SendOtpMutationResult = Apollo.MutationResult<SendOtpMutation>;
 export type SendOtpMutationOptions = Apollo.BaseMutationOptions<SendOtpMutation, SendOtpMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation updateUser($updateUserUpdateOptions: UpdateUserInfo!) {
+  updateUser(updateOptions: $updateUserUpdateOptions)
+}
+    `;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      updateUserUpdateOptions: // value for 'updateUserUpdateOptions'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UploadAvatarDocument = gql`
+    mutation UploadAvatar($uploadAvatarImage: Upload!) {
+  uploadAvatar(image: $uploadAvatarImage) {
+    errors {
+      field
+      message
+      code
+    }
+    url
+  }
+}
+    `;
+export type UploadAvatarMutationFn = Apollo.MutationFunction<UploadAvatarMutation, UploadAvatarMutationVariables>;
+
+/**
+ * __useUploadAvatarMutation__
+ *
+ * To run a mutation, you first call `useUploadAvatarMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadAvatarMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadAvatarMutation, { data, loading, error }] = useUploadAvatarMutation({
+ *   variables: {
+ *      uploadAvatarImage: // value for 'uploadAvatarImage'
+ *   },
+ * });
+ */
+export function useUploadAvatarMutation(baseOptions?: Apollo.MutationHookOptions<UploadAvatarMutation, UploadAvatarMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadAvatarMutation, UploadAvatarMutationVariables>(UploadAvatarDocument, options);
+      }
+export type UploadAvatarMutationHookResult = ReturnType<typeof useUploadAvatarMutation>;
+export type UploadAvatarMutationResult = Apollo.MutationResult<UploadAvatarMutation>;
+export type UploadAvatarMutationOptions = Apollo.BaseMutationOptions<UploadAvatarMutation, UploadAvatarMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {
     ...RequiredUserInfo
+    avatar {
+      path
+    }
   }
 }
     ${RequiredUserInfoFragmentDoc}`;

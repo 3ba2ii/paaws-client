@@ -1,0 +1,10 @@
+mutation UploadAvatar($uploadAvatarImage: Upload!) {
+  uploadAvatar(image: $uploadAvatarImage) {
+    errors {
+      field
+      message
+      code
+    }
+    url
+  }
+}

@@ -8,7 +8,7 @@ import { Flex, Text } from '@chakra-ui/layout';
 import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu';
 import { Portal } from '@chakra-ui/portal';
 import { CircularProgress } from '@chakra-ui/progress';
-import { useMeQuery, User } from 'generated/graphql';
+import { MeQuery, useMeQuery, User } from 'generated/graphql';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -49,11 +49,18 @@ function JoinUsNavbarItems(
 }
 
 interface UserDropdownProps {
-  userInfo: User | null;
+  userInfo: MeQuery | undefined;
 }
 const UserDropdownMenu: React.FC<UserDropdownProps> = ({ userInfo }) => {
   const AvatarOrInitials = () => {
-    return <Avatar size='sm' as={MenuButton} name={userInfo?.full_name} />;
+    return (
+      <Avatar
+        size='sm'
+        as={MenuButton}
+        name={userInfo?.me?.full_name}
+        src={userInfo?.me?.avatar?.url || ''}
+      />
+    );
   };
   return (
     <Menu>
@@ -107,7 +114,7 @@ const NavBarItems = () => {
           />
         </InputGroup>
       </div>
-      <ul className={navbarStyles['nav-items']}>
+      <nav className={navbarStyles['nav-items']}>
         <Link href='/explore'>
           <li>Explore</li>
         </Link>
@@ -124,7 +131,7 @@ const NavBarItems = () => {
             <Link href='/favorites'>
               <li aria-expanded='true'>My Favorites</li>
             </Link>
-            <UserDropdownMenu userInfo={data?.me} />
+            <UserDropdownMenu userInfo={data} />
           </>
         ) : (
           <Link href='/register'>
@@ -132,7 +139,7 @@ const NavBarItems = () => {
           </Link>
         )}
         <DarkModeSwitch />
-      </ul>
+      </nav>
     </section>
   );
   return body;

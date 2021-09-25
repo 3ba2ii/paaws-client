@@ -13,4 +13,6 @@ const UsersPage: React.FC<usersProps> = () => {
   return <ul>{JSON.stringify(data, null, 2)}</ul>;
 };
 
-export default withApollo(UsersPage, { getDataFromTree });
+export default withApollo(UsersPage, {
+  getDataFromTree,
+});

@@ -12,4 +12,7 @@ fragment RequiredUserInfo on User {
   updatedAt
   provider
   provider_id
+  avatar {
+    url
+  }
 }

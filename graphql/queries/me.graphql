@@ -1,5 +1,8 @@
 query Me {
   me {
     ...RequiredUserInfo
+    avatar {
+      path
+    }
   }
 }

@@ -1,0 +1,3 @@
+mutation updateUser($updateUserUpdateOptions: UpdateUserInfo!) {
+  updateUser(updateOptions: $updateUserUpdateOptions)
+}
