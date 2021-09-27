@@ -81,6 +81,7 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
           res
         );
         //routing to the homepage with success flag to show fireworks
+        localStorage.setItem('completed-info-confetti', 'true');
         Router.replace(`/?ref=${Router.pathname}?success=${true}`);
       });
     }

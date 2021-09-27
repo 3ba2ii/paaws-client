@@ -26,7 +26,6 @@ declare type Libraries = (
 )[];
 
 export const Step2: React.FC<Step2Props> = ({ handleChange, userInfo }) => {
-  //const GoogleMapComponent = GoogleMap(handleChange);
   const [userLocation, setUserLocation] = useState<LocationType>({
     lat: 0,
     lng: 0,
@@ -49,18 +48,6 @@ export const Step2: React.FC<Step2Props> = ({ handleChange, userInfo }) => {
     handleChange(currentCoords, 'location');
   };
 
-  useEffect(() => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const currentCoords = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        setUserLocation(currentCoords);
-        handleChange(currentCoords, 'location');
-      });
-    }
-  }, []);
   const onLoad = (ref: google.maps.places.Autocomplete) => {
     setAutoCompleteRef(ref);
   };
@@ -109,6 +96,19 @@ export const Step2: React.FC<Step2Props> = ({ handleChange, userInfo }) => {
     ),
     [userLocation, libraries]
   );
+
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const currentCoords = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setUserLocation(currentCoords);
+        handleChange(currentCoords, 'location');
+      });
+    }
+  }, []);
   return (
     <section
       className={styles['step-container'] + ' ' + styles['location-step']}
