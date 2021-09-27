@@ -47,6 +47,7 @@ export const Step1: React.FC<Step1Props> = ({ handleChange, userInfo }) => {
         w={'120px'}
         h={'120px'}
         shadow='base'
+        zIndex={1}
         className={styles['avatar-image']}
         onClick={openFileDialog}
         name={userInfo?.me?.full_name}
@@ -82,7 +83,9 @@ export const Step1: React.FC<Step1Props> = ({ handleChange, userInfo }) => {
         <Textarea
           borderWidth='1.5px'
           id='bio'
-          placeholder={'Hello'}
+          placeholder={
+            'Creator. Passionate tv nerd. Problem solver. Proud alcohol evangelist. Lifelong web junkie.'
+          }
           onChange={(e) => {
             handleChange(e.target.value, 'bio');
           }}

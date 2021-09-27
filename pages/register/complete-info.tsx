@@ -1,9 +1,14 @@
 import { Button } from '@chakra-ui/button';
+import { FormHelperText } from '@chakra-ui/form-control';
 import { ChevronRightIcon } from '@chakra-ui/icons';
-import { Flex } from '@chakra-ui/layout';
+import { Flex, Heading, Text } from '@chakra-ui/layout';
 import { CircularProgress } from '@chakra-ui/progress';
 import { Layout } from 'components/Layout';
-import { useMeQuery, useUploadAvatarMutation } from 'generated/graphql';
+import {
+  useMeQuery,
+  useUpdateUserInfoMutation,
+  useUploadAvatarMutation,
+} from 'generated/graphql';
 import React, { useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import styles from 'styles/register.module.css';
@@ -11,6 +16,8 @@ import { useIsAuth } from 'utils/useIsAuth';
 import withApollo from 'utils/withApollo';
 import { Step1 } from './_updateInfoStep1';
 import { Step2 } from './_updateInfoStep2';
+import Router from 'next/router';
+import router from 'next/router';
 
 interface CompleteInfoProps {}
 const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
@@ -20,10 +27,16 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
   const [values, setValues] = useState({
     bio: '',
     avatar: '',
-    location: '',
+    location: {
+      lng: null,
+      lat: null,
+    },
   });
 
-  const [uploadAvatar] = useUploadAvatarMutation();
+  const [uploadAvatar, { loading: uploadAvatarLoading }] =
+    useUploadAvatarMutation();
+  const [updateUserInfo, { loading: updateInfoLoading }] =
+    useUpdateUserInfoMutation();
 
   const { data, loading } = useMeQuery();
 
@@ -31,9 +44,46 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
     setValues({ ...values, [field]: value });
   };
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     //HAndle Next Step
-    setStep(step + 1);
+    setStep(Math.min(step + 1, 1));
+
+    // if (step === 1) fire all requests and save them to db
+    //1. upload avatar
+    //2. update user bio
+    //3. update user location
+    //4. update user info
+
+    if (step === 1) {
+      const { bio, avatar, location } = values;
+      const updateBioLocation = updateUserInfo({
+        variables: {
+          updateUserUpdateOptions: {
+            bio,
+            long: location?.lng,
+            lat: location?.lat,
+          },
+        },
+      });
+
+      const updateAvatar = avatar
+        ? uploadAvatar({
+            variables: {
+              uploadAvatarImage: avatar,
+            },
+          })
+        : null;
+
+      //firing both mutations simultaneously
+      Promise.all([updateBioLocation, updateAvatar]).then((res) => {
+        console.log(
+          `🚀 ~ file: complete-info.tsx ~ line 64 ~ Promise.all ~ res`,
+          res
+        );
+        //routing to the homepage with success flag to show fireworks
+        Router.replace(`/?ref=${Router.pathname}?success=${true}`);
+      });
+    }
   };
   const handlePrevStep = () => {
     //HAndle Next Step
@@ -48,6 +98,35 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
   return (
     <Layout title='Complete Registration - Step 1'>
       <div className={styles['complete-info-forms-container']}>
+        <Heading
+          position='absolute'
+          top='-90px'
+          left='0'
+          as='h1'
+          size='lg'
+          mb={4}
+        >
+          <Text as='span' color='teal.400'>
+            Step {step + 1}:{' '}
+          </Text>
+          <Text as='span'>
+            {step === 0 ? 'Tell us more about yourself' : 'Set your Location'}
+          </Text>
+          <Text
+            maxW='60ch'
+            as='p'
+            color='gray.500'
+            fontWeight='400'
+            fontSize='14px'
+            mt={2}
+          >
+            {step === 1
+              ? ` We will be using your location to send you notifications if a pet
+            was lost or found near you, you can turn off these notifications
+            anytime you want`
+              : `Let others know who you're, this will help you a lot in adopting pets`}
+          </Text>
+        </Heading>
         <div className={styles['single-step-container']}>
           <CSSTransition
             in={step == 0}
@@ -74,11 +153,16 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
           justify='flex-end'
           className={styles['form-buttons-container']}
         >
-          <Button mr={4} variant='ghost' onClick={handleNextStep}>
+          <Button
+            mr={4}
+            variant='ghost'
+            color='gray.400'
+            onClick={handleNextStep}
+          >
             Skip
           </Button>
           {step > 0 && (
-            <Button variant='ghost' onClick={handlePrevStep}>
+            <Button mr={4} variant='ghost' onClick={handlePrevStep}>
               Back
             </Button>
           )}
@@ -88,14 +172,12 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
             colorScheme='teal'
             minW='128px'
             onClick={handleNextStep}
+            isLoading={uploadAvatarLoading || updateInfoLoading}
           >
-            Next
+            {step === 1 ? 'Finish' : 'Next'}
           </Button>
         </Flex>
       </div>
-
-      <>{JSON.stringify(values)}</>
-      <>{JSON.stringify(step)}</>
     </Layout>
   );
 };

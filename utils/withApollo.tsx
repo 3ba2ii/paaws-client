@@ -2,14 +2,13 @@ import {
   ApolloClient,
   ApolloProvider,
   from,
-  HttpLink,
   InMemoryCache,
 } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
+import { createUploadLink } from 'apollo-upload-client';
 import nextWithApollo from 'next-with-apollo';
 import { useRouter } from 'next/router';
 import { isServer } from './isServer';
-import { createUploadLink } from 'apollo-upload-client';
 
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
