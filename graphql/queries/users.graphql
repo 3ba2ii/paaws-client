@@ -1,8 +1,15 @@
-query Users {
-  users {
-    id
-    email
-    phone
-    full_name
+query PaginatedUsers($usersWhere: WhereClause!) {
+  users(where: $usersWhere) {
+    users {
+      id
+      email
+      phone
+    }
+    errors {
+      field
+      message
+      code
+    }
+    hasMore
   }
 }

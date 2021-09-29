@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/button';
 import { FormHelperText } from '@chakra-ui/form-control';
 import { ChevronRightIcon } from '@chakra-ui/icons';
-import { Flex, Heading, Text } from '@chakra-ui/layout';
+import { Box, Flex, Heading, Text } from '@chakra-ui/layout';
 import { CircularProgress } from '@chakra-ui/progress';
 import { Layout } from 'components/Layout';
 import {
@@ -18,6 +18,8 @@ import { Step1 } from './_updateInfoStep1';
 import { Step2 } from './_updateInfoStep2';
 import Router from 'next/router';
 import router from 'next/router';
+import { useColorMode } from '@chakra-ui/color-mode';
+import { useColorModePreference } from '@chakra-ui/media-query';
 
 interface CompleteInfoProps {}
 const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
@@ -32,6 +34,9 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
       lat: null,
     },
   });
+  const { colorMode } = useColorMode();
+
+  console.log(`🚀 ~ file: complete-info.tsx ~ line 38 ~ colorMode`, colorMode);
 
   const [uploadAvatar, { loading: uploadAvatarLoading }] =
     useUploadAvatarMutation();
@@ -60,7 +65,7 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
         variables: {
           updateUserUpdateOptions: {
             bio,
-            long: location?.lng,
+            lng: location?.lng,
             lat: location?.lat,
           },
         },
@@ -98,13 +103,18 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
 
   return (
     <Layout title='Complete Registration - Step 1'>
-      <div className={styles['complete-info-forms-container']}>
+      <Box
+        className={styles['complete-info-forms-container']}
+        boxShadow='base'
+        border='.5px'
+        borderColor={colorMode === 'dark' ? 'gray.700' : 'gray.50'}
+      >
         <Heading
           position='absolute'
-          top='-90px'
+          top='-60px'
           left='0'
           as='h1'
-          size='lg'
+          size='md'
           mb={4}
         >
           <Text as='span' color='teal.400'>
@@ -135,7 +145,11 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
             classNames='complete-info-steps'
             unmountOnExit
           >
-            <Step1 userInfo={data} handleChange={handleChange} />
+            <Step1
+              userInfo={data}
+              handleChange={handleChange}
+              values={values}
+            />
           </CSSTransition>
         </div>
         <div className={styles['single-step-container']}>
@@ -178,7 +192,7 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
             {step === 1 ? 'Finish' : 'Next'}
           </Button>
         </Flex>
-      </div>
+      </Box>
     </Layout>
   );
 };

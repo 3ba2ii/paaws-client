@@ -5,7 +5,7 @@ fragment RequiredUserInfo on User {
   full_name
   confirmed
   blocked
-  long
+  lng
   lat
   bio
   last_login

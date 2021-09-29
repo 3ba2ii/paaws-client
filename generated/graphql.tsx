@@ -18,6 +18,17 @@ export type Scalars = {
   Upload: any;
 };
 
+export type AdoptionPost = {
+  __typename?: 'AdoptionPost';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['Float'];
+  petId: Scalars['String'];
+  title: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+  user: User;
+  userId: Scalars['String'];
+};
+
 /** Basic Pet Breeds */
 export enum Breeds {
   Bulldog = 'BULLDOG',
@@ -57,6 +68,12 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type FindNearestUsersInput = {
+  lat: Scalars['Float'];
+  lng: Scalars['Float'];
+  radius: Scalars['Float'];
+};
+
 export type LoginInput = {
   identifier: Scalars['String'];
   password: Scalars['String'];
@@ -69,13 +86,11 @@ export type Mutation = {
   createPet: PetResponse;
   deletePet: RegularResponse;
   forgotPassword: Scalars['Boolean'];
-  likePet: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
   sendOTP: RegularResponse;
   updateUser: Scalars['Boolean'];
-  updateUserLocation: Scalars['Boolean'];
   uploadAvatar: UploadImageResponse;
 };
 
@@ -105,11 +120,6 @@ export type MutationForgotPasswordArgs = {
 };
 
 
-export type MutationLikePetArgs = {
-  petId: Scalars['Int'];
-};
-
-
 export type MutationLoginArgs = {
   options: LoginInput;
 };
@@ -131,14 +141,15 @@ export type MutationUpdateUserArgs = {
 };
 
 
-export type MutationUpdateUserLocationArgs = {
-  lat: Scalars['Float'];
-  long: Scalars['Float'];
-};
-
-
 export type MutationUploadAvatarArgs = {
   image: Scalars['Upload'];
+};
+
+export type PaginatedUsers = {
+  __typename?: 'PaginatedUsers';
+  errors?: Maybe<Array<FieldError>>;
+  hasMore: Scalars['Boolean'];
+  users: Array<User>;
 };
 
 export type Pet = {
@@ -149,13 +160,10 @@ export type Pet = {
   createdAt: Scalars['DateTime'];
   gender: PetGender;
   id: Scalars['Int'];
-  likes?: Maybe<Array<UserFavorites>>;
   name: Scalars['String'];
   neutered?: Maybe<Scalars['Boolean']>;
-  numberOfLikes: Scalars['Int'];
   size: PetSize;
   spayed?: Maybe<Scalars['Boolean']>;
-  status: PetStatus;
   type: PetType;
   updatedAt: Scalars['DateTime'];
   user: User;
@@ -219,13 +227,20 @@ export type Photo = {
 
 export type Query = {
   __typename?: 'Query';
+  getNearestLocations?: Maybe<Array<User>>;
   isValidToken: Scalars['Boolean'];
   me?: Maybe<User>;
   pet?: Maybe<Pet>;
   pets: Array<Pet>;
   photos: Array<Photo>;
   user?: Maybe<User>;
-  users: Array<User>;
+  users: PaginatedUsers;
+  usersCount: Scalars['Int'];
+};
+
+
+export type QueryGetNearestLocationsArgs = {
+  options: FindNearestUsersInput;
 };
 
 
@@ -241,6 +256,11 @@ export type QueryPetArgs = {
 
 export type QueryUserArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryUsersArgs = {
+  where: WhereClause;
 };
 
 export type RegisterOptions = {
@@ -261,7 +281,7 @@ export type UpdateUserInfo = {
   avatar?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
   lat?: Maybe<Scalars['Float']>;
-  long?: Maybe<Scalars['Float']>;
+  lng?: Maybe<Scalars['Float']>;
 };
 
 export type UploadImageResponse = {
@@ -272,7 +292,9 @@ export type UploadImageResponse = {
 
 export type User = {
   __typename?: 'User';
+  adoptionPosts?: Maybe<Array<AdoptionPost>>;
   avatar?: Maybe<Photo>;
+  avatarId?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
   blocked: Scalars['Boolean'];
   confirmed: Scalars['Boolean'];
@@ -283,7 +305,7 @@ export type User = {
   id: Scalars['Int'];
   last_login?: Maybe<Scalars['DateTime']>;
   lat?: Maybe<Scalars['String']>;
-  long?: Maybe<Scalars['String']>;
+  lng?: Maybe<Scalars['String']>;
   pets?: Maybe<Array<Pet>>;
   phone: Scalars['String'];
   photos?: Maybe<Array<Photo>>;
@@ -291,14 +313,21 @@ export type User = {
   provider_id?: Maybe<Scalars['Int']>;
   tags?: Maybe<Array<UserTag>>;
   updatedAt: Scalars['DateTime'];
+  userPets?: Maybe<Array<UserPet>>;
 };
 
 export type UserFavorites = {
   __typename?: 'UserFavorites';
-  pet: Pet;
   petId: Scalars['Float'];
   user: User;
   userId: Scalars['Float'];
+};
+
+export type UserPet = {
+  __typename?: 'UserPet';
+  petId: Scalars['String'];
+  user: User;
+  userId: Scalars['String'];
 };
 
 export type UserResponse = {
@@ -324,7 +353,12 @@ export enum UserTagsType {
   DogPerson = 'DOG_PERSON'
 }
 
-export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, long?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> };
+export type WhereClause = {
+  cursor?: Maybe<Scalars['String']>;
+  limit?: Maybe<Scalars['Int']>;
+};
+
+export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> };
 
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
@@ -338,7 +372,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, long?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }> } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }> } };
 
 export type SendOtpMutationVariables = Exact<{
   sendOtpPhone: Scalars['String'];
@@ -365,12 +399,14 @@ export type UploadAvatarMutation = { __typename?: 'Mutation', uploadAvatar: { __
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, long?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', path: string, url?: Maybe<string> }> }> };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', path: string, url?: Maybe<string> }> }> };
 
-export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
+export type PaginatedUsersQueryVariables = Exact<{
+  usersWhere: WhereClause;
+}>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: number, email: string, phone: string, full_name: string }> };
+export type PaginatedUsersQuery = { __typename?: 'Query', users: { __typename?: 'PaginatedUsers', hasMore: boolean, users: Array<{ __typename?: 'User', id: number, email: string, phone: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
 export const RequiredUserInfoFragmentDoc = gql`
     fragment RequiredUserInfo on User {
@@ -380,7 +416,7 @@ export const RequiredUserInfoFragmentDoc = gql`
   full_name
   confirmed
   blocked
-  long
+  lng
   lat
   bio
   last_login
@@ -618,40 +654,48 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
-export const UsersDocument = gql`
-    query Users {
-  users {
-    id
-    email
-    phone
-    full_name
+export const PaginatedUsersDocument = gql`
+    query PaginatedUsers($usersWhere: WhereClause!) {
+  users(where: $usersWhere) {
+    users {
+      id
+      email
+      phone
+    }
+    errors {
+      field
+      message
+      code
+    }
+    hasMore
   }
 }
     `;
 
 /**
- * __useUsersQuery__
+ * __usePaginatedUsersQuery__
  *
- * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `usePaginatedUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePaginatedUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUsersQuery({
+ * const { data, loading, error } = usePaginatedUsersQuery({
  *   variables: {
+ *      usersWhere: // value for 'usersWhere'
  *   },
  * });
  */
-export function useUsersQuery(baseOptions?: Apollo.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
+export function usePaginatedUsersQuery(baseOptions: Apollo.QueryHookOptions<PaginatedUsersQuery, PaginatedUsersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
+        return Apollo.useQuery<PaginatedUsersQuery, PaginatedUsersQueryVariables>(PaginatedUsersDocument, options);
       }
-export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
+export function usePaginatedUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaginatedUsersQuery, PaginatedUsersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, options);
+          return Apollo.useLazyQuery<PaginatedUsersQuery, PaginatedUsersQueryVariables>(PaginatedUsersDocument, options);
         }
-export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
-export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
-export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
+export type PaginatedUsersQueryHookResult = ReturnType<typeof usePaginatedUsersQuery>;
+export type PaginatedUsersLazyQueryHookResult = ReturnType<typeof usePaginatedUsersLazyQuery>;
+export type PaginatedUsersQueryResult = Apollo.QueryResult<PaginatedUsersQuery, PaginatedUsersQueryVariables>;

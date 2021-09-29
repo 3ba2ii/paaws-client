@@ -85,7 +85,7 @@ export function OTPModal({
     setOTPError('');
     onClose();
     //Redirect to home page for now
-    router.push('/');
+    router.push('/register/complete-info');
   };
 
   const OtpModalBody = () => (

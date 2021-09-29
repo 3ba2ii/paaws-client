@@ -10,8 +10,13 @@ import styles from 'styles/register.module.css';
 interface Step1Props {
   handleChange: (e: any, field: string) => void;
   userInfo: MeQuery | undefined;
+  values: any;
 }
-export const Step1: React.FC<Step1Props> = ({ handleChange, userInfo }) => {
+export const Step1: React.FC<Step1Props> = ({
+  handleChange,
+  userInfo,
+  values,
+}) => {
   const [uploadedAvatar, setUploadedAvatar] = useState<
     File | Blob | MediaSource | null
   >(null);
@@ -62,7 +67,7 @@ export const Step1: React.FC<Step1Props> = ({ handleChange, userInfo }) => {
   );
   return (
     <section className={styles['step-container']}>
-      <Flex align='center' justify='center'>
+      <Flex align='center' justify='center' mb={4}>
         {/* Avatar Input */}
         <MyAvatarInputField />
         {AvatarImage}
@@ -83,6 +88,7 @@ export const Step1: React.FC<Step1Props> = ({ handleChange, userInfo }) => {
         <Textarea
           borderWidth='1.5px'
           id='bio'
+          value={values.bio}
           placeholder={
             'Creator. Passionate tv nerd. Problem solver. Proud alcohol evangelist. Lifelong web junkie.'
           }
