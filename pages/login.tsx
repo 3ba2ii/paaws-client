@@ -79,7 +79,6 @@ const LoginPage: React.FC<loginProps> = ({}) => {
                 placeholder='example@gmail.com'
                 label='Email or Phone Number'
                 autoFocus={true}
-                type='email'
               />
 
               <InputField

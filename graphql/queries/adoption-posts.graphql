@@ -1,0 +1,38 @@
+query AdoptionPosts($adoptionPostsCursor: String, $adoptionPostsLimit: Int) {
+  adoptionPosts(cursor: $adoptionPostsCursor, limit: $adoptionPostsLimit) {
+    posts {
+      id
+      pet {
+        id
+        name
+        type
+        gender
+        size
+        birthDate
+        images {
+          photoId
+          petId
+          photo {
+            url
+          }
+        }
+      }
+      address {
+        distance
+        country
+        state
+      }
+      createdAt
+      updatedAt
+      user {
+        full_name
+      }
+    }
+    hasMore
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

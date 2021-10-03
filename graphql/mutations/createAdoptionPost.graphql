@@ -1,0 +1,19 @@
+mutation CreateAdoptionPost(
+  $createAdoptionPostImages: [Upload!]!
+  $createAdoptionPostInput: AdoptionPostInput!
+) {
+  createAdoptionPost(
+    images: $createAdoptionPostImages
+    input: $createAdoptionPostInput
+  ) {
+    errors {
+      field
+      message
+      code
+    }
+    adoptionPost {
+      id
+      userId
+    }
+  }
+}

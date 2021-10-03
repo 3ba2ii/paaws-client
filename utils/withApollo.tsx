@@ -6,6 +6,7 @@ import {
 } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
+import { PaginatedAdoptionPosts } from 'generated/graphql';
 import nextWithApollo from 'next-with-apollo';
 import { useRouter } from 'next/router';
 import { isServer } from './isServer';
@@ -19,6 +20,32 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     });
 
   if (networkError) console.log(`[Network error]: ${networkError}`);
+});
+
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        adoptionPosts: {
+          keyArgs: [],
+          merge(
+            existing: PaginatedAdoptionPosts | undefined,
+            incoming: PaginatedAdoptionPosts
+          ): PaginatedAdoptionPosts {
+            console.log(
+              `🚀 ~ file: withApollo.tsx ~ line 35 ~ incoming`,
+              incoming
+            );
+            if (!existing) return incoming;
+            return {
+              ...incoming,
+              posts: [...(existing?.posts || []), ...incoming.posts],
+            };
+          },
+        },
+      },
+    },
+  },
 });
 
 const withApollo = nextWithApollo(
@@ -36,7 +63,7 @@ const withApollo = nextWithApollo(
 
       link: from([errorLink, link]),
 
-      cache: new InMemoryCache().restore(initialState || {}),
+      cache,
     });
   },
   {

@@ -18,15 +18,68 @@ export type Scalars = {
   Upload: any;
 };
 
+export type Address = {
+  __typename?: 'Address';
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  distance?: Maybe<Scalars['Float']>;
+  lat?: Maybe<Scalars['String']>;
+  lng?: Maybe<Scalars['String']>;
+  state?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
+  zip?: Maybe<Scalars['String']>;
+};
+
+export type AddressInput = {
+  city?: Maybe<Scalars['String']>;
+  country?: Maybe<Scalars['String']>;
+  lat: Scalars['Float'];
+  lng: Scalars['Float'];
+  state?: Maybe<Scalars['String']>;
+  street?: Maybe<Scalars['String']>;
+  zip?: Maybe<Scalars['String']>;
+};
+
+export type AdoptionPetsFilters = {
+  petGenders?: Maybe<Array<PetGender>>;
+  petSizes?: Maybe<Array<PetSize>>;
+  petTypes?: Maybe<Array<PetType>>;
+};
+
 export type AdoptionPost = {
   __typename?: 'AdoptionPost';
+  address?: Maybe<Address>;
   createdAt: Scalars['DateTime'];
-  id: Scalars['Float'];
-  petId: Scalars['String'];
-  title: Scalars['String'];
+  id: Scalars['Int'];
+  pet: Pet;
+  petId: Scalars['Int'];
   updatedAt: Scalars['DateTime'];
   user: User;
-  userId: Scalars['String'];
+  userId: Scalars['Int'];
+};
+
+export type AdoptionPostInput = {
+  address?: Maybe<AddressInput>;
+  petInfo: CreatePetOptions;
+};
+
+export type AdoptionPostResponse = {
+  __typename?: 'AdoptionPostResponse';
+  adoptionPost?: Maybe<AdoptionPost>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
+export type AdoptionPostUpdateInput = {
+  about?: Maybe<Scalars['String']>;
+  birthDate?: Maybe<Scalars['DateTime']>;
+  breeds?: Maybe<Array<Breeds>>;
+  gender?: Maybe<PetGender>;
+  name?: Maybe<Scalars['String']>;
+  neutered?: Maybe<Scalars['Boolean']>;
+  size?: Maybe<PetSize>;
+  spayed?: Maybe<Scalars['Boolean']>;
+  type?: Maybe<PetType>;
+  vaccinated?: Maybe<Scalars['Boolean']>;
 };
 
 /** Basic Pet Breeds */
@@ -56,7 +109,6 @@ export type CreatePetOptions = {
   neutered?: Maybe<Scalars['Boolean']>;
   size: PetSize;
   spayed?: Maybe<Scalars['Boolean']>;
-  status: PetStatus;
   type: PetType;
   vaccinated?: Maybe<Scalars['Boolean']>;
 };
@@ -74,6 +126,14 @@ export type FindNearestUsersInput = {
   radius: Scalars['Float'];
 };
 
+export type ImageMetaData = {
+  __typename?: 'ImageMetaData';
+  pathName: Scalars['String'];
+  photo: Photo;
+  uniqueFileName: Scalars['String'];
+  user: User;
+};
+
 export type LoginInput = {
   identifier: Scalars['String'];
   password: Scalars['String'];
@@ -83,13 +143,17 @@ export type Mutation = {
   __typename?: 'Mutation';
   addUserTag: Scalars['Boolean'];
   changePassword: ChangePasswordResponse;
+  createAdoptionPost: AdoptionPostResponse;
   createPet: PetResponse;
+  createPhoto: ImageMetaData;
+  deleteAdoptionPost: Scalars['Boolean'];
   deletePet: RegularResponse;
   forgotPassword: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
   sendOTP: RegularResponse;
+  updateAdoptionPost: AdoptionPostResponse;
   updateUser: Scalars['Boolean'];
   uploadAvatar: UploadImageResponse;
 };
@@ -105,8 +169,24 @@ export type MutationChangePasswordArgs = {
 };
 
 
+export type MutationCreateAdoptionPostArgs = {
+  images: Array<Scalars['Upload']>;
+  input: AdoptionPostInput;
+};
+
+
 export type MutationCreatePetArgs = {
   createPetOptions: CreatePetOptions;
+};
+
+
+export type MutationCreatePhotoArgs = {
+  image: Scalars['Upload'];
+};
+
+
+export type MutationDeleteAdoptionPostArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -136,6 +216,12 @@ export type MutationSendOtpArgs = {
 };
 
 
+export type MutationUpdateAdoptionPostArgs = {
+  id: Scalars['Int'];
+  newPetInfo: AdoptionPostUpdateInput;
+};
+
+
 export type MutationUpdateUserArgs = {
   updateOptions: UpdateUserInfo;
 };
@@ -143,6 +229,13 @@ export type MutationUpdateUserArgs = {
 
 export type MutationUploadAvatarArgs = {
   image: Scalars['Upload'];
+};
+
+export type PaginatedAdoptionPosts = {
+  __typename?: 'PaginatedAdoptionPosts';
+  errors?: Maybe<Array<FieldError>>;
+  hasMore: Scalars['Boolean'];
+  posts: Array<AdoptionPost>;
 };
 
 export type PaginatedUsers = {
@@ -160,6 +253,7 @@ export type Pet = {
   createdAt: Scalars['DateTime'];
   gender: PetGender;
   id: Scalars['Int'];
+  images: Array<PetImages>;
   name: Scalars['String'];
   neutered?: Maybe<Scalars['Boolean']>;
   size: PetSize;
@@ -185,6 +279,14 @@ export enum PetGender {
   Other = 'OTHER'
 }
 
+export type PetImages = {
+  __typename?: 'PetImages';
+  pet: Pet;
+  petId: Scalars['Int'];
+  photo: Photo;
+  photoId: Scalars['Int'];
+};
+
 export type PetResponse = {
   __typename?: 'PetResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -196,13 +298,6 @@ export enum PetSize {
   Large = 'LARGE',
   Medium = 'MEDIUM',
   Small = 'SMALL'
-}
-
-/** Basic Pet Status */
-export enum PetStatus {
-  Adopted = 'ADOPTED',
-  Deleted = 'DELETED',
-  Offered = 'OFFERED'
 }
 
 /** Basic Pet Type */
@@ -227,15 +322,28 @@ export type Photo = {
 
 export type Query = {
   __typename?: 'Query';
+  adoptionPost?: Maybe<AdoptionPost>;
+  adoptionPosts: PaginatedAdoptionPosts;
   getNearestLocations?: Maybe<Array<User>>;
   isValidToken: Scalars['Boolean'];
   me?: Maybe<User>;
   pet?: Maybe<Pet>;
   pets: Array<Pet>;
-  photos: Array<Photo>;
   user?: Maybe<User>;
   users: PaginatedUsers;
   usersCount: Scalars['Int'];
+};
+
+
+export type QueryAdoptionPostArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryAdoptionPostsArgs = {
+  cursor?: Maybe<Scalars['String']>;
+  filters?: Maybe<AdoptionPetsFilters>;
+  limit?: Maybe<Scalars['Int']>;
 };
 
 
@@ -360,6 +468,14 @@ export type WhereClause = {
 
 export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> };
 
+export type CreateAdoptionPostMutationVariables = Exact<{
+  createAdoptionPostImages: Array<Scalars['Upload']> | Scalars['Upload'];
+  createAdoptionPostInput: AdoptionPostInput;
+}>;
+
+
+export type CreateAdoptionPostMutation = { __typename?: 'Mutation', createAdoptionPost: { __typename?: 'AdoptionPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, adoptionPost?: Maybe<{ __typename?: 'AdoptionPost', id: number, userId: number }> } };
+
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
 }>;
@@ -396,6 +512,14 @@ export type UploadAvatarMutationVariables = Exact<{
 
 export type UploadAvatarMutation = { __typename?: 'Mutation', uploadAvatar: { __typename?: 'UploadImageResponse', url?: Maybe<string>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
+export type AdoptionPostsQueryVariables = Exact<{
+  adoptionPostsCursor?: Maybe<Scalars['String']>;
+  adoptionPostsLimit?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type AdoptionPostsQuery = { __typename?: 'Query', adoptionPosts: { __typename?: 'PaginatedAdoptionPosts', hasMore: boolean, posts: Array<{ __typename?: 'AdoptionPost', id: number, createdAt: any, updatedAt: any, pet: { __typename?: 'Pet', id: number, name: string, type: PetType, gender: PetGender, size: PetSize, birthDate: any, images: Array<{ __typename?: 'PetImages', photoId: number, petId: number, photo: { __typename?: 'Photo', url?: Maybe<string> } }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number>, country?: Maybe<string>, state?: Maybe<string> }>, user: { __typename?: 'User', full_name: string } }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -429,6 +553,51 @@ export const RequiredUserInfoFragmentDoc = gql`
   }
 }
     `;
+export const CreateAdoptionPostDocument = gql`
+    mutation CreateAdoptionPost($createAdoptionPostImages: [Upload!]!, $createAdoptionPostInput: AdoptionPostInput!) {
+  createAdoptionPost(
+    images: $createAdoptionPostImages
+    input: $createAdoptionPostInput
+  ) {
+    errors {
+      field
+      message
+      code
+    }
+    adoptionPost {
+      id
+      userId
+    }
+  }
+}
+    `;
+export type CreateAdoptionPostMutationFn = Apollo.MutationFunction<CreateAdoptionPostMutation, CreateAdoptionPostMutationVariables>;
+
+/**
+ * __useCreateAdoptionPostMutation__
+ *
+ * To run a mutation, you first call `useCreateAdoptionPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAdoptionPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAdoptionPostMutation, { data, loading, error }] = useCreateAdoptionPostMutation({
+ *   variables: {
+ *      createAdoptionPostImages: // value for 'createAdoptionPostImages'
+ *      createAdoptionPostInput: // value for 'createAdoptionPostInput'
+ *   },
+ * });
+ */
+export function useCreateAdoptionPostMutation(baseOptions?: Apollo.MutationHookOptions<CreateAdoptionPostMutation, CreateAdoptionPostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateAdoptionPostMutation, CreateAdoptionPostMutationVariables>(CreateAdoptionPostDocument, options);
+      }
+export type CreateAdoptionPostMutationHookResult = ReturnType<typeof useCreateAdoptionPostMutation>;
+export type CreateAdoptionPostMutationResult = Apollo.MutationResult<CreateAdoptionPostMutation>;
+export type CreateAdoptionPostMutationOptions = Apollo.BaseMutationOptions<CreateAdoptionPostMutation, CreateAdoptionPostMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($loginOptions: LoginInput!) {
   login(options: $loginOptions) {
@@ -617,6 +786,75 @@ export function useUploadAvatarMutation(baseOptions?: Apollo.MutationHookOptions
 export type UploadAvatarMutationHookResult = ReturnType<typeof useUploadAvatarMutation>;
 export type UploadAvatarMutationResult = Apollo.MutationResult<UploadAvatarMutation>;
 export type UploadAvatarMutationOptions = Apollo.BaseMutationOptions<UploadAvatarMutation, UploadAvatarMutationVariables>;
+export const AdoptionPostsDocument = gql`
+    query AdoptionPosts($adoptionPostsCursor: String, $adoptionPostsLimit: Int) {
+  adoptionPosts(cursor: $adoptionPostsCursor, limit: $adoptionPostsLimit) {
+    posts {
+      id
+      pet {
+        id
+        name
+        type
+        gender
+        size
+        birthDate
+        images {
+          photoId
+          petId
+          photo {
+            url
+          }
+        }
+      }
+      address {
+        distance
+        country
+        state
+      }
+      createdAt
+      updatedAt
+      user {
+        full_name
+      }
+    }
+    hasMore
+    errors {
+      field
+      message
+      code
+    }
+  }
+}
+    `;
+
+/**
+ * __useAdoptionPostsQuery__
+ *
+ * To run a query within a React component, call `useAdoptionPostsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAdoptionPostsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAdoptionPostsQuery({
+ *   variables: {
+ *      adoptionPostsCursor: // value for 'adoptionPostsCursor'
+ *      adoptionPostsLimit: // value for 'adoptionPostsLimit'
+ *   },
+ * });
+ */
+export function useAdoptionPostsQuery(baseOptions?: Apollo.QueryHookOptions<AdoptionPostsQuery, AdoptionPostsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AdoptionPostsQuery, AdoptionPostsQueryVariables>(AdoptionPostsDocument, options);
+      }
+export function useAdoptionPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AdoptionPostsQuery, AdoptionPostsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AdoptionPostsQuery, AdoptionPostsQueryVariables>(AdoptionPostsDocument, options);
+        }
+export type AdoptionPostsQueryHookResult = ReturnType<typeof useAdoptionPostsQuery>;
+export type AdoptionPostsLazyQueryHookResult = ReturnType<typeof useAdoptionPostsLazyQuery>;
+export type AdoptionPostsQueryResult = Apollo.QueryResult<AdoptionPostsQuery, AdoptionPostsQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
