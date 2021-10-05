@@ -105,7 +105,7 @@ const theme = extendTheme({
       color: 'gray.500',
       fontWeight: '400',
       fontSize: '.85rem',
-      lineHeight: '1',
+      lineHeight: '1.5',
     },
   },
   breakpoints,

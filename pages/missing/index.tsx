@@ -10,6 +10,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import CustomDatePicker from 'components/CustomDatePicker';
+import { MyDropzone } from 'components/CustomDropzone';
 import InputField from 'components/InputField';
 import { Layout } from 'components/Layout';
 import SelectComponent from 'components/SelectFieldComponent';
@@ -125,16 +126,41 @@ const FirstStepComponent = () => {
     </>
   );
 };
+const SecondStepComponent = () => {
+  return (
+    <>
+      <div className={s['horizontal-input-fields']}>
+        <InputField
+          name='about'
+          placeholder='Tell us about your pet'
+          label='About Pet'
+          textarea
+        />
+      </div>
+      <div className={s['horizontal-input-fields']}>
+        <MyDropzone
+          label='Pet Images'
+          name='petImages'
+          helperText='The first image will be used as a thumbnail in case you did not specify one.'
+        />
+      </div>
+    </>
+  );
+};
 const renderFormStep = (step: number) => {
   switch (step) {
     case 1:
       return <FirstStepComponent />;
+    case 2:
+      return <SecondStepComponent />;
   }
 };
 const getStepTitle = (step: number) => {
   switch (step) {
     case 1:
       return 'Pet Information';
+    case 2:
+      return 'Pet Description';
   }
 };
 
@@ -172,7 +198,7 @@ const CreateAdoptionPostModal: React.FC<createPostProps> = ({
               size: null,
               birthDate: null,
               about: null,
-              postImages: [],
+              petImages: [],
               thumbnailIdx: 0,
               address: {
                 lat: null,
@@ -203,6 +229,7 @@ const CreateAdoptionPostModal: React.FC<createPostProps> = ({
             {({ isSubmitting, handleChange, values }) => (
               <Form className={s.form_container}>
                 {renderFormStep(step)}
+                <>{JSON.stringify(values, null, 2)}</>
                 <div className={s.actions_container}>
                   <Button
                     onClick={prevStep}

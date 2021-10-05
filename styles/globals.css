@@ -25,23 +25,6 @@
   --color-link-light: var(--blue-400);
 
   --speed: 300ms;
-
-  /* 
-
-  --color-background: #ffffff;
-  --color-background-dark: #f6f6f6;
-  --color-background-light: #e9e9e9;
-  --color-text: #000000;
-  --color-text-dark: #000000;
-  --color-text-light: #000000;
-  --color-link: #00bcd4;
-  --color-link-dark: #00acc1;
-  --color-link-light: #0097a7;
-  --color-link-hover: #00bcd4;
-  --color-link-hover-dark: #00acc1;
-  --color-link-hover-light: #0097a7;
-  --color-link-active: #00bcd4;
-  --color-link-active-dark: #00acc1; */
 }
 * {
   box-sizing: border-box;
