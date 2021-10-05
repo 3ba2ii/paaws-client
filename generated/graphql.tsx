@@ -109,6 +109,7 @@ export type CreatePetOptions = {
   neutered?: Maybe<Scalars['Boolean']>;
   size: PetSize;
   spayed?: Maybe<Scalars['Boolean']>;
+  thumbnailIdx: Scalars['Int'];
   type: PetType;
   vaccinated?: Maybe<Scalars['Boolean']>;
 };
@@ -253,11 +254,13 @@ export type Pet = {
   createdAt: Scalars['DateTime'];
   gender: PetGender;
   id: Scalars['Int'];
-  images: Array<PetImages>;
+  images?: Maybe<Array<PetImages>>;
   name: Scalars['String'];
   neutered?: Maybe<Scalars['Boolean']>;
   size: PetSize;
   spayed?: Maybe<Scalars['Boolean']>;
+  thumbnail?: Maybe<Photo>;
+  thumbnailId?: Maybe<Scalars['Int']>;
   type: PetType;
   updatedAt: Scalars['DateTime'];
   user: User;
@@ -469,12 +472,12 @@ export type WhereClause = {
 export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> };
 
 export type CreateAdoptionPostMutationVariables = Exact<{
-  createAdoptionPostImages: Array<Scalars['Upload']> | Scalars['Upload'];
-  createAdoptionPostInput: AdoptionPostInput;
+  postInput: AdoptionPostInput;
+  postImages: Array<Scalars['Upload']> | Scalars['Upload'];
 }>;
 
 
-export type CreateAdoptionPostMutation = { __typename?: 'Mutation', createAdoptionPost: { __typename?: 'AdoptionPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, adoptionPost?: Maybe<{ __typename?: 'AdoptionPost', id: number, userId: number }> } };
+export type CreateAdoptionPostMutation = { __typename?: 'Mutation', createAdoptionPost: { __typename?: 'AdoptionPostResponse', adoptionPost?: Maybe<{ __typename?: 'AdoptionPost', id: number }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
@@ -513,12 +516,12 @@ export type UploadAvatarMutationVariables = Exact<{
 export type UploadAvatarMutation = { __typename?: 'Mutation', uploadAvatar: { __typename?: 'UploadImageResponse', url?: Maybe<string>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
 export type AdoptionPostsQueryVariables = Exact<{
-  adoptionPostsCursor?: Maybe<Scalars['String']>;
-  adoptionPostsLimit?: Maybe<Scalars['Int']>;
+  cursor?: Maybe<Scalars['String']>;
+  limit?: Maybe<Scalars['Int']>;
 }>;
 
 
-export type AdoptionPostsQuery = { __typename?: 'Query', adoptionPosts: { __typename?: 'PaginatedAdoptionPosts', hasMore: boolean, posts: Array<{ __typename?: 'AdoptionPost', id: number, createdAt: any, updatedAt: any, pet: { __typename?: 'Pet', id: number, name: string, type: PetType, gender: PetGender, size: PetSize, birthDate: any, images: Array<{ __typename?: 'PetImages', photoId: number, petId: number, photo: { __typename?: 'Photo', url?: Maybe<string> } }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number>, country?: Maybe<string>, state?: Maybe<string> }>, user: { __typename?: 'User', full_name: string } }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+export type AdoptionPostsQuery = { __typename?: 'Query', adoptionPosts: { __typename?: 'PaginatedAdoptionPosts', hasMore: boolean, posts: Array<{ __typename?: 'AdoptionPost', id: number, createdAt: any, updatedAt: any, pet: { __typename?: 'Pet', id: number, name: string, type: PetType, gender: PetGender, size: PetSize, birthDate: any, images?: Maybe<Array<{ __typename?: 'PetImages', photoId: number, petId: number, photo: { __typename?: 'Photo', url?: Maybe<string> } }>> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number>, country?: Maybe<string>, state?: Maybe<string> }>, user: { __typename?: 'User', full_name: string } }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -554,19 +557,15 @@ export const RequiredUserInfoFragmentDoc = gql`
 }
     `;
 export const CreateAdoptionPostDocument = gql`
-    mutation CreateAdoptionPost($createAdoptionPostImages: [Upload!]!, $createAdoptionPostInput: AdoptionPostInput!) {
-  createAdoptionPost(
-    images: $createAdoptionPostImages
-    input: $createAdoptionPostInput
-  ) {
+    mutation CreateAdoptionPost($postInput: AdoptionPostInput!, $postImages: [Upload!]!) {
+  createAdoptionPost(input: $postInput, images: $postImages) {
+    adoptionPost {
+      id
+    }
     errors {
       field
       message
       code
-    }
-    adoptionPost {
-      id
-      userId
     }
   }
 }
@@ -586,8 +585,8 @@ export type CreateAdoptionPostMutationFn = Apollo.MutationFunction<CreateAdoptio
  * @example
  * const [createAdoptionPostMutation, { data, loading, error }] = useCreateAdoptionPostMutation({
  *   variables: {
- *      createAdoptionPostImages: // value for 'createAdoptionPostImages'
- *      createAdoptionPostInput: // value for 'createAdoptionPostInput'
+ *      postInput: // value for 'postInput'
+ *      postImages: // value for 'postImages'
  *   },
  * });
  */
@@ -787,8 +786,8 @@ export type UploadAvatarMutationHookResult = ReturnType<typeof useUploadAvatarMu
 export type UploadAvatarMutationResult = Apollo.MutationResult<UploadAvatarMutation>;
 export type UploadAvatarMutationOptions = Apollo.BaseMutationOptions<UploadAvatarMutation, UploadAvatarMutationVariables>;
 export const AdoptionPostsDocument = gql`
-    query AdoptionPosts($adoptionPostsCursor: String, $adoptionPostsLimit: Int) {
-  adoptionPosts(cursor: $adoptionPostsCursor, limit: $adoptionPostsLimit) {
+    query AdoptionPosts($cursor: String, $limit: Int) {
+  adoptionPosts(cursor: $cursor, limit: $limit) {
     posts {
       id
       pet {
@@ -839,8 +838,8 @@ export const AdoptionPostsDocument = gql`
  * @example
  * const { data, loading, error } = useAdoptionPostsQuery({
  *   variables: {
- *      adoptionPostsCursor: // value for 'adoptionPostsCursor'
- *      adoptionPostsLimit: // value for 'adoptionPostsLimit'
+ *      cursor: // value for 'cursor'
+ *      limit: // value for 'limit'
  *   },
  * });
  */

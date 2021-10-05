@@ -1,19 +1,15 @@
 mutation CreateAdoptionPost(
-  $createAdoptionPostImages: [Upload!]!
-  $createAdoptionPostInput: AdoptionPostInput!
+  $postInput: AdoptionPostInput!
+  $postImages: [Upload!]!
 ) {
-  createAdoptionPost(
-    images: $createAdoptionPostImages
-    input: $createAdoptionPostInput
-  ) {
+  createAdoptionPost(input: $postInput, images: $postImages) {
+    adoptionPost {
+      id
+    }
     errors {
       field
       message
       code
-    }
-    adoptionPost {
-      id
-      userId
     }
   }
 }

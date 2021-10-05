@@ -24,8 +24,10 @@
     "next-with-apollo": "^5.2.1",
     "react": "17.0.2",
     "react-confetti": "^6.0.1",
+    "react-datepicker": "^4.2.1",
     "react-dom": "17.0.2",
     "react-icons": "^4.2.0",
+    "react-select": "^5.0.0",
     "react-transition-group": "^4.4.2",
     "yup": "^0.32.9"
   },
@@ -37,6 +39,7 @@
     "@types/apollo-upload-client": "^14.1.0",
     "@types/google.maps": "^3.45.6",
     "@types/react": "17.0.21",
+    "@types/react-datepicker": "^4.1.7",
     "@types/react-transition-group": "^4.4.3",
     "eslint": "7.32.0",
     "eslint-config-next": "11.1.2",

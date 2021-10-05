@@ -1,5 +1,5 @@
-query AdoptionPosts($adoptionPostsCursor: String, $adoptionPostsLimit: Int) {
-  adoptionPosts(cursor: $adoptionPostsCursor, limit: $adoptionPostsLimit) {
+query AdoptionPosts($cursor: String, $limit: Int) {
+  adoptionPosts(cursor: $cursor, limit: $limit) {
     posts {
       id
       pet {
