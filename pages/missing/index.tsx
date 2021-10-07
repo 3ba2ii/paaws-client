@@ -8,13 +8,17 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  Box,
+  Flex,
+  FormHelperText,
 } from '@chakra-ui/react';
 import CustomDatePicker from 'components/CustomDatePicker';
 import { MyDropzone } from 'components/CustomDropzone';
+import CustomSwitch from 'components/CustomSwitch';
 import InputField from 'components/InputField';
 import { Layout } from 'components/Layout';
 import SelectComponent from 'components/SelectFieldComponent';
-import { Form, Formik } from 'formik';
+import { Form, Formik, useFormikContext } from 'formik';
 import {
   Breeds,
   PetGender,
@@ -22,11 +26,13 @@ import {
   PetType,
   useAdoptionPostsQuery,
 } from 'generated/graphql';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FaChevronRight } from 'react-icons/fa';
 import s from 'styles/createPostForm.module.css';
 import withApollo from 'utils/withApollo';
-
+import Image from 'next/image';
+import CustomLocationPicker from 'components/GenericLocationPicker';
+import { LocationType } from 'pages/types';
 interface createPostProps {
   isOpen: boolean;
   onClose: () => void;
@@ -127,23 +133,140 @@ const FirstStepComponent = () => {
   );
 };
 const SecondStepComponent = () => {
+  const { values }: { values: any } = useFormikContext();
   return (
     <>
-      <div className={s['horizontal-input-fields']}>
-        <InputField
-          name='about'
-          placeholder='Tell us about your pet'
-          label='About Pet'
-          textarea
+      <InputField
+        name='about'
+        placeholder='Tell us about your pet'
+        label='About Pet'
+        textarea
+      />
+      <MyDropzone
+        label='Pet Images'
+        name='petImages'
+        helperText='The first image will be used as a thumbnail in case you did not specify one.'
+      />
+      <Flex flexDirection='row' gridGap={2}>
+        <CustomSwitch
+          label='Vaccinated?'
+          defaultValue={false}
+          name='vaccinated'
+          required={false}
+          helpIcon
+          helperText='💉 Select if your pet is vaccinated up-to-date'
         />
-      </div>
-      <div className={s['horizontal-input-fields']}>
-        <MyDropzone
-          label='Pet Images'
-          name='petImages'
-          helperText='The first image will be used as a thumbnail in case you did not specify one.'
-        />
-      </div>
+        {values.gender === 'Female' && (
+          <CustomSwitch
+            label='Spayed?'
+            defaultValue={false}
+            name='spayed'
+            required={false}
+            helpIcon
+            helperText='Female Animals must be spayed before they are given up for adoption'
+          />
+        )}
+        {values.gender === 'Male' && (
+          <CustomSwitch
+            label='Neutered?'
+            defaultValue={false}
+            name='neutered'
+            required={false}
+            helpIcon
+            helperText='Male Animals must be neutered before they are given up for adoption'
+          />
+        )}
+      </Flex>
+    </>
+  );
+};
+const ThirdStepComponent = () => {
+  const [selected, setSelected] = useState<number | null>(null);
+
+  const form = useFormikContext();
+  //This step include user'preferred location
+  const handleLocationChange = (coords: LocationType) => {
+    console.log(
+      `🚀 ~ file: index.tsx ~ line 187 ~ handleLocationChange ~ coords`,
+      coords
+    );
+    form.setFieldValue('address', {
+      ...coords,
+    });
+  };
+  const handleShowMap = () => {
+    setSelected(1);
+    //recompute the height by adding a specific proprety to class name
+    const element = document.getElementById(
+      'chakra-modal-post-modal-container'
+    );
+
+    if (element) {
+      element.style.height = '100%';
+    }
+  };
+  const handleSelectCurrentLocation = () => {
+    const element = document.getElementById(
+      'chakra-modal-post-modal-container'
+    );
+    console.log(
+      `🚀 ~ file: index.tsx ~ line 212 ~ handleSelectCurrentLocation ~ element`,
+      element
+    );
+
+    if (element) {
+      element.style.height = 'min-content';
+    }
+  };
+
+  return (
+    <>
+      <Box>
+        <Text textStyle='h5'> Location Preferences</Text>
+        <Text textStyle='p3'>Deserunt ex excepteur velit quis sit magna.</Text>
+      </Box>
+      {/* Select between current location or add new location*/}
+      <section className={s.locationSelection}>
+        <div
+          className={`${s.card} ${selected === 0 ? s.selectedLocation : ''}`}
+          onClick={() => {
+            setSelected(0);
+            handleSelectCurrentLocation();
+          }}
+        >
+          <Image
+            src='/illustrations/gummy-sweet-home.svg'
+            width={'100%'}
+            height={'100%'}
+          />
+          <Text textStyle='p1' color={selected === 0 ? 'blue.600' : 'gray.500'}>
+            My Location
+          </Text>
+        </div>
+        <div
+          className={`${s.card} ${selected === 1 ? s.selectedLocation : ''}`}
+          onClick={handleShowMap}
+        >
+          <Image
+            src='/illustrations/gummy-location.svg'
+            width={'100%'}
+            height={'100%'}
+          />
+          <Text textStyle='p1' color={selected === 1 ? 'blue.600' : 'gray.500'}>
+            Add new Location
+          </Text>
+        </div>
+      </section>
+      {/* Location Maps */}
+      {selected === 1 ? (
+        <div style={{ height: '100%', width: '100%' }}>
+          <CustomLocationPicker
+            includeMarker
+            includeAutoComplete
+            handleLocationChange={handleLocationChange}
+          />
+        </div>
+      ) : null}
     </>
   );
 };
@@ -153,6 +276,9 @@ const renderFormStep = (step: number) => {
       return <FirstStepComponent />;
     case 2:
       return <SecondStepComponent />;
+
+    case 3:
+      return <ThirdStepComponent />;
   }
 };
 const getStepTitle = (step: number) => {
@@ -161,6 +287,9 @@ const getStepTitle = (step: number) => {
       return 'Pet Information';
     case 2:
       return 'Pet Description';
+
+    case 3:
+      return 'Preferences';
   }
 };
 
@@ -169,17 +298,27 @@ const CreateAdoptionPostModal: React.FC<createPostProps> = ({
   onClose,
 }) => {
   const [step, setStep] = useState<number>(1);
+  const modalRef = useRef(null);
 
   const prevStep = () => {
+    if (step === 1) {
+      onClose();
+    }
     setStep(Math.max(step - 1, 1));
   };
   const nextStep = () => {
     setStep(Math.min(step + 1, 3));
   };
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size='xl'>
+    <Modal
+      closeOnOverlayClick={false}
+      isOpen={isOpen}
+      onClose={onClose}
+      size='2xl'
+      id={'post-modal-container'}
+    >
       <ModalOverlay />
-      <ModalContent className={s.modal_container}>
+      <ModalContent ref={modalRef} className={s.modal_container}>
         <ModalHeader>
           <Text textStyle='p3'>{`Create adoption post (step ${step} of 3)`}</Text>
           <Text textStyle='h4'> {getStepTitle(step)}</Text>
@@ -215,6 +354,7 @@ const CreateAdoptionPostModal: React.FC<createPostProps> = ({
             ) => {
               if (step === 3) {
                 //submit form
+                console.log(step);
                 return;
               } else {
                 if (step === 1) {
@@ -222,14 +362,17 @@ const CreateAdoptionPostModal: React.FC<createPostProps> = ({
                     return;
                   }
                 }
-                nextStep();
               }
+              console.log(step);
+
+              nextStep();
             }}
           >
             {({ isSubmitting, handleChange, values }) => (
               <Form className={s.form_container}>
-                {renderFormStep(step)}
-                <>{JSON.stringify(values, null, 2)}</>
+                <>{renderFormStep(step)}</>
+                {/* <>{JSON.stringify(values, null, 2)}</> */}
+                {/* <>{JSON.stringify(step, null, 2)}</> */}
                 <div className={s.actions_container}>
                   <Button
                     onClick={prevStep}

@@ -6,7 +6,6 @@ import {
 } from '@chakra-ui/form-control';
 import { Text } from '@chakra-ui/layout';
 import { useField, useFormikContext } from 'formik';
-import { Input } from '@chakra-ui/react';
 import React from 'react';
 import Select from 'react-select';
 

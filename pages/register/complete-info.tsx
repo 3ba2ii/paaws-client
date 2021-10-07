@@ -111,26 +111,19 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
       >
         <Heading
           position='absolute'
-          top='-60px'
+          top='-90px'
           left='0'
           as='h1'
           size='md'
           mb={4}
         >
-          <Text as='span' color='teal.400'>
+          <Text as='span' textStyle='h4' color='teal.400'>
             Step {step + 1}:{' '}
           </Text>
-          <Text as='span'>
+          <Text as='span' textStyle='h4'>
             {step === 0 ? 'Tell us more about yourself' : 'Set your Location'}
           </Text>
-          <Text
-            maxW='60ch'
-            as='p'
-            color='gray.500'
-            fontWeight='400'
-            fontSize='14px'
-            mt={2}
-          >
+          <Text maxW='60ch' as='p' textStyle='p2'>
             {step === 1
               ? ` We will be using your location to send you notifications if a pet
             was lost or found near you, you can turn off these notifications
