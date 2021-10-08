@@ -61,6 +61,7 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
   ...props
 }) => {
   const [field, { error, touched }] = useField(props);
+  console.log(`🚀 ~ file: CustomDropzone.tsx ~ line 64 ~ error`, error);
   const form = useFormikContext();
 
   const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
@@ -161,6 +162,7 @@ const PreviewComponent: React.FC<{
     <ul className={s.preview_container}>
       {values.map((file: File, idx: number) => (
         <li
+          key={idx}
           className={`${s.preview_item} ${
             thumbnailIdx === idx ? s.selected : ''
           }`}

@@ -18,6 +18,7 @@ interface CustomDatePickerProps {
   label: string;
   required?: boolean;
   helperText?: string;
+  defaultValue?: Date;
 }
 
 const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
@@ -25,6 +26,7 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   placeholder,
   helperText,
   required = true,
+  defaultValue,
   ...props
 }) => {
   const isLight = useColorMode().colorMode === 'light'; //you can check what theme you are using right now however you want
@@ -32,7 +34,8 @@ const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   const form = useFormikContext();
 
   const onChange = (value: any) => {
-    form.setFieldValue(field.name, value);
+    console.log(field.name);
+    form.setFieldValue(field.name, new Date(value));
   };
 
   return (

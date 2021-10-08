@@ -1,6 +1,8 @@
 import { getDataFromTree } from '@apollo/client/react/ssr';
 import {
+  Box,
   Button,
+  Flex,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -8,13 +10,11 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  Box,
-  Flex,
-  FormHelperText,
 } from '@chakra-ui/react';
 import CustomDatePicker from 'components/CustomDatePicker';
 import { MyDropzone } from 'components/CustomDropzone';
 import CustomSwitch from 'components/CustomSwitch';
+import CustomLocationPicker from 'components/GenericLocationPicker';
 import InputField from 'components/InputField';
 import { Layout } from 'components/Layout';
 import SelectComponent from 'components/SelectFieldComponent';
@@ -25,14 +25,16 @@ import {
   PetSize,
   PetType,
   useAdoptionPostsQuery,
+  useCreateAdoptionPostMutation,
 } from 'generated/graphql';
-import React, { useRef, useState } from 'react';
+import Image from 'next/image';
+import { LocationType } from 'pages/types';
+import React, { useState } from 'react';
 import { FaChevronRight } from 'react-icons/fa';
 import s from 'styles/createPostForm.module.css';
+import { CreatePostSchema } from 'utils/constants/YupSchemas';
+import { toErrorMap } from 'utils/toErrorMap';
 import withApollo from 'utils/withApollo';
-import Image from 'next/image';
-import CustomLocationPicker from 'components/GenericLocationPicker';
-import { LocationType } from 'pages/types';
 interface createPostProps {
   isOpen: boolean;
   onClose: () => void;
@@ -73,9 +75,9 @@ const FirstStepComponent = () => {
           name='type'
           required
           placeholder='Cat'
-          options={Object.keys(PetType).map((key) => ({
+          options={Object.entries(PetType).map(([key, value]) => ({
             label: key,
-            value: key,
+            value,
           }))}
         />
       </div>
@@ -86,9 +88,9 @@ const FirstStepComponent = () => {
           name='size'
           required
           placeholder='Mini'
-          options={Object.keys(PetSize).map((key) => ({
+          options={Object.entries(PetSize).map(([key, value]) => ({
             label: key,
-            value: key,
+            value,
           }))}
         />
         <SelectComponent
@@ -96,9 +98,9 @@ const FirstStepComponent = () => {
           name='gender'
           required
           placeholder='Male or Female'
-          options={Object.keys(PetGender).map((key) => ({
+          options={Object.entries(PetGender).map(([key, value]) => ({
             label: key,
-            value: key,
+            value,
           }))}
         />
       </div>
@@ -109,9 +111,9 @@ const FirstStepComponent = () => {
         isMulti
         placeholder='Please select all breeds'
         helperText='If your pet is a mixture of breeds, please select all of them'
-        options={Object.keys(Breeds).map((key) => ({
+        options={Object.entries(Breeds).map(([key, value]) => ({
           label: key,
-          value: key,
+          value,
         }))}
       />
 
@@ -121,13 +123,17 @@ const FirstStepComponent = () => {
           name='colors'
           required
           placeholder='Mini'
-          options={Object.keys(PetSize).map((key) => ({
+          options={Object.entries(PetSize).map(([key, value]) => ({
             label: key,
-            value: key,
+            value,
           }))}
         />
 
-        <CustomDatePicker label='Age' name='age' placeholder='mm/dd/yyyy' />
+        <CustomDatePicker
+          label='Birth Date'
+          name='birthDate'
+          placeholder='mm/dd/yyyy'
+        />
       </div>
     </>
   );
@@ -156,7 +162,7 @@ const SecondStepComponent = () => {
           helpIcon
           helperText='💉 Select if your pet is vaccinated up-to-date'
         />
-        {values.gender === 'Female' && (
+        {values.gender === 'FEMALE' && (
           <CustomSwitch
             label='Spayed?'
             defaultValue={false}
@@ -166,7 +172,7 @@ const SecondStepComponent = () => {
             helperText='Female Animals must be spayed before they are given up for adoption'
           />
         )}
-        {values.gender === 'Male' && (
+        {values.gender === 'MALE' && (
           <CustomSwitch
             label='Neutered?'
             defaultValue={false}
@@ -186,10 +192,6 @@ const ThirdStepComponent = () => {
   const form = useFormikContext();
   //This step include user'preferred location
   const handleLocationChange = (coords: LocationType) => {
-    console.log(
-      `🚀 ~ file: index.tsx ~ line 187 ~ handleLocationChange ~ coords`,
-      coords
-    );
     form.setFieldValue('address', {
       ...coords,
     });
@@ -287,7 +289,6 @@ const getStepTitle = (step: number) => {
       return 'Pet Information';
     case 2:
       return 'Pet Description';
-
     case 3:
       return 'Preferences';
   }
@@ -298,7 +299,7 @@ const CreateAdoptionPostModal: React.FC<createPostProps> = ({
   onClose,
 }) => {
   const [step, setStep] = useState<number>(1);
-  const modalRef = useRef(null);
+  const [createAdoptionPost] = useCreateAdoptionPostMutation();
 
   const prevStep = () => {
     if (step === 1) {
@@ -318,7 +319,7 @@ const CreateAdoptionPostModal: React.FC<createPostProps> = ({
       id={'post-modal-container'}
     >
       <ModalOverlay />
-      <ModalContent ref={modalRef} className={s.modal_container}>
+      <ModalContent className={s.modal_container}>
         <ModalHeader>
           <Text textStyle='p3'>{`Create adoption post (step ${step} of 3)`}</Text>
           <Text textStyle='h4'> {getStepTitle(step)}</Text>
@@ -329,7 +330,7 @@ const CreateAdoptionPostModal: React.FC<createPostProps> = ({
 
           <Formik
             initialValues={{
-              name: null,
+              name: '',
               type: null,
               gender: null,
               breeds: [],
@@ -338,6 +339,9 @@ const CreateAdoptionPostModal: React.FC<createPostProps> = ({
               birthDate: null,
               about: null,
               petImages: [],
+              neutered: false,
+              vaccinated: false,
+              spayed: false,
               thumbnailIdx: 0,
               address: {
                 lat: null,
@@ -348,20 +352,80 @@ const CreateAdoptionPostModal: React.FC<createPostProps> = ({
                 zip: null,
               },
             }}
+            validationSchema={CreatePostSchema}
             onSubmit={async (
-              { name, type, gender, breeds, size },
+              {
+                name,
+                type,
+                gender,
+                breeds,
+                about,
+                size,
+                address,
+                petImages,
+                thumbnailIdx,
+                neutered,
+                vaccinated,
+                spayed,
+                birthDate,
+              },
               { setErrors }
             ) => {
               if (step === 3) {
+                const { lat, lng } = address;
+                if (
+                  !lat ||
+                  !lng ||
+                  !name ||
+                  !type ||
+                  !gender ||
+                  !breeds.length ||
+                  !size ||
+                  !about ||
+                  !birthDate
+                )
+                  return;
                 //submit form
-                console.log(step);
-                return;
-              } else {
-                if (step === 1) {
-                  if (!name || !type || !gender || !breeds.length || !size) {
-                    return;
-                  }
+                console.log('hello world');
+                //TODO: Update cache after creating post
+                const { data } = await createAdoptionPost({
+                  variables: {
+                    petImages,
+                    postInput: {
+                      address: {
+                        lat,
+                        lng,
+                      },
+                      petInfo: {
+                        name,
+                        type,
+                        size,
+                        breeds,
+                        about,
+                        gender,
+                        thumbnailIdx,
+                        neutered,
+                        vaccinated,
+                        spayed,
+                        birthDate,
+                      },
+                    },
+                  },
+                });
+                if (!data) return;
+                if (data?.createAdoptionPost.errors?.length) {
+                  const errorsMapped = toErrorMap(
+                    data.createAdoptionPost.errors
+                  );
+                  return setErrors(errorsMapped);
                 }
+
+                const { adoptionPost } = data.createAdoptionPost;
+                console.log(
+                  `🚀 ~ file: index.tsx ~ line 429 ~ adoptionPost`,
+                  adoptionPost
+                );
+                return onClose();
               }
               console.log(step);
 
@@ -371,7 +435,7 @@ const CreateAdoptionPostModal: React.FC<createPostProps> = ({
             {({ isSubmitting, handleChange, values }) => (
               <Form className={s.form_container}>
                 <>{renderFormStep(step)}</>
-                {/* <>{JSON.stringify(values, null, 2)}</> */}
+                <>{JSON.stringify(values, null, 2)}</>
                 {/* <>{JSON.stringify(step, null, 2)}</> */}
                 <div className={s.actions_container}>
                   <Button
@@ -393,6 +457,7 @@ const CreateAdoptionPostModal: React.FC<createPostProps> = ({
                     minH='36px'
                     bgColor='teal.400'
                     rightIcon={<FaChevronRight size='12px' />}
+                    isLoading={isSubmitting}
                   >
                     Next
                   </Button>

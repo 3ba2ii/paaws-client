@@ -472,12 +472,12 @@ export type WhereClause = {
 export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> };
 
 export type CreateAdoptionPostMutationVariables = Exact<{
+  petImages: Array<Scalars['Upload']> | Scalars['Upload'];
   postInput: AdoptionPostInput;
-  postImages: Array<Scalars['Upload']> | Scalars['Upload'];
 }>;
 
 
-export type CreateAdoptionPostMutation = { __typename?: 'Mutation', createAdoptionPost: { __typename?: 'AdoptionPostResponse', adoptionPost?: Maybe<{ __typename?: 'AdoptionPost', id: number }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+export type CreateAdoptionPostMutation = { __typename?: 'Mutation', createAdoptionPost: { __typename?: 'AdoptionPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, adoptionPost?: Maybe<{ __typename?: 'AdoptionPost', id: number, userId: number, petId: number, createdAt: any, updatedAt: any, pet: { __typename?: 'Pet', id: number, name: string }, user: { __typename?: 'User', id: number, email: string }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }> }> } };
 
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
@@ -557,15 +557,30 @@ export const RequiredUserInfoFragmentDoc = gql`
 }
     `;
 export const CreateAdoptionPostDocument = gql`
-    mutation CreateAdoptionPost($postInput: AdoptionPostInput!, $postImages: [Upload!]!) {
-  createAdoptionPost(input: $postInput, images: $postImages) {
-    adoptionPost {
-      id
-    }
+    mutation CreateAdoptionPost($petImages: [Upload!]!, $postInput: AdoptionPostInput!) {
+  createAdoptionPost(images: $petImages, input: $postInput) {
     errors {
       field
       message
       code
+    }
+    adoptionPost {
+      id
+      userId
+      petId
+      pet {
+        id
+        name
+      }
+      user {
+        id
+        email
+      }
+      address {
+        distance
+      }
+      createdAt
+      updatedAt
     }
   }
 }
@@ -585,8 +600,8 @@ export type CreateAdoptionPostMutationFn = Apollo.MutationFunction<CreateAdoptio
  * @example
  * const [createAdoptionPostMutation, { data, loading, error }] = useCreateAdoptionPostMutation({
  *   variables: {
+ *      petImages: // value for 'petImages'
  *      postInput: // value for 'postInput'
- *      postImages: // value for 'postImages'
  *   },
  * });
  */
