@@ -75,9 +75,8 @@ export type AdoptionPostUpdateInput = {
   breeds?: Maybe<Array<Breeds>>;
   gender?: Maybe<PetGender>;
   name?: Maybe<Scalars['String']>;
-  neutered?: Maybe<Scalars['Boolean']>;
   size?: Maybe<PetSize>;
-  spayed?: Maybe<Scalars['Boolean']>;
+  spayedOrNeutered?: Maybe<Scalars['Boolean']>;
   type?: Maybe<PetType>;
   vaccinated?: Maybe<Scalars['Boolean']>;
 };
@@ -106,9 +105,8 @@ export type CreatePetOptions = {
   breeds: Array<Breeds>;
   gender: PetGender;
   name: Scalars['String'];
-  neutered?: Maybe<Scalars['Boolean']>;
   size: PetSize;
-  spayed?: Maybe<Scalars['Boolean']>;
+  spayedOrNeutered?: Maybe<Scalars['Boolean']>;
   thumbnailIdx: Scalars['Int'];
   type: PetType;
   vaccinated?: Maybe<Scalars['Boolean']>;
@@ -256,9 +254,8 @@ export type Pet = {
   id: Scalars['Int'];
   images?: Maybe<Array<PetImages>>;
   name: Scalars['String'];
-  neutered?: Maybe<Scalars['Boolean']>;
   size: PetSize;
-  spayed?: Maybe<Scalars['Boolean']>;
+  spayedOrNeutered?: Maybe<Scalars['Boolean']>;
   thumbnail?: Maybe<Photo>;
   thumbnailId?: Maybe<Scalars['Int']>;
   type: PetType;
