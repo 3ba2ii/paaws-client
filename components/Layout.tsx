@@ -43,6 +43,7 @@ export const Layout = ({
         justifyContent='flex-start'
         bg={bgColor[colorMode]}
         color={color[colorMode]}
+        height='100%'
       >
         <NavBar />
         <Box className={styles.main}>{children}</Box>

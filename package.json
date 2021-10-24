@@ -17,6 +17,7 @@
     "@emotion/styled": "^11.3.0",
     "@react-google-maps/api": "^2.4.0",
     "apollo-upload-client": "^16.0.0",
+    "date-fns": "^2.25.0",
     "formik": "^2.2.9",
     "framer-motion": "^4",
     "graphql": "^15.6.0",

@@ -5,16 +5,14 @@ query AdoptionPosts($cursor: String, $limit: Int) {
       pet {
         id
         name
-        type
         gender
         size
         birthDate
-        images {
-          photoId
-          petId
-          photo {
-            url
-          }
+        breeds {
+          breed
+        }
+        thumbnail {
+          url
         }
       }
       address {
@@ -24,9 +22,6 @@ query AdoptionPosts($cursor: String, $limit: Int) {
       }
       createdAt
       updatedAt
-      user {
-        full_name
-      }
     }
     hasMore
     errors {

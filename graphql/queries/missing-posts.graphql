@@ -1,0 +1,24 @@
+query MissingPostsQuery {
+  missingPosts {
+    id
+    title
+    description
+    user {
+      id
+      full_name
+      avatar {
+        url
+      }
+    }
+    address {
+      distance
+    }
+    points
+
+    thumbnail {
+      url
+    }
+    createdAt
+    updatedAt
+  }
+}

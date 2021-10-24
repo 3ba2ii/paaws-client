@@ -7,7 +7,6 @@ import {
 import { Input } from '@chakra-ui/input';
 import { Textarea } from '@chakra-ui/textarea';
 import { useField } from 'formik';
-import { Text } from '@chakra-ui/layout';
 import React, { InputHTMLAttributes } from 'react';
 
 type InputFieldProps = InputHTMLAttributes<

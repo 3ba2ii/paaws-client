@@ -1,0 +1,21 @@
+mutation CreateMissingPost(
+  $input: CreateMissingPostInput!
+  $images: [Upload!]!
+) {
+  createMissingPost(input: $input, images: $images) {
+    errors {
+      field
+      message
+      code
+    }
+    post {
+      id
+      addressId
+      address {
+        id
+      }
+      updatedAt
+      createdAt
+    }
+  }
+}

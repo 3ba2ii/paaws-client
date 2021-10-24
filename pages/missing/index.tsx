@@ -1,111 +1,222 @@
-import { getDataFromTree } from '@apollo/client/react/ssr';
-import { Button } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import {
-  Breeds,
-  PetGender,
-  PetSize,
-  PetType,
-  useAdoptionPostsQuery,
-} from 'generated/graphql';
-import React, { useState } from 'react';
+  Container,
+  Text,
+  Heading,
+  Flex,
+  Grid,
+  GridItem,
+  Box,
+} from '@chakra-ui/layout';
+import React, { useMemo } from 'react';
 import withApollo from 'utils/withApollo';
-import { CreateAdoptionPostModal } from './_createPostModal';
-export interface createPostProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-interface postInputProps {
-  name: string | null;
-  type: PetType | null;
-  gender: PetGender | null;
-  breeds: [Breeds] | [];
-  size: PetSize | null;
-  birthDate: Date | null;
-  about: string | null;
-  postImages: FileList | [];
-  thumbnailIdx: number | null;
-  address: {
-    lat: number | null;
-    lng: number | null;
-    country: string | null;
-    city: string | null;
-    street: string | null;
-    zip: number | null;
+import { getDataFromTree } from '@apollo/client/react/ssr';
+import {
+  Maybe,
+  MissingPost,
+  Photo,
+  useMissingPostsQueryQuery,
+  User,
+} from 'generated/graphql';
+import {
+  Image,
+  Avatar,
+  IconButton,
+  Button,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import { ArrowUpIcon, ArrowDownIcon } from '@chakra-ui/icons';
+import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { formatDistance } from 'date-fns';
+
+interface SinglePostProps {
+  id: number;
+  title: string;
+  description: string;
+  thumbnail?: Partial<Photo> | null;
+  points: number;
+  createdAt: string;
+  user: {
+    id: number;
+    full_name: string;
+    avatar?: Maybe<{ __typename?: 'Photo'; url?: Maybe<string> }>;
   };
 }
 
-const MissingPage: React.FC = ({}) => {
-  const { data, error, loading, fetchMore, variables } = useAdoptionPostsQuery({
-    variables: {
-      limit: 2,
-      cursor: null,
-    },
-    notifyOnNetworkStatusChange: true,
-  });
-  const [openModal, setOpenModal] = useState(false);
+const SinglePost: React.FC<SinglePostProps> = ({
+  title,
+  description,
+  thumbnail,
+  createdAt,
+  points,
+  user,
+}) => {
+  const thumbnailImage = thumbnail?.url || '';
 
-  if (loading) {
-    return <Layout>Loading...</Layout>;
-  }
-  //Not Loading case but there is an error
-  if (error || data?.adoptionPosts?.errors?.length) {
-    return <Layout>Error</Layout>;
-  }
-
-  //No errors but no posts
-  if (!data?.adoptionPosts?.posts?.length) {
-    return <Layout>No posts</Layout>;
-  }
-
-  const { hasMore, posts } = data.adoptionPosts;
-
+  const { id, full_name, avatar } = user;
+  const createdAtDistance = useMemo(
+    () => formatDistance(new Date(createdAt), new Date(), { addSuffix: true }),
+    [createdAt]
+  );
   return (
-    <Layout>
-      <h1>Missing Page</h1>
-      <ul>
-        {posts.map(({ id, pet, createdAt, user, address }) => {
-          const { name, size, gender, images, birthDate, type } = pet;
-
-          return (
-            <li key={id}>
-              {id}-{name}
-            </li>
-          );
-        })}
-      </ul>
-      {hasMore && (
-        <Button
-          onClick={() => {
-            const latestCreatedAt = posts[posts.length - 1].createdAt;
-            fetchMore({
-              variables: {
-                limit: variables?.limit,
-                cursor: latestCreatedAt,
-              },
-            });
-          }}
-        >
-          Load More
-        </Button>
-      )}
-      <Button
-        onClick={() => {
-          setOpenModal(true);
-        }}
+    <Flex
+      key={id}
+      flexDirection={['column', 'row']}
+      p={['0px', '12px']}
+      boxShadow='md'
+      border='1px'
+      borderColor={useColorModeValue('gray.200', 'gray.700')}
+      h='100%'
+      w='100%'
+      borderRadius={'10px'}
+      overflow='hidden'
+    >
+      <Box
+        w={['100%', '250px']}
+        mr={4}
+        borderTopLeftRadius={['0px', '10px']}
+        borderBottomLeftRadius={['0px', '10px']}
+        overflow='hidden'
+        boxShadow='md'
       >
-        Create Post
-      </Button>
-      {openModal && (
-        <CreateAdoptionPostModal
-          {...{
-            isOpen: openModal,
-            onClose: () => setOpenModal(false),
-          }}
+        <Image
+          src={thumbnailImage}
+          alt={title}
+          w='100%'
+          h='100%'
+          objectFit='cover'
+          fallbackSrc='https://www.cdc.gov/healthypets/images/pets/cute-dog-headshot.jpg?_=42445'
         />
-      )}
-    </Layout>
+      </Box>
+      <Flex
+        flexDirection='column'
+        justify='space-between'
+        w='100%'
+        overflow='hidden'
+        p={['10px 16px', '0px']}
+      >
+        <Flex flexDirection='column' w='100%' sx={{ gap: '6px' }}>
+          <Flex alignItems='center' justifyContent='space-between' w='100%'>
+            <Text
+              textStyle='h5'
+              maxW='50ch'
+              color={useColorModeValue('gray.700', 'gray.400')}
+            >
+              {title} Cupidatat pariatur anim id sunt sit et sit{' '}
+            </Text>
+            <Text textStyle='p3' fontSize={'11px'} textAlign={'center'}>
+              {createdAtDistance}
+            </Text>
+          </Flex>
+          <Flex align='center' sx={{ gap: '6px' }}>
+            <Avatar size='xs' name={full_name} src={avatar?.url || ''} />
+            <Text fontSize='14px' fontWeight='normal' color='gray.500'>
+              Posted by{' '}
+              <Text
+                aria-label='name'
+                as='a'
+                href={`localhost:3000/user/${full_name}`}
+                color='blue.500'
+                fontWeight='medium'
+              >
+                {full_name}
+              </Text>
+            </Text>
+          </Flex>
+          <Text as='p' textStyle='p1' maxW={'70ch'} fontWeight='normal'>
+            {description}
+            Labore voluptate ex eiusmod
+          </Text>
+        </Flex>
+        <Flex align='center' sx={{ gap: '6px' }} color='#A0AEC0'>
+          <Button variant={'ghost'} p='2px'>
+            <FaChevronUp width={'100%'} />
+          </Button>
+          <Text color='gray.500' textStyle='p1'>
+            {points}
+          </Text>
+          <Button variant={'ghost'} p='2px'>
+            <FaChevronDown />
+          </Button>
+        </Flex>
+      </Flex>
+    </Flex>
   );
 };
 
+/* Missing Posts Grid Container */
+const MissingPostsGridContainer = () => {
+  const { data, loading } = useMissingPostsQueryQuery();
+
+  if (loading) return <div>Loading...</div>;
+  if (!data) return <div>No data</div>;
+  const posts = data.missingPosts;
+  return (
+    <Grid
+      templateRows={[
+        `repeat(${posts.length}, fit-content),repeat(${posts.length}, 200px)`,
+      ]}
+      gap={'24px'}
+    >
+      {posts.map(
+        ({ id, title, description, points, user, createdAt, thumbnail }) => {
+          return (
+            <GridItem w='100%' h='100%' key={id}>
+              <SinglePost
+                {...{
+                  id,
+                  title,
+                  description,
+                  points,
+                  createdAt,
+                  user,
+                  thumbnail,
+                }}
+              />
+            </GridItem>
+          );
+        }
+      )}
+    </Grid>
+  );
+};
+
+interface MissingPageProps {}
+
+const MissingPage: React.FC<MissingPageProps> = ({}) => {
+  return (
+    <Layout title='Missing Pets - Paaws'>
+      {/* This will be divided into 2 sections
+        1. Filters Section (32% width)     
+        2. Pet Listing Section (68% width)
+      */}
+      <Container maxW={['100%', '900px']}>
+        <Grid
+          templateColumns='1fr'
+          templateRows='1fr auto'
+          placeContent={'center'}
+          w='100%'
+          h='100%'
+          gap={'24px'}
+        >
+          <GridItem ml='auto'>
+            <Flex sx={{ gap: '16px' }}>
+              <Button
+                rightIcon={<FaChevronDown />}
+                variant='outline'
+                aria-label='sorting'
+              >
+                Most Recent
+              </Button>
+              <Button colorScheme={'teal'}>Report Missing Pet</Button>
+            </Flex>
+          </GridItem>
+          <GridItem>
+            <MissingPostsGridContainer />
+          </GridItem>
+        </Grid>
+      </Container>
+    </Layout>
+  );
+};
 export default withApollo(MissingPage, { getDataFromTree });
