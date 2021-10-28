@@ -1,4 +1,4 @@
-import { Box, Flex, useColorMode } from '@chakra-ui/react';
+import { Box, Container, Flex, useColorMode } from '@chakra-ui/react';
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Footer from './Footer';

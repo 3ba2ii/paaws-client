@@ -1,34 +1,42 @@
-import { Layout } from 'components/Layout';
+import { getDataFromTree } from '@apollo/client/react/ssr';
 import {
+  Box,
   Container,
-  Text,
-  Heading,
   Flex,
   Grid,
   GridItem,
-  Box,
+  HStack,
+  Text,
 } from '@chakra-ui/layout';
-import React, { useMemo } from 'react';
-import withApollo from 'utils/withApollo';
-import { getDataFromTree } from '@apollo/client/react/ssr';
 import {
-  Maybe,
-  MissingPost,
-  Photo,
-  useMissingPostsQueryQuery,
-  User,
-} from 'generated/graphql';
-import {
-  Image,
   Avatar,
-  IconButton,
   Button,
+  IconButton,
+  Image,
+  Tag,
+  Tooltip,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { ArrowUpIcon, ArrowDownIcon } from '@chakra-ui/icons';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { Layout } from 'components/Layout';
 import { formatDistance } from 'date-fns';
-
+import {
+  Maybe,
+  MissingPostTags,
+  Photo,
+  useMissingPostsQueryQuery,
+} from 'generated/graphql';
+import React, { useMemo } from 'react';
+import {
+  BiComment,
+  BiCommentDots,
+  BiCommentX,
+  BiDownvote,
+  BiMessageRounded,
+  BiShareAlt,
+  BiUpvote,
+} from 'react-icons/bi';
+import { FaChevronDown } from 'react-icons/fa';
+import withApollo from 'utils/withApollo';
 interface SinglePostProps {
   id: number;
   title: string;
@@ -41,7 +49,45 @@ interface SinglePostProps {
     full_name: string;
     avatar?: Maybe<{ __typename?: 'Photo'; url?: Maybe<string> }>;
   };
+  tags?: MissingPostTags[];
+  address:
+    | Maybe<{
+        __typename?: 'Address' | undefined;
+        distance?: Maybe<number> | undefined;
+      }>
+    | undefined;
 }
+const PostTags: React.FC<{ tags: MissingPostTags[] }> = ({ tags }) => {
+  const getColorProps = (tag: MissingPostTags) => {
+    switch (tag) {
+      case 'Missing':
+        return { colorScheme: 'red' };
+      case 'Found':
+        return { colorScheme: 'blue' };
+      case 'Urgent':
+        return { colorScheme: 'red' };
+      default:
+        return '';
+    }
+  };
+  return (
+    <>
+      {tags?.map((tag) => (
+        <Tag
+          key={tag}
+          borderRadius='3'
+          boxShadow='sm'
+          fontSize='12px'
+          fontWeight='semibold'
+          size='sm'
+          {...getColorProps(tag)}
+        >
+          {tag}
+        </Tag>
+      ))}
+    </>
+  );
+};
 
 const SinglePost: React.FC<SinglePostProps> = ({
   title,
@@ -50,7 +96,14 @@ const SinglePost: React.FC<SinglePostProps> = ({
   createdAt,
   points,
   user,
+  tags,
+  address,
 }) => {
+  let isNear = false;
+  if (address?.distance) {
+    isNear = address.distance <= 100;
+  }
+
   const thumbnailImage = thumbnail?.url || '';
 
   const { id, full_name, avatar } = user;
@@ -66,8 +119,8 @@ const SinglePost: React.FC<SinglePostProps> = ({
       boxShadow='md'
       border='1px'
       borderColor={useColorModeValue('gray.200', 'gray.700')}
-      h='100%'
       w='100%'
+      h={['100%', '200px']}
       borderRadius={'10px'}
       overflow='hidden'
     >
@@ -88,6 +141,7 @@ const SinglePost: React.FC<SinglePostProps> = ({
           fallbackSrc='https://www.cdc.gov/healthypets/images/pets/cute-dog-headshot.jpg?_=42445'
         />
       </Box>
+
       <Flex
         flexDirection='column'
         justify='space-between'
@@ -97,19 +151,48 @@ const SinglePost: React.FC<SinglePostProps> = ({
       >
         <Flex flexDirection='column' w='100%' sx={{ gap: '6px' }}>
           <Flex alignItems='center' justifyContent='space-between' w='100%'>
+            <Flex alignItems='center' w='100%' sx={{ gap: '12px' }}>
+              <Box
+                color={useColorModeValue('gray.700', 'gray.400')}
+                overflow='hidden'
+                maxW='60ch'
+              >
+                <Text as='h2' textStyle='h5'>
+                  {title}
+                </Text>
+              </Box>
+              <HStack>
+                {tags && <PostTags tags={tags} />}
+                {isNear && (
+                  <Tag
+                    colorScheme='cyan'
+                    borderRadius='3'
+                    boxShadow='sm'
+                    size='sm'
+                    fontSize='12px'
+                    fontWeight='semibold'
+                  >
+                    Near you
+                  </Tag>
+                )}
+              </HStack>
+            </Flex>
             <Text
-              textStyle='h5'
-              maxW='50ch'
-              color={useColorModeValue('gray.700', 'gray.400')}
+              textStyle='p3'
+              fontSize={'11px'}
+              textAlign={'center'}
+              whiteSpace={'nowrap'}
             >
-              {title} Cupidatat pariatur anim id sunt sit et sit{' '}
-            </Text>
-            <Text textStyle='p3' fontSize={'11px'} textAlign={'center'}>
               {createdAtDistance}
             </Text>
           </Flex>
           <Flex align='center' sx={{ gap: '6px' }}>
-            <Avatar size='xs' name={full_name} src={avatar?.url || ''} />
+            <Avatar
+              size='xs'
+              name={full_name}
+              src={avatar?.url || ''}
+              cursor='default'
+            />
             <Text fontSize='14px' fontWeight='normal' color='gray.500'>
               Posted by{' '}
               <Text
@@ -123,21 +206,73 @@ const SinglePost: React.FC<SinglePostProps> = ({
               </Text>
             </Text>
           </Flex>
-          <Text as='p' textStyle='p1' maxW={'70ch'} fontWeight='normal'>
-            {description}
-            Labore voluptate ex eiusmod
-          </Text>
+          <Box maxW={'inherit'} overflow='hidden'>
+            <Text as='p' textStyle='p1' maxW={'70ch'} fontWeight='normal'>
+              {description}
+              Labore voluptate ex eiusmod
+            </Text>
+          </Box>
         </Flex>
-        <Flex align='center' sx={{ gap: '6px' }} color='#A0AEC0'>
-          <Button variant={'ghost'} p='2px'>
-            <FaChevronUp width={'100%'} />
+        <Flex
+          align='center'
+          color={'gray.400'}
+          mb={2}
+          ml={1}
+          sx={{ gap: '4px' }}
+        >
+          <Button
+            sx={{
+              minWidth: 'auto',
+              height: 'auto',
+              p: '6px',
+            }}
+            variant={'ghost'}
+            fontSize={'18px'}
+            color='inherit'
+          >
+            <BiUpvote width={'100%'} height={'100%'} />
           </Button>
-          <Text color='gray.500' textStyle='p1'>
+          <Text color='inherit' textStyle='p1'>
             {points}
           </Text>
-          <Button variant={'ghost'} p='2px'>
-            <FaChevronDown />
+          <Button
+            sx={{
+              minWidth: 'auto',
+              height: 'auto',
+              padding: '6px',
+            }}
+            variant={'ghost'}
+            fontSize={'18px'}
+            color='inherit'
+          >
+            <BiDownvote />
           </Button>
+
+          {/* Comments Section */}
+          <Button
+            sx={{
+              minWidth: 'auto',
+              height: 'auto',
+              padding: '6px',
+            }}
+            variant={'ghost'}
+            color='inherit'
+            leftIcon={<BiMessageRounded />}
+          >
+            11
+          </Button>
+          {/* Share  */}
+          <IconButton
+            sx={{
+              minWidth: 'auto',
+              height: 'auto',
+              padding: '6px',
+            }}
+            variant={'ghost'}
+            color='inherit'
+            icon={<BiShareAlt />}
+            aria-label={'Share'}
+          />
         </Flex>
       </Flex>
     </Flex>
@@ -152,16 +287,21 @@ const MissingPostsGridContainer = () => {
   if (!data) return <div>No data</div>;
   const posts = data.missingPosts;
   return (
-    <Grid
-      templateRows={[
-        `repeat(${posts.length}, fit-content),repeat(${posts.length}, 200px)`,
-      ]}
-      gap={'24px'}
-    >
+    <Flex flexDirection='column' sx={{ gap: '24px' }} w='100%'>
       {posts.map(
-        ({ id, title, description, points, user, createdAt, thumbnail }) => {
+        ({
+          id,
+          title,
+          description,
+          points,
+          user,
+          createdAt,
+          tags,
+          thumbnail,
+          address,
+        }) => {
           return (
-            <GridItem w='100%' h='100%' key={id}>
+            <GridItem key={id} w='100%' h='100%'>
               <SinglePost
                 {...{
                   id,
@@ -171,13 +311,15 @@ const MissingPostsGridContainer = () => {
                   createdAt,
                   user,
                   thumbnail,
+                  tags,
+                  address,
                 }}
               />
             </GridItem>
           );
         }
       )}
-    </Grid>
+    </Flex>
   );
 };
 
@@ -208,7 +350,9 @@ const MissingPage: React.FC<MissingPageProps> = ({}) => {
               >
                 Most Recent
               </Button>
-              <Button colorScheme={'teal'}>Report Missing Pet</Button>
+              <Button colorScheme={'teal'} size='md'>
+                Report Missing Pet
+              </Button>
             </Flex>
           </GridItem>
           <GridItem>
