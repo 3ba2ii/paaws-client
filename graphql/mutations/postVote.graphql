@@ -1,0 +1,10 @@
+mutation PostVote($value: Int!, $postId: Int!) {
+  vote(value: $value, postId: $postId) {
+    errors {
+      field
+      message
+      code
+    }
+    success
+  }
+}

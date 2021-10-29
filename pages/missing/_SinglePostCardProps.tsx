@@ -1,18 +1,9 @@
 import { Box, Flex, HStack, Text } from '@chakra-ui/layout';
-import {
-  Avatar,
-  Button,
-  IconButton,
-  Image,
-  Tag,
-  Tooltip,
-  useColorModeValue,
-} from '@chakra-ui/react';
-import VoteComponent from 'components/VoteComponent';
+import { Avatar, Image, Tag, useColorModeValue } from '@chakra-ui/react';
 import { formatDistance } from 'date-fns';
 import { Maybe, MissingPostTags, Photo } from 'generated/graphql';
 import React, { useMemo } from 'react';
-import { BiMessageRounded, BiShareAlt } from 'react-icons/bi';
+import { PostActions } from './_PostActions';
 import { PostTags } from './_PostTags';
 
 interface SinglePostCardProps {
@@ -37,6 +28,7 @@ interface SinglePostCardProps {
     | undefined;
 }
 export const SinglePostCard: React.FC<SinglePostCardProps> = ({
+  id,
   title,
   description,
   thumbnail,
@@ -54,83 +46,13 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
 
   const thumbnailImage = thumbnail?.url || '';
 
-  const { id, full_name, avatar } = user;
+  const { full_name, avatar } = user;
   const createdAtDistance = useMemo(
     () => formatDistance(new Date(createdAt), new Date(), { addSuffix: true }),
     [createdAt]
   );
   const hasVoted = voteStatus != null;
-  const isUpvote = hasVoted && voteStatus === 1;
 
-  function PostActions() {
-    return (
-      <HStack w='100%' color={'gray.400'} sx={{ gap: '2px' }}>
-        <Tooltip label='Upvote'>
-          <IconButton
-            sx={{
-              minWidth: 'auto',
-              height: 'auto',
-              p: '6px',
-            }}
-            aria-label='Upvote'
-            icon={
-              <VoteComponent
-                isUpvote
-                outlined={!(hasVoted && voteStatus === 1)}
-              />
-            }
-            variant='ghost'
-          />
-        </Tooltip>
-        <Text color='inherit' textStyle='p1'>
-          {points}
-        </Text>
-        <Tooltip label='Downvote'>
-          <IconButton
-            sx={{
-              minWidth: 'auto',
-              height: 'auto',
-              padding: '6px',
-            }}
-            variant='ghost'
-            icon={<VoteComponent outlined={!(hasVoted && voteStatus === -1)} />}
-            aria-label='Downvote'
-          />
-        </Tooltip>
-
-        {/* Comments Section */}
-        <Tooltip label='Comments'>
-          <Button
-            size='sm'
-            sx={{
-              minWidth: 'auto',
-              height: 'auto',
-              padding: '6px',
-            }}
-            variant={'ghost'}
-            color='inherit'
-            leftIcon={<BiMessageRounded />}
-          >
-            11
-          </Button>
-        </Tooltip>
-        {/* Share  */}
-        <Tooltip label='Share'>
-          <IconButton
-            sx={{
-              minWidth: 'auto',
-              height: 'auto',
-              padding: '6px',
-            }}
-            variant={'ghost'}
-            color='inherit'
-            icon={<BiShareAlt />}
-            aria-label={'Share'}
-          />
-        </Tooltip>
-      </HStack>
-    );
-  }
   return (
     <Flex
       key={id}
@@ -232,7 +154,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
           </Box>
         </Flex>
         {/* Actions */}
-        {PostActions()}
+        <PostActions {...{ postId: id, hasVoted, voteStatus, points }} />
       </Flex>
     </Flex>
   );
