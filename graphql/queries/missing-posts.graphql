@@ -3,6 +3,7 @@ query MissingPostsQuery {
     id
     title
     description
+    voteStatus
     user {
       id
       full_name

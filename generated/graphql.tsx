@@ -212,6 +212,7 @@ export type MissingPost = {
   updoots: Array<PostUpdoot>;
   user: User;
   userId: Scalars['Int'];
+  voteStatus?: Maybe<Scalars['Int']>;
 };
 
 export type MissingPostComments = {
@@ -780,7 +781,7 @@ export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', 
 export type MissingPostsQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MissingPostsQueryQuery = { __typename?: 'Query', missingPosts: Array<{ __typename?: 'MissingPost', id: number, title: string, description: string, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, full_name: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }> };
+export type MissingPostsQueryQuery = { __typename?: 'Query', missingPosts: Array<{ __typename?: 'MissingPost', id: number, title: string, description: string, voteStatus?: Maybe<number>, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, full_name: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }> };
 
 export type PaginatedUsersQueryVariables = Exact<{
   usersWhere: WhereClause;
@@ -1208,6 +1209,7 @@ export const MissingPostsQueryDocument = gql`
     id
     title
     description
+    voteStatus
     user {
       id
       full_name
