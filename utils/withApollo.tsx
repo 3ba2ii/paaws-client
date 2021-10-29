@@ -8,15 +8,30 @@ import { onError } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
 import { PaginatedAdoptionPosts } from 'generated/graphql';
 import nextWithApollo from 'next-with-apollo';
-import { useRouter } from 'next/router';
+import router, { useRouter } from 'next/router';
 import { isServer } from './isServer';
 
+// Use this inside error-link
+export const handleLogoutWithoutHook = () => {
+  // Logout without hook
+
+  // do other stuff required when logout
+  // eslint-disable-next-line no-restricted-globals
+  location.replace('/login?next=' + router.pathname);
+
+  // location.reload() after token removed affects user redirect
+  // when component is wrapped inside <ProtectedRoute> component
+};
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
     graphQLErrors.forEach(({ message, locations, path }) => {
       console.log(
         `❌ [GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       );
+      if (message.includes('Not Authenticated')) {
+        if (path && path.toString() === 'vote') handleLogoutWithoutHook();
+        return;
+      }
     });
 
   if (networkError) console.log(`[Network error]: ${networkError}`);
@@ -60,9 +75,7 @@ const withApollo = nextWithApollo(
 
     return new ApolloClient({
       ssrMode: isServer(),
-
       link: from([errorLink, link]),
-
       cache,
     });
   },

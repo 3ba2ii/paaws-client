@@ -24,56 +24,56 @@ export const PostActions: React.FC<{
       setLoading({ ...actionLoading, upvoteLoading: true });
     else setLoading({ ...actionLoading, downvoteLoading: true });
 
-    const { data } = await vote({
-      variables: {
-        postId,
-        value: votingValue,
-      },
-      update: (cache, { data }) => {
-        if (!data?.vote.success) return;
-        const cachedPost = cache.readFragment({
-          id: `MissingPost:${postId}`,
-          fragment: gql`
-            fragment MissingPost on MissingPost {
-              id
-              points
-              voteStatus
-            }
-          `,
-        }) as Partial<MissingPost> | null;
-
-        if (cachedPost && typeof cachedPost.points === 'number') {
-          //update the cache
-          //updated points value has two cases
-          // if the user has already voted, then the change in value will be multiplied by two
-          //else the change in value will the new votingValue
-
-          const newPoints = hasVoted ? votingValue * 2 : votingValue;
-          cache.writeFragment({
+    try {
+      const { data } = await vote({
+        variables: {
+          postId,
+          value: votingValue,
+        },
+        update: (cache, { data, errors }) => {
+          if (!data?.vote?.success || errors?.length) return;
+          const cachedPost = cache.readFragment({
             id: `MissingPost:${postId}`,
             fragment: gql`
               fragment MissingPost on MissingPost {
+                id
                 points
                 voteStatus
               }
             `,
-            data: {
-              points: cachedPost.points + newPoints,
-              voteStatus: votingValue,
-            },
-          });
-        }
-      },
-    });
-    setLoading({
-      ...actionLoading,
-      upvoteLoading: false,
-      downvoteLoading: false,
-    });
+          }) as Partial<MissingPost> | null;
 
-    if (!data?.vote.success) {
-      //an error occurred
-      return;
+          if (cachedPost && typeof cachedPost.points === 'number') {
+            //update the cache
+            //updated points value has two cases
+            // if the user has already voted, then the change in value will be multiplied by two
+            //else the change in value will the new votingValue
+
+            const newPoints = hasVoted ? votingValue * 2 : votingValue;
+            cache.writeFragment({
+              id: `MissingPost:${postId}`,
+              fragment: gql`
+                fragment MissingPost on MissingPost {
+                  points
+                  voteStatus
+                }
+              `,
+              data: {
+                points: cachedPost.points + newPoints,
+                voteStatus: votingValue,
+              },
+            });
+          }
+        },
+      });
+    } catch (err) {
+      console.error(typeof err);
+    } finally {
+      setLoading({
+        ...actionLoading,
+        upvoteLoading: false,
+        downvoteLoading: false,
+      });
     }
   };
   return (
