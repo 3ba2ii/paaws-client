@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/button';
-import { FormHelperText } from '@chakra-ui/form-control';
+import { useColorMode } from '@chakra-ui/color-mode';
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Box, Flex, Heading, Text } from '@chakra-ui/layout';
 import { CircularProgress } from '@chakra-ui/progress';
@@ -9,6 +9,7 @@ import {
   useUpdateUserInfoMutation,
   useUploadAvatarMutation,
 } from 'generated/graphql';
+import Router from 'next/router';
 import React, { useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import styles from 'styles/register.module.css';
@@ -16,10 +17,6 @@ import { useIsAuth } from 'utils/useIsAuth';
 import withApollo from 'utils/withApollo';
 import { Step1 } from './_updateInfoStep1';
 import { Step2 } from './_updateInfoStep2';
-import Router from 'next/router';
-import router from 'next/router';
-import { useColorMode } from '@chakra-ui/color-mode';
-import { useColorModePreference } from '@chakra-ui/media-query';
 
 interface CompleteInfoProps {}
 const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {

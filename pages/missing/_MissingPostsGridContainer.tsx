@@ -1,9 +1,9 @@
-import { Box, Flex } from '@chakra-ui/layout';
+import { Flex } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/react';
 import { MissingPost } from 'generated/graphql';
 import React, { useEffect, useRef } from 'react';
 import useOnScreen from 'utils/useOnScreen';
-import { DummyPostSkelton } from '../../components/skeltons/DummyPostSkelton';
+import { DummyPostsSkeleton } from '../../components/skeltons/DummyPostSkelton';
 import { SinglePostCard } from './_SinglePostCardProps';
 
 /* Missing Posts Grid Container */
@@ -55,9 +55,7 @@ export const MissingPostsGridContainer: React.FC<{
         }
       )}
       {/* Add two skelton is if loading skelton */}
-      {loading &&
-        hasMore &&
-        [...Array(2)].map((_, index) => <DummyPostSkelton index={index} />)}
+      {loading && hasMore && <DummyPostsSkeleton />}
 
       {hasMore ? (
         <Button

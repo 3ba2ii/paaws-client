@@ -1,4 +1,4 @@
-import { Box, Flex, HStack, Text } from '@chakra-ui/layout';
+import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout';
 import {
   Avatar,
   Skeleton,
@@ -123,38 +123,38 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
 
       <Flex
         flexDirection='column'
+        align='flex-start'
         justify='space-between'
         w='100%'
         h='100%'
         overflow='hidden'
-        p={['24px 16px 6px 16px', '10px 0 10px 0']}
+        p={['16px', '10px 0']}
         sx={{ gap: ['24px', '18px'] }}
       >
-        <Flex flexDirection='column' w='100%' sx={{ gap: '6px' }}>
-          <Flex alignItems='center' justifyContent='space-between' w='100%'>
-            <Flex alignItems='center' w='100%' sx={{ gap: '12px' }}>
+        <VStack spacing='6px' align='flex-start'>
+          <HStack w='100%' justify='space-between'>
+            <HStack spacing={4}>
               <Skeleton isLoaded={isLoaded}>
-                <Box overflow='hidden' maxW='60ch'>
-                  <Text
-                    color={useColorModeValue('gray.700', 'gray.400')}
-                    as='h2'
-                    textStyle='h5'
-                  >
-                    {title}
-                  </Text>
-                </Box>
+                <Text
+                  maxW='60ch'
+                  color={useColorModeValue('gray.700', 'gray.400')}
+                  as='h2'
+                  textStyle='h5'
+                >
+                  {title}
+                </Text>
               </Skeleton>
               <Skeleton hidden={!isLoaded} isLoaded={isLoaded}>
                 <ComponentTags />
               </Skeleton>
-            </Flex>
+            </HStack>
             <Skeleton height='fit-content' isLoaded={isLoaded}>
               <Text textStyle='p3' textAlign={'center'} whiteSpace={'nowrap'}>
                 {createdAtDistance}
               </Text>
             </Skeleton>
-          </Flex>
-          <Flex align='center' sx={{ gap: '6px' }}>
+          </HStack>
+          <HStack>
             <SkeletonCircle
               isLoaded={isLoaded}
               width='fit-content'
@@ -181,16 +181,14 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
                 </Text>
               </Text>
             </Skeleton>
-          </Flex>
+          </HStack>
           <SkeletonText w='fit-content' h='fit-content' isLoaded={isLoaded}>
-            <Box maxW={'inherit'} overflow='hidden'>
-              <Text as='p' textStyle='p1' maxW={'70ch'} fontWeight='normal'>
-                {description}
-                Labore voluptate ex eiusmod
-              </Text>
-            </Box>
+            <Text as='p' textStyle='p1' maxW={'70ch'} fontWeight='normal'>
+              {description}
+              Labore voluptate ex eiusmod
+            </Text>
           </SkeletonText>
-        </Flex>
+        </VStack>
         {/* Actions */}
         <Skeleton isLoaded={isLoaded} width='fit-content'>
           <PostActions {...{ postId: id, hasVoted, voteStatus, points }} />

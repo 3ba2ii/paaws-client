@@ -1,7 +1,6 @@
 import { gql } from '@apollo/client';
 import { HStack, Text } from '@chakra-ui/layout';
 import { Button, IconButton, Tooltip } from '@chakra-ui/react';
-import { CustomAlertDialog } from 'components/AlertDialog';
 import VoteComponent from 'components/VoteComponent';
 import { MissingPost, usePostVoteMutation } from 'generated/graphql';
 import React from 'react';
