@@ -7,9 +7,7 @@ import {
 import React from 'react';
 import withApollo from 'utils/withApollo';
 
-interface MissingPageProps {}
-
-const MissingPage: React.FC<MissingPageProps> = ({}) => {
+const MissingPage: React.FC = () => {
   const [files, setFiles] = React.useState<FileList | null>(null);
   const [createPost] = useCreateMissingPostMutation();
 

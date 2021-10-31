@@ -1,5 +1,6 @@
 import { Box, Flex, HStack, Text } from '@chakra-ui/layout';
-import { Avatar, Image, Tag, useColorModeValue } from '@chakra-ui/react';
+import { Avatar, Tag, useColorModeValue } from '@chakra-ui/react';
+import ImageWithFallback from 'components/ImageWithFallback';
 import { formatDistance } from 'date-fns';
 import { Maybe, MissingPostTags, Photo } from 'generated/graphql';
 import React, { useMemo } from 'react';
@@ -44,7 +45,9 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
     isNear = address.distance <= 100;
   }
 
-  const thumbnailImage = thumbnail?.url || '';
+  const thumbnailImage =
+    thumbnail?.url ||
+    'https://www.cdc.gov/healthypets/images/pets/cute-dog-headshot.jpg?_=42445';
 
   const { full_name, avatar } = user;
   const createdAtDistance = useMemo(
@@ -74,13 +77,16 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         overflow='hidden'
         boxShadow='md'
       >
-        <Image
-          src={thumbnailImage}
-          alt={title}
-          w='100%'
-          h='100%'
-          objectFit='cover'
+        <ImageWithFallback
           fallbackSrc='https://www.cdc.gov/healthypets/images/pets/cute-dog-headshot.jpg?_=42445'
+          props={{
+            src: thumbnailImage,
+            loading: 'eager',
+            alt: title,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
         />
       </Box>
 
