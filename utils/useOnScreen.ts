@@ -10,7 +10,7 @@ export default function useOnScreen(ref: any) {
       observer = new IntersectionObserver(
         ([entry]) => setIntersecting(entry.isIntersecting),
         {
-          rootMargin: '180px',
+          rootMargin: '300px 0px 0px 0px',
         }
       );
 

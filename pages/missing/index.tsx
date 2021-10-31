@@ -1,14 +1,14 @@
 import { getDataFromTree } from '@apollo/client/react/ssr';
 import { Container, Flex, Grid, GridItem } from '@chakra-ui/layout';
-import { Button } from '@chakra-ui/react';
+import { Button, Skeleton } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import { MissingPost, useMissingPostsQuery } from 'generated/graphql';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import withApollo from 'utils/withApollo';
 import { MissingPostsGridContainer } from './_MissingPostsGridContainer';
 
-const MissingPage: React.FC = (props) => {
+const MissingPage: React.FC = () => {
   const { data, loading, fetchMore } = useMissingPostsQuery({
     variables: {
       input: {

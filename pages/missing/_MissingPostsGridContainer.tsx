@@ -3,6 +3,7 @@ import { Button } from '@chakra-ui/react';
 import { MissingPost } from 'generated/graphql';
 import React, { useEffect, useRef } from 'react';
 import useOnScreen from 'utils/useOnScreen';
+import { DummyPostSkelton } from '../../components/skeltons/DummyPostSkelton';
 import { SinglePostCard } from './_SinglePostCardProps';
 
 /* Missing Posts Grid Container */
@@ -17,49 +18,46 @@ export const MissingPostsGridContainer: React.FC<{
 
   // to check if the last pre last element is visible on screen or not
   useEffect(() => {
-    if (isVisible && hasMore) {
-      fetchMorePosts();
-    }
+    if (isVisible && hasMore) fetchMorePosts();
   }, [isVisible]);
   return (
     <Flex flexDirection='column' sx={{ gap: '24px' }} w='100%'>
       {posts.map(
-        (
-          {
-            id,
-            title,
-            description,
-            points,
-            user,
-            createdAt,
-            tags,
-            thumbnail,
-            address,
-            voteStatus,
-          },
-          index
-        ) => {
+        ({
+          id,
+          title,
+          description,
+          points,
+          user,
+          createdAt,
+          tags,
+          thumbnail,
+          address,
+          voteStatus,
+        }) => {
           return (
-            <Box key={id}>
-              <>{index === posts.length - 1 ? 'This is the one' : null}</>
-              <SinglePostCard
-                {...{
-                  id,
-                  title,
-                  description,
-                  points,
-                  createdAt,
-                  user,
-                  thumbnail,
-                  tags,
-                  address,
-                  voteStatus,
-                }}
-              />
-            </Box>
+            <SinglePostCard
+              key={id}
+              {...{
+                id,
+                title,
+                description,
+                points,
+                createdAt,
+                user,
+                thumbnail,
+                tags,
+                address,
+                voteStatus,
+              }}
+            />
           );
         }
       )}
+      {/* Add two skelton is if loading skelton */}
+      {loading &&
+        hasMore &&
+        [...Array(2)].map((_, index) => <DummyPostSkelton index={index} />)}
 
       {hasMore ? (
         <Button

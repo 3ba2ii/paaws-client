@@ -159,15 +159,6 @@ export const PostActions: React.FC<{
           />
         </Tooltip>
       </HStack>
-      <CustomAlertDialog
-        {...{
-          header: 'Spam Warning ❌',
-          body: 'You have changed your vote on this post 5 times in the last 10 minutes, please cool down before you get banned',
-          isOpen,
-          includeFooter: true,
-          confirmText: 'Okay',
-        }}
-      />
     </>
   );
 };
