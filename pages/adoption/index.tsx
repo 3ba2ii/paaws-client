@@ -3,6 +3,7 @@ import { Button } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import {
   Address,
+  Pet,
   PetBreed,
   PetType,
   Photo,
@@ -66,7 +67,7 @@ const MissingPage: React.FC = ({}) => {
               return (
                 <li>
                   {JSON.stringify(pet, null, 2)}
-                  <MissingPost pet={pet} address={address} />
+                  <MissingPost pet={pet as Pet} address={address as Address} />
                 </li>
               );
             })}

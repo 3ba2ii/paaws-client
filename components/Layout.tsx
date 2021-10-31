@@ -1,5 +1,6 @@
 import { Box, Container, Flex, useColorMode } from '@chakra-ui/react';
 import Head from 'next/head';
+import { useEffect } from 'react';
 import styles from '../styles/Home.module.css';
 import Footer from './Footer';
 import NavBar from './NavBar';

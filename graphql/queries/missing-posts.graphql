@@ -1,26 +1,33 @@
-query MissingPostsQuery {
-  missingPosts {
-    id
-    title
-    description
-    voteStatus
-    user {
+query MissingPosts($input: PaginationArgs!) {
+  missingPosts(input: $input) {
+    hasMore
+    errors {
+      field
+      message
+      code
+    }
+    missingPosts {
       id
-      full_name
-      avatar {
+      title
+      description
+      voteStatus
+      user {
+        id
+        full_name
+        avatar {
+          url
+        }
+      }
+      tags
+      address {
+        distance
+      }
+      points
+      thumbnail {
         url
       }
+      createdAt
+      updatedAt
     }
-    tags
-    address {
-      distance
-    }
-    points
-
-    thumbnail {
-      url
-    }
-    createdAt
-    updatedAt
   }
 }

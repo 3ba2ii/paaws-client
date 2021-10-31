@@ -1,11 +1,11 @@
 import { gql } from '@apollo/client';
 import { HStack, Text } from '@chakra-ui/layout';
 import { Button, IconButton, Tooltip } from '@chakra-ui/react';
+import { CustomAlertDialog } from 'components/AlertDialog';
 import VoteComponent from 'components/VoteComponent';
 import { MissingPost, usePostVoteMutation } from 'generated/graphql';
 import React from 'react';
 import { BiMessageRounded, BiShareAlt } from 'react-icons/bi';
-import { useIsAuth } from 'utils/useIsAuth';
 
 export const PostActions: React.FC<{
   postId: number;
@@ -18,6 +18,7 @@ export const PostActions: React.FC<{
     upvoteLoading: false,
     downvoteLoading: false,
   });
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const onVote = async (votingValue: number) => {
     if (votingValue === 1)
@@ -66,8 +67,14 @@ export const PostActions: React.FC<{
           }
         },
       });
+      if (data?.vote.errors?.length) {
+        if (data?.vote.errors[0].field === 'spam') {
+          //open a dialog to warn the user
+          setIsOpen(true);
+        }
+      }
     } catch (err) {
-      console.error(typeof err);
+      console.error(err);
     } finally {
       setLoading({
         ...actionLoading,
@@ -77,79 +84,90 @@ export const PostActions: React.FC<{
     }
   };
   return (
-    <HStack w='100%' color={'gray.400'} sx={{ gap: '2px' }}>
-      <Tooltip label='Upvote'>
-        <IconButton
-          sx={{
-            minWidth: 'auto',
-            height: 'auto',
-            p: '6px',
-          }}
-          aria-label='Upvote'
-          icon={
-            <VoteComponent
-              isUpvote
-              outlined={!(hasVoted && voteStatus === 1)}
-            />
+    <>
+      <HStack w='100%' color={'gray.400'} sx={{ gap: '2px' }}>
+        <Tooltip label='Upvote'>
+          <IconButton
+            sx={{
+              minWidth: 'auto',
+              height: 'auto',
+              p: '6px',
+            }}
+            aria-label='Upvote'
+            icon={
+              <VoteComponent
+                isUpvote
+                outlined={!(hasVoted && voteStatus === 1)}
+              />
+            }
+            onClick={() => onVote(1)}
+            isLoading={actionLoading.upvoteLoading}
+            variant='ghost'
+          />
+        </Tooltip>
+        <Text
+          color={
+            !hasVoted ? 'inherit' : voteStatus === 1 ? 'teal.400' : 'red.400'
           }
-          onClick={() => onVote(1)}
-          isLoading={actionLoading.upvoteLoading}
-          variant='ghost'
-        />
-      </Tooltip>
-      <Text
-        color={
-          !hasVoted ? 'inherit' : voteStatus === 1 ? 'teal.400' : 'red.400'
-        }
-        textStyle='p1'
-      >
-        {points}
-      </Text>
-      <Tooltip label='Downvote'>
-        <IconButton
-          sx={{
-            minWidth: 'auto',
-            height: 'auto',
-            padding: '6px',
-          }}
-          variant='ghost'
-          icon={<VoteComponent outlined={!(hasVoted && voteStatus === -1)} />}
-          aria-label='Downvote'
-          isLoading={actionLoading.downvoteLoading}
-          onClick={() => onVote(-1)}
-        />
-      </Tooltip>
-
-      {/* Comments Section */}
-      <Tooltip label='Comments'>
-        <Button
-          size='sm'
-          sx={{
-            minWidth: 'auto',
-            height: 'auto',
-            padding: '6px',
-          }}
-          variant={'ghost'}
-          color='inherit'
-          leftIcon={<BiMessageRounded />}
+          textStyle='p1'
         >
-          11
-        </Button>
-      </Tooltip>
-      {/* Share  */}
-      <Tooltip label='Share'>
-        <IconButton
-          sx={{
-            minWidth: 'auto',
-            height: 'auto',
-            padding: '6px',
-          }}
-          variant={'ghost'}
-          color='inherit'
-          icon={<BiShareAlt />}
-          aria-label={'Share'}
-        />
-      </Tooltip>
-    </HStack>
+          {points}
+        </Text>
+        <Tooltip label='Downvote'>
+          <IconButton
+            sx={{
+              minWidth: 'auto',
+              height: 'auto',
+              padding: '6px',
+            }}
+            variant='ghost'
+            icon={<VoteComponent outlined={!(hasVoted && voteStatus === -1)} />}
+            aria-label='Downvote'
+            isLoading={actionLoading.downvoteLoading}
+            onClick={() => onVote(-1)}
+          />
+        </Tooltip>
+
+        {/* Comments Section */}
+        <Tooltip label='Comments'>
+          <Button
+            size='sm'
+            sx={{
+              minWidth: 'auto',
+              height: 'auto',
+              padding: '6px',
+            }}
+            variant={'ghost'}
+            color='inherit'
+            leftIcon={<BiMessageRounded />}
+          >
+            11
+          </Button>
+        </Tooltip>
+        {/* Share  */}
+        <Tooltip label='Share'>
+          <IconButton
+            sx={{
+              minWidth: 'auto',
+              height: 'auto',
+              padding: '6px',
+            }}
+            variant={'ghost'}
+            color='inherit'
+            icon={<BiShareAlt />}
+            aria-label={'Share'}
+          />
+        </Tooltip>
+      </HStack>
+      <CustomAlertDialog
+        {...{
+          header: 'Spam Warning ❌',
+          body: 'You have changed your vote on this post 5 times in the last 10 minutes, please cool down before you get banned',
+          isOpen,
+          includeFooter: true,
+          confirmText: 'Okay',
+        }}
+      />
+    </>
   );
 };
