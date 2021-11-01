@@ -8,8 +8,6 @@ import { FcGoogle } from 'react-icons/fc';
 import { Layout } from '../../components/Layout';
 import registerS from '../../styles/register.module.css';
 
-interface loginProps {}
-
 const CustomColorScheme = {
   facebook: {
     light: {
@@ -34,7 +32,7 @@ const CustomColorScheme = {
     },
   },
 };
-const RegisterPage: React.FC<loginProps> = ({}) => {
+const RegisterPage: React.FC = () => {
   const { colorMode } = useColorMode();
   return (
     <Layout title={'Create Account and Join Paaws'}>

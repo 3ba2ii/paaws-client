@@ -1,4 +1,4 @@
-query MissingPosts($input: PaginationArgs!) {
+query MissingPosts($input: PaginationArgs!, $length: Int) {
   missingPosts(input: $input) {
     hasMore
     errors {
@@ -9,11 +9,11 @@ query MissingPosts($input: PaginationArgs!) {
     missingPosts {
       id
       title
-      description
+      descriptionSnippet(length: $length)
       voteStatus
       user {
         id
-        full_name
+        displayName
         avatar {
           url
         }

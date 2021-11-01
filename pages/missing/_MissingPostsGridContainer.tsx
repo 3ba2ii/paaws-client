@@ -26,7 +26,6 @@ export const MissingPostsGridContainer: React.FC<{
         ({
           id,
           title,
-          description,
           points,
           user,
           createdAt,
@@ -34,6 +33,7 @@ export const MissingPostsGridContainer: React.FC<{
           thumbnail,
           address,
           voteStatus,
+          descriptionSnippet,
         }) => {
           return (
             <SinglePostCard
@@ -41,7 +41,7 @@ export const MissingPostsGridContainer: React.FC<{
               {...{
                 id,
                 title,
-                description,
+                descriptionSnippet,
                 points,
                 createdAt,
                 user,

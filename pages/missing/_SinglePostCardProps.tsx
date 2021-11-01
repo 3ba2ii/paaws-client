@@ -11,14 +11,14 @@ import { PostTags } from './_PostTags';
 interface SinglePostCardProps {
   id: number;
   title: string;
-  description: string;
+  descriptionSnippet: string;
   thumbnail?: Partial<Photo> | null;
   points: number;
   createdAt: string;
   voteStatus?: number | null;
   user: {
     id: number;
-    full_name: string;
+    displayName: string;
     avatar?: Maybe<{ __typename?: 'Photo'; url?: Maybe<string> }>;
   };
   tags?: MissingPostTags[];
@@ -30,7 +30,6 @@ interface SinglePostCardProps {
 export const SinglePostCard: React.FC<SinglePostCardProps> = ({
   id,
   title,
-  description,
   thumbnail,
   createdAt,
   points,
@@ -38,6 +37,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
   tags,
   address,
   voteStatus,
+  descriptionSnippet,
 }) => {
   let isNear = false;
   if (address?.distance) {
@@ -50,7 +50,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
     () => formatDistance(new Date(createdAt), new Date(), { addSuffix: true }),
     [createdAt]
   );
-  const { full_name, avatar } = user;
+  const { displayName, avatar } = user;
   const hasVoted = voteStatus != null;
 
   const ComponentTags = () => {
@@ -128,7 +128,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
               >
                 {title}
               </Text>
-              {/* Component Tags */}
+              {/* Post Tags */}
               <ComponentTags />
             </HStack>
 
@@ -139,7 +139,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
           <HStack>
             <Avatar
               size='xs'
-              name={full_name}
+              name={displayName}
               src={avatar?.url || ''}
               cursor='default'
             />
@@ -148,17 +148,16 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
               <Text
                 aria-label='name'
                 as='a'
-                href={`localhost:3000/user/${full_name}`}
+                href={`localhost:3000/user/${displayName}`}
                 color='blue.500'
                 fontWeight='medium'
               >
-                {full_name}
+                {displayName}
               </Text>
             </Text>
           </HStack>
           <Text as='p' textStyle='p1' maxW={'70ch'} fontWeight='normal'>
-            {description}
-            Labore voluptate ex eiusmod
+            {descriptionSnippet}
           </Text>
         </VStack>
         {/* Actions */}

@@ -15,6 +15,7 @@ const MissingPageContent: React.FC = () => {
   const { data, loading, fetchMore } = useMissingPostsQuery({
     variables: {
       input: { limit: 5, cursor: null },
+      length: 120,
     },
     notifyOnNetworkStatusChange: true,
     onCompleted: () => {
