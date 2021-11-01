@@ -128,7 +128,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
               >
                 {title}
               </Text>
-
+              {/* Component Tags */}
               <ComponentTags />
             </HStack>
 

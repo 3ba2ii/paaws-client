@@ -1,7 +1,5 @@
 import React from 'react';
-import { BiDownvote, BiUpvote } from 'react-icons/bi';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
-import { TiArrowLeftOutline } from 'react-icons/ti';
 interface VoteComponentProps {
   outlined?: boolean;
   isUpvote?: boolean;
@@ -12,7 +10,13 @@ const VoteComponent: React.FC<VoteComponentProps> = ({
   isUpvote = false,
 }) => {
   const OutlinedComponents = (
-    <>{isUpvote ? <FaChevronUp /> : <FaChevronDown />}</>
+    <>
+      {isUpvote ? (
+        <FaChevronUp color='#A0AEC0' />
+      ) : (
+        <FaChevronDown color='#A0AEC0' />
+      )}
+    </>
   );
   const FilledComponents = (
     <>
