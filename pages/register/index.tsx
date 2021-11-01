@@ -1,8 +1,7 @@
 import { Button } from '@chakra-ui/button';
-import { useColorMode, useColorModeValue } from '@chakra-ui/color-mode';
+import { useColorMode } from '@chakra-ui/color-mode';
 import { Heading } from '@chakra-ui/layout';
 import Link from 'next/link';
-
 import React from 'react';
 import { FaApple, FaFacebook, FaHeart } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';

@@ -1,10 +1,17 @@
-import { gql } from '@apollo/client';
+import { ApolloCache, gql } from '@apollo/client';
 import { HStack, Text } from '@chakra-ui/layout';
 import { Button, IconButton, Tooltip } from '@chakra-ui/react';
-import VoteComponent from 'components/VoteComponent';
+import VoteComponent from 'components/VoteIconComponent';
 import { MissingPost, usePostVoteMutation } from 'generated/graphql';
 import React from 'react';
 import { BiMessageRounded, BiShareAlt } from 'react-icons/bi';
+
+function getPointsColor(voteStatus: number | undefined | null): string {
+  if (!voteStatus) {
+    return 'gray.400';
+  }
+  return voteStatus === 1 ? 'teal.400' : 'red.400';
+}
 
 export const PostActions: React.FC<{
   postId: number;
@@ -19,51 +26,76 @@ export const PostActions: React.FC<{
   });
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const onVote = async (votingValue: number) => {
-    if (votingValue === 1)
-      setLoading({ ...actionLoading, upvoteLoading: true });
-    else setLoading({ ...actionLoading, downvoteLoading: true });
+  const handleVotingLoading =
+    (type: 'upvote' | 'downvote') => (loading: boolean) => {
+      setLoading({
+        ...actionLoading,
+        [`${type}Loading`]: loading,
+      });
+    };
+  const updateCache = (
+    cache: ApolloCache<any>,
+    data: any,
+    votingValue: 1 | -1
+  ) => {
+    if (!data?.vote?.success) return;
+    const cachedPost = cache.readFragment({
+      id: `MissingPost:${postId}`,
+      fragment: gql`
+        fragment MissingPost on MissingPost {
+          id
+          points
+          voteStatus
+        }
+      `,
+    }) as Partial<MissingPost>;
 
+    if (cachedPost && typeof cachedPost.points === 'number') {
+      /* update the cache
+      updated points value has 3 cases
+       1. the user has already voted
+       2. the user did not vote before 
+       3. the user revoted the  same vote again (he wants to remove his vote)
+       */
+
+      let addedPoints = 0;
+      let newVoteStatus: 1 | -1 | null = null;
+      //if the user has already voted, then the did not change his vote value then just decrease it by the voting value
+      if (cachedPost.voteStatus === votingValue) {
+        //then the user want to just delete his vote
+        //1. decrease the points by the voting value
+        addedPoints = -votingValue;
+        //2. set the voteStatus to null
+      } else {
+        addedPoints = hasVoted ? votingValue * 2 : votingValue;
+        newVoteStatus = votingValue;
+      }
+      cache.writeFragment({
+        id: `MissingPost:${postId}`,
+        fragment: gql`
+          fragment MissingPost on MissingPost {
+            points
+            voteStatus
+          }
+        `,
+        data: {
+          points: cachedPost.points + addedPoints,
+          voteStatus: newVoteStatus,
+        },
+      });
+    }
+  };
+  const onVote = async (votingValue: 1 | -1) => {
+    handleVotingLoading(votingValue === 1 ? 'upvote' : 'downvote')(true);
     try {
       const { data } = await vote({
         variables: {
           postId,
           value: votingValue,
         },
-        update: (cache, { data, errors }) => {
-          if (!data?.vote?.success || errors?.length) return;
-          const cachedPost = cache.readFragment({
-            id: `MissingPost:${postId}`,
-            fragment: gql`
-              fragment MissingPost on MissingPost {
-                id
-                points
-                voteStatus
-              }
-            `,
-          }) as Partial<MissingPost> | null;
-
-          if (cachedPost && typeof cachedPost.points === 'number') {
-            //update the cache
-            //updated points value has two cases
-            // if the user has already voted, then the change in value will be multiplied by two
-            //else the change in value will the new votingValue
-
-            const newPoints = hasVoted ? votingValue * 2 : votingValue;
-            cache.writeFragment({
-              id: `MissingPost:${postId}`,
-              fragment: gql`
-                fragment MissingPost on MissingPost {
-                  points
-                  voteStatus
-                }
-              `,
-              data: {
-                points: cachedPost.points + newPoints,
-                voteStatus: votingValue,
-              },
-            });
-          }
+        update: (cache, { data: returnedData, errors }) => {
+          if (!returnedData || errors?.length) return;
+          updateCache(cache, returnedData, votingValue);
         },
       });
       if (data?.vote.errors?.length) {
@@ -75,89 +107,70 @@ export const PostActions: React.FC<{
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading({
-        ...actionLoading,
-        upvoteLoading: false,
-        downvoteLoading: false,
-      });
+      handleVotingLoading(votingValue === 1 ? 'upvote' : 'downvote')(false);
     }
   };
-  return (
-    <>
-      <HStack w='100%' color={'gray.400'} sx={{ gap: '2px' }}>
-        <Tooltip label='Upvote'>
-          <IconButton
-            sx={{
-              minWidth: 'auto',
-              height: 'auto',
-              p: '6px',
-            }}
-            aria-label='Upvote'
-            icon={
-              <VoteComponent
-                isUpvote
-                outlined={!(hasVoted && voteStatus === 1)}
-              />
-            }
-            onClick={() => onVote(1)}
-            isLoading={actionLoading.upvoteLoading}
-            variant='ghost'
-          />
-        </Tooltip>
-        <Text
-          color={
-            !hasVoted ? 'inherit' : voteStatus === 1 ? 'teal.400' : 'red.400'
-          }
-          textStyle='p1'
-        >
-          {points}
-        </Text>
-        <Tooltip label='Downvote'>
-          <IconButton
-            sx={{
-              minWidth: 'auto',
-              height: 'auto',
-              padding: '6px',
-            }}
-            variant='ghost'
-            icon={<VoteComponent outlined={!(hasVoted && voteStatus === -1)} />}
-            aria-label='Downvote'
-            isLoading={actionLoading.downvoteLoading}
-            onClick={() => onVote(-1)}
-          />
-        </Tooltip>
 
-        {/* Comments Section */}
-        <Tooltip label='Comments'>
-          <Button
-            size='sm'
-            sx={{
-              minWidth: 'auto',
-              height: 'auto',
-              padding: '6px',
-            }}
-            variant={'ghost'}
-            color='inherit'
-            leftIcon={<BiMessageRounded />}
-          >
-            11
-          </Button>
-        </Tooltip>
-        {/* Share  */}
-        <Tooltip label='Share'>
-          <IconButton
-            sx={{
-              minWidth: 'auto',
-              height: 'auto',
-              padding: '6px',
-            }}
-            variant={'ghost'}
-            color='inherit'
-            icon={<BiShareAlt />}
-            aria-label={'Share'}
-          />
-        </Tooltip>
-      </HStack>
-    </>
+  return (
+    <HStack
+      w='100%'
+      color={'gray.400'}
+      sx={{ gap: '2px' }}
+      css={{
+        button: {
+          minWidth: 'auto',
+          height: 'auto',
+          padding: '6px',
+        },
+      }}
+    >
+      <Tooltip label='Upvote'>
+        <IconButton
+          aria-label='Upvote'
+          icon={
+            <VoteComponent
+              isUpvote
+              outlined={!(hasVoted && voteStatus === 1)}
+            />
+          }
+          onClick={() => onVote(1)}
+          isLoading={actionLoading.upvoteLoading}
+          variant='ghost'
+        />
+      </Tooltip>
+      <Text color={getPointsColor(voteStatus)} textStyle='p1'>
+        {points}
+      </Text>
+      <Tooltip label='Downvote'>
+        <IconButton
+          variant='ghost'
+          icon={<VoteComponent outlined={!(hasVoted && voteStatus === -1)} />}
+          aria-label='Downvote'
+          isLoading={actionLoading.downvoteLoading}
+          onClick={() => onVote(-1)}
+        />
+      </Tooltip>
+
+      {/* Comments Section */}
+      <Tooltip label='Comments'>
+        <Button
+          size='sm'
+          variant={'ghost'}
+          color='inherit'
+          leftIcon={<BiMessageRounded />}
+        >
+          11
+        </Button>
+      </Tooltip>
+      {/* Share  */}
+      <Tooltip label='Share'>
+        <IconButton
+          variant={'ghost'}
+          color='inherit'
+          icon={<BiShareAlt />}
+          aria-label={'Share'}
+        />
+      </Tooltip>
+    </HStack>
   );
 };
