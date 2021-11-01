@@ -1,12 +1,5 @@
 import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout';
-import {
-  Avatar,
-  Skeleton,
-  SkeletonCircle,
-  SkeletonText,
-  Tag,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Avatar, Tag, useColorModeValue } from '@chakra-ui/react';
 import ImageWithFallback from 'components/ImageWithFallback';
 import { formatDistance } from 'date-fns';
 import { Maybe, MissingPostTags, Photo } from 'generated/graphql';
@@ -16,8 +9,6 @@ import { PostActions } from './_PostActions';
 import { PostTags } from './_PostTags';
 
 interface SinglePostCardProps {
-  isLoaded?: boolean;
-
   id: number;
   title: string;
   description: string;
@@ -31,12 +22,10 @@ interface SinglePostCardProps {
     avatar?: Maybe<{ __typename?: 'Photo'; url?: Maybe<string> }>;
   };
   tags?: MissingPostTags[];
-  address:
-    | Maybe<{
-        __typename?: 'Address' | undefined;
-        distance?: Maybe<number> | undefined;
-      }>
-    | undefined;
+  address?: Maybe<{
+    __typename?: 'Address';
+    distance?: Maybe<number>;
+  }>;
 }
 export const SinglePostCard: React.FC<SinglePostCardProps> = ({
   id,
@@ -49,7 +38,6 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
   tags,
   address,
   voteStatus,
-  isLoaded = true,
 }) => {
   let isNear = false;
   if (address?.distance) {
@@ -106,19 +94,17 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         overflow='hidden'
         boxShadow='md'
       >
-        <Skeleton isLoaded={isLoaded}>
-          <ImageWithFallback
-            fallbackSrc={fallbackSrc}
-            props={{
-              src: thumbnailImage,
-              loading: 'eager',
-              alt: title,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-            }}
-          />
-        </Skeleton>
+        <ImageWithFallback
+          fallbackSrc={fallbackSrc}
+          props={{
+            src: thumbnailImage,
+            loading: 'eager',
+            alt: title,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
+        />
       </Box>
 
       <Flex
@@ -132,67 +118,51 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         sx={{ gap: ['24px', '18px'] }}
       >
         <VStack spacing='6px' align='flex-start'>
-          <HStack w='100%' justify='space-between'>
+          <HStack w='100%' justify='space-between' pr={4}>
             <HStack spacing={4}>
-              <Skeleton isLoaded={isLoaded}>
-                <Text
-                  maxW='60ch'
-                  color={useColorModeValue('gray.700', 'gray.400')}
-                  as='h2'
-                  textStyle='h5'
-                >
-                  {title}
-                </Text>
-              </Skeleton>
-              <Skeleton hidden={!isLoaded} isLoaded={isLoaded}>
-                <ComponentTags />
-              </Skeleton>
-            </HStack>
-            <Skeleton height='fit-content' isLoaded={isLoaded}>
-              <Text textStyle='p3' textAlign={'center'} whiteSpace={'nowrap'}>
-                {createdAtDistance}
+              <Text
+                maxW='60ch'
+                color={useColorModeValue('gray.700', 'gray.400')}
+                as='h2'
+                textStyle='h5'
+              >
+                {title}
               </Text>
-            </Skeleton>
+
+              <ComponentTags />
+            </HStack>
+
+            <Text textStyle='p3' textAlign={'center'} whiteSpace={'nowrap'}>
+              {createdAtDistance}
+            </Text>
           </HStack>
           <HStack>
-            <SkeletonCircle
-              isLoaded={isLoaded}
-              width='fit-content'
-              height='fit-content'
-            >
-              <Avatar
-                size='xs'
-                name={full_name}
-                src={avatar?.url || ''}
-                cursor='default'
-              />
-            </SkeletonCircle>
-            <Skeleton height='fit-content' isLoaded={isLoaded}>
-              <Text fontSize='14px' fontWeight='normal' color='gray.500'>
-                Posted by{' '}
-                <Text
-                  aria-label='name'
-                  as='a'
-                  href={`localhost:3000/user/${full_name}`}
-                  color='blue.500'
-                  fontWeight='medium'
-                >
-                  {full_name}
-                </Text>
+            <Avatar
+              size='xs'
+              name={full_name}
+              src={avatar?.url || ''}
+              cursor='default'
+            />
+            <Text fontSize='14px' fontWeight='normal' color='gray.500'>
+              Posted by{' '}
+              <Text
+                aria-label='name'
+                as='a'
+                href={`localhost:3000/user/${full_name}`}
+                color='blue.500'
+                fontWeight='medium'
+              >
+                {full_name}
               </Text>
-            </Skeleton>
-          </HStack>
-          <SkeletonText w='fit-content' h='fit-content' isLoaded={isLoaded}>
-            <Text as='p' textStyle='p1' maxW={'70ch'} fontWeight='normal'>
-              {description}
-              Labore voluptate ex eiusmod
             </Text>
-          </SkeletonText>
+          </HStack>
+          <Text as='p' textStyle='p1' maxW={'70ch'} fontWeight='normal'>
+            {description}
+            Labore voluptate ex eiusmod
+          </Text>
         </VStack>
         {/* Actions */}
-        <Skeleton isLoaded={isLoaded} width='fit-content'>
-          <PostActions {...{ postId: id, hasVoted, voteStatus, points }} />
-        </Skeleton>
+        <PostActions {...{ postId: id, hasVoted, voteStatus, points }} />
       </Flex>
     </Flex>
   );
