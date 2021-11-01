@@ -3,25 +3,23 @@ import { Container, Flex, Grid, GridItem } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
-import { MissingPost, useMissingPostsQuery } from 'generated/graphql';
+import {
+  MissingPost,
+  MissingPostsQuery,
+  MissingPostTypes,
+  useMissingPostsQuery,
+} from 'generated/graphql';
 import React, { useState } from 'react';
 import { FaChevronDown } from 'react-icons/fa';
 import withApollo from 'utils/withApollo';
 import { MissingPostsGridContainer } from './_MissingPostsGridContainer';
 
-const MissingPageContent: React.FC = () => {
-  const [hasLoadedFirstTime, setHasLoaded] = useState(false);
-
-  const { data, loading, fetchMore } = useMissingPostsQuery({
-    variables: {
-      input: { limit: 5, cursor: null },
-      length: 120,
-    },
-    notifyOnNetworkStatusChange: true,
-    onCompleted: () => {
-      setHasLoaded(true);
-    },
-  });
+const MissingPageContent: React.FC<{
+  data?: MissingPostsQuery;
+  hasLoadedFirstTime?: boolean;
+  loading: boolean;
+  fetchMore: Function;
+}> = ({ loading, data, hasLoadedFirstTime, fetchMore }) => {
   if (!hasLoadedFirstTime) return <DummyPostsSkeleton noOfPosts={3} />;
   if (!data && !hasLoadedFirstTime && !loading) return <h1>No data</h1>;
   if (!data || !data.missingPosts) return <h1>No data</h1>;
@@ -75,15 +73,46 @@ const MissingPageContent: React.FC = () => {
 };
 
 const MissingPage = () => {
+  const [hasLoadedFirstTime, setHasLoaded] = useState(false);
+  const [filters, setFilters] = useState<MissingPostTypes[]>([]); //will hold the filters for the posts
+
+  const { data, loading, fetchMore } = useMissingPostsQuery({
+    variables: {
+      input: { limit: 5, cursor: null },
+      length: 120,
+    },
+    notifyOnNetworkStatusChange: true,
+    onCompleted: () => {
+      setHasLoaded(true);
+    },
+  });
   return (
     <Layout title='Missing Pets - Paaws'>
-      {/* This will be divided into 2 sections
-        1. Filters Section (32% width)     
-        2. Pet Listing Section (68% width)
-      */}
-      <Container maxW={['100%', '900px']}>
-        <MissingPageContent />
-      </Container>
+      <Grid templateColumns='1fr auto 1fr' gap={'24px'}>
+        <GridItem>
+          Anim labore laboris amet exercitation sunt amet adipisicing. Do elit
+          est ullamco Lorem ut elit nisi reprehenderit. Non duis aliquip sunt
+          dolor minim nisi ex fugiat quis tempor nostrud nulla reprehenderit.
+          Duis eu nostrud incididunt adipisicing ut adipisicing culpa laboris eu
+          veniam anim esse ea aliquip. Eu fugiat mollit dolor mollit ad.
+          Deserunt eu non velit voluptate id ipsum fugiat.
+        </GridItem>
+        <GridItem>
+          <Container maxW={['100%', '900px']}>
+            <MissingPageContent
+              {...{ data, loading, hasLoadedFirstTime, fetchMore }}
+            />
+          </Container>
+        </GridItem>
+        <GridItem>
+          Anim labore laboris amet exercitation sunt amet adipisicing. Do elit
+          est ullamco Lorem ut elit nisi reprehenderit. Non duis aliquip sunt
+          dolor minim nisi ex fugiat quis tempor nostrud nulla reprehenderit.
+          Duis eu nostrud incididunt adipisicing ut adipisicing culpa laboris eu
+          veniam anim esse ea aliquip. Eu fugiat mollit dolor mollit ad.
+          Deserunt eu non velit voluptate id ipsum fugiat.
+        </GridItem>
+      </Grid>
     </Layout>
   );
 };

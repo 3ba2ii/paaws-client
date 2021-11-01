@@ -117,8 +117,8 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         p={['16px', '10px 0']}
         sx={{ gap: ['24px', '18px'] }}
       >
-        <VStack spacing='6px' align='flex-start'>
-          <HStack w='100%' justify='space-between' pr={4}>
+        <VStack w='100%' pr={[1, 4]} spacing='6px' align='flex-start'>
+          <HStack w='100%' justify='space-between'>
             <HStack spacing={4}>
               <Text
                 maxW='60ch'
