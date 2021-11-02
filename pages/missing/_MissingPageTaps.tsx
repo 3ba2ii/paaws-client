@@ -1,4 +1,4 @@
-import { Text, VStack, Box } from '@chakra-ui/layout';
+import { Text, VStack, Box, Flex } from '@chakra-ui/layout';
 import { Button, ButtonGroup, useColorModeValue } from '@chakra-ui/react';
 import { MissingPostTypes } from 'generated/graphql';
 import React, { useState } from 'react';
@@ -40,24 +40,25 @@ export const MissingPageTaps: React.FC<{
     handleSelectFilter(buttons[index].types);
   };
   return (
-    <VStack
+    <Flex
+      flexDirection={['row', 'column']}
       w='100%'
       align='flex-start'
+      overflow={['auto', 'hidden']}
       css={{
         button: {
           width: '100%',
-          textAlign: 'left',
         },
       }}
     >
       <ButtonGroup
         w='100%'
-        flexDir={'column'}
+        flexDir={['row', 'column']}
         align='flex-start'
         variant='unstyled'
         sx={{ gap: '8px' }}
       >
-        <Text textStyle='p1' mb={4}>
+        <Text display={['none', 'block']} textStyle='p1' mb={4}>
           Menu
         </Text>
 
@@ -68,7 +69,7 @@ export const MissingPageTaps: React.FC<{
           />
         ))}
       </ButtonGroup>
-    </VStack>
+    </Flex>
   );
 };
 const SingleNavTap: React.FC<{
@@ -79,12 +80,10 @@ const SingleNavTap: React.FC<{
 }> = ({ selectedTap, handleSelectTap, button, index }) => {
   return (
     <Box
-      _focus={{
-        border: '1px solid red',
-      }}
+      w='100%'
       position='relative'
+      overflow={'hidden'}
       borderRadius={4}
-      overflow='hidden'
       key={button.label}
       onClick={() => handleSelectTap(index)}
       transition='background .2s ease-in-out'
@@ -102,13 +101,16 @@ const SingleNavTap: React.FC<{
               content: `''`,
               position: 'absolute',
               background: useColorModeValue('teal.500', 'teal.500'),
-              height: '100%',
-              width: '4px',
+              height: ['4px', '100%'],
+              width: ['100%', '4px'],
+              bottom: [0, 'unset'],
             }
           : {}
       }
     >
-      <Button pl={4}>{button.label}</Button>
+      <Button px={[2, 4]} textAlign={['center', 'left']}>
+        {button.label}
+      </Button>
     </Box>
   );
 };

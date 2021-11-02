@@ -1,14 +1,6 @@
 import { getDataFromTree } from '@apollo/client/react/ssr';
-import {
-  Box,
-  Container,
-  Flex,
-  Grid,
-  GridItem,
-  VStack,
-} from '@chakra-ui/layout';
-
-import { Button, Image } from '@chakra-ui/react';
+import { Box, Flex, Grid, GridItem } from '@chakra-ui/layout';
+import { Button, IconButton, Image, useMediaQuery } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
 import {
@@ -18,6 +10,7 @@ import {
   useMissingPostsQuery,
 } from 'generated/graphql';
 import React, { useState } from 'react';
+import { BiPlus } from 'react-icons/bi';
 import { FaChevronDown } from 'react-icons/fa';
 import withApollo from 'utils/withApollo';
 import { MissingPageTaps } from './_MissingPageTaps';
@@ -56,7 +49,7 @@ const MissingPageContent: React.FC<{
       gap={'24px'}
     >
       <GridItem ml='auto'>
-        <Flex sx={{ gap: '16px' }}>
+        <Flex sx={{ gap: '8px' }}>
           <Button
             rightIcon={<FaChevronDown />}
             variant='outline'
@@ -64,9 +57,13 @@ const MissingPageContent: React.FC<{
           >
             Most Recent
           </Button>
-          <Button colorScheme={'teal'} size='md'>
-            Report Missing Pet
-          </Button>
+          <IconButton
+            aria-label='Report Missing Pet'
+            icon={<BiPlus />}
+            colorScheme={'teal'}
+            bg='teal.400'
+            fontSize='24px'
+          />
         </Flex>
       </GridItem>
       <GridItem>
@@ -80,10 +77,63 @@ const MissingPageContent: React.FC<{
     </Grid>
   );
 };
+
+const SideFiltersColumn: React.FC<{
+  handleSelectFilter: (type: MissingPostTypes) => void;
+}> = ({ handleSelectFilter }) => {
+  return (
+    <Flex
+      flexDirection={['row', 'column']}
+      w='100%'
+      h={['fit-content', '80vh']}
+      align='flex-start'
+      justify='space-between'
+      position='relative'
+      maxW={['100%', '250px']}
+    >
+      <MissingPageTaps handleSelectFilter={handleSelectFilter} />
+      <Box
+        display={['none', 'none', 'block']}
+        width='200px'
+        position='absolute'
+        placeSelf='left'
+        bottom='0'
+      >
+        <Image
+          src='/illustrations/CTA.svg'
+          w='100%'
+          h='100%'
+          objectFit='cover'
+        />
+        <Button
+          position='absolute'
+          bottom='8%'
+          left='50%'
+          transform='translateX(-50%)'
+          variant='solid'
+          colorScheme='red'
+          bg='red.400'
+          w='80%'
+          color='white'
+          fontWeight='bold'
+          borderRadius={6}
+          size='sm'
+        >
+          Discover More
+        </Button>
+      </Box>
+    </Flex>
+  );
+};
+
 const MissingPage = () => {
   const [hasLoadedFirstTime, setHasLoaded] = useState(false);
   const [filters, setFilters] = useState<MissingPostTypes[]>([]); //will hold the filters for the posts
-
+  const [isSmallerThan1440] = useMediaQuery('(max-width: 1440px)');
+  console.log(
+    `🚀 ~ file: index.tsx ~ line 129 ~ MissingPage ~ isSmallerThan720`,
+    isSmallerThan1440
+  );
   const { data, loading, fetchMore } = useMissingPostsQuery({
     variables: {
       input: { limit: 5, cursor: null },
@@ -100,56 +150,29 @@ const MissingPage = () => {
       setFilters([...filters, type]);
     }
   };
+
   return (
     <Layout title='Missing Pets - Paaws'>
-      <Grid alignItems='baseline' templateColumns='1fr auto 1fr' gap={'24px'}>
-        <GridItem
-          maxW='300px'
-          gridColumn='1/2'
-          sx={{
-            position: 'fixed',
-          }}
-        >
-          <VStack
-            w='100%'
-            h='80vh'
-            align='flex-start'
-            justify='space-between'
-            position='relative'
-          >
-            <MissingPageTaps handleSelectFilter={handleSelectFilter} />
-            <Box width='220px'>
-              <Image
-                src='/illustrations/CTA.svg'
-                w='100%'
-                h='100%'
-                objectFit='cover'
-              />
-              <Button
-                position='absolute'
-                bottom='3%'
-                left='50%'
-                transform='translateX(-50%)'
-                variant='solid'
-                colorScheme='red'
-                bg='red.500'
-                w='70%'
-                color='white'
-                fontWeight='bold'
-              >
-                Discover More
-              </Button>
-            </Box>
-          </VStack>
+      <Grid
+        w='100%'
+        templateAreas={[
+          `"left"
+          "center"`,
+          '"left center"',
+          '"left center right"',
+        ]}
+        gap={'24px'}
+        alignItems='baseline'
+      >
+        <GridItem w={['100%', '220px', '220px']} area='left'>
+          <SideFiltersColumn handleSelectFilter={handleSelectFilter} />
         </GridItem>
-        <GridItem gridColumn='2/3'>
-          <Container maxW={['100%', '900px']}>
-            <MissingPageContent
-              {...{ data, loading, hasLoadedFirstTime, fetchMore }}
-            />
-          </Container>
+        <GridItem area='center' w='100%' maxW={['none', '800px']}>
+          <MissingPageContent
+            {...{ data, loading, hasLoadedFirstTime, fetchMore }}
+          />
         </GridItem>
-        <GridItem>
+        <GridItem hidden={isSmallerThan1440} w='250px' area='right'>
           Anim labore laboris amet exercitation sunt amet adipisicing. Do elit
           est ullamco Lorem ut elit nisi reprehenderit. Non duis aliquip sunt
           dolor minim nisi ex fugiat quis tempor nostrud nulla reprehenderit.
