@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css';
 import Footer from './Footer';
 import NavBar from './NavBar';
 
-interface containerProps {
+interface ContainerProps {
   children: React.ReactNode;
   title?: string;
   className?: string;
@@ -23,7 +23,7 @@ export const Layout = ({
   children,
   className,
   title = 'Paaws',
-}: containerProps) => {
+}: ContainerProps) => {
   const { colorMode } = useColorMode();
 
   const bgColor = { light: 'white', dark: 'gray.900' };
@@ -47,7 +47,9 @@ export const Layout = ({
         height='100%'
       >
         <NavBar />
-        <Box className={styles.main}>{children}</Box>
+        <Box className={styles.main} mt={'5rem'}>
+          {children}
+        </Box>
         <Footer />
       </Flex>
     </>

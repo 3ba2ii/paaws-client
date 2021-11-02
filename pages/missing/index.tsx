@@ -1,6 +1,14 @@
 import { getDataFromTree } from '@apollo/client/react/ssr';
-import { Box, Flex, Grid, GridItem } from '@chakra-ui/layout';
-import { Button, IconButton, Image, useMediaQuery } from '@chakra-ui/react';
+import { Box, Flex, Grid, GridItem, HStack } from '@chakra-ui/layout';
+import {
+  Button,
+  IconButton,
+  Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  useMediaQuery,
+} from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
 import {
@@ -9,12 +17,15 @@ import {
   MissingPostTypes,
   useMissingPostsQuery,
 } from 'generated/graphql';
+import { SearchIcon } from '@chakra-ui/icons';
 import React, { useState } from 'react';
-import { BiPlus } from 'react-icons/bi';
+import { BiFilter, BiFilterAlt, BiPlus } from 'react-icons/bi';
+import { GoPlus, GoSettings } from 'react-icons/go';
 import { FaChevronDown } from 'react-icons/fa';
 import withApollo from 'utils/withApollo';
 import { MissingPageTaps } from './_MissingPageTaps';
 import { MissingPostsGridContainer } from './_MissingPostsGridContainer';
+import { FcSettings } from 'react-icons/fc';
 
 const MissingPageContent: React.FC<{
   data?: MissingPostsQuery;
@@ -48,23 +59,45 @@ const MissingPageContent: React.FC<{
       h='100%'
       gap={'24px'}
     >
-      <GridItem ml='auto'>
-        <Flex sx={{ gap: '8px' }}>
-          <Button
-            rightIcon={<FaChevronDown />}
-            variant='outline'
-            aria-label='sorting'
-          >
-            Most Recent
-          </Button>
+      <GridItem w='100%'>
+        {/* Search bar */}
+        <HStack justify='flex-end' w='100%'>
+          {/*  <InputGroup alignItems='center' justify='center'>
+            <InputLeftElement
+              py={5}
+              px={7}
+              pointerEvents='none'
+              children={<SearchIcon color='gray.500' />}
+            />
+            <Input
+              shadow='base'
+              py={5}
+              pl={12}
+              rounded='lg'
+              variant='filled'
+              placeholder='Search for pets, people or anything...'
+            />
+          </InputGroup> */}
           <IconButton
-            aria-label='Report Missing Pet'
-            icon={<BiPlus />}
-            colorScheme={'teal'}
-            bg='teal.400'
-            fontSize='24px'
+            aria-label='Search Icon'
+            icon={<SearchIcon />}
+            colorScheme='gray'
           />
-        </Flex>
+          <Button
+            aria-label='Report Missing Pet'
+            colorScheme='gray'
+            leftIcon={<GoSettings />}
+          >
+            Filters
+          </Button>
+          <Button
+            leftIcon={<GoPlus />}
+            aria-label='Report Missing Pet'
+            colorScheme='teal'
+          >
+            New Post
+          </Button>
+        </HStack>
       </GridItem>
       <GridItem>
         <MissingPostsGridContainer
@@ -81,15 +114,19 @@ const MissingPageContent: React.FC<{
 const SideFiltersColumn: React.FC<{
   handleSelectFilter: (type: MissingPostTypes) => void;
 }> = ({ handleSelectFilter }) => {
+  const [isHeightSmallerThan600] = useMediaQuery('(max-height: 600px)');
+
   return (
     <Flex
       flexDirection={['row', 'column']}
       w='100%'
-      h={['fit-content', '80vh']}
+      h={['fit-content', '90vh']}
+      maxH='100%'
       align='flex-start'
       justify='space-between'
-      position='relative'
       maxW={['100%', '250px']}
+      position='fixed'
+      paddingInlineEnd='2rem'
     >
       <MissingPageTaps handleSelectFilter={handleSelectFilter} />
       <Box
@@ -97,7 +134,8 @@ const SideFiltersColumn: React.FC<{
         width='200px'
         position='absolute'
         placeSelf='left'
-        bottom='0'
+        bottom='8vh'
+        hidden={isHeightSmallerThan600}
       >
         <Image
           src='/illustrations/CTA.svg'
@@ -130,10 +168,7 @@ const MissingPage = () => {
   const [hasLoadedFirstTime, setHasLoaded] = useState(false);
   const [filters, setFilters] = useState<MissingPostTypes[]>([]); //will hold the filters for the posts
   const [isSmallerThan1440] = useMediaQuery('(max-width: 1440px)');
-  console.log(
-    `🚀 ~ file: index.tsx ~ line 129 ~ MissingPage ~ isSmallerThan720`,
-    isSmallerThan1440
-  );
+
   const { data, loading, fetchMore } = useMissingPostsQuery({
     variables: {
       input: { limit: 5, cursor: null },
@@ -172,14 +207,7 @@ const MissingPage = () => {
             {...{ data, loading, hasLoadedFirstTime, fetchMore }}
           />
         </GridItem>
-        <GridItem hidden={isSmallerThan1440} w='250px' area='right'>
-          Anim labore laboris amet exercitation sunt amet adipisicing. Do elit
-          est ullamco Lorem ut elit nisi reprehenderit. Non duis aliquip sunt
-          dolor minim nisi ex fugiat quis tempor nostrud nulla reprehenderit.
-          Duis eu nostrud incididunt adipisicing ut adipisicing culpa laboris eu
-          veniam anim esse ea aliquip. Eu fugiat mollit dolor mollit ad.
-          Deserunt eu non velit voluptate id ipsum fugiat.
-        </GridItem>
+        <GridItem hidden={isSmallerThan1440} w='250px' area='right'></GridItem>
       </Grid>
     </Layout>
   );

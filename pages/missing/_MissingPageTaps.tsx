@@ -56,7 +56,7 @@ export const MissingPageTaps: React.FC<{
         flexDir={['row', 'column']}
         align='flex-start'
         variant='unstyled'
-        sx={{ gap: '8px' }}
+        sx={{ gap: '4px' }}
       >
         <Text display={['none', 'block']} textStyle='p1' mb={4}>
           Menu
@@ -90,6 +90,7 @@ const SingleNavTap: React.FC<{
       _hover={{
         background: useColorModeValue('blackAlpha.50', 'whiteAlpha.50'),
       }}
+      color={selectedTap === index ? 'teal.500' : 'inherit'}
       bg={
         selectedTap === index
           ? useColorModeValue('blackAlpha.100', 'whiteAlpha.100')
@@ -108,7 +109,11 @@ const SingleNavTap: React.FC<{
           : {}
       }
     >
-      <Button px={[2, 4]} textAlign={['center', 'left']}>
+      <Button
+        px={[2, 4]}
+        textAlign={['center', 'left']}
+        fontWeight={selectedTap === index ? 'bold' : 'semibold'}
+      >
         {button.label}
       </Button>
     </Box>

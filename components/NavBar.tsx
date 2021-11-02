@@ -11,7 +11,7 @@ import { CircularProgress } from '@chakra-ui/progress';
 import { MeQuery, useMeQuery, User } from 'generated/graphql';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FaHeart } from 'react-icons/fa';
 import navbarStyles from 'styles/navbar.module.css';
 import { isServer } from 'utils/isServer';
@@ -146,8 +146,20 @@ const NavBarItems = () => {
 };
 const NavBar = () => {
   const logo = useColorModeValue('light', 'dark');
+
   return (
-    <nav className={navbarStyles['navbar-container']}>
+    <nav
+      id='navbar-container'
+      className={navbarStyles['navbar-container']}
+      style={{
+        background: 'inherit',
+        padding: 'inherit',
+        boxShadow: useColorModeValue(
+          '0 0 10px rgba(0, 0, 0, 0.1)',
+          '0 0 10px rgba(255, 255,255, 0.05)'
+        ),
+      }}
+    >
       <Link href='/'>
         <Image
           tabIndex={0}
