@@ -17,7 +17,7 @@ import {
   MissingPostTypes,
   useMissingPostsQuery,
 } from 'generated/graphql';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GoPlus, GoSettings } from 'react-icons/go';
 import withApollo from 'utils/withApollo';
 import { MissingPageTaps } from './_MissingPageTaps';
@@ -156,7 +156,8 @@ const MissingPageContent: React.FC<{
 
 const SideFiltersColumn: React.FC<{
   handleSelectFilter: (type: MissingPostTypes) => void;
-}> = ({ handleSelectFilter }) => {
+  refetch: Function;
+}> = ({ handleSelectFilter, refetch }) => {
   const [isHeightSmallerThan600] = useMediaQuery('(max-height: 600px)');
 
   return (
@@ -211,22 +212,29 @@ const MissingPage = () => {
   const [hasLoadedFirstTime, setHasLoaded] = useState(false);
   const [filters, setFilters] = useState<MissingPostTypes[]>([]); //will hold the filters for the posts
 
-  const { data, loading, fetchMore } = useMissingPostsQuery({
-    variables: {
-      input: { limit: 5, cursor: null },
-      length: 120,
-    },
-    notifyOnNetworkStatusChange: true,
-    onCompleted: () => {
-      setHasLoaded(true);
-    },
-  });
+  const { data, loading, fetchMore, refetch, variables } = useMissingPostsQuery(
+    {
+      variables: {
+        input: { limit: 5, cursor: null },
+        length: 120,
+        types: [],
+      },
+      notifyOnNetworkStatusChange: true,
+      onCompleted: () => {
+        setHasLoaded(true);
+      },
+    }
+  );
+  console.log(`🚀 ~ file: index.tsx ~ line 216 ~ MissingPage ~ data`, data);
   const handleSelectFilter = (type: MissingPostTypes) => {
     const index = filters.indexOf(type);
     if (index === -1) {
-      setFilters([...filters, type]);
+      setFilters([type]);
     }
   };
+  useEffect(() => {
+    refetch({ ...variables, types: filters });
+  }, [filters]);
 
   return (
     <Layout title='Missing Pets - Paaws'>
@@ -242,7 +250,10 @@ const MissingPage = () => {
         alignItems='baseline'
       >
         <GridItem w={['100%', '220px', '100%']} area='left'>
-          <SideFiltersColumn handleSelectFilter={handleSelectFilter} />
+          <SideFiltersColumn
+            handleSelectFilter={handleSelectFilter}
+            refetch={refetch}
+          />
         </GridItem>
         <GridItem area='center' w='100%' maxW={['none', '800px']}>
           <MissingPageContent

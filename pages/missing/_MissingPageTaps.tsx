@@ -1,4 +1,4 @@
-import { Text, VStack, Box, Flex } from '@chakra-ui/layout';
+import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Button, ButtonGroup, useColorModeValue } from '@chakra-ui/react';
 import { MissingPostTypes } from 'generated/graphql';
 import React, { useState } from 'react';
@@ -39,6 +39,7 @@ export const MissingPageTaps: React.FC<{
     setSelectedTap(index);
     handleSelectFilter(buttons[index].types);
   };
+
   return (
     <Flex
       flexDirection={['row', 'column']}

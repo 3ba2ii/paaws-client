@@ -1,5 +1,9 @@
-query MissingPosts($input: PaginationArgs!, $length: Int) {
-  missingPosts(input: $input) {
+query MissingPosts(
+  $input: PaginationArgs!
+  $length: Int
+  $types: [MissingPostTypes!]
+) {
+  missingPosts(input: $input, types: $types) {
     hasMore
     errors {
       field

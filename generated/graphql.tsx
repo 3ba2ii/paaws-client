@@ -821,6 +821,7 @@ export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', 
 export type MissingPostsQueryVariables = Exact<{
   input: PaginationArgs;
   length?: Maybe<Scalars['Int']>;
+  types?: Maybe<Array<MissingPostTypes> | MissingPostTypes>;
 }>;
 
 
@@ -1286,8 +1287,8 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const MissingPostsDocument = gql`
-    query MissingPosts($input: PaginationArgs!, $length: Int) {
-  missingPosts(input: $input) {
+    query MissingPosts($input: PaginationArgs!, $length: Int, $types: [MissingPostTypes!]) {
+  missingPosts(input: $input, types: $types) {
     hasMore
     errors {
       field
@@ -1336,6 +1337,7 @@ export const MissingPostsDocument = gql`
  *   variables: {
  *      input: // value for 'input'
  *      length: // value for 'length'
+ *      types: // value for 'types'
  *   },
  * });
  */
