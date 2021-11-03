@@ -18,7 +18,8 @@ export const PostActions: React.FC<{
   hasVoted: boolean;
   voteStatus?: number | null;
   points: number;
-}> = ({ postId, hasVoted, voteStatus, points }) => {
+  commentsCount: number;
+}> = ({ postId, hasVoted, voteStatus, points, commentsCount }) => {
   const [vote] = usePostVoteMutation();
   const [actionLoading, setLoading] = React.useState({
     upvoteLoading: false,
@@ -152,15 +153,24 @@ export const PostActions: React.FC<{
       </Tooltip>
 
       {/* Comments Section */}
-      <Tooltip label='Comments'>
-        <Button
-          size='sm'
-          variant={'ghost'}
-          color='inherit'
-          leftIcon={<BiMessageRounded />}
-        >
-          11
-        </Button>
+      <Tooltip label='Comment'>
+        {commentsCount > 0 ? (
+          <Button
+            size='sm'
+            variant={'ghost'}
+            color='inherit'
+            leftIcon={<BiMessageRounded />}
+          >
+            {commentsCount}
+          </Button>
+        ) : (
+          <IconButton
+            color='inherit'
+            variant='ghost'
+            aria-label='Comments'
+            icon={<BiMessageRounded />}
+          />
+        )}
       </Tooltip>
       {/* Share  */}
       <Tooltip label='Share'>

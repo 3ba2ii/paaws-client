@@ -16,6 +16,7 @@ interface SinglePostCardProps {
   points: number;
   createdAt: string;
   voteStatus?: number | null;
+  commentsCount: number;
   user: {
     id: number;
     displayName: string;
@@ -38,6 +39,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
   address,
   voteStatus,
   descriptionSnippet,
+  commentsCount,
 }) => {
   let isNear = false;
   if (address?.distance) {
@@ -161,7 +163,9 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
           </Text>
         </VStack>
         {/* Actions */}
-        <PostActions {...{ postId: id, hasVoted, voteStatus, points }} />
+        <PostActions
+          {...{ postId: id, hasVoted, voteStatus, points, commentsCount }}
+        />
       </Flex>
     </Flex>
   );

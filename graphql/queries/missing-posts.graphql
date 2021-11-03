@@ -18,6 +18,7 @@ query MissingPosts($input: PaginationArgs!, $length: Int) {
           url
         }
       }
+      commentsCount
       tags
       address {
         distance

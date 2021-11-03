@@ -112,6 +112,7 @@ export type Comment = {
   points: Scalars['Int'];
   postId: Scalars['Int'];
   replies: Array<Comment>;
+  repliesCount: Scalars['Int'];
   text: Scalars['String'];
   updatedAt: Scalars['DateTime'];
   updoots: Array<CommentUpdoot>;
@@ -197,6 +198,7 @@ export type MissingPost = {
   address?: Maybe<Address>;
   addressId?: Maybe<Scalars['Int']>;
   comments: Array<Comment>;
+  commentsCount: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   descriptionSnippet: Scalars['String'];
@@ -237,10 +239,12 @@ export enum MissingPostTags {
   Urgent = 'Urgent'
 }
 
-/** Either missing or found */
+/** Either missing, found, rescued, or all */
 export enum MissingPostTypes {
+  All = 'ALL',
   Found = 'Found',
-  Missing = 'Missing'
+  Missing = 'Missing',
+  Rescued = 'Rescued'
 }
 
 export type Mutation = {
@@ -613,6 +617,7 @@ export type QueryIsValidTokenArgs = {
 
 export type QueryMissingPostsArgs = {
   input: PaginationArgs;
+  types?: Maybe<Array<MissingPostTypes>>;
 };
 
 
@@ -819,7 +824,7 @@ export type MissingPostsQueryVariables = Exact<{
 }>;
 
 
-export type MissingPostsQuery = { __typename?: 'Query', missingPosts: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', id: number, title: string, descriptionSnippet: string, voteStatus?: Maybe<number>, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }> } };
+export type MissingPostsQuery = { __typename?: 'Query', missingPosts: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', id: number, title: string, descriptionSnippet: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }> } };
 
 export type PaginatedUsersQueryVariables = Exact<{
   usersWhere: WhereClause;
@@ -1301,6 +1306,7 @@ export const MissingPostsDocument = gql`
           url
         }
       }
+      commentsCount
       tags
       address {
         distance

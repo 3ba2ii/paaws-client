@@ -1,32 +1,112 @@
 import { getDataFromTree } from '@apollo/client/react/ssr';
+import { SearchIcon } from '@chakra-ui/icons';
 import { Box, Flex, Grid, GridItem, HStack } from '@chakra-ui/layout';
 import {
   Button,
   IconButton,
   Image,
   Input,
-  InputGroup,
-  InputLeftElement,
   useMediaQuery,
 } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
+import { motion } from 'framer-motion';
 import {
   MissingPost,
   MissingPostsQuery,
   MissingPostTypes,
   useMissingPostsQuery,
 } from 'generated/graphql';
-import { SearchIcon } from '@chakra-ui/icons';
 import React, { useState } from 'react';
-import { BiFilter, BiFilterAlt, BiPlus } from 'react-icons/bi';
 import { GoPlus, GoSettings } from 'react-icons/go';
-import { FaChevronDown } from 'react-icons/fa';
 import withApollo from 'utils/withApollo';
 import { MissingPageTaps } from './_MissingPageTaps';
 import { MissingPostsGridContainer } from './_MissingPostsGridContainer';
-import { FcSettings } from 'react-icons/fc';
 
+const variants = {
+  closed: {
+    opacity: 0,
+    x: '98%',
+    y: '-100%',
+  },
+  open: {
+    opacity: 1,
+    x: '0',
+    y: '-100%',
+  },
+};
+
+const PostsOptions: React.FC = () => {
+  const [showOptions, setShowOptions] = useState(false);
+
+  const toggleShowOptions = () => {
+    setShowOptions(!showOptions);
+  };
+  return (
+    <HStack
+      justify='flex-end'
+      w='100%'
+      position='relative'
+      wrap={['wrap', 'unset']}
+      sx={{
+        rowGap: '1rem',
+      }}
+    >
+      <Box
+        position='relative'
+        w='100%'
+        display='flex'
+        align='flex-start'
+        justify='flex-start'
+        overflow='hidden'
+      >
+        <IconButton
+          aria-label='Search Icon'
+          icon={<SearchIcon />}
+          colorScheme='gray'
+          ml='auto'
+          w='24px'
+          onClick={toggleShowOptions}
+          zIndex={2}
+        />
+        <motion.div
+          style={{
+            position: 'absolute',
+            width: '90%',
+            height: '100%',
+            top: '100%',
+          }}
+          animate={showOptions ? 'open' : 'closed'}
+          variants={variants as any}
+        >
+          <Input
+            w='100%'
+            shadow='base'
+            variant='filled'
+            placeholder='Search for post title, pet type or just description'
+            zIndex={1}
+          />
+        </motion.div>
+      </Box>
+
+      <Button
+        aria-label='Report Missing Pet'
+        colorScheme='gray'
+        leftIcon={<GoSettings />}
+      >
+        Filters
+      </Button>
+      <Button
+        leftIcon={<GoPlus />}
+        aria-label='Report Missing Pet'
+        colorScheme='teal'
+        px={6}
+      >
+        New Post
+      </Button>
+    </HStack>
+  );
+};
 const MissingPageContent: React.FC<{
   data?: MissingPostsQuery;
   hasLoadedFirstTime?: boolean;
@@ -60,44 +140,7 @@ const MissingPageContent: React.FC<{
       gap={'24px'}
     >
       <GridItem w='100%'>
-        {/* Search bar */}
-        <HStack justify='flex-end' w='100%'>
-          {/*  <InputGroup alignItems='center' justify='center'>
-            <InputLeftElement
-              py={5}
-              px={7}
-              pointerEvents='none'
-              children={<SearchIcon color='gray.500' />}
-            />
-            <Input
-              shadow='base'
-              py={5}
-              pl={12}
-              rounded='lg'
-              variant='filled'
-              placeholder='Search for pets, people or anything...'
-            />
-          </InputGroup> */}
-          <IconButton
-            aria-label='Search Icon'
-            icon={<SearchIcon />}
-            colorScheme='gray'
-          />
-          <Button
-            aria-label='Report Missing Pet'
-            colorScheme='gray'
-            leftIcon={<GoSettings />}
-          >
-            Filters
-          </Button>
-          <Button
-            leftIcon={<GoPlus />}
-            aria-label='Report Missing Pet'
-            colorScheme='teal'
-          >
-            New Post
-          </Button>
-        </HStack>
+        <PostsOptions />
       </GridItem>
       <GridItem>
         <MissingPostsGridContainer
@@ -125,7 +168,7 @@ const SideFiltersColumn: React.FC<{
       align='flex-start'
       justify='space-between'
       maxW={['100%', '250px']}
-      position='fixed'
+      position='relative'
       paddingInlineEnd='2rem'
     >
       <MissingPageTaps handleSelectFilter={handleSelectFilter} />
@@ -167,7 +210,6 @@ const SideFiltersColumn: React.FC<{
 const MissingPage = () => {
   const [hasLoadedFirstTime, setHasLoaded] = useState(false);
   const [filters, setFilters] = useState<MissingPostTypes[]>([]); //will hold the filters for the posts
-  const [isSmallerThan1440] = useMediaQuery('(max-width: 1440px)');
 
   const { data, loading, fetchMore } = useMissingPostsQuery({
     variables: {
@@ -194,12 +236,12 @@ const MissingPage = () => {
           `"left"
           "center"`,
           '"left center"',
-          '"left center right"',
+          '"left center"',
         ]}
         gap={'24px'}
         alignItems='baseline'
       >
-        <GridItem w={['100%', '220px', '220px']} area='left'>
+        <GridItem w={['100%', '220px', '100%']} area='left'>
           <SideFiltersColumn handleSelectFilter={handleSelectFilter} />
         </GridItem>
         <GridItem area='center' w='100%' maxW={['none', '800px']}>
@@ -207,7 +249,6 @@ const MissingPage = () => {
             {...{ data, loading, hasLoadedFirstTime, fetchMore }}
           />
         </GridItem>
-        <GridItem hidden={isSmallerThan1440} w='250px' area='right'></GridItem>
       </Grid>
     </Layout>
   );

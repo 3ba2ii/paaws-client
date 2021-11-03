@@ -34,6 +34,7 @@ export const MissingPostsGridContainer: React.FC<{
           address,
           voteStatus,
           descriptionSnippet,
+          commentsCount,
         }) => {
           return (
             <SinglePostCard
@@ -49,6 +50,7 @@ export const MissingPostsGridContainer: React.FC<{
                 tags,
                 address,
                 voteStatus,
+                commentsCount,
               }}
             />
           );
