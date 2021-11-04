@@ -1,3 +1,4 @@
+import { QueryResult } from '@apollo/client';
 import { getDataFromTree } from '@apollo/client/react/ssr';
 import { SearchIcon } from '@chakra-ui/icons';
 import { Box, Flex, Grid, GridItem, HStack } from '@chakra-ui/layout';
@@ -17,7 +18,7 @@ import {
   MissingPostTypes,
   useMissingPostsQuery,
 } from 'generated/graphql';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { GoPlus, GoSettings } from 'react-icons/go';
 import withApollo from 'utils/withApollo';
 import { MissingPageTaps } from './_MissingPageTaps';
@@ -207,60 +208,63 @@ const SideFiltersColumn: React.FC<{
     </Flex>
   );
 };
-
+const MissingPageContext =
+  React.createContext<QueryResult<MissingPostsQuery> | null>(null);
 const MissingPage = () => {
   const [hasLoadedFirstTime, setHasLoaded] = useState(false);
-  const [filters, setFilters] = useState<MissingPostTypes[]>([]); //will hold the filters for the posts
+  const [filters, setFilters] = useState<MissingPostTypes>(
+    MissingPostTypes.All
+  ); //will hold the filters for the posts
 
-  const { data, loading, fetchMore, refetch, variables } = useMissingPostsQuery(
-    {
+  const { data, loading, fetchMore, refetch, variables, ...rest } =
+    useMissingPostsQuery({
       variables: {
         input: { limit: 5, cursor: null },
         length: 120,
-        types: [],
       },
       notifyOnNetworkStatusChange: true,
       onCompleted: () => {
         setHasLoaded(true);
       },
-    }
-  );
-  console.log(`🚀 ~ file: index.tsx ~ line 216 ~ MissingPage ~ data`, data);
+    });
+
   const handleSelectFilter = (type: MissingPostTypes) => {
-    const index = filters.indexOf(type);
-    if (index === -1) {
-      setFilters([type]);
-    }
+    setFilters(type);
   };
+
   useEffect(() => {
-    refetch({ ...variables, types: filters });
+    refetch({ ...variables, type: filters });
   }, [filters]);
 
   return (
     <Layout title='Missing Pets - Paaws'>
-      <Grid
-        w='100%'
-        templateAreas={[
-          `"left"
-          "center"`,
-          '"left center"',
-          '"left center"',
-        ]}
-        gap={'24px'}
-        alignItems='baseline'
+      <MissingPageContext.Provider
+        value={{ data, loading, fetchMore, refetch, variables, ...rest }}
       >
-        <GridItem w={['100%', '220px', '100%']} area='left'>
-          <SideFiltersColumn
-            handleSelectFilter={handleSelectFilter}
-            refetch={refetch}
-          />
-        </GridItem>
-        <GridItem area='center' w='100%' maxW={['none', '800px']}>
-          <MissingPageContent
-            {...{ data, loading, hasLoadedFirstTime, fetchMore }}
-          />
-        </GridItem>
-      </Grid>
+        <Grid
+          w='100%'
+          templateAreas={[
+            `"left"
+          "center"`,
+            '"left center"',
+            '"left center"',
+          ]}
+          gap={'24px'}
+          alignItems='baseline'
+        >
+          <GridItem w={['100%', '220px', '250px']} area='left'>
+            <SideFiltersColumn
+              handleSelectFilter={handleSelectFilter}
+              refetch={refetch}
+            />
+          </GridItem>
+          <GridItem area='center' w='100%'>
+            <MissingPageContent
+              {...{ data, loading, hasLoadedFirstTime, fetchMore }}
+            />
+          </GridItem>
+        </Grid>
+      </MissingPageContext.Provider>
     </Layout>
   );
 };
