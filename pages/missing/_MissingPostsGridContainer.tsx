@@ -8,11 +8,11 @@ import { SinglePostCard } from './_SinglePostCardProps';
 
 /* Missing Posts Grid Container */
 export const MissingPostsGridContainer: React.FC<{
-  posts: Array<MissingPost>;
   fetchMorePosts: VoidFunction;
-  hasMore: boolean | undefined | null;
+  hasMore?: boolean | null;
   loading: boolean;
-}> = ({ posts, fetchMorePosts, hasMore, loading = false }) => {
+  posts: Array<MissingPost>;
+}> = ({ fetchMorePosts, hasMore = false, posts, loading }) => {
   const loadMorButtonRef = useRef(null);
   const isVisible = useOnScreen(loadMorButtonRef);
 

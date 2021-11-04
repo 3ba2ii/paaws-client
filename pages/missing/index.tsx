@@ -109,27 +109,23 @@ const PostsOptions: React.FC = () => {
   );
 };
 const MissingPageContent: React.FC<{
-  data?: MissingPostsQuery;
-  hasLoadedFirstTime?: boolean;
-  loading: boolean;
-  fetchMore: Function;
-}> = ({ loading, data, hasLoadedFirstTime, fetchMore }) => {
+  hasLoadedFirstTime: boolean;
+  fetchMorePosts: VoidFunction;
+}> = ({ hasLoadedFirstTime = false, fetchMorePosts }) => {
+  const queryResponse = useContext(MissingPageContext);
+
   if (!hasLoadedFirstTime) return <DummyPostsSkeleton noOfPosts={3} />;
-  if (!data && !hasLoadedFirstTime && !loading) return <h1>No data</h1>;
-  if (!data || !data.missingPosts) return <h1>No data</h1>;
 
-  const { missingPosts, hasMore, errors } = data.missingPosts;
-  if (errors?.length) return <div>Error occurred</div>;
-
-  const fetchMorePosts = async () => {
-    if (!hasMore) return;
-    const { createdAt: cursor } = missingPosts[missingPosts.length - 1];
-    const variables = {
-      input: { limit: 5, cursor },
-    };
-
-    await fetchMore({ variables });
-  };
+  if (
+    !queryResponse ||
+    !queryResponse.data ||
+    !queryResponse.data.missingPosts ||
+    queryResponse.data.missingPosts.errors?.length
+  ) {
+    return <h1>Error 404</h1>;
+  }
+  const { data, loading } = queryResponse;
+  const { missingPosts: posts, hasMore } = data.missingPosts;
 
   return (
     <Grid
@@ -145,7 +141,7 @@ const MissingPageContent: React.FC<{
       </GridItem>
       <GridItem>
         <MissingPostsGridContainer
-          posts={missingPosts as Array<MissingPost>}
+          posts={posts as Array<MissingPost>}
           fetchMorePosts={fetchMorePosts}
           hasMore={hasMore}
           loading={loading}
@@ -157,10 +153,7 @@ const MissingPageContent: React.FC<{
 
 const SideFiltersColumn: React.FC<{
   handleSelectFilter: (type: MissingPostTypes) => void;
-  refetch: Function;
-}> = ({ handleSelectFilter, refetch }) => {
-  const [isHeightSmallerThan600] = useMediaQuery('(max-height: 600px)');
-
+}> = ({ handleSelectFilter }) => {
   return (
     <Flex
       flexDirection={['row', 'column']}
@@ -180,7 +173,6 @@ const SideFiltersColumn: React.FC<{
         position='absolute'
         placeSelf='left'
         bottom='8vh'
-        hidden={isHeightSmallerThan600}
       >
         <Image
           src='/illustrations/CTA.svg'
@@ -208,7 +200,7 @@ const SideFiltersColumn: React.FC<{
     </Flex>
   );
 };
-const MissingPageContext =
+export const MissingPageContext =
   React.createContext<QueryResult<MissingPostsQuery> | null>(null);
 const MissingPage = () => {
   const [hasLoadedFirstTime, setHasLoaded] = useState(false);
@@ -230,6 +222,16 @@ const MissingPage = () => {
 
   const handleSelectFilter = (type: MissingPostTypes) => {
     setFilters(type);
+  };
+  const fetchMorePosts = async () => {
+    if (!data?.missingPosts) return;
+    const { missingPosts, hasMore } = data.missingPosts;
+    if (!hasMore) return;
+    const { createdAt: cursor } = missingPosts[missingPosts.length - 1];
+    const newVariables = {
+      input: { limit: 5, cursor },
+    };
+    fetchMore({ variables: newVariables });
   };
 
   useEffect(() => {
@@ -253,14 +255,12 @@ const MissingPage = () => {
           alignItems='baseline'
         >
           <GridItem w={['100%', '220px', '250px']} area='left'>
-            <SideFiltersColumn
-              handleSelectFilter={handleSelectFilter}
-              refetch={refetch}
-            />
+            <SideFiltersColumn handleSelectFilter={handleSelectFilter} />
           </GridItem>
           <GridItem area='center' w='100%'>
             <MissingPageContent
-              {...{ data, loading, hasLoadedFirstTime, fetchMore }}
+              hasLoadedFirstTime={hasLoadedFirstTime}
+              fetchMorePosts={fetchMorePosts}
             />
           </GridItem>
         </Grid>
