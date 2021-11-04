@@ -46,7 +46,6 @@ export const PostsOptions: React.FC = () => {
           icon={<SearchIcon />}
           colorScheme='gray'
           ml='auto'
-          w='24px'
           onClick={toggleShowOptions}
           zIndex={2}
         />
@@ -74,6 +73,7 @@ export const PostsOptions: React.FC = () => {
         aria-label='Report Missing Pet'
         colorScheme='gray'
         leftIcon={<GoSettings />}
+        minW='92px'
       >
         Filters
       </Button>
@@ -81,7 +81,7 @@ export const PostsOptions: React.FC = () => {
         leftIcon={<GoPlus />}
         aria-label='Report Missing Pet'
         colorScheme='teal'
-        px={6}
+        minW='128px'
       >
         New Post
       </Button>

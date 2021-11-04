@@ -1,6 +1,6 @@
 import { QueryResult } from '@apollo/client';
 import { getDataFromTree } from '@apollo/client/react/ssr';
-import { Grid, GridItem } from '@chakra-ui/layout';
+import { Container, Flex, Grid, GridItem } from '@chakra-ui/layout';
 import { Layout } from 'components/Layout';
 import {
   MissingPostsQuery,
@@ -55,27 +55,24 @@ const MissingPage = () => {
       <MissingPageContext.Provider
         value={{ data, loading, fetchMore, refetch, variables, ...rest }}
       >
-        <Grid
+        <Flex
           w='100%'
-          templateAreas={[
-            `"left"
-          "center"`,
-            '"left center"',
-            '"left center"',
-          ]}
-          gap={'24px'}
-          alignItems='baseline'
+          h='100%'
+          flexDirection={['column', 'row', 'row']}
+          alignItems='flex-start'
+          justify='center'
+          p='inherit'
         >
-          <GridItem w={['100%', '220px', '250px']} area='left'>
+          <Container w={['100%', '220px', '250px']}>
             <SideFiltersColumn handleSelectFilter={handleSelectFilter} />
-          </GridItem>
-          <GridItem area='center' w='100%'>
+          </Container>
+          <Container w='100%' maxW='1440px' flex={1}>
             <MissingPageContent
               hasLoadedFirstTime={hasLoadedFirstTime}
               fetchMorePosts={fetchMorePosts}
             />
-          </GridItem>
-        </Grid>
+          </Container>
+        </Flex>
       </MissingPageContext.Provider>
     </Layout>
   );

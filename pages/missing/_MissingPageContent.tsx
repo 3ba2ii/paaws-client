@@ -1,4 +1,4 @@
-import { Grid, GridItem } from '@chakra-ui/layout';
+import { Grid, GridItem, VStack } from '@chakra-ui/layout';
 import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
 import { MissingPost } from 'generated/graphql';
 import React, { useContext } from 'react';
@@ -24,20 +24,12 @@ export const MissingPageContent: React.FC<{
   }
   const { data, loading } = queryResponse;
   const { missingPosts: posts, hasMore } = data.missingPosts;
-
   return (
-    <Grid
-      templateColumns='1fr'
-      templateRows='1fr auto'
-      placeContent={'center'}
-      w='100%'
-      h='100%'
-      gap={'24px'}
-    >
+    <VStack spacing={4} w='100%' h='100%' paddingInline='3%'>
       <GridItem w='100%'>
         <PostsOptions />
       </GridItem>
-      <GridItem>
+      <GridItem w='100%'>
         <MissingPostsGridContainer
           posts={posts as Array<MissingPost>}
           fetchMorePosts={fetchMorePosts}
@@ -45,6 +37,6 @@ export const MissingPageContent: React.FC<{
           loading={loading}
         />
       </GridItem>
-    </Grid>
+    </VStack>
   );
 };

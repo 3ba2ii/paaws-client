@@ -7,6 +7,24 @@ interface TapsProps {
   label: string;
   types: MissingPostTypes;
 }
+const buttons: TapsProps[] = [
+  {
+    label: 'All Pets',
+    types: MissingPostTypes.Missing,
+  },
+  {
+    label: 'Missing Pets',
+    types: MissingPostTypes.Missing,
+  },
+  {
+    label: 'Found Pets',
+    types: MissingPostTypes.Found,
+  },
+  {
+    label: 'Rescued Pets',
+    types: MissingPostTypes.Missing,
+  },
+];
 export const MissingPageTaps: React.FC<{
   handleSelectFilter: (type: MissingPostTypes) => void;
 }> = ({ handleSelectFilter }) => {
@@ -17,24 +35,7 @@ export const MissingPageTaps: React.FC<{
     4. All Pets
   */
   const [selectedTap, setSelectedTap] = useState<number>(0);
-  const buttons: TapsProps[] = [
-    {
-      label: 'All Pets',
-      types: MissingPostTypes.Missing,
-    },
-    {
-      label: 'Missing Pets',
-      types: MissingPostTypes.Missing,
-    },
-    {
-      label: 'Found Pets',
-      types: MissingPostTypes.Found,
-    },
-    {
-      label: 'Rescued Pets',
-      types: MissingPostTypes.Missing,
-    },
-  ];
+
   const handleSelectTap = (index: number) => {
     setSelectedTap(index);
     handleSelectFilter(buttons[index].types);

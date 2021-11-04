@@ -78,23 +78,25 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
   return (
     <Flex
       key={id}
-      flexDirection={['column', 'row']}
+      flexDirection={['column', 'column', 'row']}
       p={['0px', '12px']}
       boxShadow='md'
       border='1px'
       borderColor={useColorModeValue('gray.200', 'gray.700')}
-      w='100%'
-      h={['100%', '200px']}
+      w={['100%', '100%']}
+      h={['clamp(200px, fit-content, 300px)']}
       borderRadius={'10px'}
       overflow='hidden'
     >
       <Box
-        w={['100%', '250px']}
-        mr={4}
+        w='100%'
+        h='100%'
+        mr={[0, 4]}
         borderTopLeftRadius={['0px', '10px']}
         borderBottomLeftRadius={['0px', '10px']}
         overflow='hidden'
         boxShadow='md'
+        bg='red'
       >
         <ImageWithFallback
           fallbackSrc={fallbackSrc}
@@ -120,10 +122,9 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         sx={{ gap: ['24px', '18px'] }}
       >
         <VStack w='100%' pr={[1, 4]} spacing='6px' align='flex-start'>
-          <HStack w='100%' justify='space-between'>
+          <HStack w='100%' justify='space-between' flexWrap={'wrap'}>
             <HStack spacing={4}>
               <Text
-                maxW='60ch'
                 color={useColorModeValue('gray.700', 'gray.400')}
                 as='h2'
                 textStyle='h5'
