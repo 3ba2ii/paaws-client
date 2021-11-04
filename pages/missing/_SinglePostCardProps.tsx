@@ -79,24 +79,22 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
     <Flex
       key={id}
       flexDirection={['column', 'column', 'row']}
-      p={['0px', '12px']}
+      p={['0px', '0px', '12px']}
       boxShadow='md'
       border='1px'
       borderColor={useColorModeValue('gray.200', 'gray.700')}
-      w={['100%', '100%']}
-      h={['clamp(200px, fit-content, 300px)']}
+      w='100%'
+      h='100%'
       borderRadius={'10px'}
       overflow='hidden'
     >
       <Box
-        w='100%'
+        w={['clamp(250px, 100%, minmax(350px,100%))', '100%', '250px']}
         h='100%'
-        mr={[0, 4]}
-        borderTopLeftRadius={['0px', '10px']}
-        borderBottomLeftRadius={['0px', '10px']}
+        borderTopLeftRadius={['0px', '0px', '10px']}
+        borderBottomLeftRadius={['0px', '0px', '10px']}
         overflow='hidden'
         boxShadow='md'
-        bg='red'
       >
         <ImageWithFallback
           fallbackSrc={fallbackSrc}
@@ -111,18 +109,21 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         />
       </Box>
 
-      <Flex
-        flexDirection='column'
+      <VStack
+        w='100%'
         align='flex-start'
         justify='space-between'
-        w='100%'
-        h='100%'
         overflow='hidden'
-        p={['16px', '10px 0']}
+        p={['16px', '10px 0 10px 16px']}
         sx={{ gap: ['24px', '18px'] }}
       >
-        <VStack w='100%' pr={[1, 4]} spacing='6px' align='flex-start'>
-          <HStack w='100%' justify='space-between' flexWrap={'wrap'}>
+        <VStack w='100%' pr={[1, 2, 4]} spacing='6px' align='flex-start'>
+          <HStack
+            w='100%'
+            h='inherit'
+            justify='space-between'
+            flexWrap={'wrap'}
+          >
             <HStack spacing={4}>
               <Text
                 color={useColorModeValue('gray.700', 'gray.400')}
@@ -167,7 +168,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         <PostActions
           {...{ postId: id, hasVoted, voteStatus, points, commentsCount }}
         />
-      </Flex>
+      </VStack>
     </Flex>
   );
 };
