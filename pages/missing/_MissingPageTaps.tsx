@@ -42,36 +42,25 @@ export const MissingPageTaps: React.FC<{
   };
 
   return (
-    <Flex
-      flexDirection={['row', 'column']}
+    <ButtonGroup
       w='100%'
+      flexDir={['row', 'column']}
       align='flex-start'
-      overflow={['auto', 'hidden']}
-      css={{
-        button: {
-          width: '100%',
-        },
-      }}
+      variant='unstyled'
+      flexWrap='wrap'
+      sx={{ gap: '4px' }}
     >
-      <ButtonGroup
-        w='100%'
-        flexDir={['row', 'column']}
-        align='flex-start'
-        variant='unstyled'
-        sx={{ gap: '4px' }}
-      >
-        <Text display={['none', 'block']} textStyle='p1' mb={4}>
-          Menu
-        </Text>
+      <Text display={['none', 'block']} textStyle='p1' mb={4}>
+        Menu
+      </Text>
 
-        {buttons.map((button, index) => (
-          <SingleNavTap
-            key={button.label}
-            {...{ selectedTap, handleSelectTap, button, index }}
-          />
-        ))}
-      </ButtonGroup>
-    </Flex>
+      {buttons.map((button, index) => (
+        <SingleNavTap
+          key={button.label}
+          {...{ selectedTap, handleSelectTap, button, index }}
+        />
+      ))}
+    </ButtonGroup>
   );
 };
 const SingleNavTap: React.FC<{
@@ -80,26 +69,29 @@ const SingleNavTap: React.FC<{
   button: TapsProps;
   index: number;
 }> = ({ selectedTap, handleSelectTap, button, index }) => {
+  const isActive = React.useMemo(
+    () => selectedTap === index,
+    [selectedTap, index]
+  );
   return (
     <Box
-      w='100%'
+      w={['128px', '100%']}
       position='relative'
-      overflow={'hidden'}
       borderRadius={4}
       key={button.label}
       onClick={() => handleSelectTap(index)}
       transition='background .2s ease-in-out'
+      color={isActive ? 'teal.500' : 'inherit'}
       _hover={{
         background: useColorModeValue('blackAlpha.50', 'whiteAlpha.50'),
       }}
-      color={selectedTap === index ? 'teal.500' : 'inherit'}
       bg={
-        selectedTap === index
+        isActive
           ? useColorModeValue('blackAlpha.100', 'whiteAlpha.100')
           : 'transparent'
       }
       _before={
-        selectedTap === index
+        isActive
           ? {
               content: `''`,
               position: 'absolute',
@@ -112,9 +104,11 @@ const SingleNavTap: React.FC<{
       }
     >
       <Button
+        w='100%'
+        paddingInlineStart={1}
         px={[2, 4]}
         textAlign={['center', 'left']}
-        fontWeight={selectedTap === index ? 'bold' : 'semibold'}
+        fontWeight={isActive ? 'bold' : 'semibold'}
       >
         {button.label}
       </Button>

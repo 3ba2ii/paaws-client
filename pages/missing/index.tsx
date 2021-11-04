@@ -1,6 +1,6 @@
 import { QueryResult } from '@apollo/client';
 import { getDataFromTree } from '@apollo/client/react/ssr';
-import { Container, Flex, Grid, GridItem } from '@chakra-ui/layout';
+import { Box, Container, Flex, Grid, GridItem } from '@chakra-ui/layout';
 import { Layout } from 'components/Layout';
 import {
   MissingPostsQuery,
@@ -63,9 +63,9 @@ const MissingPage = () => {
           justify='center'
           p='inherit'
         >
-          <Container w={['100%', '220px', '250px']}>
+          <Box w={['100%', '220px', '250px']}>
             <SideFiltersColumn handleSelectFilter={handleSelectFilter} />
-          </Container>
+          </Box>
           <Container w='100%' maxW='1440px' flex={1}>
             <MissingPageContent
               hasLoadedFirstTime={hasLoadedFirstTime}

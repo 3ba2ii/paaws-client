@@ -9,15 +9,14 @@ export const SideFiltersColumn: React.FC<{
 }> = ({ handleSelectFilter }) => {
   return (
     <Flex
-      flexDirection={['row', 'column']}
       w='100%'
+      flexDirection={['row', 'column']}
       h={['fit-content', '90vh']}
       maxH='100%'
       align='flex-start'
       justify='space-between'
       maxW={['100%', '250px']}
       position='relative'
-      paddingInlineEnd='2rem'
     >
       <MissingPageTaps handleSelectFilter={handleSelectFilter} />
       <Box
