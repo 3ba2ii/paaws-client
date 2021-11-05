@@ -79,6 +79,7 @@ const UserDropdownMenu: React.FC<UserDropdownProps> = ({ userInfo }) => {
 const NavBarItems = () => {
   const { data, loading } = useMeQuery({
     skip: isServer(),
+    fetchPolicy: 'cache-first',
   });
 
   const { pathname } = useRouter();

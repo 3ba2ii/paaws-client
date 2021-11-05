@@ -2,6 +2,7 @@
   "name": "client2",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -21,7 +22,7 @@
     "formik": "^2.2.9",
     "framer-motion": "^4",
     "graphql": "^15.6.0",
-    "next": "11.1.2",
+    "next": "^12.0.2",
     "next-with-apollo": "^5.2.1",
     "react": "17.0.2",
     "react-confetti": "^6.0.1",
@@ -34,7 +35,7 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.2.0",
+    "@graphql-codegen/cli": "^2.2.2",
     "@graphql-codegen/typescript": "2.2.2",
     "@graphql-codegen/typescript-operations": "2.1.4",
     "@graphql-codegen/typescript-react-apollo": "3.1.4",
