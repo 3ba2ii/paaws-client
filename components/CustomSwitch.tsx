@@ -1,7 +1,6 @@
 import { FormControl, FormLabel } from '@chakra-ui/form-control';
 import { Box, Checkbox, Tooltip } from '@chakra-ui/react';
 import { useField } from 'formik';
-import { SearchIcon } from '@chakra-ui/icons';
 import React from 'react';
 import { FaRegQuestionCircle } from 'react-icons/fa';
 

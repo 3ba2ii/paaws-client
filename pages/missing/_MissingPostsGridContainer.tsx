@@ -1,11 +1,11 @@
-import { Flex, Text, Heading, VStack } from '@chakra-ui/layout';
+import { Flex } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/react';
 import NotFound from 'components/NotFound';
 import { MissingPost } from 'generated/graphql';
 import React, { useEffect, useRef } from 'react';
 import useOnScreen from 'utils/useOnScreen';
 import { DummyPostsSkeleton } from '../../components/skeltons/DummyPostSkelton';
-import { SinglePostCard } from './_SinglePostCardProps';
+import { SinglePostCard } from './_SinglePostCard';
 
 /* Missing Posts Grid Container */
 export const MissingPostsGridContainer: React.FC<{
@@ -13,7 +13,7 @@ export const MissingPostsGridContainer: React.FC<{
   hasMore?: boolean | null;
   loading: boolean;
   posts: Array<MissingPost>;
-}> = ({ fetchMorePosts, hasMore = false, posts, loading }) => {
+}> = ({ fetchMorePosts, posts, loading, hasMore = false }) => {
   const loadMorButtonRef = useRef(null);
   const isVisible = useOnScreen(loadMorButtonRef);
 
