@@ -66,7 +66,7 @@ const MissingPage = () => {
           <Box w={['100%', '220px', '250px']}>
             <SideFiltersColumn handleSelectFilter={handleSelectFilter} />
           </Box>
-          <Container w='100%' maxW='1440px' flex={1}>
+          <Container w='100%' h='100%' maxW='1440px' flex={1}>
             <MissingPageContent
               hasLoadedFirstTime={hasLoadedFirstTime}
               fetchMorePosts={fetchMorePosts}

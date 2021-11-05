@@ -33,6 +33,7 @@ export const SideFiltersColumn: React.FC<{
           objectFit='cover'
         />
         <Button
+          w='80%'
           position='absolute'
           bottom='8%'
           left='50%'
@@ -40,7 +41,6 @@ export const SideFiltersColumn: React.FC<{
           variant='solid'
           colorScheme='red'
           bg='red.400'
-          w='80%'
           color='white'
           fontWeight='bold'
           borderRadius={6}

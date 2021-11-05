@@ -1,5 +1,6 @@
-import { Flex } from '@chakra-ui/layout';
+import { Flex, Text, Heading, VStack } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/react';
+import NotFound from 'components/NotFound';
 import { MissingPost } from 'generated/graphql';
 import React, { useEffect, useRef } from 'react';
 import useOnScreen from 'utils/useOnScreen';
@@ -20,6 +21,15 @@ export const MissingPostsGridContainer: React.FC<{
   useEffect(() => {
     if (isVisible && hasMore) fetchMorePosts();
   }, [isVisible]);
+
+  if (!posts || !posts.length)
+    return (
+      <NotFound
+        title='No Posts Found 📭'
+        subtitle="Unfortunately, We didn't find posts with you selected category or filters, Try
+          change them or add the first post yourself"
+      />
+    );
   return (
     <Flex flexDirection='column' sx={{ gap: '24px' }} w='100%'>
       {posts.map(

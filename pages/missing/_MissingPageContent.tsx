@@ -25,11 +25,11 @@ export const MissingPageContent: React.FC<{
   const { data, loading } = queryResponse;
   const { missingPosts: posts, hasMore } = data.missingPosts;
   return (
-    <VStack spacing={4} w='100%' h='100%' paddingInline='3%'>
+    <VStack spacing={4} w='100%' h='100%' paddingInline='3%' pos='relative'>
       <GridItem w='100%'>
         <PostsOptions />
       </GridItem>
-      <GridItem w='100%'>
+      <GridItem w='100%' h='100%'>
         <MissingPostsGridContainer
           posts={posts as Array<MissingPost>}
           fetchMorePosts={fetchMorePosts}
