@@ -2,6 +2,7 @@ fragment RequiredUserInfo on User {
   id
   email
   phone
+  displayName
   full_name
   confirmed
   blocked

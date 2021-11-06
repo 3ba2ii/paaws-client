@@ -1,5 +1,5 @@
 import { SearchIcon } from '@chakra-ui/icons';
-import { Box, HStack, VStack } from '@chakra-ui/layout';
+import { Box, HStack, VStack, Text, Heading } from '@chakra-ui/layout';
 import {
   Button,
   Drawer,
@@ -14,11 +14,13 @@ import {
 import { MyDropzone } from 'components/CustomDropzone';
 import GenericInputComponent from 'components/GenericInputComponent';
 import InputField from 'components/InputField';
+import LoggedInUserAvatar from 'components/LoggedInUserAvatar';
 import TwoOptionsSwitch from 'components/TwoOptionsSwitch';
 import { Form, Formik } from 'formik';
 import { motion } from 'framer-motion';
 import {
   CreateMissingPostInput,
+  MeQuery,
   MissingPostTypes,
   PrivacyType,
   Scalars,
@@ -28,6 +30,7 @@ import {
 import { useRouter } from 'next/router';
 import React, { ReactElement, useState } from 'react';
 import { GoPlus, GoSettings } from 'react-icons/go';
+import { useIsLoggedIn } from 'utils/useIsLoggedIn';
 const variants = {
   closed: {
     opacity: 0,
@@ -139,12 +142,20 @@ export const PostsOptions: React.FC = () => {
         isOpen={openDrawer}
         onClose={toggleDrawer}
         drawerHeader='Create New Post'
-        drawerBody={<NewMissingPostForm />}
+        drawerBody={<NewMissingPostForm loggedInUser={loggedInUser} />}
       />
     </>
   );
 };
-const NewMissingPostForm = (): ReactElement => {
+const NewMissingPostForm: React.FC<{
+  loggedInUser: MeQuery | undefined;
+}> = ({ loggedInUser }): JSX.Element => {
+  if (!loggedInUser || !loggedInUser.me)
+    return (
+      <Heading>You must be logged in to create a missing pet post</Heading>
+    );
+  const { me: user } = loggedInUser;
+
   const initialValues: CreateMissingPostInput & {
     images: Array<Scalars['Upload']>;
   } = {
@@ -156,22 +167,27 @@ const NewMissingPostForm = (): ReactElement => {
     thumbnailIdx: 0,
     images: [],
   };
+
   return (
     <Box my={5}>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={(values) => {
-          console.log(
-            `🚀 ~ file: _PostsOptions.tsx ~ line 165 ~ NewMissingPostForm ~ values`,
-            values
-          );
-        }}
-      >
+      <Formik initialValues={initialValues} onSubmit={(values) => {}}>
         {({ values, isSubmitting, handleChange, setFieldValue }) => (
           <Form>
-            {JSON.stringify(values)}
-            <VStack>
-              <GenericInputComponent label='Missing or Found' name='type'>
+            <VStack spacing={5}>
+              {/* Avatar, name and  */}
+              <HStack w='100%' align='center'>
+                <LoggedInUserAvatar size='md' />
+                <VStack>
+                  <Text fontSize={'lg'} fontWeight={'semibold'}>
+                    {user.displayName}
+                  </Text>
+                </VStack>
+              </HStack>
+              <GenericInputComponent
+                helperText='Please specify whether you missed your pet or found one'
+                label='Missing or Found'
+                name='type'
+              >
                 <TwoOptionsSwitch
                   handleChange={(value) => setFieldValue('type', value)}
                   options={[
@@ -200,10 +216,11 @@ const NewMissingPostForm = (): ReactElement => {
                 textarea
               />
               <MyDropzone label='Media' name='images' />
-              <Button type='submit' mt={4} colorScheme={'teal'}>
+              <Button minW='128px' type='submit' mt={4} colorScheme={'teal'}>
                 Post
               </Button>
             </VStack>
+            {JSON.stringify(values)}
           </Form>
         )}
       </Formik>
