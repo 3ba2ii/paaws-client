@@ -49,7 +49,9 @@ const LoginPage: React.FC<loginProps> = ({}) => {
           onSubmit={async ({ identifier, password }, { setErrors }) => {
             const { data } = await loginMutation({
               variables: { loginOptions: { identifier, password } },
-              update: (cache, { data }) => {
+              update: (cache, { data: returnedData }) => {
+                if (!returnedData) return;
+
                 cache.writeQuery<MeQuery>({
                   query: MeDocument,
                   data: {
