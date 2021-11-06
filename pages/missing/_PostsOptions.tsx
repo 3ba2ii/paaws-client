@@ -1,4 +1,4 @@
-import { SearchIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons';
 import { Box, HStack, VStack, Text, Heading } from '@chakra-ui/layout';
 import {
   Button,
@@ -10,6 +10,13 @@ import {
   DrawerOverlay,
   IconButton,
   Input,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
+  Tag,
 } from '@chakra-ui/react';
 import { MyDropzone } from 'components/CustomDropzone';
 import GenericInputComponent from 'components/GenericInputComponent';
@@ -29,7 +36,12 @@ import {
 
 import { useRouter } from 'next/router';
 import React, { ReactElement, useState } from 'react';
-import { GoPlus, GoSettings } from 'react-icons/go';
+import { BiChevronDown, BiLock } from 'react-icons/bi';
+import { FaChevronDown } from 'react-icons/fa';
+import { FcPrivacy } from 'react-icons/fc';
+import { GoChevronDown, GoPlus, GoSettings } from 'react-icons/go';
+import { capitalizeString } from 'utils/capitalizeString';
+import { PrivacyTypeCustomized } from 'utils/constants/enums';
 import { useIsLoggedIn } from 'utils/useIsLoggedIn';
 const variants = {
   closed: {
@@ -177,10 +189,11 @@ const NewMissingPostForm: React.FC<{
               {/* Avatar, name and  */}
               <HStack w='100%' align='center'>
                 <LoggedInUserAvatar size='md' />
-                <VStack>
+                <VStack align={'flex-start'} spacing={1}>
                   <Text fontSize={'lg'} fontWeight={'semibold'}>
                     {user.displayName}
                   </Text>
+                  {PrivacyMenu(values, setFieldValue)}
                 </VStack>
               </HStack>
               <GenericInputComponent
@@ -252,3 +265,46 @@ const CustomDrawer: React.FC<{
     </Drawer>
   );
 };
+function PrivacyMenu(
+  values: CreateMissingPostInput,
+  setFieldValue: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean | undefined
+  ) => void
+) {
+  return (
+    <Menu>
+      <MenuButton
+        as={Button}
+        size='xs'
+        borderRadius='4px'
+        p='0rem .5rem 0rem .5rem'
+        rightIcon={<GoChevronDown />}
+        boxShadow='base'
+      >
+        {capitalizeString(values.privacy)}
+      </MenuButton>
+      <MenuList>
+        <MenuOptionGroup
+          defaultValue={values.privacy}
+          title='Privacy'
+          color='gray.500'
+          type='radio'
+        >
+          {PrivacyTypeCustomized.map(({ key, value }) => (
+            <MenuItemOption
+              value={value}
+              key={key}
+              onClick={() => {
+                setFieldValue('privacy', value);
+              }}
+            >
+              <Text fontWeight={'medium'}>{capitalizeString(value)}</Text>
+            </MenuItemOption>
+          ))}
+        </MenuOptionGroup>
+      </MenuList>
+    </Menu>
+  );
+}
