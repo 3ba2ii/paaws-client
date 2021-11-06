@@ -4,11 +4,20 @@ import {
   FormHelperText,
   FormLabel,
 } from '@chakra-ui/form-control';
-import { Input } from '@chakra-ui/input';
+import { CloseIcon } from '@chakra-ui/icons';
+import { Input, InputProps } from '@chakra-ui/input';
 import { Box, Text } from '@chakra-ui/layout';
+import {
+  CloseButton,
+  DrawerOverlay,
+  IconButton,
+  PopoverCloseButton,
+  Tooltip,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { useField, useFormikContext } from 'formik';
 import React, { useCallback, useMemo } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { FileRejection, useDropzone } from 'react-dropzone';
 import { FaRegImages } from 'react-icons/fa';
 import s from 'styles/custom-dropzone.module.css';
 
@@ -61,20 +70,23 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
   ...props
 }) => {
   const [field, { error, touched }] = useField(props);
-  console.log(`🚀 ~ file: CustomDropzone.tsx ~ line 64 ~ error`, error);
   const form = useFormikContext();
 
-  const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
-    if (rejectedFiles && rejectedFiles.length) {
-      form.setFieldError(
-        field.name,
-        'Please upload only 10 images with maximum size of 5MBs pet image'
-      );
-      return;
-    }
-    // Do something with the files
-    form.setFieldValue(field.name, acceptedFiles.slice(0, 10));
-  }, []);
+  const onDrop = useCallback(
+    (accFiles: File[], rejectedFiles: FileRejection[]) => {
+      if (rejectedFiles && rejectedFiles.length) {
+        form.setFieldError(
+          field.name,
+          'Please upload only 10 images with maximum size of 5MBs pet image'
+        );
+        return;
+      }
+
+      // Do something with the files
+      form.setFieldValue(field.name, accFiles.slice(0, 10));
+    },
+    []
+  );
   const {
     getRootProps,
     getInputProps,
@@ -89,10 +101,18 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
     accept: 'image/*',
   });
 
+  const handleThumbnailChange = (idx: number) => {
+    form.setFieldValue('thumbnailIdx', idx);
+  };
+
   const style = useMemo(
     () =>
       ({
-        ...baseStyle,
+        ...{
+          ...baseStyle,
+          backgroundColor: useColorModeValue('#fafafa', 'gray.700'),
+          borderColor: useColorModeValue('#eeeeee', 'gray.200'),
+        },
         ...(isDragActive ? activeStyle : {}),
         ...(isDragAccept ? acceptStyle : {}),
         ...(isDragReject ? rejectStyle : {}),
@@ -107,7 +127,10 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
       </FormLabel>
 
       <div {...getRootProps({ style })} className='dropzone-container'>
-        <Input {...(getInputProps() as any)} />
+        <Input
+          {...(getInputProps() as InputProps)}
+          disabled={field.value && field.value.length}
+        />
         {isDragActive ? (
           <p>Drop the files here ...</p>
         ) : (
@@ -132,9 +155,8 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
                 (form?.values as any)?.thumbnailIdx as number
               ) || 0
             }
-            handleThumbnailChange={(idx: number) => {
-              form.setFieldValue('thumbnailIdx', idx);
-            }}
+            handleThumbnailChange={handleThumbnailChange}
+            handleChange={onDrop}
           />
         ) : null}
       </div>
@@ -153,26 +175,63 @@ const PreviewComponent: React.FC<{
   values: [File];
   thumbnailIdx: number;
   handleThumbnailChange?: (idx: number) => void;
-}> = ({ values, thumbnailIdx, handleThumbnailChange }) => {
-  console.log(
-    `🚀 ~ file: CustomDropzone.tsx ~ line 145 ~ thumbnailIdx`,
-    thumbnailIdx
-  );
+  handleChange: (acceptedFiles: File[], rejectedFiles: FileRejection[]) => void;
+}> = ({ values, thumbnailIdx, handleThumbnailChange, handleChange }) => {
+  const clearAll = () => {
+    handleChange([], []);
+  };
+  const deleteImage = (idx: number) => {
+    const newImages = values.filter((_, index) => index !== idx);
+    handleChange(newImages, []);
+  };
   return (
     <ul className={s.preview_container}>
-      {values.map((file: File, idx: number) => (
-        <li
-          key={idx}
-          className={`${s.preview_item} ${
-            thumbnailIdx === idx ? s.selected : ''
-          }`}
-          onClick={() => {
-            handleThumbnailChange && handleThumbnailChange(idx);
-          }}
-        >
-          <img src={URL.createObjectURL(file)} alt='preview' />
-        </li>
-      ))}
+      <Tooltip label='Clear'>
+        <CloseButton
+          pos='absolute'
+          top='50%'
+          transform='translateY(-50%)'
+          right='10px'
+          color='whiteAlpha.500'
+          onClick={clearAll}
+        />
+      </Tooltip>
+      {values.map((file: File, idx: number) => {
+        return (
+          <li
+            key={idx}
+            className={`${s.preview_item} ${
+              thumbnailIdx === idx ? s.selected : ''
+            }`}
+            onClick={() => {
+              handleThumbnailChange && handleThumbnailChange(idx);
+            }}
+          >
+            <Tooltip
+              hidden={idx !== thumbnailIdx}
+              label='This image will be used as your thumbnail'
+              placement='top'
+              hasArrow
+              defaultIsOpen
+            >
+              <img src={URL.createObjectURL(file)} alt='preview' />
+            </Tooltip>
+            <IconButton
+              aria-label='Remove Media'
+              pos='absolute'
+              top='1px'
+              right='1px'
+              color='red.400'
+              size='xs'
+              fontSize={'8px'}
+              variant='ghost'
+              icon={<CloseIcon />}
+              onClick={() => deleteImage(idx)}
+              tabIndex={2}
+            />
+          </li>
+        );
+      })}
     </ul>
   );
 };
