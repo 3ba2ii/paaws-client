@@ -197,22 +197,21 @@ const PreviewComponent: React.FC<{
         />
       </Tooltip>
       {values.map((file: File, idx: number) => {
+        const isThumbnail = idx === thumbnailIdx;
         return (
           <li
             key={idx}
-            className={`${s.preview_item} ${
-              thumbnailIdx === idx ? s.selected : ''
-            }`}
+            className={`${s.preview_item} ${isThumbnail ? s.selected : ''}`}
             onClick={() => {
               handleThumbnailChange && handleThumbnailChange(idx);
             }}
           >
             <Tooltip
-              hidden={idx !== thumbnailIdx}
+              hidden={!isThumbnail}
               label='This image will be used as your thumbnail'
               placement='top'
               hasArrow
-              defaultIsOpen
+              defaultIsOpen={isThumbnail}
             >
               <img src={URL.createObjectURL(file)} alt='preview' />
             </Tooltip>
