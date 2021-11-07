@@ -5,6 +5,7 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerOverlay,
+  DrawerProps,
 } from '@chakra-ui/react';
 import React, { ReactElement } from 'react';
 
@@ -14,15 +15,17 @@ export const CustomDrawer: React.FC<{
   drawerHeader: string;
   drawerBody: ReactElement;
   size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  drawerProps?: DrawerProps;
 }> = ({
   isOpen,
   onClose,
   drawerHeader,
   drawerBody,
+  drawerProps,
   size = 'md',
 }): ReactElement => {
   return (
-    <Drawer onClose={onClose} isOpen={isOpen} size={size}>
+    <Drawer {...drawerProps} onClose={onClose} isOpen={isOpen} size={size}>
       <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
