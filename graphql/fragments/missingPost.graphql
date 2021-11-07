@@ -1,7 +1,6 @@
 fragment MissingPostFragment on MissingPost {
   id
   title
-  descriptionSnippet(length: $length)
   voteStatus
   user {
     id

@@ -11,28 +11,8 @@ query MissingPosts(
       code
     }
     missingPosts {
-      id
-      title
+      ...MissingPostFragment
       descriptionSnippet(length: $length)
-      voteStatus
-      user {
-        id
-        displayName
-        avatar {
-          url
-        }
-      }
-      commentsCount
-      tags
-      address {
-        distance
-      }
-      points
-      thumbnail {
-        url
-      }
-      createdAt
-      updatedAt
     }
   }
 }

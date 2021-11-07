@@ -743,7 +743,7 @@ export type WhereClause = {
   limit?: Maybe<Scalars['Int']>;
 };
 
-export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, descriptionSnippet: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> };
+export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> };
 
 export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> };
 
@@ -761,7 +761,7 @@ export type CreateMissingPostMutationVariables = Exact<{
 }>;
 
 
-export type CreateMissingPostMutation = { __typename?: 'Mutation', createMissingPost: { __typename?: 'CreateMissingPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, post?: Maybe<{ __typename?: 'MissingPost', id: number, addressId?: Maybe<number>, updatedAt: any, createdAt: any, address?: Maybe<{ __typename?: 'Address', id: number }> }> } };
+export type CreateMissingPostMutation = { __typename?: 'Mutation', createMissingPost: { __typename?: 'CreateMissingPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, post?: Maybe<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }> } };
 
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
@@ -827,7 +827,7 @@ export type MissingPostsQueryVariables = Exact<{
 }>;
 
 
-export type MissingPostsQuery = { __typename?: 'Query', missingPosts: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', id: number, title: string, descriptionSnippet: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }> } };
+export type MissingPostsQuery = { __typename?: 'Query', missingPosts: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }> } };
 
 export type PaginatedUsersQueryVariables = Exact<{
   usersWhere: WhereClause;
@@ -840,7 +840,6 @@ export const MissingPostFragmentFragmentDoc = gql`
     fragment MissingPostFragment on MissingPost {
   id
   title
-  descriptionSnippet(length: $length)
   voteStatus
   user {
     id
@@ -949,17 +948,12 @@ export const CreateMissingPostDocument = gql`
       code
     }
     post {
-      id
-      addressId
-      address {
-        id
-      }
-      updatedAt
-      createdAt
+      ...MissingPostFragment
+      descriptionSnippet(length: 100)
     }
   }
 }
-    `;
+    ${MissingPostFragmentFragmentDoc}`;
 export type CreateMissingPostMutationFn = Apollo.MutationFunction<CreateMissingPostMutation, CreateMissingPostMutationVariables>;
 
 /**
@@ -1326,6 +1320,7 @@ export const MissingPostsDocument = gql`
     }
     missingPosts {
       ...MissingPostFragment
+      descriptionSnippet(length: $length)
     }
   }
 }

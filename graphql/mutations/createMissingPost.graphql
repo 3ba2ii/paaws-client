@@ -9,13 +9,8 @@ mutation CreateMissingPost(
       code
     }
     post {
-      id
-      addressId
-      address {
-        id
-      }
-      updatedAt
-      createdAt
+      ...MissingPostFragment
+      descriptionSnippet(length: 100)
     }
   }
 }
