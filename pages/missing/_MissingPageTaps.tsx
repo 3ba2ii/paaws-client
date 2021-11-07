@@ -10,7 +10,7 @@ interface TapsProps {
 const buttons: TapsProps[] = [
   {
     label: 'All Pets',
-    types: MissingPostTypes.Missing,
+    types: MissingPostTypes.All,
   },
   {
     label: 'Missing Pets',
