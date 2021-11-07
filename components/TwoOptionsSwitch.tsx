@@ -2,7 +2,6 @@ import { CheckIcon } from '@chakra-ui/icons';
 import {
   Button,
   ButtonProps,
-  ComponentWithAs,
   HStack,
   useColorModeValue,
 } from '@chakra-ui/react';
@@ -30,11 +29,8 @@ const TwoOptionsSwitch: React.FC<TwoOptionsSwitchProps> = ({
         return (
           <Button
             {...props}
-            variant='outline'
             key={value}
-            py={6}
             colorScheme={isActive ? 'teal' : 'gray'}
-            w='100%'
             onClick={() => handleChange(value)}
             leftIcon={isActive ? <CheckIcon /> : undefined}
             bgColor={
