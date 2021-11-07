@@ -743,6 +743,8 @@ export type WhereClause = {
   limit?: Maybe<Scalars['Int']>;
 };
 
+export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, descriptionSnippet: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> };
+
 export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> };
 
 export type CreateAdoptionPostMutationVariables = Exact<{
@@ -834,6 +836,32 @@ export type PaginatedUsersQueryVariables = Exact<{
 
 export type PaginatedUsersQuery = { __typename?: 'Query', users: { __typename?: 'PaginatedUsers', hasMore: boolean, users: Array<{ __typename?: 'User', id: number, email: string, phone: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
+export const MissingPostFragmentFragmentDoc = gql`
+    fragment MissingPostFragment on MissingPost {
+  id
+  title
+  descriptionSnippet(length: $length)
+  voteStatus
+  user {
+    id
+    displayName
+    avatar {
+      url
+    }
+  }
+  commentsCount
+  tags
+  address {
+    distance
+  }
+  points
+  thumbnail {
+    url
+  }
+  createdAt
+  updatedAt
+}
+    `;
 export const RequiredUserInfoFragmentDoc = gql`
     fragment RequiredUserInfo on User {
   id
@@ -1297,32 +1325,11 @@ export const MissingPostsDocument = gql`
       code
     }
     missingPosts {
-      id
-      title
-      descriptionSnippet(length: $length)
-      voteStatus
-      user {
-        id
-        displayName
-        avatar {
-          url
-        }
-      }
-      commentsCount
-      tags
-      address {
-        distance
-      }
-      points
-      thumbnail {
-        url
-      }
-      createdAt
-      updatedAt
+      ...MissingPostFragment
     }
   }
 }
-    `;
+    ${MissingPostFragmentFragmentDoc}`;
 
 /**
  * __useMissingPostsQuery__
