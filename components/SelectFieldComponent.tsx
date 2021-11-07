@@ -1,10 +1,14 @@
 import { Box, useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
-import Select, { Props } from 'react-select';
+import Select, { GroupBase, Props, StylesConfig } from 'react-select';
+type MyOptionType = {
+  label: string;
+  value: string;
+};
 
 interface SelectComponentProps {
   isMulti?: boolean;
-  options: any[];
+  options: MyOptionType[];
   placeholder?: string;
   handleChange: (value: any) => void;
   selectProps?: Props;
@@ -16,25 +20,33 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
   handleChange,
   selectProps,
 }) => {
-  const customSelectFieldStyles = {
-    control: (provided: any, state: any) => ({
+  type IsMulti = false;
+
+  const customSelectFieldStyles: StylesConfig<MyOptionType, IsMulti> = {
+    control: (provided, state) => ({
       ...provided,
       cursor: 'pointer',
       backgroundColor: 'inherit',
-      borderColor: state.isSelected
+      borderColor: state.isFocused
         ? 'blue.500'
         : useColorModeValue('gray.200', 'gray.500'),
     }),
-    placeholder: (provided: any, state: any) => ({
+    placeholder: (provided, _state) => ({
       ...provided,
-      color: '#cbd5e0',
+      color: 'inherit',
     }),
-    menu: (provided: any, state: any) => ({
+    singleValue: (provided, _state) => ({
       ...provided,
+      color: 'inherit',
+    }),
+
+    menu: (provided, _state) => ({
+      ...provided,
+
       cursor: 'pointer',
       backgroundColor: 'inherit',
     }),
-    option: (provided: any, state: any) => ({
+    option: (provided, _state) => ({
       ...provided,
       cursor: 'pointer',
       backgroundColor: 'inherit',
@@ -42,12 +54,12 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
         backdropFilter: 'brightness(115%)',
       },
     }),
-    multiValue: (provided: any, state: any) => ({
+    multiValue: (provided, _state) => ({
       ...provided,
       borderRadius: '4px',
       backgroundColor: useColorModeValue('#E2E8F0', '#718096'),
     }),
-    multiValueLabel: (provided: any, state: any) => ({
+    multiValueLabel: (provided, _state) => ({
       ...provided,
       color: 'inherit',
     }),
@@ -57,11 +69,16 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
     <Box>
       <Select
         {...selectProps}
-        styles={customSelectFieldStyles}
+        styles={
+          customSelectFieldStyles as StylesConfig<
+            unknown,
+            boolean,
+            GroupBase<unknown>
+          >
+        }
         onChange={handleChange}
         isMulti={isMulti}
         options={options}
-        maxMenuHeight={200}
       />
     </Box>
   );
