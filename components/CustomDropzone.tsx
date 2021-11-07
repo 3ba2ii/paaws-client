@@ -184,8 +184,13 @@ const PreviewComponent: React.FC<{
     const newImages = values.filter((_, index) => index !== idx);
     handleChange(newImages, []);
   };
+
   return (
-    <ul className={s.preview_container}>
+    <Box
+      as='ul'
+      className={s.preview_container}
+      bg={useColorModeValue('#fafafa', 'gray.700')}
+    >
       <Tooltip label='Clear'>
         <CloseButton
           pos='absolute'
@@ -208,7 +213,7 @@ const PreviewComponent: React.FC<{
           >
             <Tooltip
               hidden={!isThumbnail}
-              label='This image will be used as your thumbnail'
+              label='This image will be used as a thumbnail'
               placement='top'
               hasArrow
               defaultIsOpen={isThumbnail}
@@ -231,6 +236,6 @@ const PreviewComponent: React.FC<{
           </li>
         );
       })}
-    </ul>
+    </Box>
   );
 };
