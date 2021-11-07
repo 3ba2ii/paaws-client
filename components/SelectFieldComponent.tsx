@@ -1,82 +1,69 @@
-import {
-  FormControl,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-} from '@chakra-ui/form-control';
-import { Text } from '@chakra-ui/layout';
-import { useField, useFormikContext } from 'formik';
+import { Box, useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
-import Select from 'react-select';
+import Select, { Props } from 'react-select';
 
 interface SelectComponentProps {
-  name: string;
   isMulti?: boolean;
   options: any[];
   placeholder?: string;
-  label: string;
-  required?: boolean;
-  helperText?: string;
+  handleChange: (value: any) => void;
+  selectProps?: Props;
 }
-
-const customSelectFieldStyles = {
-  control: (provided: any, state: any) => ({
-    ...provided,
-    borderColor: state.isSelected ? '#3d9eff' : '#CBD5E0',
-  }),
-  placeholder: (provided: any, state: any) => ({
-    ...provided,
-    color: '#cbd5e0',
-  }),
-};
 
 const SelectComponent: React.FC<SelectComponentProps> = ({
   isMulti,
   options,
-  label,
-  required = true,
-  helperText,
-  ...props
+  handleChange,
+  selectProps,
 }) => {
-  const [field, { error, touched }] = useField(props);
-  const form = useFormikContext();
-
-  const onChange = (values: any) => {
-    if (isMulti) {
-      form.setFieldValue(
-        props.name,
-        values.map((v: any) => v.value)
-      );
-    } else {
-      form.setFieldValue(props.name, values.value);
-    }
+  const customSelectFieldStyles = {
+    control: (provided: any, state: any) => ({
+      ...provided,
+      cursor: 'pointer',
+      backgroundColor: 'inherit',
+      borderColor: state.isSelected
+        ? 'blue.500'
+        : useColorModeValue('gray.200', 'gray.500'),
+    }),
+    placeholder: (provided: any, state: any) => ({
+      ...provided,
+      color: '#cbd5e0',
+    }),
+    menu: (provided: any, state: any) => ({
+      ...provided,
+      cursor: 'pointer',
+      backgroundColor: 'inherit',
+    }),
+    option: (provided: any, state: any) => ({
+      ...provided,
+      cursor: 'pointer',
+      backgroundColor: 'inherit',
+      '&:hover': {
+        backdropFilter: 'brightness(115%)',
+      },
+    }),
+    multiValue: (provided: any, state: any) => ({
+      ...provided,
+      borderRadius: '4px',
+      backgroundColor: useColorModeValue('#E2E8F0', '#718096'),
+    }),
+    multiValueLabel: (provided: any, state: any) => ({
+      ...provided,
+      color: 'inherit',
+    }),
   };
 
   return (
-    <FormControl isInvalid={!!error && touched} isRequired={required}>
-      <FormLabel fontSize='sm' htmlFor={field.name}>
-        {label}
-      </FormLabel>
+    <Box>
       <Select
-        {...props}
-        value={
-          options ? options.find((option) => option.value === field.value) : ''
-        }
+        {...selectProps}
         styles={customSelectFieldStyles}
-        onChange={onChange}
-        id={field.name}
+        onChange={handleChange}
         isMulti={isMulti}
         options={options}
+        maxMenuHeight={200}
       />
-      {helperText ? (
-        <FormHelperText maxW='45ch'>
-          <Text textStyle='helperText'>{helperText}</Text>
-        </FormHelperText>
-      ) : null}
-      {error && touched ? (
-        <FormErrorMessage maxW='45ch'>{error}</FormErrorMessage>
-      ) : null}
-    </FormControl>
+    </Box>
   );
 };
 export default SelectComponent;
