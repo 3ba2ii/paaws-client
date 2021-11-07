@@ -31,11 +31,11 @@ const GenericInputComponent: React.FC<GenericInputComponentProps> = ({
       </FormLabel>
       {children}
       {helperText ? (
-        <FormHelperText maxW='45ch'>{helperText}</FormHelperText>
+        <FormHelperText maxW='60ch'>{helperText}</FormHelperText>
       ) : null}
 
       {error && touched ? (
-        <FormErrorMessage maxW='45ch'>{error}</FormErrorMessage>
+        <FormErrorMessage maxW='60ch'>{error}</FormErrorMessage>
       ) : null}
     </FormControl>
   );

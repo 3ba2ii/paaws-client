@@ -124,9 +124,10 @@
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
   -o-border-radius: 10px;
-  overflow: hidden;
+  color: var(--chakra-colors-gray-700);
 }
 .autocomplete_input {
+  color: var(--chakra-colors-gray-700);
   border: 1px solid transparent;
   width: 50%;
   height: 40px;

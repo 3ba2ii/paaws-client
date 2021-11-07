@@ -17,9 +17,13 @@ import { Form, Formik } from 'formik';
 import {
   CreateMissingPostInput,
   MeQuery,
+  MissingPost,
+  MissingPostsDocument,
+  MissingPostsQuery,
   MissingPostTypes,
   PrivacyType,
   Scalars,
+  useCreateMissingPostMutation,
 } from 'generated/graphql';
 import { LocationType } from 'pages/types';
 import React, { useState } from 'react';
@@ -30,6 +34,7 @@ import {
   SelectLocationObj,
   SelectLocationOptions,
 } from 'utils/constants/enums';
+import { toErrorMap } from 'utils/toErrorMap';
 import { NotAuthenticatedComponent } from './NotAuthenticatedComponent';
 
 const initialValues: CreateMissingPostInput & {
@@ -43,10 +48,27 @@ const initialValues: CreateMissingPostInput & {
   thumbnailIdx: 0,
   images: [],
 };
+const LocationHeader = React.memo(() => {
+  return (
+    <VStack align='flex-start' mt={4}>
+      <Heading size='md'>Select Location 🌍</Heading>
+      <Text
+        fontSize='.875rem'
+        color={'gray.500'}
+        fontWeight={'medium'}
+        textAlign={'left'}
+      >
+        Select the location where you missed or found the pet on map, Locations
+        are used to send notifications and alerts to nearby users
+      </Text>
+    </VStack>
+  );
+});
 export const NewMissingPostForm: React.FC<{
   loggedInUser: MeQuery | undefined;
   loading: boolean;
-}> = ({ loggedInUser, loading }): JSX.Element => {
+  closeDrawer: VoidFunction;
+}> = ({ loggedInUser, loading, closeDrawer }): JSX.Element => {
   if (loading)
     return (
       <HStack w='100%' justify='center'>
@@ -60,6 +82,7 @@ export const NewMissingPostForm: React.FC<{
         subtitle='You must login to be able to create a new post'
       />
     );
+  const { me: user } = loggedInUser;
 
   const [selectLocationOption, setSelectLocationOption] =
     useState<SelectLocationOptions | null>(null);
@@ -67,35 +90,63 @@ export const NewMissingPostForm: React.FC<{
   const [locationLatLng, setLocationLatLng] = useState<LocationType | null>(
     null
   );
+  const [createPost] = useCreateMissingPostMutation();
 
-  const { me: user } = loggedInUser;
-
-  const LocationHeader = React.memo(() => {
-    return (
-      <VStack align='flex-start' mt={4}>
-        <Heading size='md'>Select Location 🌍</Heading>
-        <Text
-          fontSize='.875rem'
-          color={'gray.500'}
-          fontWeight={'medium'}
-          textAlign={'left'}
-        >
-          Select the location where you missed or found the pet on map,
-          Locations are used to send notifications and alerts to nearby users
-        </Text>
-      </VStack>
-    );
-  });
   const hideLocationPicker = () => {
     setSelectLocationOption(null);
   };
 
   return (
     <Box my={5}>
-      <Formik initialValues={initialValues} onSubmit={(values) => {}}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={async (
+          { images, ...input },
+          { setErrors, setFieldError }
+        ) => {
+          if (!images || !images.length) {
+            return setFieldError(
+              'images',
+              'Please provide at least one image for the pet'
+            );
+          }
+          const { data } = await createPost({
+            variables: {
+              input,
+              images,
+            },
+
+            update: (cache, { data: result }) => {
+              if (!result || !result.createMissingPost) return;
+              const newPost = result.createMissingPost.post;
+
+              if (!newPost) return;
+              const cachedPosts = cache.readQuery<MissingPostsQuery>({
+                query: MissingPostsDocument,
+              });
+              const posts = (cachedPosts?.missingPosts?.missingPosts ||
+                []) as MissingPost[];
+
+              cache.writeQuery<MissingPostsQuery>({
+                query: MissingPostsDocument,
+                data: {
+                  missingPosts: {
+                    missingPosts: [...posts, newPost],
+                  },
+                },
+              });
+            },
+          });
+
+          if (data?.createMissingPost.errors?.length) {
+            return setErrors(toErrorMap(data?.createMissingPost.errors));
+          }
+          closeDrawer();
+        }}
+      >
         {({ values, isSubmitting, setFieldValue }) => (
           <Form>
-            <VStack spacing={5}>
+            <VStack spacing={5} mb={10}>
               {/* Avatar, name and  */}
               <HStack w='100%' align='center'>
                 <LoggedInUserAvatar size='md' />
@@ -139,7 +190,7 @@ export const NewMissingPostForm: React.FC<{
                   ]}
                   activeValue={values.type}
                   variant='outline'
-                  py={6}
+                  py={5}
                   w='100%'
                 />
               </GenericInputComponent>
@@ -164,6 +215,7 @@ export const NewMissingPostForm: React.FC<{
                 name='location'
                 helperText='Select the location where you missed or found the pet,
                  Locations are used to send notifications and alerts to nearby users'
+                required={false}
               />
 
               <HStack w='100%' align='center'>
@@ -258,22 +310,26 @@ export const NewMissingPostForm: React.FC<{
                 isOpen={selectLocationOption === SelectLocationOptions.MAP}
                 onClose={() => setSelectLocationOption(null)}
               />
-
-              <HStack mt={4} w='100%' align='center' justify='flex-end'>
-                <Button size='sm' height={'38px'} type='submit' variant='ghost'>
-                  Cancel
-                </Button>
-                <Button
-                  size='sm'
-                  height={'38px'}
-                  type='submit'
-                  colorScheme={'teal'}
-                  px={6}
-                >
-                  Post
-                </Button>
-              </HStack>
             </VStack>
+            <HStack mt={4} w='100%' align='center' justify='flex-end'>
+              <Button
+                fontSize='.875rem'
+                height={'38px'}
+                type='submit'
+                variant='ghost'
+              >
+                Cancel
+              </Button>
+              <Button
+                type='submit'
+                colorScheme={'teal'}
+                minW='100px'
+                fontSize='.875rem'
+                isLoading={isSubmitting}
+              >
+                Post
+              </Button>
+            </HStack>
           </Form>
         )}
       </Formik>

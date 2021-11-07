@@ -12,9 +12,7 @@ import styles from 'styles/login.module.css';
 import { toErrorMap } from 'utils/toErrorMap';
 import withApollo from 'utils/withApollo';
 
-interface loginProps {}
-
-const LoginPage: React.FC<loginProps> = ({}) => {
+const LoginPage: React.FC = () => {
   const [loginMutation] = useLoginMutation();
   const router = useRouter();
 

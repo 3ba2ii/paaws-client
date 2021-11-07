@@ -1,48 +1,13 @@
-import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons';
-import { Box, HStack, VStack, Text, Heading } from '@chakra-ui/layout';
-import {
-  Button,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
-  IconButton,
-  Input,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItemOption,
-  MenuList,
-  MenuOptionGroup,
-  Tag,
-} from '@chakra-ui/react';
-import { MyDropzone } from 'components/CustomDropzone';
-import GenericInputComponent from 'components/GenericInputComponent';
-import InputField from 'components/InputField';
-import LoggedInUserAvatar from 'components/LoggedInUserAvatar';
-import TwoOptionsSwitch from 'components/TwoOptionsSwitch';
-import { Form, Formik } from 'formik';
+import { SearchIcon } from '@chakra-ui/icons';
+import { Box, HStack } from '@chakra-ui/layout';
+import { Button, DrawerProps, IconButton, Input } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
-import {
-  CreateMissingPostInput,
-  MeQuery,
-  MissingPostTypes,
-  PrivacyType,
-  Scalars,
-  useMeQuery,
-} from 'generated/graphql';
-
+import { useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
-import React, { ReactElement, useState } from 'react';
-import { BiChevronDown, BiLock } from 'react-icons/bi';
-import { FaChevronDown } from 'react-icons/fa';
-import { FcPrivacy } from 'react-icons/fc';
-import { GoChevronDown, GoPlus, GoSettings } from 'react-icons/go';
-import { capitalizeString } from 'utils/capitalizeString';
-import { PrivacyTypeCustomized } from 'utils/constants/enums';
-import { useIsLoggedIn } from 'utils/useIsLoggedIn';
+import React, { useState } from 'react';
+import { GoPlus, GoSettings } from 'react-icons/go';
+import { NewMissingPostForm } from '../../components/CreateMissingPostForm';
+import { CustomDrawer } from '../../components/CustomDrawer';
 const variants = {
   closed: {
     opacity: 0,
@@ -126,9 +91,7 @@ export const PostsOptions: React.FC = () => {
         justify='flex-end'
         position='relative'
         wrap={['wrap', 'unset']}
-        sx={{
-          rowGap: '1rem',
-        }}
+        sx={{ rowGap: '1rem' }}
       >
         <AnimatedSearchBox />
 
@@ -154,157 +117,15 @@ export const PostsOptions: React.FC = () => {
         isOpen={openDrawer}
         onClose={toggleDrawer}
         drawerHeader='Create New Post'
-        drawerBody={<NewMissingPostForm loggedInUser={loggedInUser} />}
+        drawerBody={
+          <NewMissingPostForm
+            loggedInUser={loggedInUser}
+            loading={loading}
+            closeDrawer={() => setOpenDrawer(false)}
+          />
+        }
+        drawerProps={{ closeOnOverlayClick: false } as DrawerProps}
       />
     </>
   );
 };
-const NewMissingPostForm: React.FC<{
-  loggedInUser: MeQuery | undefined;
-}> = ({ loggedInUser }): JSX.Element => {
-  if (!loggedInUser || !loggedInUser.me)
-    return (
-      <Heading>You must be logged in to create a missing pet post</Heading>
-    );
-  const { me: user } = loggedInUser;
-
-  const initialValues: CreateMissingPostInput & {
-    images: Array<Scalars['Upload']>;
-  } = {
-    title: '',
-    description: '',
-    type: MissingPostTypes.Missing,
-    privacy: PrivacyType.Public,
-    address: null,
-    thumbnailIdx: 0,
-    images: [],
-  };
-
-  return (
-    <Box my={5}>
-      <Formik initialValues={initialValues} onSubmit={(values) => {}}>
-        {({ values, isSubmitting, handleChange, setFieldValue }) => (
-          <Form>
-            <VStack spacing={5}>
-              {/* Avatar, name and  */}
-              <HStack w='100%' align='center'>
-                <LoggedInUserAvatar size='md' />
-                <VStack align={'flex-start'} spacing={1}>
-                  <Text fontSize={'lg'} fontWeight={'semibold'}>
-                    {user.displayName}
-                  </Text>
-                  {PrivacyMenu(values, setFieldValue)}
-                </VStack>
-              </HStack>
-              <GenericInputComponent
-                helperText='Please specify whether you missed your pet or found one'
-                label='Missing or Found'
-                name='type'
-              >
-                <TwoOptionsSwitch
-                  handleChange={(value) => setFieldValue('type', value)}
-                  options={[
-                    { label: 'Missing', value: MissingPostTypes.Missing },
-                    { label: 'Found', value: MissingPostTypes.Found },
-                  ]}
-                  activeValue={values.type}
-                  variant='outline'
-                  py={6}
-                  w='100%'
-                />
-              </GenericInputComponent>
-              <InputField
-                name='title'
-                placeholder='I found a dog near manara street'
-                label='Title'
-                maxLength={90}
-                autoFocus={true}
-              />
-              <InputField
-                name='description'
-                placeholder='Tell us more about where you found this pet'
-                helperText='Give us more information about the pet you missed or found'
-                label='Description'
-                maxLength={255}
-                textarea
-              />
-              <MyDropzone label='Media' name='images' />
-              <Button minW='128px' type='submit' mt={4} colorScheme={'teal'}>
-                Post
-              </Button>
-            </VStack>
-            {JSON.stringify(values)}
-          </Form>
-        )}
-      </Formik>
-    </Box>
-  );
-};
-
-const CustomDrawer: React.FC<{
-  isOpen: boolean;
-  onClose: VoidFunction;
-  drawerHeader: string;
-  drawerBody: ReactElement;
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-}> = ({
-  isOpen,
-  onClose,
-  drawerHeader,
-  drawerBody,
-  size = 'md',
-}): ReactElement => {
-  return (
-    <Drawer onClose={onClose} isOpen={isOpen} size={size}>
-      <DrawerOverlay />
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader>{drawerHeader}</DrawerHeader>
-        <DrawerBody>{drawerBody}</DrawerBody>
-      </DrawerContent>
-    </Drawer>
-  );
-};
-function PrivacyMenu(
-  values: CreateMissingPostInput,
-  setFieldValue: (
-    field: string,
-    value: any,
-    shouldValidate?: boolean | undefined
-  ) => void
-) {
-  return (
-    <Menu>
-      <MenuButton
-        as={Button}
-        size='xs'
-        borderRadius='4px'
-        p='0rem .5rem 0rem .5rem'
-        rightIcon={<GoChevronDown />}
-        boxShadow='base'
-      >
-        {capitalizeString(values.privacy)}
-      </MenuButton>
-      <MenuList>
-        <MenuOptionGroup
-          defaultValue={values.privacy}
-          title='Privacy'
-          color='gray.500'
-          type='radio'
-        >
-          {PrivacyTypeCustomized.map(({ key, value }) => (
-            <MenuItemOption
-              value={value}
-              key={key}
-              onClick={() => {
-                setFieldValue('privacy', value);
-              }}
-            >
-              <Text fontWeight={'medium'}>{capitalizeString(value)}</Text>
-            </MenuItemOption>
-          ))}
-        </MenuOptionGroup>
-      </MenuList>
-    </Menu>
-  );
-}

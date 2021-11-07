@@ -9,9 +9,7 @@ import { Input, InputProps } from '@chakra-ui/input';
 import { Box, Text } from '@chakra-ui/layout';
 import {
   CloseButton,
-  DrawerOverlay,
   IconButton,
-  PopoverCloseButton,
   Tooltip,
   useColorModeValue,
 } from '@chakra-ui/react';
@@ -46,7 +44,7 @@ const activeStyle = {
 };
 
 const acceptStyle = {
-  borderColor: '#00e676',
+  borderColor: '#38B2AC',
 };
 
 const rejectStyle = {
@@ -77,16 +75,18 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
       if (rejectedFiles && rejectedFiles.length) {
         form.setFieldError(
           field.name,
-          'Please upload only 10 images with maximum size of 5MBs pet image'
+          'Please upload only 10 images with maximum size of 2MBs pet image'
         );
         return;
       }
+      //validate images
 
       // Do something with the files
       form.setFieldValue(field.name, accFiles.slice(0, 10));
     },
     []
   );
+
   const {
     getRootProps,
     getInputProps,
@@ -96,7 +96,7 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
   } = useDropzone({
     onDrop,
     maxFiles: 10,
-    maxSize: 1024 * 1024 * 5,
+    maxSize: 1024 * 1024 * 3,
     multiple: true,
     accept: 'image/*',
   });
@@ -142,7 +142,7 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
               Drag ‘n Drop images here, or click to browse
             </Text>
             <Text textStyle='p3' color='gray.400' fontWeight='400'>
-              Files Supported: .png .jpg .webp up to 5MB each
+              Files Supported: .png .jpg .webp .gif up to 2MB each
             </Text>
           </>
         )}
