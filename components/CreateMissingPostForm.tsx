@@ -126,11 +126,18 @@ export const NewMissingPostForm: React.FC<{
               });
               const posts = (cachedPosts?.missingPosts?.missingPosts ||
                 []) as MissingPost[];
+              console.log(
+                `🚀 ~ file: CreateMissingPostForm.tsx ~ line 129 ~ posts`,
+                posts
+              );
 
               cache.writeQuery<MissingPostsQuery>({
                 query: MissingPostsDocument,
+
                 data: {
+                  ...cachedPosts,
                   missingPosts: {
+                    ...cachedPosts?.missingPosts,
                     missingPosts: [...posts, newPost],
                   },
                 },
@@ -150,8 +157,8 @@ export const NewMissingPostForm: React.FC<{
               {/* Avatar, name and  */}
               <HStack w='100%' align='center'>
                 <LoggedInUserAvatar size='md' />
-                <VStack align={'flex-start'} spacing={1}>
-                  <Text fontSize={'lg'} fontWeight={'semibold'}>
+                <VStack align={'flex-start'} spacing={0}>
+                  <Text mb={1} fontSize={'lg'} fontWeight={'semibold'}>
                     {user.displayName}
                   </Text>
                   <DropdownMenu
@@ -164,7 +171,6 @@ export const NewMissingPostForm: React.FC<{
                       as: Button,
                       size: 'xs',
                       borderRadius: '4px',
-                      p: '0rem .5rem 0rem .5rem',
                       rightIcon: <GoChevronDown />,
                       boxShadow: 'base',
                     }}
@@ -218,7 +224,7 @@ export const NewMissingPostForm: React.FC<{
                 required={false}
               />
 
-              <HStack w='100%' align='center'>
+              <HStack w='100%' align='center' spacing={0}>
                 <DropdownMenu
                   options={SelectLocationObj}
                   menuButtonText={
