@@ -11,7 +11,7 @@ import { CircularProgress } from '@chakra-ui/progress';
 import { MeQuery, useMeQuery } from 'generated/graphql';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaHeart } from 'react-icons/fa';
 import navbarStyles from 'styles/navbar.module.css';
 import { isServer } from 'utils/isServer';
@@ -84,6 +84,7 @@ const NavBarItems = () => {
   });
 
   const { pathname } = useRouter();
+
   const isLoginScreen = pathname.includes('/login');
   const isRegisterScreen = pathname.includes('/register');
 
@@ -127,7 +128,7 @@ const NavBarItems = () => {
           <li aria-expanded='true'>Adoption</li>
         </Link>
         {loading ? (
-          <CircularProgress size='20px' isIndeterminate color='gray.700' />
+          <LoadingComponent />
         ) : data?.me?.id ? (
           <>
             <Link href='/favorites'>
@@ -178,4 +179,21 @@ const NavBar = () => {
     </nav>
   );
 };
+
+const LoadingComponent = (): JSX.Element | null => {
+  /*
+   Code that is only supposed to run in the browser should be executed inside useEffect. 
+   That's required because the first render should match the initial render of the server. 
+   If you manipulate that result it creates a mismatch and React won't be able to hydrate the page successfully.
+   When you run browser only code (like trying to access window) inside useEffect, it will happen after hydration 👍 */
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return mounted ? (
+    <CircularProgress size='20px' isIndeterminate color='gray.700' />
+  ) : null;
+};
+
 export default withApollo(NavBar);
