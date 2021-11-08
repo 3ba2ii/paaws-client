@@ -6,16 +6,19 @@ fragment MissingPostFragment on MissingPost {
     id
     displayName
     avatar {
+      id
       url
     }
   }
   commentsCount
   tags
   address {
+    id
     distance
   }
   points
   thumbnail {
+    id
     url
   }
   createdAt

@@ -15,6 +15,7 @@ fragment RequiredUserInfo on User {
   provider
   provider_id
   avatar {
+    id
     url
   }
 }
