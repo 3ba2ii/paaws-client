@@ -79,8 +79,6 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
         );
         return;
       }
-      //validate images
-
       // Do something with the files
       form.setFieldValue(field.name, accFiles.slice(0, 10));
     },
@@ -105,13 +103,17 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
     form.setFieldValue('thumbnailIdx', idx);
   };
 
+  const backgroundStyles = useColorModeValue(
+    { backgroundColor: '#fafafa', borderColor: '#eeeeee' },
+    { backgroundColor: 'gray.700', borderColor: 'gray.200' }
+  );
+
   const style = useMemo(
     () =>
       ({
         ...{
           ...baseStyle,
-          backgroundColor: useColorModeValue('#fafafa', 'gray.700'),
-          borderColor: useColorModeValue('#eeeeee', 'gray.200'),
+          ...backgroundStyles,
         },
         ...(isDragActive ? activeStyle : {}),
         ...(isDragAccept ? acceptStyle : {}),
