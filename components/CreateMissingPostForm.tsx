@@ -1,3 +1,4 @@
+import { gql } from '@apollo/client';
 import { Box, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
 import {
   Button,
@@ -116,31 +117,41 @@ export const NewMissingPostForm: React.FC<{
               images,
             },
 
-            update: (cache, { data: result }) => {
-              if (!result || !result.createMissingPost) return;
-              const newPost = result.createMissingPost.post;
+            //refetchQueries: [MissingPostsDocument],
+            update: (cache, { data: result, errors }) => {
+              if (errors?.length || !result) return;
 
+              const newPost = result?.createMissingPost.post;
               if (!newPost) return;
-              const cachedPosts = cache.readQuery<MissingPostsQuery>({
+              const cachedData = cache.readQuery<MissingPostsQuery>({
                 query: MissingPostsDocument,
+                variables: {
+                  input: { limit: 5, cursor: null },
+                  length: 120,
+                },
               });
-              const posts = (cachedPosts?.missingPosts?.missingPosts ||
-                []) as MissingPost[];
+
               console.log(
-                `🚀 ~ file: CreateMissingPostForm.tsx ~ line 129 ~ posts`,
-                posts
+                `🚀 ~ file: CreateMissingPostForm.tsx ~ line 125 ~ cachedData`,
+                cachedData
               );
 
               cache.writeQuery<MissingPostsQuery>({
                 query: MissingPostsDocument,
-
+                variables: {
+                  input: { limit: 6, cursor: null },
+                  length: 120,
+                },
                 data: {
-                  ...cachedPosts,
                   missingPosts: {
-                    ...cachedPosts?.missingPosts,
-                    missingPosts: [...posts, newPost],
+                    ...cachedData!.missingPosts,
+                    missingPosts: [
+                      newPost,
+                      ...cachedData!.missingPosts.missingPosts,
+                    ],
                   },
                 },
+                overwrite: true,
               });
             },
           });

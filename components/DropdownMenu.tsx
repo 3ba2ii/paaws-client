@@ -1,14 +1,14 @@
 import {
-  MenuButtonProps,
   ButtonProps,
-  MenuOptionGroupProps,
   Menu,
   MenuButton,
+  MenuButtonProps,
+  MenuItemOption,
   MenuList,
   MenuOptionGroup,
-  MenuItemOption,
-  Text,
+  MenuOptionGroupProps,
   MenuProps,
+  Text,
 } from '@chakra-ui/react';
 import { capitalizeString } from 'utils/capitalizeString';
 
@@ -17,7 +17,7 @@ type DropdownMenuProps = {
   menuButtonText: string;
   handleChange: (value: any) => void;
   menuProps?: MenuProps;
-  menuButtonProps?: MenuButtonProps | ButtonProps;
+  menuButtonProps?: MenuButtonProps & ButtonProps;
   menuOptionGroupProps?: MenuOptionGroupProps;
 };
 
@@ -28,7 +28,6 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
   menuProps,
   menuButtonProps,
   menuOptionGroupProps,
-  ...props
 }) => {
   return (
     <Menu {...menuProps}>

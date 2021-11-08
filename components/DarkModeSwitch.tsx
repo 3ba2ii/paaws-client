@@ -1,23 +1,19 @@
-import { useColorMode, Switch } from '@chakra-ui/react';
-import React from 'react';
-import { IconButton } from '@chakra-ui/react';
-import { FaLightbulb, FaMoon, FaSun } from 'react-icons/fa';
+import { IconButton, useColorMode } from '@chakra-ui/react';
+import React, { useEffect } from 'react';
+import { FaMoon, FaSun } from 'react-icons/fa';
 
 export const DarkModeSwitch = () => {
+  const [mounted, setMounted] = React.useState(false);
   const { colorMode, toggleColorMode } = useColorMode();
-  const isDark = colorMode === 'dark';
 
-  return (
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  return mounted ? (
     <IconButton
       aria-label='mode-switch'
       onClick={toggleColorMode}
-      icon={
-        isDark ? (
-          <FaSun color='rgba(255,255,255,.92)' />
-        ) : (
-          <FaMoon color='#2D3748' />
-        )
-      }
+      icon={colorMode === 'light' ? <FaMoon /> : <FaSun />}
     />
-  );
+  ) : null;
 };

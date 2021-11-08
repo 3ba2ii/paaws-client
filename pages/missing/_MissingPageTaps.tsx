@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from '@chakra-ui/layout';
 import { Button, ButtonGroup, useColorModeValue } from '@chakra-ui/react';
 import { MissingPostTypes } from 'generated/graphql';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface TapsProps {
   label: string;
@@ -38,8 +38,10 @@ export const MissingPageTaps: React.FC<{
 
   const handleSelectTap = (index: number) => {
     setSelectedTap(index);
-    handleSelectFilter(buttons[index].types);
   };
+  useEffect(() => {
+    handleSelectFilter(buttons[selectedTap].types);
+  }, [selectedTap]);
 
   return (
     <ButtonGroup
@@ -78,7 +80,7 @@ const SingleNavTap: React.FC<{
       w={['128px', '100%']}
       position='relative'
       borderRadius={4}
-      key={button.label}
+      key={button.label + index}
       onClick={() => handleSelectTap(index)}
       transition='background .2s ease-in-out'
       color={isActive ? 'teal.500' : 'inherit'}

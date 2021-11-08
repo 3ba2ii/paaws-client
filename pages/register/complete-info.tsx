@@ -33,14 +33,12 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
   });
   const { colorMode } = useColorMode();
 
-  console.log(`🚀 ~ file: complete-info.tsx ~ line 38 ~ colorMode`, colorMode);
-
   const [uploadAvatar, { loading: uploadAvatarLoading }] =
     useUploadAvatarMutation();
   const [updateUserInfo, { loading: updateInfoLoading }] =
     useUpdateUserInfoMutation();
 
-  const { data, loading } = useMeQuery();
+  const { data, loading } = useMeQuery({ fetchPolicy: 'cache-only' });
 
   const handleChange = (value: any, field: string) => {
     setValues({ ...values, [field]: value });

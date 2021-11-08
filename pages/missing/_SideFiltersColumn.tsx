@@ -21,7 +21,7 @@ export const SideFiltersColumn: React.FC<{
       <MissingPageTaps handleSelectFilter={handleSelectFilter} />
       <Box
         display={['none', 'none', 'block']}
-        width='200px'
+        width='150px'
         position='absolute'
         placeSelf='left'
         bottom='8vh'

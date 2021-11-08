@@ -83,6 +83,7 @@ const NavBarItems = () => {
     nextFetchPolicy: 'cache-only',
   });
 
+  const [mounted, setMounted] = useState(false);
   const { pathname } = useRouter();
 
   const isLoginScreen = pathname.includes('/login');
@@ -145,7 +146,11 @@ const NavBarItems = () => {
       </nav>
     </section>
   );
-  return body;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  return mounted ? body : null;
 };
 const NavBar = () => {
   const logo = useColorModeValue('light', 'dark');

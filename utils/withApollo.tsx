@@ -64,6 +64,7 @@ const cache = new InMemoryCache({
             incoming: PaginatedMissingPosts
           ) {
             if (!existing) return incoming;
+
             return {
               ...incoming,
               missingPosts: [

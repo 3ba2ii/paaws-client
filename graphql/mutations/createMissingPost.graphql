@@ -10,7 +10,7 @@ mutation CreateMissingPost(
     }
     post {
       ...MissingPostFragment
-      descriptionSnippet(length: 100)
+      descriptionSnippet(length: 120)
     }
   }
 }

@@ -1,24 +1,21 @@
 import { QueryResult } from '@apollo/client';
 import { getDataFromTree } from '@apollo/client/react/ssr';
-import { Box, Container, Flex, Grid, GridItem } from '@chakra-ui/layout';
+import { Box, Container, Flex } from '@chakra-ui/layout';
 import { Layout } from 'components/Layout';
 import {
   MissingPostsQuery,
   MissingPostTypes,
   useMissingPostsQuery,
 } from 'generated/graphql';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import withApollo from 'utils/withApollo';
-import { SideFiltersColumn } from './_SideFiltersColumn';
 import { MissingPageContent } from './_MissingPageContent';
+import { SideFiltersColumn } from './_SideFiltersColumn';
 
 export const MissingPageContext =
   React.createContext<QueryResult<MissingPostsQuery> | null>(null);
 const MissingPage = () => {
   const [hasLoadedFirstTime, setHasLoaded] = useState(false);
-  const [filters, setFilters] = useState<MissingPostTypes>(
-    MissingPostTypes.All
-  ); //will hold the filters for the posts
 
   const { data, loading, fetchMore, refetch, variables, ...rest } =
     useMissingPostsQuery({
@@ -27,13 +24,14 @@ const MissingPage = () => {
         length: 120,
       },
       notifyOnNetworkStatusChange: true,
+
       onCompleted: () => {
         setHasLoaded(true);
       },
     });
 
   const handleSelectFilter = (type: MissingPostTypes) => {
-    setFilters(type);
+    refetch({ input: { limit: 5, cursor: null }, length: 120, type });
   };
   const fetchMorePosts = async () => {
     if (!data?.missingPosts) return;
@@ -46,36 +44,28 @@ const MissingPage = () => {
     fetchMore({ variables: newVariables });
   };
 
-  useEffect(() => {
-    if (!hasLoadedFirstTime) return;
-
-    refetch({ ...variables, type: filters });
-  }, [filters]);
-
   return (
     <Layout title='Missing Pets - Paaws'>
-      <MissingPageContext.Provider
-        value={{ data, loading, fetchMore, refetch, variables, ...rest }}
+      <Flex
+        w='100%'
+        h='100%'
+        flexDirection={['column', 'row', 'row']}
+        alignItems='flex-start'
+        justify='center'
+        p='inherit'
       >
-        <Flex
-          w='100%'
-          h='100%'
-          flexDirection={['column', 'row', 'row']}
-          alignItems='flex-start'
-          justify='center'
-          p='inherit'
-        >
-          <Box w={['100%', '220px', '250px']}>
-            <SideFiltersColumn handleSelectFilter={handleSelectFilter} />
-          </Box>
-          <Container w='100%' h='100%' maxW='1440px' flex={1}>
-            <MissingPageContent
-              hasLoadedFirstTime={hasLoadedFirstTime}
-              fetchMorePosts={fetchMorePosts}
-            />
-          </Container>
-        </Flex>
-      </MissingPageContext.Provider>
+        <Box w={['100%', '220px', '250px']}>
+          <SideFiltersColumn handleSelectFilter={handleSelectFilter} />
+        </Box>
+        <Container w='100%' h='100%' maxW='1440px' flex={1}>
+          <MissingPageContent
+            hasLoadedFirstTime={hasLoadedFirstTime}
+            fetchMorePosts={fetchMorePosts}
+            data={data}
+            loading={loading}
+          />
+        </Container>
+      </Flex>
     </Layout>
   );
 };

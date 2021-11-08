@@ -113,19 +113,21 @@ export const PostsOptions: React.FC = () => {
           New Post
         </Button>
       </HStack>
-      <CustomDrawer
-        isOpen={openDrawer}
-        onClose={toggleDrawer}
-        drawerHeader='Create New Post'
-        drawerBody={
-          <NewMissingPostForm
-            loggedInUser={loggedInUser}
-            loading={loading}
-            closeDrawer={() => setOpenDrawer(false)}
-          />
-        }
-        drawerProps={{ closeOnOverlayClick: false } as DrawerProps}
-      />
+      {openDrawer && (
+        <CustomDrawer
+          isOpen={openDrawer}
+          onClose={toggleDrawer}
+          drawerHeader='Create New Post'
+          drawerBody={
+            <NewMissingPostForm
+              loggedInUser={loggedInUser}
+              loading={loading}
+              closeDrawer={() => setOpenDrawer(false)}
+            />
+          }
+          drawerProps={{ closeOnOverlayClick: false } as DrawerProps}
+        />
+      )}
     </>
   );
 };
