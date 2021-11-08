@@ -8,10 +8,10 @@ import { Flex, Text } from '@chakra-ui/layout';
 import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu';
 import { Portal } from '@chakra-ui/portal';
 import { CircularProgress } from '@chakra-ui/progress';
-import { MeQuery, useMeQuery, User } from 'generated/graphql';
+import { MeQuery, useMeQuery } from 'generated/graphql';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FaHeart } from 'react-icons/fa';
 import navbarStyles from 'styles/navbar.module.css';
 import { isServer } from 'utils/isServer';
@@ -80,6 +80,7 @@ const NavBarItems = () => {
   const { data, loading } = useMeQuery({
     skip: isServer(),
     fetchPolicy: 'cache-first',
+    nextFetchPolicy: 'cache-only',
   });
 
   const { pathname } = useRouter();
