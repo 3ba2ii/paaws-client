@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useMeQuery } from '../generated/graphql';
 
 export const useIsAuth = () => {
-  const { data, loading } = useMeQuery();
+  const { data, loading } = useMeQuery({ fetchPolicy: 'cache-only' });
   const router = useRouter();
 
   useEffect(() => {

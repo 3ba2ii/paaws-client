@@ -47,6 +47,8 @@ const MissingPage = () => {
   };
 
   useEffect(() => {
+    if (!hasLoadedFirstTime) return;
+
     refetch({ ...variables, type: filters });
   }, [filters]);
 
