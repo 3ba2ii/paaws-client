@@ -26,7 +26,7 @@ import {
   Scalars,
   useCreateMissingPostMutation,
 } from 'generated/graphql';
-import { LocationType } from 'pages/types';
+import { LocationType } from 'types';
 import React, { useState } from 'react';
 import { GoChevronDown, GoChevronRight } from 'react-icons/go';
 import { capitalizeString } from 'utils/capitalizeString';

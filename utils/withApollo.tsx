@@ -11,7 +11,7 @@ import {
   PaginatedMissingPosts,
 } from 'generated/graphql';
 import nextWithApollo from 'next-with-apollo';
-import router, { useRouter } from 'next/router';
+import router from 'next/router';
 import { isServer } from './isServer';
 
 // Use this inside error-link
@@ -32,8 +32,8 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         `❌ [GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       );
       if (message.includes('Not Authenticated')) {
-        if (path && path.toString() === 'vote') handleLogoutWithoutHook();
-        return;
+        if (path && path.toString() === 'vote')
+          return handleLogoutWithoutHook();
       }
     });
 
@@ -82,7 +82,7 @@ const cache = new InMemoryCache({
 const withApollo = nextWithApollo(
   ({ initialState, headers }) => {
     const link = createUploadLink({
-      uri: 'http://localhost:4000/graphql',
+      uri: process.env.NEXT_PUBLIC_API_URL,
       credentials: 'include',
       headers: {
         ...(headers as Record<string, string>),
@@ -97,7 +97,6 @@ const withApollo = nextWithApollo(
   },
   {
     render: ({ Page, props }) => {
-      const router = useRouter();
       return (
         <ApolloProvider client={props.apollo}>
           <Page {...props} {...router} />

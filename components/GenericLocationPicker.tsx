@@ -2,7 +2,7 @@ import { Box, HStack } from '@chakra-ui/react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { Form, Formik } from 'formik';
 import { AddressInput } from 'generated/graphql';
-import { Libraries, LocationType } from 'pages/types';
+import { Libraries, LocationType } from 'types';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Country, SelectLocationOptions } from 'utils/constants/enums';
 import { isProduction } from 'utils/isProduction';

@@ -4,6 +4,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "gen-env": "npx gen-env-types .env.local -o ./types/env.d.ts -e .",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

@@ -8,9 +8,10 @@ import SelectComponent from 'components/SelectFieldComponent';
 import { useFormikContext } from 'formik';
 import { Breeds, PetGender, PetSize, PetType } from 'generated/graphql';
 import Image from 'next/image';
-import { LocationType } from 'pages/types';
+
 import React, { useState } from 'react';
 import s from 'styles/createPostForm.module.css';
+import { LocationType } from 'types';
 
 export const FirstStepComponent = () => {
   return (
@@ -24,10 +25,6 @@ export const FirstStepComponent = () => {
         />
 
         <SelectComponent
-          label='Pet Type'
-          name='type'
-          required
-          placeholder='Cat'
           options={Object.entries(PetType).map(([key, value]) => ({
             label: key,
             value,
@@ -37,20 +34,12 @@ export const FirstStepComponent = () => {
 
       <div className={s['horizontal-input-fields']}>
         <SelectComponent
-          label='Pet Size'
-          name='size'
-          required
-          placeholder='Mini'
           options={Object.entries(PetSize).map(([key, value]) => ({
             label: key,
             value,
           }))}
         />
         <SelectComponent
-          label='Gender'
-          name='gender'
-          required
-          placeholder='Male or Female'
           options={Object.entries(PetGender).map(([key, value]) => ({
             label: key,
             value,
@@ -58,8 +47,6 @@ export const FirstStepComponent = () => {
         />
       </div>
       <SelectComponent
-        label='Breed'
-        name='breeds'
         required
         isMulti
         placeholder='Please select all breeds'
@@ -72,8 +59,6 @@ export const FirstStepComponent = () => {
 
       <div className={s['horizontal-input-fields']}>
         <SelectComponent
-          label='Pet Colors'
-          name='colors'
           required
           placeholder='Mini'
           options={Object.entries(PetSize).map(([key, value]) => ({

@@ -1,6 +1,6 @@
 import CustomLocationPicker from 'components/GenericLocationPicker';
 import { MeQuery } from 'generated/graphql';
-import { LocationType } from 'pages/types';
+import { LocationType } from 'types';
 import React from 'react';
 import styles from 'styles/register.module.css';
 
