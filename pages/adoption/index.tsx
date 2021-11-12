@@ -3,11 +3,16 @@ import { Button } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import {
   Address,
+  Breeds,
   Pet,
   PetBreed,
+  PetGender,
+  PetSize,
   PetType,
   Photo,
   useAdoptionPostsQuery,
+  useCreateAdoptionPostMutation,
+  useCreatePetMutation,
 } from 'generated/graphql';
 import React, { useState } from 'react';
 import styles from 'styles/missing-page.module.css';
@@ -40,8 +45,28 @@ const MissingPage: React.FC = ({}) => {
     },
     notifyOnNetworkStatusChange: true,
   });
+  const [createPost] = useCreatePetMutation();
   const [openModal, setOpenModal] = useState(false);
 
+  const createPet = async () => {
+    await createPost({
+      variables: {
+        createPetOptions: {
+          name: 'New Poet',
+          type: PetType.Dog,
+          gender: PetGender.Female,
+          size: PetSize.Large,
+          birthDate: new Date(),
+          about: 'Hello this is about',
+          breeds: [Breeds.Bulldog],
+          thumbnailIdx: 0,
+        },
+      },
+    });
+  };
+  React.useEffect(() => {
+    // createPet();
+  }, []);
   if (loading) {
     return <Layout>Loading...</Layout>;
   }

@@ -763,6 +763,13 @@ export type CreateMissingPostMutationVariables = Exact<{
 
 export type CreateMissingPostMutation = { __typename?: 'Mutation', createMissingPost: { __typename?: 'CreateMissingPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, post?: Maybe<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
 
+export type CreatePetMutationVariables = Exact<{
+  createPetOptions: CreatePetOptions;
+}>;
+
+
+export type CreatePetMutation = { __typename?: 'Mutation', createPet: { __typename?: 'PetResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, pet?: Maybe<{ __typename?: 'Pet', id: number, updatedAt: any, createdAt: any, name: string, type: PetType }> } };
+
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
 }>;
@@ -985,6 +992,50 @@ export function useCreateMissingPostMutation(baseOptions?: Apollo.MutationHookOp
 export type CreateMissingPostMutationHookResult = ReturnType<typeof useCreateMissingPostMutation>;
 export type CreateMissingPostMutationResult = Apollo.MutationResult<CreateMissingPostMutation>;
 export type CreateMissingPostMutationOptions = Apollo.BaseMutationOptions<CreateMissingPostMutation, CreateMissingPostMutationVariables>;
+export const CreatePetDocument = gql`
+    mutation CreatePet($createPetOptions: CreatePetOptions!) {
+  createPet(createPetOptions: $createPetOptions) {
+    errors {
+      field
+      message
+      code
+    }
+    pet {
+      id
+      updatedAt
+      createdAt
+      name
+      type
+    }
+  }
+}
+    `;
+export type CreatePetMutationFn = Apollo.MutationFunction<CreatePetMutation, CreatePetMutationVariables>;
+
+/**
+ * __useCreatePetMutation__
+ *
+ * To run a mutation, you first call `useCreatePetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPetMutation, { data, loading, error }] = useCreatePetMutation({
+ *   variables: {
+ *      createPetOptions: // value for 'createPetOptions'
+ *   },
+ * });
+ */
+export function useCreatePetMutation(baseOptions?: Apollo.MutationHookOptions<CreatePetMutation, CreatePetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePetMutation, CreatePetMutationVariables>(CreatePetDocument, options);
+      }
+export type CreatePetMutationHookResult = ReturnType<typeof useCreatePetMutation>;
+export type CreatePetMutationResult = Apollo.MutationResult<CreatePetMutation>;
+export type CreatePetMutationOptions = Apollo.BaseMutationOptions<CreatePetMutation, CreatePetMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($loginOptions: LoginInput!) {
   login(options: $loginOptions) {
