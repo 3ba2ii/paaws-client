@@ -52,7 +52,7 @@ interface UserDropdownProps {
   userInfo: MeQuery | undefined;
 }
 const UserDropdownMenu: React.FC<UserDropdownProps> = ({ userInfo }) => {
-  const AvatarOrInitials = () => {
+  const AvatarOrInitials = React.useMemo(() => {
     return (
       <Avatar
         size='sm'
@@ -61,10 +61,10 @@ const UserDropdownMenu: React.FC<UserDropdownProps> = ({ userInfo }) => {
         src={userInfo?.me?.avatar?.url || ''}
       />
     );
-  };
+  }, [userInfo]);
   return (
     <Menu>
-      <AvatarOrInitials />
+      {AvatarOrInitials}
       <Portal>
         <MenuList>
           <MenuItem>My Profile</MenuItem>

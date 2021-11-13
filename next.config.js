@@ -3,6 +3,6 @@ module.exports = {
   reactStrictMode: true,
 
   images: {
-    domains: ['localhost', 'www.cdc.gov'],
+    domains: ['localhost', 'www.cdc.gov', 'paaws-storage-s3.s3.amazonaws.com'],
   },
 };
