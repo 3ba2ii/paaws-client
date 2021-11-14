@@ -4,7 +4,7 @@ import { ArrowForwardIcon, SearchIcon } from '@chakra-ui/icons';
 import { Image } from '@chakra-ui/image';
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
 import { Flex, Text } from '@chakra-ui/layout';
-import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/menu';
+import { Menu, MenuItem, MenuList } from '@chakra-ui/menu';
 import { Portal } from '@chakra-ui/portal';
 import { CircularProgress } from '@chakra-ui/progress';
 import { MeQuery, useMeQuery } from 'generated/graphql';
@@ -93,9 +93,10 @@ const NavBarItems = () => {
   body = (
     <section className={navbarStyles['nav-items-container']}>
       <div className={navbarStyles['search-input-field-styles']}>
-        <InputGroup alignItems='center' justify='center' maxW={450}>
+        <InputGroup alignItems='center' justify='center' maxW={420}>
           <InputLeftElement
             px={7}
+            pb={1}
             pointerEvents='none'
             children={<SearchIcon color='gray.500' />}
           />
@@ -105,6 +106,8 @@ const NavBarItems = () => {
             rounded='lg'
             variant='filled'
             placeholder='Search for pets, people or anything...'
+            size='sm'
+            height='34px'
           />
         </InputGroup>
       </div>
@@ -153,8 +156,8 @@ const NavBar = () => {
         background: 'inherit',
         padding: 'inherit',
         boxShadow: useColorModeValue(
-          '0 0 10px rgba(0, 0, 0, 0.1)',
-          '0 0 10px rgba(255, 255,255, 0.05)'
+          '0 0 2px rgba(0, 0, 0, 0.1)',
+          '0 0 2px rgba(255, 255,255, 0.05)'
         ),
       }}
     >
@@ -166,7 +169,7 @@ const NavBar = () => {
           cursor='pointer'
           src={`/images/logo-${logo}.svg`}
           alt='paaws'
-          maxW='120px'
+          maxW='90px'
         />
       </Link>
 

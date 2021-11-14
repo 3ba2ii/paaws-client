@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/layout';
+import { Box, Flex, VStack, Text, Heading } from '@chakra-ui/layout';
 import { Button, Image } from '@chakra-ui/react';
 import { MissingPostTypes } from 'generated/graphql';
 import React from 'react';
@@ -19,36 +19,48 @@ export const SideFiltersColumn: React.FC<{
       position='relative'
     >
       <MissingPageTaps handleSelectFilter={handleSelectFilter} />
-      <Box
-        display={['none', 'none', 'block']}
-        width='150px'
-        position='absolute'
-        placeSelf='left'
-        bottom='8vh'
+      <VStack
+        display={['none', 'none', 'flex']}
+        flexDir={'column'}
+        width='100%'
+        align='center'
+        justify='center'
+        position={'absolute'}
+        bottom={'8vh'}
       >
         <Image
           src='/illustrations/CTA.svg'
           w='100%'
           h='100%'
           objectFit='cover'
+          maxW='150px'
+          marginBottom='16px'
         />
+        <VStack marginBottom='20px'>
+          <Heading size={'sm'}>Thinking of Adoption?</Heading>
+          <Text
+            fontWeight='medium'
+            color='gray.500'
+            fontSize={'sm'}
+            textAlign={'center'}
+            maxW='20ch'
+          >
+            Find the perfect pet for you and your family now.
+          </Text>
+        </VStack>
         <Button
-          w='80%'
-          position='absolute'
-          bottom='8%'
-          left='50%'
-          transform='translateX(-50%)'
-          variant='solid'
-          colorScheme='red'
-          bg='red.400'
-          color='white'
+          w='fit-content'
+          variant='ghost'
+          colorScheme='teal'
           fontWeight='bold'
           borderRadius={6}
           size='sm'
+          py={4}
+          minW='180px'
         >
-          Discover More
+          Adopt Now
         </Button>
-      </Box>
+      </VStack>
     </Flex>
   );
 };

@@ -26,6 +26,7 @@ export const PostTags: React.FC<{ tags: MissingPostTags[] }> = ({ tags }) => {
           fontWeight='semibold'
           size='sm'
           {...getColorProps(tag)}
+          whiteSpace={'nowrap'}
         >
           {tag}
         </Tag>

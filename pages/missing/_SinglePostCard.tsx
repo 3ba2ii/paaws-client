@@ -67,6 +67,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
             size='sm'
             fontSize='12px'
             fontWeight='semibold'
+            whiteSpace={'nowrap'}
           >
             Near you
           </Tag>

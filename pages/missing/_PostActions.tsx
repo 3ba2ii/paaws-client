@@ -25,7 +25,6 @@ export const PostActions: React.FC<{
     upvoteLoading: false,
     downvoteLoading: false,
   });
-  const [isOpen, setIsOpen] = React.useState(false);
 
   const handleVotingLoading =
     (type: 'upvote' | 'downvote') => (loading: boolean) => {
@@ -101,8 +100,7 @@ export const PostActions: React.FC<{
       });
       if (data?.vote.errors?.length) {
         if (data?.vote.errors[0].field === 'spam') {
-          //open a dialog to warn the user
-          setIsOpen(true);
+          //todo: open a dialog to warn the user
         }
       }
     } catch (err) {
