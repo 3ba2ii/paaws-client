@@ -1,4 +1,3 @@
-import { Avatar } from '@chakra-ui/avatar';
 import { Button } from '@chakra-ui/button';
 import { useColorModeValue } from '@chakra-ui/color-mode';
 import { ArrowForwardIcon, SearchIcon } from '@chakra-ui/icons';
@@ -11,12 +10,13 @@ import { CircularProgress } from '@chakra-ui/progress';
 import { MeQuery, useMeQuery } from 'generated/graphql';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaHeart } from 'react-icons/fa';
 import navbarStyles from 'styles/navbar.module.css';
 import { isServer } from 'utils/isServer';
 import withApollo from 'utils/withApollo';
 import { DarkModeSwitch } from './DarkModeSwitch';
+import { UserAvatar } from './UserAvatar';
 
 function JoinUsNavbarItems(
   isRegisterScreen: boolean,
@@ -52,19 +52,9 @@ interface UserDropdownProps {
   userInfo: MeQuery | undefined;
 }
 const UserDropdownMenu: React.FC<UserDropdownProps> = ({ userInfo }) => {
-  const AvatarOrInitials = React.useMemo(() => {
-    return (
-      <Avatar
-        size='sm'
-        as={MenuButton}
-        name={userInfo?.me?.full_name}
-        src={userInfo?.me?.avatar?.url || ''}
-      />
-    );
-  }, [userInfo]);
   return (
     <Menu>
-      {AvatarOrInitials}
+      <UserAvatar avatarProps={{ size: 'sm' }} />
       <Portal>
         <MenuList>
           <MenuItem>My Profile</MenuItem>
