@@ -262,6 +262,7 @@ export type Mutation = {
   deleteUser: DeleteResponse;
   editComment: CommentResponse;
   forgotPassword: Scalars['Boolean'];
+  getS3URL: UploadImageResponse;
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
@@ -532,11 +533,9 @@ export type Photo = {
   __typename?: 'Photo';
   createdAt: Scalars['DateTime'];
   creator: User;
+  creatorId: Scalars['Int'];
   filename: Scalars['String'];
   id: Scalars['Int'];
-  isOnDisk: Scalars['Boolean'];
-  isThumbnail: Scalars['Boolean'];
-  path: Scalars['String'];
   updatedAt: Scalars['DateTime'];
   url?: Maybe<Scalars['String']>;
 };
@@ -659,6 +658,7 @@ export type UpdateUserInfo = {
 export type UploadImageResponse = {
   __typename?: 'UploadImageResponse';
   errors?: Maybe<Array<FieldError>>;
+  filename?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
 };
 
@@ -825,7 +825,7 @@ export type AdoptionPostsQuery = { __typename?: 'Query', adoptionPosts: { __type
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', path: string, id: number, url?: Maybe<string> }> }> };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
 
 export type MissingPostsQueryVariables = Exact<{
   input: PaginationArgs;
@@ -1332,7 +1332,7 @@ export const MeDocument = gql`
   me {
     ...RequiredUserInfo
     avatar {
-      path
+      url
     }
   }
 }

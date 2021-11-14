@@ -18,14 +18,21 @@ import withApollo from 'utils/withApollo';
 import { Step1 } from './_updateInfoStep1';
 import { Step2 } from './_updateInfoStep2';
 
-interface CompleteInfoProps {}
-const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
+interface ValuesData {
+  bio: string;
+  avatar: File | null;
+  location: {
+    lng: number | null;
+    lat: number | null;
+  };
+}
+const CompleteInfoComponent: React.FC = () => {
   useIsAuth();
 
   const [step, setStep] = useState<number>(0);
-  const [values, setValues] = useState({
+  const [values, setValues] = useState<ValuesData>({
     bio: '',
-    avatar: '',
+    avatar: null,
     location: {
       lng: null,
       lat: null,
@@ -38,7 +45,7 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
   const [updateUserInfo, { loading: updateInfoLoading }] =
     useUpdateUserInfoMutation();
 
-  const { data, loading } = useMeQuery({ fetchPolicy: 'cache-only' });
+  const { data, loading } = useMeQuery({ fetchPolicy: 'cache-first' });
 
   const handleChange = (value: any, field: string) => {
     setValues({ ...values, [field]: value });
@@ -56,6 +63,7 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
 
     if (step === 1) {
       const { bio, avatar, location } = values;
+      if (!values.avatar) return;
       const updateBioLocation = updateUserInfo({
         variables: {
           updateUserUpdateOptions: {
@@ -76,10 +84,6 @@ const CompleteInfoComponent: React.FC<CompleteInfoProps> = ({}) => {
 
       //firing both mutations simultaneously
       Promise.all([updateBioLocation, updateAvatar]).then((res) => {
-        console.log(
-          `🚀 ~ file: complete-info.tsx ~ line 64 ~ Promise.all ~ res`,
-          res
-        );
         //routing to the homepage with success flag to show fireworks
         localStorage.setItem('completed-info-confetti', 'true');
         Router.replace(`/?ref=${Router.pathname}?success=${true}`);

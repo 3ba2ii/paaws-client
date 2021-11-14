@@ -5,7 +5,6 @@ import { Layout } from '../components/Layout';
 
 const Home: NextPage = () => {
   const { ref } = useRouter().query;
-  console.log(`🚀 ~ file: index.tsx ~ line 7 ~ query`, ref);
 
   const isFireworks =
     ref === '/register/complete-info?success=true' &&

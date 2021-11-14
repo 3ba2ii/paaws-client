@@ -1,4 +1,3 @@
-import { gql } from '@apollo/client';
 import { Box, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
 import {
   Button,
@@ -12,13 +11,11 @@ import GenericInputComponent from 'components/GenericInputComponent';
 import CustomLocationPicker from 'components/GenericLocationPicker';
 import GenericModal from 'components/GenericModal';
 import InputField from 'components/InputField';
-import LoggedInUserAvatar from 'components/LoggedInUserAvatar';
 import TwoOptionsSwitch from 'components/TwoOptionsSwitch';
 import { Form, Formik } from 'formik';
 import {
   CreateMissingPostInput,
   MeQuery,
-  MissingPost,
   MissingPostsDocument,
   MissingPostsQuery,
   MissingPostTypes,
@@ -26,9 +23,9 @@ import {
   Scalars,
   useCreateMissingPostMutation,
 } from 'generated/graphql';
-import { LocationType } from 'types';
 import React, { useState } from 'react';
 import { GoChevronDown, GoChevronRight } from 'react-icons/go';
+import { LocationType } from 'types';
 import { capitalizeString } from 'utils/capitalizeString';
 import {
   PrivacyTypeCustomized,
@@ -37,6 +34,7 @@ import {
 } from 'utils/constants/enums';
 import { toErrorMap } from 'utils/toErrorMap';
 import { NotAuthenticatedComponent } from './NotAuthenticatedComponent';
+import { UserAvatar } from './UserAvatar';
 
 const initialValues: CreateMissingPostInput & {
   images: Array<Scalars['Upload']>;
@@ -167,7 +165,7 @@ export const NewMissingPostForm: React.FC<{
             <VStack spacing={5} mb={10}>
               {/* Avatar, name and  */}
               <HStack w='100%' align='center'>
-                <LoggedInUserAvatar size='md' />
+                <UserAvatar avatarProps={{ size: 'md' }} />
                 <VStack align={'flex-start'} spacing={0}>
                   <Text mb={1} fontSize={'lg'} fontWeight={'semibold'}>
                     {user.displayName}
