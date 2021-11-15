@@ -1,9 +1,10 @@
-import { Box, HStack } from '@chakra-ui/react';
+import { Box, Heading, HStack, Text } from '@chakra-ui/react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { Form, Formik } from 'formik';
+import { motion } from 'framer-motion';
 import { AddressInput } from 'generated/graphql';
-import { Libraries, LocationType } from 'types';
 import React, { useEffect, useMemo, useState } from 'react';
+import { Libraries, LocationType } from 'types';
 import { Country, SelectLocationOptions } from 'utils/constants/enums';
 import { isProduction } from 'utils/isProduction';
 import GenericInputComponent from './GenericInputComponent';
@@ -16,7 +17,50 @@ interface CustomLocationPickerProps {
   includeMarker?: boolean;
   selectLocationType?: SelectLocationOptions;
 }
-
+const transitionValues = {
+  duration: 0.4,
+  yoyo: Infinity,
+  ease: 'easeOut',
+};
+const bounceTransition = {
+  y: {
+    duration: 0.4,
+    yoyo: Infinity,
+    ease: 'easeOut',
+  },
+  backgroundColor: {
+    duration: 0,
+    yoyo: Infinity,
+    ease: 'easeOut',
+    repeatDelay: 0.8,
+  },
+};
+const ballStyle = {
+  display: 'block',
+  background: 'transparent',
+  fontSize: '2.5rem',
+};
+const MapLoadingComponent: React.FC = () => (
+  <Box
+    display={'block'}
+    position={'absolute'}
+    top='50%'
+    left='50%'
+    transform={'translate(-50%, -50%)'}
+    textAlign='center'
+  >
+    <motion.span
+      style={ballStyle}
+      transition={bounceTransition}
+      animate={{
+        y: ['0%', '-100%'],
+      }}
+    >
+      🌍
+    </motion.span>
+    <Text>Loading...</Text>
+  </Box>
+);
 export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
   handleLocationChange,
   includeMarker,
@@ -170,6 +214,7 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
       onLoad={() => {
         setLoaded(true);
       }}
+      loadingElement={<MapLoadingComponent />}
     >
       {/* todo: we need to add custom address selection form */}
       {selectLocationType === SelectLocationOptions.MAP ? (
