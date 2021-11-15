@@ -14,6 +14,7 @@ export const DarkModeSwitch = () => {
       aria-label='mode-switch'
       onClick={toggleColorMode}
       icon={colorMode === 'light' ? <FaMoon /> : <FaSun />}
+      size='sm'
     />
   ) : null;
 };

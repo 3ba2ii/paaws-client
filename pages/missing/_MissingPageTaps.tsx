@@ -81,6 +81,7 @@ const SingleNavTap: React.FC<{
       position='relative'
       borderRadius={4}
       key={button.label + index}
+      overflow={'hidden'}
       onClick={() => handleSelectTap(index)}
       transition='background .2s ease-in-out'
       color={isActive ? 'teal.500' : 'inherit'}
@@ -109,6 +110,7 @@ const SingleNavTap: React.FC<{
         w='100%'
         paddingInlineStart={1}
         px={[2, 4]}
+        fontSize='sm'
         textAlign={['center', 'left']}
         fontWeight={isActive ? 'bold' : 'semibold'}
       >

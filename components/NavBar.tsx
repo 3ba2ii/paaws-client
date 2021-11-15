@@ -132,7 +132,9 @@ const NavBarItems = () => {
           </>
         ) : (
           <Link href='/register'>
-            <Button leftIcon={<FaHeart color='red' />}>Join us</Button>
+            <Button leftIcon={<FaHeart color='red' />} size='sm'>
+              Join us
+            </Button>
           </Link>
         )}
         <DarkModeSwitch />

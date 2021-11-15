@@ -6,7 +6,10 @@ mutation Login($loginOptions: LoginInput!) {
       message
     }
     user {
-      email
+      ...RequiredUserInfo
+      avatar {
+        url
+      }
     }
   }
 }

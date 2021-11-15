@@ -48,13 +48,16 @@ const LoginPage: React.FC = () => {
             const { data } = await loginMutation({
               variables: { loginOptions: { identifier, password } },
               update: (cache, { data: returnedData }) => {
+                console.log(
+                  `🚀 ~ file: login.tsx ~ line 51 ~ onSubmit={ ~ returnedData`,
+                  returnedData
+                );
                 if (!returnedData) return;
 
                 cache.writeQuery<MeQuery>({
                   query: MeDocument,
                   data: {
-                    __typename: 'Query',
-                    me: data?.login?.user as User | null,
+                    me: returnedData?.login?.user as User | null,
                   },
                 });
               },
