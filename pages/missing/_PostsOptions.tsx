@@ -119,11 +119,7 @@ export const PostsOptions: React.FC = () => {
           onClose={toggleDrawer}
           drawerHeader='Create New Post'
           drawerBody={
-            <NewMissingPostForm
-              loggedInUser={loggedInUser}
-              loading={loading}
-              closeDrawer={() => setOpenDrawer(false)}
-            />
+            <NewMissingPostForm closeDrawer={() => setOpenDrawer(false)} />
           }
           drawerProps={{ closeOnOverlayClick: false } as DrawerProps}
         />

@@ -33,6 +33,7 @@ import {
   SelectLocationOptions,
 } from 'utils/constants/enums';
 import { toErrorMap } from 'utils/toErrorMap';
+import { useIsAuth } from 'utils/useIsAuth';
 import { NotAuthenticatedComponent } from './NotAuthenticatedComponent';
 import { UserAvatar } from './UserAvatar';
 
@@ -64,25 +65,9 @@ const LocationHeader = React.memo(() => {
   );
 });
 export const NewMissingPostForm: React.FC<{
-  loggedInUser: MeQuery | undefined;
-  loading: boolean;
   closeDrawer: VoidFunction;
-}> = ({ loggedInUser, loading, closeDrawer }): JSX.Element => {
-  if (loading)
-    return (
-      <HStack w='100%' justify='center'>
-        <CircularProgress isIndeterminate color='teal.300' size='40px' />
-      </HStack>
-    );
-  if (!loggedInUser || !loggedInUser.me)
-    return (
-      <NotAuthenticatedComponent
-        title='Not Authenticated'
-        subtitle='You must login to be able to create a new post'
-      />
-    );
-  const { me: user } = loggedInUser;
-
+}> = ({ closeDrawer }): JSX.Element => {
+  const { user, loading } = useIsAuth();
   const [selectLocationOption, setSelectLocationOption] =
     useState<SelectLocationOptions | null>(null);
 
@@ -94,6 +79,20 @@ export const NewMissingPostForm: React.FC<{
   const hideLocationPicker = () => {
     setSelectLocationOption(null);
   };
+
+  if (loading)
+    return (
+      <HStack w='100%' justify='center'>
+        <CircularProgress isIndeterminate color='teal.300' size='40px' />
+      </HStack>
+    );
+  if (!user)
+    return (
+      <NotAuthenticatedComponent
+        title='Not Authenticated'
+        subtitle='You must login to be able to create a new post'
+      />
+    );
 
   return (
     <Box my={5}>
@@ -128,11 +127,6 @@ export const NewMissingPostForm: React.FC<{
                   length: 120,
                 },
               });
-
-              console.log(
-                `🚀 ~ file: CreateMissingPostForm.tsx ~ line 125 ~ cachedData`,
-                cachedData
-              );
 
               cache.writeQuery<MissingPostsQuery>({
                 query: MissingPostsDocument,
