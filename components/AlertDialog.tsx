@@ -8,56 +8,77 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
   Button,
+  AlertDialogProps,
+  ModalHeaderProps,
+  ModalBodyProps,
 } from '@chakra-ui/react';
 import React from 'react';
 
-export const CustomAlertDialog: React.FC<{
-  header: string;
-  body: string;
-  includeFooter: boolean;
+interface CustomAlertDialogProps {
+  isOpen: boolean;
+  header: string | JSX.Element | React.ReactChildren;
+  body?: string | JSX.Element | React.ReactChildren;
+  footer?: string | JSX.Element | React.ReactChildren;
   cancelText?: string;
   confirmText?: string;
-  isOpen: boolean;
-}> = ({
+  alertDialogProps?: AlertDialogProps;
+  alertDialogBodyProps?: ModalBodyProps;
+  alertHeaderProps?: ModalHeaderProps;
+  handleConfirm: VoidFunction;
+  handleCancel: VoidFunction;
+}
+
+export const CustomAlertDialog: React.FC<CustomAlertDialogProps> = ({
   header,
   body,
   cancelText,
   confirmText,
-  includeFooter = false,
+  footer,
   isOpen = false,
+  alertDialogProps,
+  alertDialogBodyProps,
+  alertHeaderProps,
+  handleConfirm,
+  handleCancel,
 }) => {
-  const { onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef(null);
 
   return (
     <>
       <AlertDialog
-        motionPreset='slideInBottom'
+        motionPreset='scale'
         leastDestructiveRef={cancelRef}
-        onClose={onClose}
+        onClose={handleCancel}
         isOpen={isOpen}
         isCentered
+        {...alertDialogProps}
       >
         <AlertDialogOverlay />
 
         <AlertDialogContent>
-          {header && <AlertDialogHeader>{header}</AlertDialogHeader>}
-          <AlertDialogCloseButton />
-          {body && <AlertDialogBody>{body}</AlertDialogBody>}
-          {includeFooter && (
-            <AlertDialogFooter>
-              {cancelText && (
-                <Button ref={cancelRef} onClick={onClose}>
+          {header && (
+            <AlertDialogHeader {...alertHeaderProps}>
+              {header}
+            </AlertDialogHeader>
+          )}
+          {body && (
+            <AlertDialogBody {...alertDialogBodyProps}>{body}</AlertDialogBody>
+          )}
+
+          <AlertDialogFooter>
+            {footer ? (
+              footer
+            ) : (
+              <>
+                <Button size='sm' mr={3} variant='ghost' onClick={handleCancel}>
                   {cancelText}
                 </Button>
-              )}
-              {confirmText && (
-                <Button colorScheme='red' onClick={onClose} ml={3}>
+                <Button size='sm' colorScheme='red' onClick={handleConfirm}>
                   {confirmText}
                 </Button>
-              )}
-            </AlertDialogFooter>
-          )}
+              </>
+            )}
+          </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </>
