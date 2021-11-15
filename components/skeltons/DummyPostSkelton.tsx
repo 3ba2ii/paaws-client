@@ -6,18 +6,16 @@ import {
   Skeleton,
   SkeletonCircle,
   SkeletonText,
-  Text,
   useColorModeValue,
 } from '@chakra-ui/react';
 import React from 'react';
-import { fallbackSrc } from 'utils/constants';
 
 const SingleDummySkeleton = (): JSX.Element => {
   return (
     <Flex
       flexDirection={['column', 'row']}
       p={['0px', '12px']}
-      boxShadow='md'
+      boxShadow='base'
       border='1px'
       borderColor={useColorModeValue('gray.200', 'gray.700')}
       w='100%'
@@ -79,8 +77,9 @@ export const DummyPostsSkeleton: React.FC<{ noOfPosts?: number }> = ({
   return (
     <VStack
       sx={{
-        gap: '24px',
+        gap: '16px',
       }}
+      w='100%'
     >
       {[...Array(noOfPosts)].map((_, index) => (
         <SingleDummySkeleton key={index} />

@@ -80,8 +80,8 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
     <Flex
       key={id}
       flexDirection={['column', 'column', 'row']}
-      p={['0px', '0px', '12px']}
-      boxShadow='md'
+      p={'0px'}
+      boxShadow='base'
       border='1px'
       borderColor={useColorModeValue('gray.200', 'gray.700')}
       w='100%'
@@ -95,7 +95,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         borderTopLeftRadius={['0px', '0px', '10px']}
         borderBottomLeftRadius={['0px', '0px', '10px']}
         overflow='hidden'
-        boxShadow='md'
+        boxShadow='base'
       >
         <ImageWithFallback
           fallbackSrc={fallbackSrc}

@@ -31,7 +31,7 @@ export const MissingPostsGridContainer: React.FC<{
       />
     );
   return (
-    <Flex flexDirection='column' sx={{ gap: '24px' }} w='100%'>
+    <Flex flexDirection='column' sx={{ gap: '16px' }} w='100%'>
       {posts.map(
         ({
           id,

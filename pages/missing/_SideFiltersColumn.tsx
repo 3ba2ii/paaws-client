@@ -11,7 +11,7 @@ export const SideFiltersColumn: React.FC<{
     <Flex
       w='100%'
       flexDirection={['row', 'column']}
-      h={['fit-content', '90vh']}
+      h={['fit-content', '80vh']}
       maxH='100%'
       align='flex-start'
       justify='space-between'
@@ -22,28 +22,25 @@ export const SideFiltersColumn: React.FC<{
       <VStack
         display={['none', 'none', 'flex']}
         flexDir={'column'}
-        width='100%'
+        width='fit-content'
         align='center'
-        justify='center'
-        position={'absolute'}
-        bottom={'8vh'}
+        justify='flex-start'
       >
         <Image
           src='/illustrations/CTA.svg'
-          w='100%'
+          w='130px'
           h='100%'
           objectFit='cover'
-          maxW='150px'
           marginBottom='16px'
         />
         <VStack marginBottom='20px'>
-          <Heading size={'sm'}>Thinking of Adoption?</Heading>
+          <Heading size={'xs'}>Thinking of Adoption?</Heading>
           <Text
             fontWeight='medium'
             color='gray.500'
-            fontSize={'sm'}
+            fontSize={'xs'}
             textAlign={'center'}
-            maxW='20ch'
+            maxW='25ch'
           >
             Find the perfect pet for you and your family now.
           </Text>

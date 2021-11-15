@@ -47,7 +47,7 @@ const AnimatedSearchBox = () => {
       <motion.div
         style={{
           position: 'absolute',
-          width: '93%',
+          width: '90%',
           height: '100%',
           top: '100%',
         }}
