@@ -1,6 +1,15 @@
 import { QueryResult } from '@apollo/client';
 import { getDataFromTree } from '@apollo/client/react/ssr';
-import { Box, Flex } from '@chakra-ui/layout';
+import {
+  Text,
+  Box,
+  Flex,
+  VStack,
+  HStack,
+  SimpleGrid,
+  Link,
+} from '@chakra-ui/layout';
+import { Button } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import {
   MissingPostsQuery,
@@ -8,9 +17,32 @@ import {
   useMissingPostsQuery,
 } from 'generated/graphql';
 import React, { useState } from 'react';
+import { GoPlus } from 'react-icons/go';
 import withApollo from 'utils/withApollo';
 import { MissingPageContent } from './_MissingPageContent';
 import { SideFiltersColumn } from './_SideFiltersColumn';
+
+const SideFooter = () => {
+  return (
+    <VStack spacing={3}>
+      <SimpleGrid w='100%' columns={2} spacing={3}>
+        <Link textStyle='p2'>Help</Link>
+        <Link textStyle='p2'>About</Link>
+        <Link textStyle='p2' whiteSpace='nowrap'>
+          Paaws Pro ✨
+        </Link>
+        <Link textStyle='p2'>Policy</Link>
+        <Link textStyle='p2'>Security</Link>
+        <Link textStyle='p2'>Help</Link>
+        <Link textStyle='p2'>Report a bug</Link>
+        <Link textStyle='p2'>Privacy</Link>
+      </SimpleGrid>
+      <Text textStyle='p2' w='100%'>
+        &copy;2021 Paaws Platform.
+      </Text>
+    </VStack>
+  );
+};
 
 export const MissingPageContext =
   React.createContext<QueryResult<MissingPostsQuery> | null>(null);
@@ -44,7 +76,7 @@ const MissingPage = () => {
   };
 
   return (
-    <Layout title='Missing Pets - Paaws'>
+    <Layout title='Missing Pets - Paaws' includeFooter={false}>
       <Flex
         w='100%'
         h='100%'
@@ -66,14 +98,7 @@ const MissingPage = () => {
           />
         </Box>
         <Box display={['none', 'none', 'block']} flex='.15'>
-          Voluptate ipsum Lorem tempor quis voluptate deserunt id eiusmod
-          occaecat consequat nostrud irure incididunt. Amet occaecat est enim
-          amet ex minim exercitation culpa. Cillum irure laborum labore laborum
-          veniam sunt. Incididunt laborum laborum quis sunt enim nulla tempor
-          consequat aliquip eiusmod ea esse. Sunt cillum ea reprehenderit irure
-          commodo nisi nostrud laboris adipisicing magna labore nostrud dolore.
-          Do adipisicing incididunt occaecat ipsum eu cillum non cupidatat
-          eiusmod ex. Esse qui dolore voluptate anim fugiat.
+          <SideFooter />
         </Box>
       </Flex>
     </Layout>

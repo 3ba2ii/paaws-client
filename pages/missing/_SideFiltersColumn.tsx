@@ -11,8 +11,7 @@ export const SideFiltersColumn: React.FC<{
     <Flex
       w='100%'
       flexDirection={['row', 'column']}
-      h={['fit-content', '80vh']}
-      maxH='100%'
+      h={['fit-content', 'calc(100vh - 12rem)']}
       align='flex-start'
       justify='space-between'
       maxW={['100%', '250px']}

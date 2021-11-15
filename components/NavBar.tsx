@@ -156,7 +156,6 @@ const NavBar = () => {
       className={navbarStyles['navbar-container']}
       style={{
         background: 'inherit',
-        padding: 'inherit',
         boxShadow: useColorModeValue(
           '0 0 2px rgba(0, 0, 0, 0.1)',
           '0 0 2px rgba(255, 255,255, 0.05)'

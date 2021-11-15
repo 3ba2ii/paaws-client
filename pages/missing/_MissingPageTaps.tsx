@@ -20,10 +20,6 @@ const buttons: TapsProps[] = [
     label: 'Found Pets',
     types: MissingPostTypes.Found,
   },
-  {
-    label: 'Rescued Pets',
-    types: MissingPostTypes.Missing,
-  },
 ];
 export const MissingPageTaps: React.FC<{
   handleSelectFilter: (type: MissingPostTypes) => void;
@@ -44,25 +40,23 @@ export const MissingPageTaps: React.FC<{
   }, [selectedTap]);
 
   return (
-    <ButtonGroup
+    <Box
       w='100%'
+      display={'flex'}
       flexDir={['row', 'column']}
       align='flex-start'
-      variant='unstyled'
+      justifyContent={['center', 'flex-start']}
       flexWrap='wrap'
       sx={{ gap: '4px' }}
+      flex='1'
     >
-      <Text display={['none', 'block']} textStyle='p1' mb={4}>
-        Menu
-      </Text>
-
       {buttons.map((button, index) => (
         <SingleNavTap
           key={button.label}
           {...{ selectedTap, handleSelectTap, button, index }}
         />
       ))}
-    </ButtonGroup>
+    </Box>
   );
 };
 const SingleNavTap: React.FC<{
@@ -113,6 +107,7 @@ const SingleNavTap: React.FC<{
         fontSize='sm'
         textAlign={['center', 'left']}
         fontWeight={isActive ? 'bold' : 'semibold'}
+        variant='unstyled'
       >
         {button.label}
       </Button>

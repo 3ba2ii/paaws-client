@@ -58,7 +58,7 @@ const MapLoadingComponent: React.FC = () => (
     >
       🌍
     </motion.span>
-    <Text>Loading...</Text>
+    <Text>Loading Google Maps for you...</Text>
   </Box>
 );
 export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
@@ -159,7 +159,7 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
     */
     return (
       <Formik initialValues={address} onSubmit={() => {}}>
-        {({ values, isSubmitting, handleChange, setFieldValue }) => (
+        {({ values, handleChange, setFieldValue }) => (
           <Form>
             {JSON.stringify(values)}
 
@@ -209,7 +209,7 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
     <LoadScript
       libraries={libraries}
       googleMapsApiKey={
-        !isProduction ? process.env.NEXT_PUBLIC_GOOGLE_API_KEY + '' : ''
+        !isProduction ? process.env.NEXT_PUBLIC_GOOGLE_API_KEY : ''
       }
       onLoad={() => {
         setLoaded(true);

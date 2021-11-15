@@ -9,20 +9,15 @@ interface ContainerProps {
   children: React.ReactNode;
   title?: string;
   className?: string;
+  includeFooter?: boolean;
 }
 //Container will be the main container of each page in the app
 
-const sizes = {
-  sm: '300px',
-  md: '600px',
-  lg: '1048px',
-  xl: '1440px',
-  'full-width': '100%',
-};
 export const Layout = ({
   children,
   className,
   title = 'Paaws',
+  includeFooter = true,
 }: ContainerProps) => {
   const { colorMode } = useColorMode();
 
@@ -44,13 +39,16 @@ export const Layout = ({
         justifyContent='flex-start'
         bg={bgColor[colorMode]}
         color={color[colorMode]}
-        height='100%'
+        w='100%'
+        h='100%'
       >
-        <NavBar />
-        <Box className={styles.main} mt={'5rem'}>
+        <Box px='inherit' w='100%' position={'fixed'} h='80px' top='0'>
+          <NavBar />
+        </Box>
+        <Box className={styles.main} mt={'6rem'} w='100%' maxW='1500px'>
           {children}
         </Box>
-        <Footer />
+        {includeFooter && <Footer />}
       </Flex>
     </>
   );
