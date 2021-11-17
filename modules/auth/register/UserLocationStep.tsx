@@ -1,4 +1,4 @@
-import CustomLocationPicker from 'components/GenericLocationPicker';
+import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
 import { MeQuery } from 'generated/graphql';
 import { LocationType } from 'types';
 import React from 'react';
@@ -9,7 +9,10 @@ interface Step2Props {
   userInfo: MeQuery | undefined;
 }
 
-export const Step2: React.FC<Step2Props> = ({ handleChange, userInfo }) => {
+export const UserLocationStep: React.FC<Step2Props> = ({
+  handleChange,
+  userInfo,
+}) => {
   const handleLocationChange = (coords: LocationType) => {
     handleChange(coords, 'location');
   };

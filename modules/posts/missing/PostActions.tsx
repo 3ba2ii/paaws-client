@@ -1,7 +1,7 @@
 import { ApolloCache, gql } from '@apollo/client';
 import { HStack, Text } from '@chakra-ui/layout';
 import { Button, IconButton, Tooltip } from '@chakra-ui/react';
-import VoteComponent from 'components/VoteIconComponent';
+import VoteIcon from 'modules/posts/common/VoteIconComponent';
 import { MissingPost, usePostVoteMutation } from 'generated/graphql';
 import React from 'react';
 import { BiMessageRounded, BiShareAlt } from 'react-icons/bi';
@@ -127,10 +127,7 @@ export const PostActions: React.FC<{
         <IconButton
           aria-label='Upvote'
           icon={
-            <VoteComponent
-              isUpvote
-              outlined={!(hasVoted && voteStatus === 1)}
-            />
+            <VoteIcon isUpvote outlined={!(hasVoted && voteStatus === 1)} />
           }
           onClick={() => onVote(1)}
           isLoading={actionLoading.upvoteLoading}
@@ -143,7 +140,7 @@ export const PostActions: React.FC<{
       <Tooltip label='Downvote'>
         <IconButton
           variant='ghost'
-          icon={<VoteComponent outlined={!(hasVoted && voteStatus === -1)} />}
+          icon={<VoteIcon outlined={!(hasVoted && voteStatus === -1)} />}
           aria-label='Downvote'
           isLoading={actionLoading.downvoteLoading}
           onClick={() => onVote(-1)}

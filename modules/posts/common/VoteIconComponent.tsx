@@ -5,7 +5,7 @@ interface VoteComponentProps {
   isUpvote?: boolean;
 }
 
-const VoteComponent: React.FC<VoteComponentProps> = ({
+const VoteIcon: React.FC<VoteComponentProps> = ({
   outlined = true,
   isUpvote = false,
 }) => {
@@ -30,4 +30,4 @@ const VoteComponent: React.FC<VoteComponentProps> = ({
 
   return <>{outlined ? OutlinedComponents : FilledComponents}</>;
 };
-export default VoteComponent;
+export default VoteIcon;

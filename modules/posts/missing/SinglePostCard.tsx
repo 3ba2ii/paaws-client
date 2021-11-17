@@ -1,12 +1,12 @@
 import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout';
 import { Avatar, Tag, useColorModeValue } from '@chakra-ui/react';
-import ImageWithFallback from 'components/ImageWithFallback';
+import ImageWithFallback from 'components/common/media/ImageWithFallback';
 import { formatDistance } from 'date-fns';
 import { Maybe, MissingPostTags, Photo } from 'generated/graphql';
 import React, { useMemo } from 'react';
 import { fallbackSrc } from 'utils/constants';
-import { PostActions } from './_PostActions';
-import { PostTags } from './_PostTags';
+import { PostActions } from './PostActions';
+import { PostTags } from '../common/PostTags';
 
 interface SinglePostCardProps {
   id: number;

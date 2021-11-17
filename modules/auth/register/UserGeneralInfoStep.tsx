@@ -12,7 +12,7 @@ interface Step1Props {
   userInfo: MeQuery | undefined;
   values: any;
 }
-export const Step1: React.FC<Step1Props> = ({
+export const UserGeneralInfoStep: React.FC<Step1Props> = ({
   handleChange,
   userInfo,
   values,

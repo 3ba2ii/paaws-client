@@ -6,13 +6,13 @@ import {
   ModalProps,
   useToast,
 } from '@chakra-ui/react';
-import { MyDropzone } from 'components/CustomDropzone';
-import { DropdownMenu } from 'components/DropdownMenu';
-import GenericInputComponent from 'components/GenericInputComponent';
-import CustomLocationPicker from 'components/GenericLocationPicker';
-import GenericModal from 'components/GenericModal';
-import InputField from 'components/InputField';
-import TwoOptionsSwitch from 'components/TwoOptionsSwitch';
+import { MyDropzone } from 'components/common/input/CustomDropzone';
+import { DropdownMenu } from 'components/common/input/DropdownMenu';
+import GenericInputComponent from 'components/common/input/CustomInputComponent';
+import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
+import GenericModal from 'components/common/overlays/CustomModal';
+import InputField from 'components/common/input/InputField';
+import TwoOptionsSwitch from 'components/common/input/TwoOptionsSwitch';
 import { Form, Formik, useFormikContext } from 'formik';
 import {
   CreateMissingPostInput,
@@ -36,9 +36,9 @@ import {
 } from 'utils/constants/enums';
 import { toErrorMap } from 'utils/toErrorMap';
 import { useIsAuth } from 'utils/useIsAuth';
-import { CustomAlertDialog } from './AlertDialog';
-import { NotAuthenticatedComponent } from './NotAuthenticatedComponent';
-import { UserAvatar } from './UserAvatar';
+import { CustomAlertDialog } from '../../../components/common/overlays/AlertDialog';
+import { NotAuthenticatedComponent } from '../../../components/NotAuthenticatedComponent';
+import { UserAvatar } from '../../../components/UserAvatar';
 
 type PostInputType = CreateMissingPostInput & {
   images: Array<Scalars['Upload']>;

@@ -4,11 +4,11 @@ import NotFound from 'components/NotFound';
 import { MissingPost } from 'generated/graphql';
 import React, { useEffect, useRef } from 'react';
 import useOnScreen from 'utils/useOnScreen';
-import { DummyPostsSkeleton } from '../../components/skeltons/DummyPostSkelton';
-import { SinglePostCard } from './_SinglePostCard';
+import { DummyPostsSkeleton } from '../../../components/skeltons/DummyPostSkelton';
+import { SinglePostCard } from './SinglePostCard';
 
 /* Missing Posts Grid Container */
-export const MissingPostsGridContainer: React.FC<{
+export const MissingPostsList: React.FC<{
   fetchMorePosts: VoidFunction;
   hasMore?: boolean | null;
   loading: boolean;

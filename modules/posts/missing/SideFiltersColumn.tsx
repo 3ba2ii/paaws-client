@@ -2,7 +2,7 @@ import { Box, Flex, VStack, Text, Heading } from '@chakra-ui/layout';
 import { Button, Image } from '@chakra-ui/react';
 import { MissingPostTypes } from 'generated/graphql';
 import React from 'react';
-import { MissingPageTaps } from './_MissingPageTaps';
+import { MissingPageTaps } from './MissingPageTaps';
 
 export const SideFiltersColumn: React.FC<{
   handleSelectFilter: (type: MissingPostTypes) => void;

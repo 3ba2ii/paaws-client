@@ -19,8 +19,8 @@ import {
 import React, { useState } from 'react';
 import { GoPlus } from 'react-icons/go';
 import withApollo from 'utils/withApollo';
-import { MissingPageContent } from './_MissingPageContent';
-import { SideFiltersColumn } from './_SideFiltersColumn';
+import { MissingPageContent } from '../../modules/posts/missing/MissingPageContent';
+import { SideFiltersColumn } from '../../modules/posts/missing/SideFiltersColumn';
 
 const SideFooter = () => {
   return (

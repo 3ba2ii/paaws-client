@@ -1,7 +1,7 @@
 import { Button, IconButton } from '@chakra-ui/button';
 import { HStack, Text } from '@chakra-ui/layout';
 import { PinInput, PinInputField } from '@chakra-ui/pin-input';
-import GenericModal from 'components/GenericModal';
+import GenericModal from 'components/common/overlays/CustomModal';
 import { FormikErrors } from 'formik';
 import {
   MeDocument,
@@ -9,7 +9,7 @@ import {
   User,
   useRegisterMutation,
 } from 'generated/graphql';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { FaHeart } from 'react-icons/fa';
 import { toErrorMap } from 'utils/toErrorMap';
@@ -62,13 +62,13 @@ export function OTPModal({
           otp: parseInt(otp),
         },
       },
-      update: (cache, { data }) => {
-        if (data?.register?.user)
+      update: (cache, { data: returnedData }) => {
+        if (returnedData?.register?.user)
           cache.writeQuery<MeQuery>({
             query: MeDocument,
             data: {
               __typename: 'Query',
-              me: data?.register?.user as User,
+              me: returnedData?.register?.user as User,
             },
           });
       },
