@@ -7,16 +7,15 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { MyDropzone } from 'components/common/input/CustomDropzone';
-import { DropdownMenu } from 'components/common/input/DropdownMenu';
 import GenericInputComponent from 'components/common/input/CustomInputComponent';
-import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
-import GenericModal from 'components/common/overlays/CustomModal';
+import { DropdownMenu } from 'components/common/input/DropdownMenu';
 import InputField from 'components/common/input/InputField';
 import TwoOptionsSwitch from 'components/common/input/TwoOptionsSwitch';
-import { Form, Formik, useFormikContext } from 'formik';
+import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
+import GenericModal from 'components/common/overlays/CustomModal';
+import { Form, Formik } from 'formik';
 import {
   CreateMissingPostInput,
-  MeQuery,
   MissingPostsDocument,
   MissingPostsQuery,
   MissingPostTypes,
