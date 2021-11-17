@@ -42,7 +42,15 @@ export const Layout = ({
         w='100%'
         h='100%'
       >
-        <Box px='inherit' w='100%' position={'fixed'} h='80px' top='0'>
+        <Box
+          px='inherit'
+          bg='inherit'
+          zIndex={50}
+          w='100%'
+          position={'fixed'}
+          h='84px'
+          top='0'
+        >
           <NavBar />
         </Box>
         <Box className={styles.main} mt={'6rem'} w='100%' maxW='1500px'>

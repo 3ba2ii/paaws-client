@@ -4,6 +4,7 @@ import {
   CircularProgress,
   MenuProps,
   ModalProps,
+  useToast,
 } from '@chakra-ui/react';
 import { MyDropzone } from 'components/CustomDropzone';
 import { DropdownMenu } from 'components/DropdownMenu';
@@ -74,10 +75,10 @@ export const NewMissingPostForm: React.FC<{
   const { user, loading } = useIsAuth();
   const [locationOption, setLocationOption] =
     useState<SelectLocationOptions | null>(null);
-
   const [locationLatLng, setLocationLatLng] = useState<LocationType | null>(
     null
   );
+  const toast = useToast();
   const [createPost] = useCreateMissingPostMutation();
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
 
@@ -169,9 +170,25 @@ export const NewMissingPostForm: React.FC<{
           });
 
           if (data?.createMissingPost.errors?.length) {
-            return setErrors(toErrorMap(data?.createMissingPost.errors));
+            setErrors(toErrorMap(data?.createMissingPost.errors));
+            toast({
+              title: 'Create Post Failed ❌',
+              description: 'An error occurred while trying to create your post',
+              status: 'error',
+              duration: 5000,
+              isClosable: true,
+            });
           }
           closeDrawer();
+
+          toast({
+            title: 'Post Created Successfully',
+            description:
+              "Your post has been created successfully, and we've sent notifications to nearby users to help you in the searching process",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          });
         }}
       >
         {({ values, isSubmitting, setFieldValue }) => {

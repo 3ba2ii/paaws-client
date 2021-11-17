@@ -82,7 +82,7 @@ const cache = new InMemoryCache({
 const withApollo = nextWithApollo(
   ({ initialState, headers }) => {
     const link = createUploadLink({
-      uri: 'https://api.3ba2i.software/graphql',
+      uri: process.env.NEXT_PUBLIC_API_URL,
       credentials: 'include',
       headers: {
         ...(headers as Record<string, string>),
