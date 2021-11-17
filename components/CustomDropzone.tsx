@@ -1,12 +1,11 @@
 import {
   FormControl,
-  FormErrorMessage,
   FormHelperText,
   FormLabel,
 } from '@chakra-ui/form-control';
 import { CloseIcon } from '@chakra-ui/icons';
 import { Input, InputProps } from '@chakra-ui/input';
-import { Box, Text } from '@chakra-ui/layout';
+import { Box, Text, VStack } from '@chakra-ui/layout';
 import {
   CloseButton,
   IconButton,
@@ -68,6 +67,7 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
   ...props
 }) => {
   const [field, { error, touched }] = useField(props);
+  console.log(`🚀 ~ file: CustomDropzone.tsx ~ line 71 ~ error`, error);
   const form = useFormikContext();
 
   const onDrop = useCallback(
@@ -94,7 +94,7 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
   } = useDropzone({
     onDrop,
     maxFiles: 10,
-    maxSize: 1024 * 1024 * 3,
+    maxSize: 1024 * 1024 * 2,
     multiple: true,
     accept: 'image/*',
   });
@@ -128,7 +128,10 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
         {label}
       </FormLabel>
 
-      <div {...getRootProps({ style })} className='dropzone-container'>
+      <Box
+        {...getRootProps({ style })}
+        borderColor={error ? 'red.400' : 'gray.600'}
+      >
         <Input
           {...(getInputProps() as InputProps)}
           disabled={field.value && field.value.length}
@@ -136,17 +139,17 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
         {isDragActive ? (
           <p>Drop the files here ...</p>
         ) : (
-          <>
+          <VStack color='gray.500' spacing={0}>
             <Box my={2}>
-              <FaRegImages size='24px' color='#718096' />
+              <FaRegImages size='24px' />
             </Box>
-            <Text textStyle='p1' color='gray.500' fontWeight='400'>
+            <Text textStyle='p1' color='inherit'>
               Drag ‘n Drop images here, or click to browse
             </Text>
-            <Text textStyle='p3' color='gray.400' fontWeight='400'>
+            <Text textStyle='p3' color='inherit'>
               Files Supported: .png .jpg .webp .gif up to 2MB each
             </Text>
-          </>
+          </VStack>
         )}
         {field.value && field.value.length ? (
           <PreviewComponent
@@ -161,14 +164,24 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
             handleChange={onDrop}
           />
         ) : null}
-      </div>
+      </Box>
 
       {helperText ? (
         <FormHelperText maxW='60ch'>
           <Text textStyle='helperText'>{helperText}</Text>
         </FormHelperText>
       ) : null}
-      {error ? <FormErrorMessage maxW='45ch'>{error}</FormErrorMessage> : null}
+      {error ? (
+        <Text
+          textStyle={'p2'}
+          colorScheme={'red'}
+          color='red.400'
+          mt={2}
+          fontWeight={'normal'}
+        >
+          {error}
+        </Text>
+      ) : null}
     </FormControl>
   );
 };
