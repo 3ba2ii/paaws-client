@@ -1,61 +1,42 @@
-import { FormControl, FormLabel } from '@chakra-ui/form-control';
-import { Box, Checkbox, Tooltip } from '@chakra-ui/react';
-import { useField } from 'formik';
+import {
+  FormControl,
+  FormControlProps,
+  FormLabel,
+  FormLabelProps,
+  Switch,
+  SwitchProps,
+} from '@chakra-ui/react';
 import React from 'react';
-import { FaRegQuestionCircle } from 'react-icons/fa';
 
 interface CustomSwitchProps {
-  name: string;
-  defaultValue: boolean;
-  label: string;
-  required?: boolean;
-  helperText?: string;
-  helpIcon?: boolean;
+  handleChange: (checked: boolean) => void;
+  label?: string;
+  checked: boolean;
+  formControlProps?: FormControlProps;
+  formLabelProps?: FormLabelProps;
+  switchProps?: SwitchProps;
 }
 
 const CustomSwitch: React.FC<CustomSwitchProps> = ({
-  defaultValue,
+  handleChange,
   label,
-  required = true,
-  helperText,
-  helpIcon,
-  ...props
+  checked,
+  formLabelProps,
+  switchProps,
+  formControlProps,
 }) => {
-  const [field, { error, touched }] = useField(props);
-
   return (
-    <FormControl
-      display='flex'
-      alignItems='center'
-      position='relative'
-      isInvalid={!!error && touched}
-      isRequired={required}
-    >
-      <Checkbox
-        mr={3}
-        mb={1.5}
-        size='md'
-        {...field}
-        {...props}
-        id={field.name}
-      />
-
-      <FormLabel fontSize='sm' htmlFor={field.name}>
-        {label}
-      </FormLabel>
-      {helpIcon && helperText && (
-        <Tooltip
-          placement='auto-start'
-          hasArrow
-          label={helperText}
-          bg='gray.300'
-          color='gray.700'
-        >
-          <Box cursor='pointer' position='relative' mb={1.5}>
-            <FaRegQuestionCircle color='#CBD5E0' />
-          </Box>
-        </Tooltip>
+    <FormControl display='flex' alignItems='center' {...formControlProps}>
+      {label && (
+        <FormLabel mb='0' {...formLabelProps}>
+          {label}
+        </FormLabel>
       )}
+      <Switch
+        isChecked={checked}
+        onChange={(e) => handleChange(e.target.checked)}
+        {...switchProps}
+      />
     </FormControl>
   );
 };
