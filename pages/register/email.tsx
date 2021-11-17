@@ -1,9 +1,9 @@
 import { Layout } from 'components/Layout';
 import React from 'react';
 import withApollo from 'utils/withApollo';
-import { RegisterForm } from '../../modules/auth/RegisterForm';
+import { RegisterForm } from 'modules/auth/register/RegisterForm';
 
-const RegisterViaEmail = ({}) => {
+const RegisterViaEmail = () => {
   return (
     <Layout title='Join us Now'>
       <main>

@@ -3,6 +3,7 @@ import {
   Button,
   ButtonProps,
   HStack,
+  useColorModePreference,
   useColorModeValue,
 } from '@chakra-ui/react';
 import React from 'react';
@@ -22,6 +23,8 @@ const TwoOptionsSwitch: React.FC<TwoOptionsSwitchProps> = ({
   activeValue = '',
   ...props
 }) => {
+  const bgActiveColor = useColorModeValue('teal.50', 'teal.900');
+
   return (
     <HStack>
       {options.map(({ label, value }, index) => {
@@ -33,11 +36,7 @@ const TwoOptionsSwitch: React.FC<TwoOptionsSwitchProps> = ({
             colorScheme={isActive ? 'teal' : 'gray'}
             onClick={() => handleChange(value)}
             leftIcon={isActive ? <CheckIcon /> : undefined}
-            bgColor={
-              isActive
-                ? useColorModeValue('teal.50', 'teal.900')
-                : 'transparent'
-            }
+            bgColor={isActive ? bgActiveColor : 'transparent'}
           >
             {label}
           </Button>

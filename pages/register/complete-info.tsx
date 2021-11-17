@@ -9,14 +9,14 @@ import {
   useUpdateUserInfoMutation,
   useUploadAvatarMutation,
 } from 'generated/graphql';
+import { UserGeneralInfoStep } from 'modules/auth/register/UserGeneralInfoStep';
+import { UserLocationStep } from 'modules/auth/register/UserLocationStep';
 import Router from 'next/router';
 import React, { useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import styles from 'styles/register.module.css';
 import { useIsAuth } from 'utils/useIsAuth';
 import withApollo from 'utils/withApollo';
-import { UserGeneralInfoStep } from '../../modules/auth/UserGeneralInfoStep';
-import { UserLocationStep } from '../../modules/auth/UserLocationStep';
 
 interface ValuesData {
   bio: string;

@@ -19,6 +19,7 @@ export const LazyCatLoadingComponent: React.FC<{
       width={'800px'}
       height={'250px'}
       objectFit='contain'
+      alt='Loading'
       {...imageProps}
     />
   ) : null;

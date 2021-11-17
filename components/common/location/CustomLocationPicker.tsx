@@ -74,16 +74,19 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
   const [loaded, setLoaded] = useState(false);
   const [libraries] = useState<Libraries>(['places']);
 
-  const onLocationChange = (latLng: google.maps.LatLng | null) => {
-    //no google api support
-    if (!latLng) return;
-    const currentCoords = {
-      lat: latLng?.lat() || userLocation.lat,
-      lng: latLng?.lng() || userLocation.lng,
-    };
-    if (!currentCoords.lat || !currentCoords.lng) return;
-    setUserLocation(currentCoords);
-  };
+  const onLocationChange = React.useCallback(
+    (latLng: google.maps.LatLng | null) => {
+      //no google api support
+      if (!latLng) return;
+      const currentCoords = {
+        lat: latLng?.lat() || userLocation.lat,
+        lng: latLng?.lng() || userLocation.lng,
+      };
+      if (!currentCoords.lat || !currentCoords.lng) return;
+      setUserLocation(currentCoords);
+    },
+    [userLocation, setUserLocation]
+  );
 
   useEffect(() => {
     //this will be used on mounting to select user's current location
@@ -97,12 +100,12 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
         setUserLocation(currentCoords);
       });
     }
-  }, []);
+  }, [handleLocationChange]);
 
   useEffect(() => {
     //this will be fired when location changes to update the referer
     handleLocationChange && handleLocationChange(userLocation);
-  }, [userLocation]);
+  }, [userLocation, handleLocationChange]);
 
   const GoogleMapComponent = useMemo(
     () => (
@@ -132,7 +135,7 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
         )}
       </GoogleMap>
     ),
-    [userLocation, libraries]
+    [userLocation, includeAutoComplete, includeMarker, loaded, onLocationChange]
   );
   const AddressFormComponent = () => {
     const [address] = useState<Partial<AddressInput>>({

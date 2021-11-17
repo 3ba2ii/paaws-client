@@ -10,6 +10,7 @@ export const LoadingComponent: React.FC<{
      If you manipulate that result it creates a mismatch and React won't be able to hydrate the page successfully.
      When you run browser only code (like trying to access window) inside useEffect, it will happen after hydration 👍 */
   const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -19,6 +20,7 @@ export const LoadingComponent: React.FC<{
       size='20px'
       isIndeterminate
       color='gray.700'
+      aria-label='Loading'
       {...progressProps}
     />
   ) : null;

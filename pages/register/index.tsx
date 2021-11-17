@@ -70,7 +70,7 @@ const RegisterPage: React.FC = () => {
           </Button>
 
           <p className='divider-with-centered-value'>or</p>
-          <Link href='/register/email'>
+          <Link passHref={true} href='/register/email'>
             <Button
               as={Button}
               borderRadius='lg'

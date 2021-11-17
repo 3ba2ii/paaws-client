@@ -63,9 +63,9 @@ const MissingPage: React.FC = ({}) => {
         <section className={styles.filters_container}>FILTERS</section>
         <section>
           <ul>
-            {posts.map(({ pet, createdAt, address }) => {
+            {posts.map(({ id, pet, createdAt, address }) => {
               return (
-                <li>
+                <li key={id}>
                   {JSON.stringify(pet, null, 2)}
                   <MissingPost pet={pet as Pet} address={address as Address} />
                 </li>

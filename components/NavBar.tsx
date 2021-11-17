@@ -32,6 +32,7 @@ function JoinUsNavbarItems(
           : ''}
       </Text>
       <Link
+        passHref
         href={isRegisterScreen ? '/login' : isLoginScreen ? '/register' : '/'}
       >
         <Button
@@ -94,12 +95,9 @@ const NavBarItems = () => {
     <section className={navbarStyles['nav-items-container']}>
       <div className={navbarStyles['search-input-field-styles']}>
         <InputGroup alignItems='center' justify='center' maxW={420}>
-          <InputLeftElement
-            px={7}
-            pb={1}
-            pointerEvents='none'
-            children={<SearchIcon color='gray.500' />}
-          />
+          <InputLeftElement px={7} pb={1} pointerEvents='none'>
+            <SearchIcon color='gray.500' />
+          </InputLeftElement>
           <Input
             shadow='base'
             pl={12}
@@ -112,26 +110,26 @@ const NavBarItems = () => {
         </InputGroup>
       </div>
       <nav className={navbarStyles['nav-items']}>
-        <Link href='/explore'>
-          <li>Explore</li>
+        <Link passHref={true} href='/explore'>
+          Explore
         </Link>
-        <Link href='/missing'>
-          <li>Missing Pets</li>
+        <Link passHref href='/missing'>
+          Missing Pets
         </Link>
-        <Link href='/adoption'>
-          <li aria-expanded='true'>Adoption</li>
+        <Link passHref={true} href='/adoption'>
+          Adoption
         </Link>
         {loading ? (
           <LoadingComponent />
         ) : data?.me?.id ? (
           <>
-            <Link href='/favorites'>
-              <li aria-expanded='true'>My Favorites</li>
+            <Link passHref={true} href='/favorites'>
+              My Favorites
             </Link>
             <UserDropdownMenu userInfo={data} />
           </>
         ) : (
-          <Link href='/register'>
+          <Link passHref={true} href='/register'>
             <Button leftIcon={<FaHeart color='red' />} size='sm'>
               Join us
             </Button>
@@ -142,10 +140,7 @@ const NavBarItems = () => {
     </section>
   );
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  return mounted ? body : null;
+  return body;
 };
 const NavBar = () => {
   const logo = useColorModeValue('light', 'dark');
@@ -162,7 +157,7 @@ const NavBar = () => {
         ),
       }}
     >
-      <Link href='/'>
+      <Link passHref href='/'>
         <Image
           tabIndex={0}
           role='img'

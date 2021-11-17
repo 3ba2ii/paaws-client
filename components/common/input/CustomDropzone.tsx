@@ -5,7 +5,7 @@ import {
 } from '@chakra-ui/form-control';
 import { CloseIcon } from '@chakra-ui/icons';
 import { Input, InputProps } from '@chakra-ui/input';
-import { Box, Text, VStack } from '@chakra-ui/layout';
+import { Box, List, ListItem, Text, VStack } from '@chakra-ui/layout';
 import {
   CloseButton,
   IconButton,
@@ -17,7 +17,8 @@ import React, { useCallback, useMemo } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { FaRegImages } from 'react-icons/fa';
 import s from 'styles/custom-dropzone.module.css';
-
+import Image from 'next/image';
+import ImageWithFallback from '../media/ImageWithFallback';
 const baseStyle = {
   flex: 1,
   display: 'flex',
@@ -73,16 +74,15 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
   const onDrop = useCallback(
     (accFiles: File[], rejectedFiles: FileRejection[]) => {
       if (rejectedFiles && rejectedFiles.length) {
-        form.setFieldError(
+        return form.setFieldError(
           field.name,
           'Please upload only 10 images with maximum size of 2MBs pet image'
         );
-        return;
       }
       // Do something with the files
       form.setFieldValue(field.name, accFiles.slice(0, 10));
     },
-    []
+    [field.name, form]
   );
 
   const {
@@ -119,7 +119,7 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
         ...(isDragAccept ? acceptStyle : {}),
         ...(isDragReject ? rejectStyle : {}),
       } as React.CSSProperties | undefined),
-    [isDragActive, isDragReject, isDragAccept]
+    [isDragActive, isDragReject, isDragAccept, backgroundStyles]
   );
 
   return (
@@ -201,7 +201,7 @@ const PreviewComponent: React.FC<{
   };
 
   return (
-    <Box
+    <List
       as='ul'
       className={s.preview_container}
       bg={useColorModeValue('#fafafa', 'gray.700')}
@@ -218,13 +218,15 @@ const PreviewComponent: React.FC<{
       </Tooltip>
       {values.map((file: File, idx: number) => {
         const isThumbnail = idx === thumbnailIdx;
+        const src = URL.createObjectURL(file) || null;
         return (
-          <li
+          <ListItem
             key={idx}
             className={`${s.preview_item} ${isThumbnail ? s.selected : ''}`}
             onClick={() => {
               handleThumbnailChange && handleThumbnailChange(idx);
             }}
+            pos='relative'
           >
             <Tooltip
               hidden={!isThumbnail}
@@ -233,7 +235,16 @@ const PreviewComponent: React.FC<{
               hasArrow
               defaultIsOpen={isThumbnail}
             >
-              <img src={URL.createObjectURL(file)} alt='preview' />
+              {src ? (
+                <Box>
+                  <Image
+                    src={src}
+                    width={'100%'}
+                    height={'100%'}
+                    alt='Preview'
+                  />
+                </Box>
+              ) : null}
             </Tooltip>
             <IconButton
               aria-label='Remove Media'
@@ -248,9 +259,9 @@ const PreviewComponent: React.FC<{
               onClick={() => deleteImage(idx)}
               tabIndex={2}
             />
-          </li>
+          </ListItem>
         );
       })}
-    </Box>
+    </List>
   );
 };

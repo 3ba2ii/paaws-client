@@ -1,4 +1,4 @@
-import { Box, useColorModeValue } from '@chakra-ui/react';
+import { Box, useColorModePreference } from '@chakra-ui/react';
 import React from 'react';
 import Select, { GroupBase, Props, StylesConfig } from 'react-select';
 type MyOptionType = {
@@ -21,6 +21,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
   selectProps,
 }) => {
   type IsMulti = false;
+  const colorMode = useColorModePreference();
 
   const customSelectFieldStyles: StylesConfig<MyOptionType, IsMulti> = {
     control: (provided, state) => ({
@@ -29,7 +30,9 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
       backgroundColor: 'inherit',
       borderColor: state.isFocused
         ? 'blue.500'
-        : useColorModeValue('gray.200', 'gray.500'),
+        : colorMode === 'light'
+        ? 'gray.200'
+        : 'gray.500',
     }),
     placeholder: (provided, _state) => ({
       ...provided,
@@ -57,7 +60,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
     multiValue: (provided, _state) => ({
       ...provided,
       borderRadius: '4px',
-      backgroundColor: useColorModeValue('#E2E8F0', '#718096'),
+      backgroundColor: colorMode === 'light' ? '#E2E8F0' : '718096',
     }),
     multiValueLabel: (provided, _state) => ({
       ...provided,
