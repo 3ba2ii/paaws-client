@@ -122,7 +122,6 @@ export const PostsOptions: React.FC = () => {
         }
         drawerProps={{ closeOnOverlayClick: false } as DrawerProps}
       />
-      )
     </>
   );
 };
