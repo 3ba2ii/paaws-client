@@ -1,4 +1,4 @@
-import { Box, Heading, HStack, Text } from '@chakra-ui/react';
+import { Box, HStack, Text } from '@chakra-ui/react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { Form, Formik } from 'formik';
 import { motion } from 'framer-motion';
@@ -8,8 +8,8 @@ import { Libraries, LocationType } from 'types';
 import { Country, SelectLocationOptions } from 'utils/constants/enums';
 import { isProduction } from 'utils/isProduction';
 import GenericInputComponent from '../input/CustomInputComponent';
-import { CustomLocationAutocomplete } from './LocationAutoComplete';
 import SelectComponent from '../input/SelectFieldComponent';
+import { CustomLocationAutocomplete } from './LocationAutoComplete';
 
 interface CustomLocationPickerProps {
   includeAutoComplete?: boolean;
@@ -17,11 +17,7 @@ interface CustomLocationPickerProps {
   includeMarker?: boolean;
   selectLocationType?: SelectLocationOptions;
 }
-const transitionValues = {
-  duration: 0.4,
-  yoyo: Infinity,
-  ease: 'easeOut',
-};
+
 const bounceTransition = {
   y: {
     duration: 0.4,
@@ -71,22 +67,20 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
     lat: 0,
     lng: 0,
   });
+
   const [loaded, setLoaded] = useState(false);
   const [libraries] = useState<Libraries>(['places']);
 
-  const onLocationChange = React.useCallback(
-    (latLng: google.maps.LatLng | null) => {
-      //no google api support
-      if (!latLng) return;
-      const currentCoords = {
-        lat: latLng?.lat() || userLocation.lat,
-        lng: latLng?.lng() || userLocation.lng,
-      };
-      if (!currentCoords.lat || !currentCoords.lng) return;
-      setUserLocation(currentCoords);
-    },
-    [userLocation, setUserLocation]
-  );
+  const onLocationChange = (latLng: google.maps.LatLng | null) => {
+    //no google api support
+    if (!latLng) return;
+    const currentCoords = {
+      lat: latLng?.lat() || userLocation.lat,
+      lng: latLng?.lng() || userLocation.lng,
+    };
+    if (!currentCoords.lat || !currentCoords.lng) return;
+    setUserLocation(currentCoords);
+  };
 
   useEffect(() => {
     //this will be used on mounting to select user's current location
@@ -105,7 +99,7 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
   useEffect(() => {
     //this will be fired when location changes to update the referer
     handleLocationChange && handleLocationChange(userLocation);
-  }, [userLocation, handleLocationChange]);
+  }, [handleLocationChange]);
 
   const GoogleMapComponent = useMemo(
     () => (
@@ -135,7 +129,14 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
         )}
       </GoogleMap>
     ),
-    [userLocation, includeAutoComplete, includeMarker, loaded, onLocationChange]
+    [
+      userLocation,
+      includeAutoComplete,
+      includeMarker,
+      loaded,
+      libraries,
+      onLocationChange,
+    ]
   );
   const AddressFormComponent = () => {
     const [address] = useState<Partial<AddressInput>>({
@@ -162,10 +163,8 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
     */
     return (
       <Formik initialValues={address} onSubmit={() => {}}>
-        {({ values, handleChange, setFieldValue }) => (
+        {({ setFieldValue }) => (
           <Form>
-            {JSON.stringify(values)}
-
             <HStack w='100%'>
               <GenericInputComponent label='Country' name='country'>
                 <Box w='100%'>

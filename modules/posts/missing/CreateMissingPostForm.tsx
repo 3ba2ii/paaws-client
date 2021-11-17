@@ -2,12 +2,13 @@ import { Box, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
 import {
   Button,
   CircularProgress,
-  MenuProps,
   ModalProps,
+  Tooltip,
   useToast,
 } from '@chakra-ui/react';
 import { MyDropzone } from 'components/common/input/CustomDropzone';
 import GenericInputComponent from 'components/common/input/CustomInputComponent';
+import CustomSwitch from 'components/common/input/CustomSwitch';
 import { DropdownMenu } from 'components/common/input/DropdownMenu';
 import InputField from 'components/common/input/InputField';
 import TwoOptionsSwitch from 'components/common/input/TwoOptionsSwitch';
@@ -25,12 +26,11 @@ import {
 } from 'generated/graphql';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import React, { useRef, useState } from 'react';
-import { GoChevronDown, GoChevronRight } from 'react-icons/go';
+import { GoChevronDown } from 'react-icons/go';
 import { LocationType } from 'types';
 import { capitalizeString } from 'utils/capitalizeString';
 import {
   PrivacyTypeCustomized,
-  SelectLocationObj,
   SelectLocationOptions,
 } from 'utils/constants/enums';
 import { toErrorMap } from 'utils/toErrorMap';
@@ -38,8 +38,8 @@ import { useIsAuth } from 'utils/useIsAuth';
 import { CustomAlertDialog } from '../../../components/common/overlays/AlertDialog';
 import { NotAuthenticatedComponent } from '../../../components/NotAuthenticatedComponent';
 import { UserAvatar } from '../../../components/UserAvatar';
-
-type PostInputType = CreateMissingPostInput & {
+import { PostLocationFields } from './PostLocationFields';
+export type PostInputType = CreateMissingPostInput & {
   images: Array<Scalars['Upload']>;
 };
 
@@ -70,16 +70,17 @@ const LocationHeader = React.memo(() => {
 });
 export const NewMissingPostForm: React.FC<{
   closeDrawer: VoidFunction;
-}> = ({ closeDrawer }): JSX.Element => {
+}> = ({ closeDrawer }) => {
   const { user, loading } = useIsAuth();
   const [locationOption, setLocationOption] =
     useState<SelectLocationOptions | null>(null);
   const [locationLatLng, setLocationLatLng] = useState<LocationType | null>(
     null
   );
-  const toast = useToast();
-  const [createPost] = useCreateMissingPostMutation();
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
+  const [showLocationOption, setShowLocationOption] = useState(false);
+  const [createPost] = useCreateMissingPostMutation();
+  const toast = useToast();
 
   const hideLocationPicker = () => {
     setLocationOption(null);
@@ -93,6 +94,7 @@ export const NewMissingPostForm: React.FC<{
   }: PostInputType) => {
     const hasValue = title.length || description.length || images.length;
 
+    //if the click happened in the location modal, ignore
     if (locationOption) return;
     else if (hasValue) {
       // if any of the values are null, then we show confirmation modal
@@ -115,7 +117,7 @@ export const NewMissingPostForm: React.FC<{
     );
 
   return (
-    <Box my={5} ref={formRef}>
+    <Box my={2} ref={formRef}>
       <Formik
         initialValues={initialValues}
         onSubmit={async (
@@ -134,7 +136,6 @@ export const NewMissingPostForm: React.FC<{
               images,
             },
 
-            //refetchQueries: [MissingPostsDocument],
             update: (cache, { data: result, errors }) => {
               if (errors?.length || !result) return;
 
@@ -260,105 +261,23 @@ export const NewMissingPostForm: React.FC<{
                 />
                 <MyDropzone label='Pet Images' name='images' />
 
-                <GenericInputComponent
-                  label='Location'
-                  name='location'
-                  helperText='Select the location where you missed or found the pet,
-                 Locations are used to send notifications and alerts to nearby users'
-                  required={false}
-                />
-
-                <HStack w='100%' align='center' spacing={0}>
-                  <DropdownMenu
-                    options={SelectLocationObj}
-                    menuButtonText={
-                      values.address != null ? 'Selected' : 'Select Location'
-                    }
-                    handleChange={(value) => {
-                      setLocationOption(value);
-                    }}
-                    menuButtonProps={{
-                      as: Button,
-                      size: 'sm',
-                      minW: '110px',
-                      height: '38px',
-                      rightIcon:
-                        values.address != null ? (
-                          <Heading size='md'>🤝</Heading>
-                        ) : (
-                          <GoChevronRight />
-                        ),
-                      boxShadow: 'base',
-                      colorScheme: values.address != null ? 'green' : 'gray',
-                      alignSelf: 'flex-start',
-                    }}
-                    menuProps={{ placement: 'right' } as MenuProps}
-                  />
-                  {values.address && (
-                    <Button
-                      onClick={() => setFieldValue('address', null)}
-                      variant='ghost'
-                      size='sm'
-                      height='38px'
-                      colorScheme={'red'}
-                    >
-                      Clear Location
-                    </Button>
-                  )}
-                </HStack>
-
-                <GenericModal
-                  title={<LocationHeader />}
-                  footer={
-                    <HStack align='flex-start'>
-                      <Button
-                        h='38px'
-                        mr={3}
-                        variant='ghost'
-                        size='sm'
-                        onClick={hideLocationPicker}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        h='38px'
-                        w={'100%'}
-                        colorScheme='teal'
-                        size='sm'
-                        onClick={() => {
-                          setFieldValue('address', locationLatLng);
-                          hideLocationPicker();
-                        }}
-                      >
-                        Confirm Address
-                      </Button>
-                    </HStack>
-                  }
-                  modalProps={{ size: 'xl' } as ModalProps}
-                  modalHeaderProps={{
-                    display: 'flex',
-                    alignContent: 'flex-start',
-                  }}
-                  body={
-                    <Box
-                      w='100%'
-                      h='450px'
-                      position={'relative'}
-                      borderRadius='6px'
-                      overflow={'hidden'}
-                      boxShadow={'md'}
-                    >
-                      <CustomLocationPicker
-                        includeMarker
-                        selectLocationType={SelectLocationOptions.MAP}
-                        handleLocationChange={(coords) => {
-                          setLocationLatLng(coords);
-                        }}
-                      />
-                    </Box>
-                  }
-                  isOpen={locationOption === SelectLocationOptions.MAP}
-                  onClose={() => setLocationOption(null)}
+                <Tooltip
+                  label='We will send notifications to nearby users to help you finding the pet'
+                  placement='bottom'
+                >
+                  <Box width={'100%'}>
+                    <CustomSwitch
+                      label='Send notifications to nearby users?'
+                      checked={showLocationOption}
+                      handleChange={(checked) => setShowLocationOption(checked)}
+                    />
+                  </Box>
+                </Tooltip>
+                <PostLocationFields
+                  values={values}
+                  setFieldValue={setFieldValue}
+                  isOpen={showLocationOption}
+                  setLocationOption={setLocationOption}
                 />
               </VStack>
               <HStack mt={4} w='100%' align='center' justify='flex-end'>
@@ -373,28 +292,80 @@ export const NewMissingPostForm: React.FC<{
                 <Button
                   type='submit'
                   colorScheme={'teal'}
-                  minW='100px'
-                  fontSize='.875rem'
+                  minW='110px'
+                  fontSize='.9rem'
                   isLoading={isSubmitting}
                 >
                   Post
                 </Button>
               </HStack>
+              {/* Location modal */}
+              <GenericModal
+                title={<LocationHeader />}
+                footer={
+                  <HStack align='flex-start'>
+                    <Button
+                      h='38px'
+                      mr={3}
+                      variant='ghost'
+                      size='sm'
+                      onClick={hideLocationPicker}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      h='38px'
+                      w={'100%'}
+                      colorScheme='teal'
+                      size='sm'
+                      onClick={() => {
+                        setFieldValue('address', locationLatLng);
+                        hideLocationPicker();
+                      }}
+                    >
+                      Confirm Address
+                    </Button>
+                  </HStack>
+                }
+                modalProps={{ size: 'xl' } as ModalProps}
+                modalHeaderProps={{
+                  display: 'flex',
+                  alignContent: 'flex-start',
+                }}
+                body={
+                  <Box
+                    w='100%'
+                    h='450px'
+                    position={'relative'}
+                    borderRadius='6px'
+                    overflow={'hidden'}
+                    boxShadow={'md'}
+                  >
+                    <CustomLocationPicker
+                      includeMarker
+                      selectLocationType={SelectLocationOptions.MAP}
+                      handleLocationChange={(coords) => {
+                        setLocationLatLng(coords);
+                      }}
+                    />
+                  </Box>
+                }
+                isOpen={locationOption === SelectLocationOptions.MAP}
+                onClose={() => setLocationOption(null)}
+              />
             </Form>
           );
         }}
       </Formik>
-      {openAlertDialog && (
-        <CustomAlertDialog
-          header={'Close Form 👀'}
-          body='Are you sure? all the fields you filled will be cleared on closing and can not be restored again'
-          confirmText='Close anyway'
-          isOpen={openAlertDialog}
-          cancelText='Cancel'
-          handleCancel={() => setOpenAlertDialog(false)}
-          handleConfirm={() => closeDrawer()}
-        />
-      )}
+      <CustomAlertDialog
+        header={'Close Form 👀'}
+        body='Are you sure? all the fields you filled will be cleared on closing and can not be restored again'
+        confirmText='Close anyway'
+        isOpen={openAlertDialog}
+        cancelText='Cancel'
+        handleCancel={() => setOpenAlertDialog(false)}
+        handleConfirm={() => closeDrawer()}
+      />
     </Box>
   );
 };

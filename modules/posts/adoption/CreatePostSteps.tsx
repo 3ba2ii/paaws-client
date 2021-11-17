@@ -1,7 +1,7 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import CustomDatePicker from 'components/common/input/CustomDatePicker';
 import { MyDropzone } from 'components/common/input/CustomDropzone';
-import CustomSwitch from 'components/common/input/CustomSwitch';
+import CustomCheckbox from 'components/common/input/CustomCheckbox';
 import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
 import InputField from 'components/common/input/InputField';
 import SelectComponent from 'components/common/input/SelectFieldComponent';
@@ -104,7 +104,7 @@ export const SecondStepComponent = () => {
         helperText='The first image will be used as a thumbnail in case you did not specify one.'
       />
       <Flex flexDirection='row' gridGap={2}>
-        <CustomSwitch
+        <CustomCheckbox
           label='Vaccinated?'
           defaultValue={false}
           name='vaccinated'
@@ -113,7 +113,7 @@ export const SecondStepComponent = () => {
           helperText='💉 Select if your pet is vaccinated up-to-date'
         />
         {values.gender === 'FEMALE' && (
-          <CustomSwitch
+          <CustomCheckbox
             label='Spayed?'
             defaultValue={false}
             name='spayed'
@@ -123,7 +123,7 @@ export const SecondStepComponent = () => {
           />
         )}
         {values.gender === 'MALE' && (
-          <CustomSwitch
+          <CustomCheckbox
             label='Neutered?'
             defaultValue={false}
             name='neutered'

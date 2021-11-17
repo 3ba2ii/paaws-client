@@ -68,7 +68,6 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
   ...props
 }) => {
   const [field, { error, touched }] = useField(props);
-  console.log(`🚀 ~ file: CustomDropzone.tsx ~ line 71 ~ error`, error);
   const form = useFormikContext();
 
   const onDrop = useCallback(
