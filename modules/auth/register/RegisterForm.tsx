@@ -3,16 +3,16 @@ import { Checkbox } from '@chakra-ui/checkbox';
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Heading, Text, WrapItem } from '@chakra-ui/layout';
 import { Tooltip } from '@chakra-ui/tooltip';
-import InputField from 'components/InputField';
+import InputField from 'components/common/input/InputField';
 import { Field, Form, Formik } from 'formik';
 import { useSendOtpMutation } from 'generated/graphql';
 import React, { useState } from 'react';
 import styles from 'styles/register.module.css';
 import { SignupSchema } from 'utils/constants/YupSchemas';
 import { toErrorMap } from 'utils/toErrorMap';
-import { OTPModal } from './_otpModal';
+import { OTPModal } from './OTPModal';
 
-export const RegistrationFormComponent = () => {
+export const RegisterForm = () => {
   const [openOTPModal, setOpenOTPModal] = useState(false);
   const [sendOTPMutation] = useSendOtpMutation();
 

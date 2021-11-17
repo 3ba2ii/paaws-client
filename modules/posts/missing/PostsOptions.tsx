@@ -6,8 +6,8 @@ import { useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { GoPlus, GoSettings } from 'react-icons/go';
-import { NewMissingPostForm } from '../../components/CreateMissingPostForm';
-import { CustomDrawer } from '../../components/CustomDrawer';
+import { NewMissingPostForm } from './CreateMissingPostForm';
+import { CustomDrawer } from '../../../components/common/overlays/CustomDrawer';
 const variants = {
   closed: {
     opacity: 0,
@@ -119,11 +119,7 @@ export const PostsOptions: React.FC = () => {
           onClose={toggleDrawer}
           drawerHeader='Create New Post'
           drawerBody={
-            <NewMissingPostForm
-              loggedInUser={loggedInUser}
-              loading={loading}
-              closeDrawer={() => setOpenDrawer(false)}
-            />
+            <NewMissingPostForm closeDrawer={() => setOpenDrawer(false)} />
           }
           drawerProps={{ closeOnOverlayClick: false } as DrawerProps}
         />

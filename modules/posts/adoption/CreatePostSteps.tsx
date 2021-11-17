@@ -1,10 +1,10 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
-import CustomDatePicker from 'components/CustomDatePicker';
-import { MyDropzone } from 'components/CustomDropzone';
-import CustomSwitch from 'components/CustomSwitch';
-import CustomLocationPicker from 'components/GenericLocationPicker';
-import InputField from 'components/InputField';
-import SelectComponent from 'components/SelectFieldComponent';
+import CustomDatePicker from 'components/common/input/CustomDatePicker';
+import { MyDropzone } from 'components/common/input/CustomDropzone';
+import CustomSwitch from 'components/common/input/CustomSwitch';
+import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
+import InputField from 'components/common/input/InputField';
+import SelectComponent from 'components/common/input/SelectFieldComponent';
 import { useFormikContext } from 'formik';
 import { Breeds, PetGender, PetSize, PetType } from 'generated/graphql';
 import Image from 'next/image';
@@ -14,6 +14,8 @@ import s from 'styles/createPostForm.module.css';
 import { LocationType } from 'types';
 
 export const FirstStepComponent = () => {
+  const { setFieldValue } = useFormikContext();
+
   return (
     <>
       <div className={s['horizontal-input-fields']}>
@@ -29,6 +31,9 @@ export const FirstStepComponent = () => {
             label: key,
             value,
           }))}
+          handleChange={(value) => {
+            setFieldValue('type', value);
+          }}
         />
       </div>
 
@@ -38,33 +43,40 @@ export const FirstStepComponent = () => {
             label: key,
             value,
           }))}
+          handleChange={(value) => {
+            setFieldValue('size', value);
+          }}
         />
         <SelectComponent
           options={Object.entries(PetGender).map(([key, value]) => ({
             label: key,
             value,
           }))}
+          handleChange={(value) => {
+            setFieldValue('gender', value);
+          }}
         />
       </div>
       <SelectComponent
-        required
         isMulti
-        placeholder='Please select all breeds'
-        helperText='If your pet is a mixture of breeds, please select all of them'
         options={Object.entries(Breeds).map(([key, value]) => ({
           label: key,
           value,
         }))}
+        handleChange={(value) => {
+          setFieldValue('breeds', value);
+        }}
       />
 
       <div className={s['horizontal-input-fields']}>
         <SelectComponent
-          required
-          placeholder='Mini'
           options={Object.entries(PetSize).map(([key, value]) => ({
             label: key,
             value,
           }))}
+          handleChange={(value) => {
+            setFieldValue('size', value);
+          }}
         />
 
         <CustomDatePicker

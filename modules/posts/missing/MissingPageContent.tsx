@@ -4,8 +4,8 @@ import { Button, IconButton, Skeleton } from '@chakra-ui/react';
 import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
 import { MissingPost, MissingPostsQuery } from 'generated/graphql';
 import React from 'react';
-import { MissingPostsGridContainer } from './_MissingPostsGridContainer';
-import { PostsOptions } from './_PostsOptions';
+import { MissingPostsList } from './MissingPostsList';
+import { PostsOptions } from './PostsOptions';
 
 interface IMissingPageContent {
   hasLoadedFirstTime: boolean;
@@ -57,7 +57,7 @@ export const MissingPageContent: React.FC<IMissingPageContent> = ({
         <PostsOptions />
       </GridItem>
       <GridItem w='100%' h='100%'>
-        <MissingPostsGridContainer
+        <MissingPostsList
           posts={posts as Array<MissingPost>}
           fetchMorePosts={fetchMorePosts}
           hasMore={hasMore}

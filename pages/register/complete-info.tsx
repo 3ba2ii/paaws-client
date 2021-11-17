@@ -15,8 +15,8 @@ import { CSSTransition } from 'react-transition-group';
 import styles from 'styles/register.module.css';
 import { useIsAuth } from 'utils/useIsAuth';
 import withApollo from 'utils/withApollo';
-import { Step1 } from './_updateInfoStep1';
-import { Step2 } from './_updateInfoStep2';
+import { UserGeneralInfoStep } from '../../modules/auth/UserGeneralInfoStep';
+import { UserLocationStep } from '../../modules/auth/UserLocationStep';
 
 interface ValuesData {
   bio: string;
@@ -137,7 +137,7 @@ const CompleteInfoComponent: React.FC = () => {
             classNames='complete-info-steps'
             unmountOnExit
           >
-            <Step1
+            <UserGeneralInfoStep
               userInfo={data}
               handleChange={handleChange}
               values={values}
@@ -152,7 +152,7 @@ const CompleteInfoComponent: React.FC = () => {
             classNames='complete-info-step-2'
             unmountOnExit
           >
-            <Step2 userInfo={data} handleChange={handleChange} />
+            <UserLocationStep userInfo={data} handleChange={handleChange} />
           </CSSTransition>
         </div>
         <Flex

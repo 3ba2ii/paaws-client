@@ -7,9 +7,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Libraries, LocationType } from 'types';
 import { Country, SelectLocationOptions } from 'utils/constants/enums';
 import { isProduction } from 'utils/isProduction';
-import GenericInputComponent from './GenericInputComponent';
+import GenericInputComponent from '../input/CustomInputComponent';
 import { CustomLocationAutocomplete } from './LocationAutoComplete';
-import SelectComponent from './SelectFieldComponent';
+import SelectComponent from '../input/SelectFieldComponent';
 
 interface CustomLocationPickerProps {
   includeAutoComplete?: boolean;
