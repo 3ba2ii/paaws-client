@@ -6,7 +6,6 @@ import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
 import { Flex, Text } from '@chakra-ui/layout';
 import { Menu, MenuItem, MenuList } from '@chakra-ui/menu';
 import { Portal } from '@chakra-ui/portal';
-import { CircularProgress } from '@chakra-ui/progress';
 import { MeQuery, useMeQuery } from 'generated/graphql';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -15,6 +14,7 @@ import { FaHeart } from 'react-icons/fa';
 import navbarStyles from 'styles/navbar.module.css';
 import { isServer } from 'utils/isServer';
 import withApollo from 'utils/withApollo';
+import { LoadingComponent } from './common/loading/LoadingSpinner';
 import { DarkModeSwitch } from './DarkModeSwitch';
 import { UserAvatar } from './UserAvatar';
 
@@ -177,22 +177,6 @@ const NavBar = () => {
       <NavBarItems />
     </nav>
   );
-};
-
-const LoadingComponent = (): JSX.Element | null => {
-  /*
-   Code that is only supposed to run in the browser should be executed inside useEffect. 
-   That's required because the first render should match the initial render of the server. 
-   If you manipulate that result it creates a mismatch and React won't be able to hydrate the page successfully.
-   When you run browser only code (like trying to access window) inside useEffect, it will happen after hydration 👍 */
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  return mounted ? (
-    <CircularProgress size='20px' isIndeterminate color='gray.700' />
-  ) : null;
 };
 
 export default withApollo(NavBar);
