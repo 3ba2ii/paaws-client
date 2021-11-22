@@ -2,8 +2,9 @@ query MissingPosts(
   $input: PaginationArgs!
   $length: Int
   $type: MissingPostTypes
+  $filters: PostFilters
 ) {
-  missingPosts(input: $input, type: $type) {
+  missingPosts(input: $input, type: $type, filters: $filters) {
     hasMore
     errors {
       field

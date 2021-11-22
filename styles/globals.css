@@ -52,6 +52,9 @@ ul {
 li {
   list-style-type: none;
 }
+img {
+  pointer-events: none;
+}
 .divider-with-centered-value {
   position: relative;
   width: 100%;

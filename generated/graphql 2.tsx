@@ -548,7 +548,7 @@ export type Photo = {
 };
 
 export type PostFilters = {
-  date?: Maybe<DateFilters>;
+  date?: Maybe<Array<DateFilters>>;
 };
 
 export type PostImages = {

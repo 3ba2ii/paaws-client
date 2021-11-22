@@ -1,13 +1,36 @@
-import { SearchIcon } from '@chakra-ui/icons';
-import { Box, HStack } from '@chakra-ui/layout';
-import { Button, DrawerProps, IconButton, Input } from '@chakra-ui/react';
+import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
+import { Box, HStack, VStack } from '@chakra-ui/layout';
+import {
+  Button,
+  DrawerProps,
+  forwardRef,
+  IconButton,
+  Input,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
+  Portal,
+  Tag,
+  TagLabel,
+  TagRightIcon,
+  Text,
+  Tooltip,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
 import { motion } from 'framer-motion';
-import { useMeQuery } from 'generated/graphql';
+import { DateFilters, useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import { MissingPageContext } from 'pages/missing';
+import React, { useContext, useEffect, useState } from 'react';
+import { CgCalendarToday, CgChevronRight, CgGlobeAlt } from 'react-icons/cg';
 import { GoPlus, GoSettings } from 'react-icons/go';
+import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
+import { DateFiltersObj } from 'utils/constants/enums';
 import { NewMissingPostForm } from './CreateMissingPostForm';
-import { CustomDrawer } from '../../../components/common/overlays/CustomDrawer';
 const variants = {
   closed: {
     opacity: 0,
@@ -84,8 +107,18 @@ export const PostsOptions: React.FC = () => {
       toggleDrawer();
     }
   };
+  //todo: add filters to the posts
+  /* Filters needed 
+    1. Location filtering (city, state, country)
+    2. Date (from, to) - Post Date -> {
+      1. Today
+      2. Last Week
+      3. Last Month
+      4. Last Year
+    }
+  */
   return (
-    <>
+    <VStack spacing={4}>
       <HStack
         w='100%'
         justify='flex-end'
@@ -95,14 +128,6 @@ export const PostsOptions: React.FC = () => {
       >
         <AnimatedSearchBox />
 
-        <Button
-          aria-label='Report Missing Pet'
-          colorScheme='gray'
-          leftIcon={<GoSettings />}
-          minW='92px'
-        >
-          Filters
-        </Button>
         <Button
           leftIcon={<GoPlus />}
           aria-label='Report Missing Pet'
@@ -122,6 +147,151 @@ export const PostsOptions: React.FC = () => {
         }
         drawerProps={{ closeOnOverlayClick: false } as DrawerProps}
       />
-    </>
+      <FiltersComponent />
+    </VStack>
   );
 };
+const FiltersComponent: React.FC = () => {
+  const [dateFilter, setDateFilters] = useState<DateFilters | null>(null);
+  const { handleSelectFilters } = useContext(MissingPageContext);
+
+  const handleAddFilter = (filter: DateFilters) => {
+    setDateFilters(filter);
+  };
+
+  const handleDeleteFilter = (type: 'date' | 'location') => {
+    if (type === 'date') setDateFilters(null);
+  };
+
+  useEffect(() => {
+    handleSelectFilters && handleSelectFilters({ date: dateFilter });
+  }, [dateFilter]);
+  return (
+    <HStack w='100%'>
+      <Menu closeOnSelect={false}>
+        <MenuButton>
+          <Button
+            aria-label='Filters'
+            colorScheme='gray'
+            leftIcon={<GoSettings />}
+            minW='92px'
+            size='sm'
+          >
+            Add Filter
+          </Button>
+        </MenuButton>
+        <Portal>
+          <MenuList>
+            <MenuItem
+              as={DateSubMenu}
+              handleAddFilter={handleAddFilter}
+              options={DateFiltersObj}
+            />
+            <MenuItem as={LocationSubMenu} />
+          </MenuList>
+        </Portal>
+      </Menu>
+      <Box h='20px' w='1px' bg={useColorModeValue('gray.300', 'gray.700')} />
+      {dateFilter ? (
+        <HStack>
+          {[dateFilter].map((filter) => (
+            <Tag colorScheme={'cyan'} boxShadow={'base'}>
+              <TagLabel>{capitalizeTheFirstLetterOfEachWord(filter)}</TagLabel>
+              <Tooltip label='Delete' placement='top'>
+                <TagRightIcon
+                  boxSize={'8px'}
+                  as={CloseIcon}
+                  cursor={'pointer'}
+                  onClick={() => handleDeleteFilter('date')}
+                />
+              </Tooltip>
+            </Tag>
+          ))}
+          <Button
+            size='xs'
+            variant={'ghost'}
+            colorScheme={'red'}
+            onClick={() => setDateFilters(null)}
+            aria-label='Clear Filters'
+            icon={<CloseIcon />}
+          >
+            Clear
+          </Button>
+        </HStack>
+      ) : (
+        <Text textStyle={'p1'} fontWeight='normal'>
+          No filters applied
+        </Text>
+      )}
+    </HStack>
+  );
+};
+
+interface DateMenuProps {
+  handleAddFilter: (filter: DateFilters) => void;
+  options: {
+    key: string;
+    value: DateFilters;
+  }[];
+}
+
+const DateSubMenu = forwardRef<DateMenuProps, any>(
+  ({ handleAddFilter, options }, ref) => {
+    return (
+      <Menu placement='right-start'>
+        <MenuButton
+          as={Button}
+          variant='ghost'
+          leftIcon={<CgCalendarToday />}
+          rightIcon={<CgChevronRight />}
+          ref={ref}
+          w='100%'
+          textAlign={'left'}
+          borderRadius={0}
+        >
+          Date
+        </MenuButton>
+        <Portal appendToParentPortal>
+          <MenuList>
+            <MenuOptionGroup title='Date' type='radio'>
+              {options.map(({ key, value }) => (
+                <MenuItemOption
+                  fontWeight={'medium'}
+                  fontSize={'sm'}
+                  key={key}
+                  value={value}
+                  onClick={() => handleAddFilter(value)}
+                >
+                  {capitalizeTheFirstLetterOfEachWord(value)}
+                </MenuItemOption>
+              ))}
+            </MenuOptionGroup>
+          </MenuList>
+        </Portal>
+      </Menu>
+    );
+  }
+);
+
+const LocationSubMenu = forwardRef((props, ref) => {
+  return (
+    <Menu placement='right-start'>
+      <MenuButton
+        as={Button}
+        variant='ghost'
+        borderRadius={0}
+        leftIcon={<CgGlobeAlt />}
+        rightIcon={<CgChevronRight />}
+        ref={ref}
+        {...props}
+      >
+        Location
+      </MenuButton>
+      <Portal appendToParentPortal>
+        <MenuList>
+          <MenuItem>New Tap</MenuItem>
+        </MenuList>
+      </Portal>
+    </Menu>
+  );
+});
