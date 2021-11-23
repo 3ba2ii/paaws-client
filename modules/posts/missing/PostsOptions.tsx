@@ -1,7 +1,8 @@
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
-import { Box, HStack, VStack } from '@chakra-ui/layout';
+import { Box, HStack, Stack, VStack } from '@chakra-ui/layout';
 import {
   Button,
+  Checkbox,
   DrawerProps,
   forwardRef,
   IconButton,
@@ -13,6 +14,8 @@ import {
   MenuList,
   MenuOptionGroup,
   Portal,
+  Radio,
+  RadioGroup,
   Tag,
   TagLabel,
   TagRightIcon,
@@ -26,7 +29,7 @@ import { DateFilters, useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import { MissingPageContext } from 'pages/missing';
 import React, { useContext, useEffect, useState } from 'react';
-import { CgCalendarToday, CgChevronRight, CgGlobeAlt } from 'react-icons/cg';
+import { CgCalendarToday, CgChevronRight, CgGlobe } from 'react-icons/cg';
 import { GoPlus, GoSettings } from 'react-icons/go';
 import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
 import { DateFiltersObj } from 'utils/constants/enums';
@@ -186,6 +189,7 @@ const FiltersComponent: React.FC = () => {
               as={DateSubMenu}
               handleAddFilter={handleAddFilter}
               options={DateFiltersObj}
+              checked={dateFilter}
             />
             <MenuItem as={LocationSubMenu} />
           </MenuList>
@@ -233,10 +237,11 @@ interface DateMenuProps {
     key: string;
     value: DateFilters;
   }[];
+  checked: DateFilters | null;
 }
 
 const DateSubMenu = forwardRef<DateMenuProps, any>(
-  ({ handleAddFilter, options }, ref) => {
+  ({ handleAddFilter, options, checked }, ref) => {
     return (
       <Menu placement='right-start'>
         <MenuButton
@@ -248,23 +253,27 @@ const DateSubMenu = forwardRef<DateMenuProps, any>(
           w='100%'
           textAlign={'left'}
           borderRadius={0}
+          size='sm'
         >
           Date
         </MenuButton>
         <Portal appendToParentPortal>
           <MenuList>
-            <MenuOptionGroup title='Date' type='radio'>
-              {options.map(({ key, value }) => (
-                <MenuItemOption
-                  fontWeight={'medium'}
-                  fontSize={'sm'}
-                  key={key}
-                  value={value}
-                  onClick={() => handleAddFilter(value)}
-                >
-                  {capitalizeTheFirstLetterOfEachWord(value)}
-                </MenuItemOption>
-              ))}
+            <MenuOptionGroup title='Date' opacity={0.5}>
+              <Stack pl={4}>
+                {options.map(({ key, value }) => (
+                  <Radio
+                    key={key}
+                    value={value}
+                    onClick={() => handleAddFilter(value)}
+                    fontSize={'sm'}
+                    isChecked={checked === value}
+                    cursor={'pointer'}
+                  >
+                    {capitalizeTheFirstLetterOfEachWord(value)}
+                  </Radio>
+                ))}
+              </Stack>
             </MenuOptionGroup>
           </MenuList>
         </Portal>
@@ -280,10 +289,11 @@ const LocationSubMenu = forwardRef((props, ref) => {
         as={Button}
         variant='ghost'
         borderRadius={0}
-        leftIcon={<CgGlobeAlt />}
         rightIcon={<CgChevronRight />}
+        leftIcon={<CgGlobe />}
         ref={ref}
         {...props}
+        size='sm'
       >
         Location
       </MenuButton>
