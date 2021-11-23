@@ -27,8 +27,6 @@ interface ValuesData {
   };
 }
 const CompleteInfoComponent: React.FC = () => {
-  useIsAuth();
-
   const [step, setStep] = useState<number>(0);
   const [values, setValues] = useState<ValuesData>({
     bio: '',
@@ -45,7 +43,7 @@ const CompleteInfoComponent: React.FC = () => {
   const [updateUserInfo, { loading: updateInfoLoading }] =
     useUpdateUserInfoMutation();
 
-  const { data, loading } = useMeQuery({ fetchPolicy: 'cache-first' });
+  const { data, loading } = useMeQuery({ fetchPolicy: 'cache-only' });
 
   const handleChange = (value: any, field: string) => {
     setValues({ ...values, [field]: value });
