@@ -1,5 +1,5 @@
 import { OperationVariables, QueryResult } from '@apollo/client';
-import { GridItem, Heading, HStack, VStack } from '@chakra-ui/layout';
+import { Box, GridItem, Heading, HStack, VStack } from '@chakra-ui/layout';
 import { Button, IconButton, Skeleton } from '@chakra-ui/react';
 import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
 import { MissingPost, MissingPostsQuery } from 'generated/graphql';
@@ -15,26 +15,26 @@ interface IMissingPageContent {
 }
 
 const PostsLoadingSkeleton: React.FC = () => (
-  <VStack w='100%' sx={{ gap: '24px' }}>
-    <HStack
-      w='100%'
-      alignSelf={'flex-end'}
-      justify='flex-end'
-      position='relative'
-      wrap={['wrap', 'unset']}
-      sx={{ rowGap: '1rem' }}
-    >
-      <Skeleton>
-        <IconButton disabled aria-label='loading-skeleton' />
-      </Skeleton>
+  <VStack w='100%'>
+    <Box w='100%'>
+      <HStack
+        w='100%'
+        alignSelf={'flex-end'}
+        justify='flex-end'
+        position='relative'
+        wrap={['wrap', 'unset']}
+      >
+        <Skeleton as={IconButton} borderRadius={4} />
 
-      <Skeleton>
-        <Button disabled>Filters</Button>
+        <Skeleton as={Button} borderRadius={4}>
+          New Post
+        </Skeleton>
+      </HStack>
+
+      <Skeleton as={Button} w='90px' h='28px' borderRadius={4}>
+        Add Filter
       </Skeleton>
-      <Skeleton>
-        <Button disabled>New Post</Button>
-      </Skeleton>
-    </HStack>
+    </Box>
     <DummyPostsSkeleton noOfPosts={3} />
   </VStack>
 );
