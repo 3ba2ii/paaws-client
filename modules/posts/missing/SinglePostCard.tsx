@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { fallbackSrc } from 'utils/constants';
 import { PostActions } from './PostActions';
 import { PostTags } from '../common/PostTags';
+import { rgbDataURL } from 'utils/rgbDataURL';
 
 interface SinglePostCardProps {
   id: number;
@@ -101,11 +102,12 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
           fallbackSrc={fallbackSrc}
           props={{
             src: thumbnailImage,
-            loading: 'eager',
             alt: title,
             width: '100%',
             height: '100%',
             objectFit: 'cover',
+            placeholder: 'blur',
+            blurDataURL: rgbDataURL(229, 229, 229),
           }}
         />
       </Box>

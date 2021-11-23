@@ -18,12 +18,11 @@ export const SelectLocationObj = Object.entries(SelectLocationOptions)
     key,
     value,
   }));
-export const DateFiltersObj = Object.entries(DateFilters).map(
-  ([key, value]) => ({
-    key,
-    value,
-  })
-);
+export const DateFiltersObj = Object.entries(DateFilters)
+.map(([key, value]) => ({
+  key,
+  value,
+}));
 
 export enum Country {
   UnitedStates = 'US',

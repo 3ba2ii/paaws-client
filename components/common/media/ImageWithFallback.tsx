@@ -11,7 +11,7 @@ const ImageWithFallback: React.FC<{ props: ImageProps; fallbackSrc: string }> =
         {...rest}
         layout='responsive'
         src={imgSrc}
-        alt='Loading Image'
+        alt={props.alt || 'Loading'}
         onError={() => {
           setImgSrc(fallbackSrc);
         }}

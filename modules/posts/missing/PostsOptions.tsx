@@ -131,9 +131,9 @@ export const PostsOptions: React.FC = () => {
         <Button
           leftIcon={<GoPlus />}
           aria-label='Report Missing Pet'
-          colorScheme='teal'
-          minW='128px'
+          colorScheme='blue'
           onClick={openNewPostModal}
+          px={6}
         >
           New Post
         </Button>
@@ -168,7 +168,7 @@ const FiltersComponent: React.FC = () => {
   }, [dateFilter]);
   return (
     <HStack w='100%'>
-      <Menu closeOnSelect={false}>
+      <Menu closeOnSelect={false} autoSelect={false}>
         <MenuButton>
           <Button
             aria-label='Filters'
@@ -275,7 +275,7 @@ const DateSubMenu = forwardRef<DateMenuProps, any>(
 
 const LocationSubMenu = forwardRef((props, ref) => {
   return (
-    <Menu placement='right-start'>
+    <Menu placement='right-start' autoSelect={false}>
       <MenuButton
         as={Button}
         variant='ghost'
