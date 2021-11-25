@@ -1,5 +1,5 @@
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
-import { Box, HStack, VStack } from '@chakra-ui/layout';
+import { Box, HStack, Stack, VStack } from '@chakra-ui/layout';
 import {
   Button,
   DrawerProps,
@@ -13,6 +13,12 @@ import {
   MenuOptionGroupProps,
   ModalProps,
   Portal,
+  Radio,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
@@ -28,6 +34,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { CgChevronRight } from 'react-icons/cg';
 import { GoPlus, GoSettings } from 'react-icons/go';
 import { LocationType } from 'types';
+import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
 import { DateFiltersObj, LocationFiltersObject } from 'utils/constants/enums';
 import { ActiveTagsComponent } from './ActiveTagsComponent';
 import { NewMissingPostForm } from './CreateMissingPostForm';
@@ -225,46 +232,35 @@ const FiltersComponent: React.FC = () => {
         </MenuButton>
         <Portal>
           <MenuList>
-            <MenuItem
-              as={FilterSubMenu}
-              handleAddDateFilter={handleAddDateFilter}
-              options={DateFiltersObj}
-              checked={dateFilter}
-              buttonText='Date'
-              menuButtonProps={
-                {
-                  as: Button,
-                  variant: 'ghost',
-                  rightIcon: <CgChevronRight />,
-                  w: '100%',
-                  textAlign: 'left',
-                  borderRadius: 0,
-                  size: 'sm',
-                } as MenuButtonProps
-              }
-              menuOptionGroupProps={{ title: 'Date' } as MenuOptionGroupProps}
-            />
-            <MenuItem
-              as={FilterSubMenu}
-              handleAddDateFilter={handleAddLocationFilter}
-              options={LocationFiltersObject}
-              checked={locationFilter}
-              buttonText='Location'
-              menuButtonProps={
-                {
-                  as: Button,
-                  variant: 'ghost',
-                  rightIcon: <CgChevronRight />,
-                  w: '100%',
-                  textAlign: 'left',
-                  borderRadius: 0,
-                  size: 'sm',
-                } as MenuButtonProps
-              }
-              menuOptionGroupProps={
-                { title: 'Location' } as MenuOptionGroupProps
-              }
-            />
+            <Tabs>
+              <TabList>
+                <Tab>Date</Tab>
+                <Tab>Location</Tab>
+              </TabList>
+
+              <TabPanels>
+                {[DateFiltersObj, LocationFiltersObject].map(
+                  (options, index) => (
+                    <TabPanel>
+                      <CustomTabPanel
+                        key={index}
+                        options={options}
+                        handleChange={(
+                          filter: DateFilters | LocationFilters
+                        ) => {
+                          index === 0
+                            ? handleAddDateFilter(filter as DateFilters)
+                            : handleAddLocationFilter(
+                                filter as LocationFilters
+                              );
+                        }}
+                        checked={index === 0 ? dateFilter : locationFilter}
+                      />
+                    </TabPanel>
+                  )
+                )}
+              </TabPanels>
+            </Tabs>
           </MenuList>
         </Portal>
       </Menu>
@@ -352,7 +348,6 @@ const FiltersComponent: React.FC = () => {
               size='sm'
               onClick={() => {
                 setLocationFilter(LocationFilters.NearCustomLocation);
-
                 setOpenLocationDialog(false);
               }}
             >
@@ -365,5 +360,36 @@ const FiltersComponent: React.FC = () => {
         onClose={() => setOpenLocationDialog(false)}
       />
     </HStack>
+  );
+};
+interface CustomTabPanelProps {
+  handleChange: (filter: DateFilters | LocationFilters) => void;
+  options: {
+    key: string;
+    value: DateFilters | LocationFilters;
+  }[];
+  checked: DateFilters | LocationFilters | null;
+}
+
+const CustomTabPanel: React.FC<CustomTabPanelProps> = ({
+  handleChange,
+  options,
+  checked,
+}) => {
+  return (
+    <Stack>
+      {options.map(({ key, value }) => (
+        <Radio
+          key={key}
+          value={value}
+          onClick={() => handleChange(value)}
+          fontSize={'sm'}
+          cursor={'pointer'}
+          isChecked={checked === value}
+        >
+          {capitalizeTheFirstLetterOfEachWord(value)}
+        </Radio>
+      ))}
+    </Stack>
   );
 };
