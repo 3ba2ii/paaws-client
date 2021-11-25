@@ -206,8 +206,8 @@ export type LocationFilterComponents = {
 export enum LocationFilters {
   NearCustomLocation = 'NEAR_CUSTOM_LOCATION',
   NearMe = 'NEAR_ME',
-  Within_2Km = 'WITHIN_2KM',
-  Within_5Km = 'WITHIN_5KM'
+  Within_5Km = 'WITHIN_5KM',
+  Within_10Km = 'WITHIN_10KM'
 }
 
 export type LoginInput = {
@@ -856,9 +856,9 @@ export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', 
 
 export type MissingPostsQueryVariables = Exact<{
   input: PaginationArgs;
-  length?: Maybe<Scalars['Int']>;
-  type?: Maybe<MissingPostTypes>;
   filters?: Maybe<PostFilters>;
+  type?: Maybe<MissingPostTypes>;
+  length?: Maybe<Scalars['Int']>;
 }>;
 
 
@@ -1396,8 +1396,8 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const MissingPostsDocument = gql`
-    query MissingPosts($input: PaginationArgs!, $length: Int, $type: MissingPostTypes, $filters: PostFilters) {
-  missingPosts(input: $input, type: $type, filters: $filters) {
+    query MissingPosts($input: PaginationArgs!, $filters: PostFilters, $type: MissingPostTypes, $length: Int) {
+  missingPosts(input: $input, filters: $filters, type: $type) {
     hasMore
     errors {
       field
@@ -1425,9 +1425,9 @@ export const MissingPostsDocument = gql`
  * const { data, loading, error } = useMissingPostsQuery({
  *   variables: {
  *      input: // value for 'input'
- *      length: // value for 'length'
- *      type: // value for 'type'
  *      filters: // value for 'filters'
+ *      type: // value for 'type'
+ *      length: // value for 'length'
  *   },
  * });
  */
