@@ -2,6 +2,7 @@ import {
   PrivacyType,
   DateFilters,
   LocationFilters,
+  SortingOrder,
 } from './../../generated/graphql';
 
 export const PrivacyTypeCustomized = Object.entries(PrivacyType)
@@ -28,12 +29,18 @@ export const DateFiltersObj = Object.entries(DateFilters).map(
     value,
   })
 );
-export const LocationFiltersObject = Object.entries(LocationFilters)
-  .reverse()
-  .map(([key, value]) => ({
+export const LocationFiltersObject = Object.entries(LocationFilters).map(
+  ([key, value]) => ({
     key,
     value,
-  }));
+  })
+);
+export const SortingOrderFilterObject = Object.entries(SortingOrder).map(
+  ([key, value]) => ({
+    key,
+    value,
+  })
+);
 
 export enum Country {
   UnitedStates = 'US',

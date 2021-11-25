@@ -7,10 +7,7 @@ import {
   Input,
   Menu,
   MenuButton,
-  MenuButtonProps,
-  MenuItem,
   MenuList,
-  MenuOptionGroupProps,
   ModalProps,
   Portal,
   Radio,
@@ -28,18 +25,25 @@ import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
 import GenericModal from 'components/common/overlays/CustomModal';
 import ModalHeader from 'components/common/overlays/ModalHeader';
 import { motion } from 'framer-motion';
-import { DateFilters, LocationFilters, useMeQuery } from 'generated/graphql';
+import {
+  DateFilters,
+  LocationFilters,
+  SortingOrder,
+  useMeQuery,
+} from 'generated/graphql';
 import { useRouter } from 'next/router';
 import { MissingPageContext } from 'pages/missing';
 import React, { useContext, useEffect, useState } from 'react';
-import { CgChevronRight } from 'react-icons/cg';
 import { GoPlus, GoSettings } from 'react-icons/go';
 import { LocationType } from 'types';
 import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
-import { DateFiltersObj, LocationFiltersObject } from 'utils/constants/enums';
+import {
+  DateFiltersObj,
+  LocationFiltersObject,
+  SortingOrderFilterObject,
+} from 'utils/constants/enums';
 import { ActiveTagsComponent } from './ActiveTagsComponent';
 import { NewMissingPostForm } from './CreateMissingPostForm';
-import { FilterSubMenu } from './SubMenuProps';
 const variants = {
   closed: {
     opacity: 0,
@@ -153,15 +157,19 @@ export const PostsOptions: React.FC = () => {
     </VStack>
   );
 };
+export type FiltersTypes = DateFilters | LocationFilters | SortingOrder;
+
 const FiltersComponent: React.FC = () => {
   const { data } = useMeQuery({ fetchPolicy: 'cache-only' });
   const router = useRouter();
 
   const [dateFilter, setDateFilters] = useState<DateFilters | null>(null);
-
   const [locationFilter, setLocationFilter] = useState<LocationFilters | null>(
     null
   );
+  const [sortingOrderFilter, setSortingOrderFilter] =
+    useState<SortingOrder | null>(null);
+
   const [locationLatLng, setLocationLatLng] = useState<LocationType>({
     lat: 0,
     lng: 0,
@@ -199,25 +207,37 @@ const FiltersComponent: React.FC = () => {
       setOpenLocationDialog(true);
     }
   };
+  const handleAddOrderFilter = (filter: SortingOrder) => {
+    setSortingOrderFilter(filter);
+  };
 
-  const handleDeleteFilter = (type: 'date' | 'location') => {
-    if (type === 'date') setDateFilters(null);
-    else setLocationFilter(null);
+  const handleDeleteFilter = (type: 'date' | 'location' | 'order') => {
+    switch (type) {
+      case 'date':
+        return setDateFilters(null);
+      case 'location':
+        return setLocationFilter(null);
+      case 'order':
+        return setSortingOrderFilter(null);
+    }
   };
 
   const handleClearAll = () => {
     setDateFilters(null);
     setLocationFilter(null);
+    setSortingOrderFilter(null);
   };
   useEffect(() => {
     handleSelectFilters &&
       handleSelectFilters({
         date: dateFilter,
+        order: sortingOrderFilter,
         location: locationFilter
           ? { ...locationLatLng, locationFilter }
           : { lat: null, lng: null, locationFilter: null },
       });
-  }, [dateFilter, locationFilter]);
+  }, [dateFilter, locationFilter, sortingOrderFilter]);
+
   return (
     <HStack w='100%'>
       <Menu closeOnSelect={false} autoSelect={false} isLazy>
@@ -238,7 +258,6 @@ const FiltersComponent: React.FC = () => {
             bg={useColorModeValue('white', 'gray.800')}
             px={2}
             pt={3}
-            pb={4}
             borderColor={useColorModeValue('blackAlpha.100', 'whiteAlpha.100')}
           >
             <Tabs isLazy>
@@ -255,33 +274,44 @@ const FiltersComponent: React.FC = () => {
               </TabList>
 
               <TabPanels>
-                {[DateFiltersObj, LocationFiltersObject].map(
-                  (options, index) => (
-                    <TabPanel>
-                      <CustomTabPanel
-                        key={index}
-                        options={options}
-                        handleChange={(
-                          filter: DateFilters | LocationFilters
-                        ) => {
-                          index === 0
-                            ? handleAddDateFilter(filter as DateFilters)
-                            : handleAddLocationFilter(
-                                filter as LocationFilters
-                              );
-                        }}
-                        checked={index === 0 ? dateFilter : locationFilter}
-                      />
-                    </TabPanel>
-                  )
-                )}
+                {[
+                  DateFiltersObj,
+                  LocationFiltersObject,
+                  SortingOrderFilterObject,
+                ].map((options, index) => (
+                  <TabPanel>
+                    <CustomTabPanel
+                      key={index}
+                      options={options}
+                      handleChange={(filter: FiltersTypes) => {
+                        switch (index) {
+                          case 0:
+                            return handleAddDateFilter(filter as DateFilters);
+                          case 1:
+                            return handleAddLocationFilter(
+                              filter as LocationFilters
+                            );
+                          case 2:
+                            return handleAddOrderFilter(filter as SortingOrder);
+                        }
+                      }}
+                      checked={
+                        index === 0
+                          ? dateFilter
+                          : index === 1
+                          ? locationFilter
+                          : sortingOrderFilter
+                      }
+                    />
+                  </TabPanel>
+                ))}
               </TabPanels>
             </Tabs>
           </MenuList>
         </Portal>
       </Menu>
       <Box h='20px' w='1px' bg={useColorModeValue('gray.300', 'gray.700')} />
-      {dateFilter || locationFilter ? (
+      {dateFilter || locationFilter || sortingOrderFilter ? (
         <>
           {dateFilter && (
             <ActiveTagsComponent
@@ -298,6 +328,15 @@ const FiltersComponent: React.FC = () => {
                 type: 'location',
 
                 filters: [locationFilter],
+                handleDeleteFilter,
+              }}
+            />
+          )}
+          {sortingOrderFilter && (
+            <ActiveTagsComponent
+              {...{
+                type: 'order',
+                filters: [sortingOrderFilter],
                 handleDeleteFilter,
               }}
             />
@@ -337,10 +376,6 @@ const FiltersComponent: React.FC = () => {
             <CustomLocationPicker
               includeMarker
               handleLocationChange={(coords) => {
-                console.log(
-                  `🚀 ~ file: PostsOptions.tsx ~ line 342 ~ coords`,
-                  coords
-                );
                 setLocationLatLng(coords);
               }}
             />
@@ -379,12 +414,12 @@ const FiltersComponent: React.FC = () => {
   );
 };
 interface CustomTabPanelProps {
-  handleChange: (filter: DateFilters | LocationFilters) => void;
+  handleChange: (filter: FiltersTypes) => void;
   options: {
     key: string;
-    value: DateFilters | LocationFilters;
+    value: FiltersTypes;
   }[];
-  checked: DateFilters | LocationFilters | null;
+  checked: FiltersTypes | null;
 }
 
 const CustomTabPanel: React.FC<CustomTabPanelProps> = ({
@@ -392,11 +427,11 @@ const CustomTabPanel: React.FC<CustomTabPanelProps> = ({
   options,
   checked,
 }) => {
-  const onChange = (val: DateFilters | LocationFilters) => {
+  const onChange = (val: FiltersTypes) => {
     handleChange(val);
   };
   return (
-    <RadioGroup onChange={onChange} size={'sm'} fontWeight={'normal'}>
+    <RadioGroup size={'sm'} fontWeight={'normal'} onChange={onChange}>
       <Stack>
         {options.map(({ key, value }) => (
           <Radio
