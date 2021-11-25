@@ -1,5 +1,5 @@
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
-import { Box, HStack, Stack, VStack } from '@chakra-ui/layout';
+import { Box, HStack, VStack } from '@chakra-ui/layout';
 import {
   Button,
   DrawerProps,
@@ -10,8 +10,6 @@ import {
   MenuList,
   ModalProps,
   Portal,
-  Radio,
-  RadioGroup,
   Tab,
   TabList,
   TabPanel,
@@ -36,7 +34,6 @@ import { MissingPageContext } from 'pages/missing';
 import React, { useContext, useEffect, useState } from 'react';
 import { GoPlus, GoSettings } from 'react-icons/go';
 import { LocationType } from 'types';
-import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
 import {
   DateFiltersObj,
   LocationFiltersObject,
@@ -44,6 +41,7 @@ import {
 } from 'utils/constants/enums';
 import { ActiveTagsComponent } from './ActiveTagsComponent';
 import { NewMissingPostForm } from './CreateMissingPostForm';
+import { CustomTabPanel } from './CustomTabPanelProps';
 const variants = {
   closed: {
     opacity: 0,
@@ -420,39 +418,5 @@ const FiltersComponent: React.FC = () => {
         onClose={() => setOpenLocationDialog(false)}
       />
     </HStack>
-  );
-};
-interface CustomTabPanelProps {
-  handleChange: (filter: FiltersTypes) => void;
-  options: {
-    key: string;
-    value: FiltersTypes;
-  }[];
-  checked: FiltersTypes | null;
-}
-
-const CustomTabPanel: React.FC<CustomTabPanelProps> = ({
-  handleChange,
-  options,
-  checked,
-}) => {
-  const onChange = (val: FiltersTypes) => {
-    handleChange(val);
-  };
-  return (
-    <RadioGroup size={'sm'} fontWeight={'normal'} onChange={onChange}>
-      <Stack>
-        {options.map(({ key, value }) => (
-          <Radio
-            key={key}
-            value={value}
-            cursor={'pointer'}
-            isChecked={checked === value}
-          >
-            {capitalizeTheFirstLetterOfEachWord(value)}
-          </Radio>
-        ))}
-      </Stack>
-    </RadioGroup>
   );
 };
