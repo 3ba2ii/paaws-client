@@ -13,7 +13,7 @@ export const ActiveTagsComponent: React.FC<{
   return (
     <HStack>
       {filters.map((filter) => (
-        <Tag colorScheme={'gray'} boxShadow={'base'}>
+        <Tag colorScheme={'gray'} boxShadow={'base'} key={filter}>
           <TagLabel>{capitalizeTheFirstLetterOfEachWord(filter)}</TagLabel>
           <Tooltip label='Delete' placement='top'>
             <TagRightIcon

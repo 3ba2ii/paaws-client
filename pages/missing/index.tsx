@@ -25,6 +25,7 @@ const MissingPage = () => {
     variables: {
       input: { limit: 5, cursor: null },
       length: 120,
+      filters: { date: null, location: null },
     },
     notifyOnNetworkStatusChange: true,
 

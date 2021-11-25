@@ -1,5 +1,5 @@
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
-import { Box, HStack, VStack } from '@chakra-ui/layout';
+import { Box, Heading, HStack, VStack } from '@chakra-ui/layout';
 import {
   Button,
   DrawerProps,
@@ -11,11 +11,15 @@ import {
   MenuItem,
   MenuList,
   MenuOptionGroupProps,
+  ModalProps,
   Portal,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
 import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
+import GenericModal from 'components/common/overlays/CustomModal';
+import { ModalHeader } from 'components/common/overlays/ModalHeader';
 import { motion } from 'framer-motion';
 import { DateFilters, LocationFilters, useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
@@ -23,7 +27,9 @@ import { MissingPageContext } from 'pages/missing';
 import React, { useContext, useEffect, useState } from 'react';
 import { CgChevronRight } from 'react-icons/cg';
 import { GoPlus, GoSettings } from 'react-icons/go';
+import { LocationType } from 'types';
 import { DateFiltersObj, LocationFiltersObject } from 'utils/constants/enums';
+import { useIsAuth } from 'utils/useIsAuth';
 import { ActiveTagsComponent } from './ActiveTagsComponent';
 import { NewMissingPostForm } from './CreateMissingPostForm';
 import { FilterSubMenu } from './SubMenuProps';
@@ -104,16 +110,7 @@ export const PostsOptions: React.FC = () => {
       toggleDrawer();
     }
   };
-  //todo: add filters to the posts
-  /* Filters needed 
-    1. Location filtering (city, state, country)
-    2. Date (from, to) - Post Date -> {
-      1. Today
-      2. Last Week
-      3. Last Month
-      4. Last Year
-    }
-  */
+
   return (
     <VStack spacing={4}>
       <HStack
@@ -150,17 +147,50 @@ export const PostsOptions: React.FC = () => {
   );
 };
 const FiltersComponent: React.FC = () => {
+  const { data } = useMeQuery({ fetchPolicy: 'cache-only' });
+  const router = useRouter();
+
   const [dateFilter, setDateFilters] = useState<DateFilters | null>(null);
+
   const [locationFilter, setLocationFilter] = useState<LocationFilters | null>(
     null
   );
+  const [locationLatLng, setLocationLatLng] = useState<LocationType>({
+    lat: 0,
+    lng: 0,
+  });
+
+  const [openLocationDialog, setOpenLocationDialog] = useState(false);
   const { handleSelectFilters } = useContext(MissingPageContext);
 
   const handleAddDateFilter = (filter: DateFilters) => {
     setDateFilters(filter);
   };
   const handleAddLocationFilter = (filter: LocationFilters) => {
-    setLocationFilter(filter);
+    if (filter !== LocationFilters.NearCustomLocation) {
+      //check if he is logged in
+      if (!data || !data.me) {
+        //not logged in -> log in and comeback
+        return router.replace('/login?next=' + router.pathname);
+      } else {
+        //check the user has a location stored
+        const { lat, lng } = data.me;
+        console.log(
+          `🚀 ~ file: PostsOptions.tsx ~ line 179 ~ handleAddLocationFilter ~ lat`,
+          lat
+        );
+        if (!lat || !lng) {
+          //redirect the user to set his location to set the location
+          return router.replace('/settings/location?next=' + router.pathname);
+        } else {
+          setLocationLatLng({ lat: parseFloat(lat), lng: parseFloat(lng) });
+          setLocationFilter(filter);
+        }
+      }
+    } else {
+      //1. open a dialog to select the location on map
+      setOpenLocationDialog(true);
+    }
   };
 
   const handleDeleteFilter = (type: 'date' | 'location') => {
@@ -173,8 +203,14 @@ const FiltersComponent: React.FC = () => {
     setLocationFilter(null);
   };
   useEffect(() => {
-    handleSelectFilters && handleSelectFilters({ date: dateFilter });
-  }, [dateFilter]);
+    handleSelectFilters &&
+      handleSelectFilters({
+        date: dateFilter,
+        location: locationFilter
+          ? { ...locationLatLng, locationFilter }
+          : { lat: null, lng: null, locationFilter: null },
+      });
+  }, [dateFilter, locationFilter]);
   return (
     <HStack w='100%'>
       <Menu closeOnSelect={false} autoSelect={false}>
@@ -272,6 +308,64 @@ const FiltersComponent: React.FC = () => {
           No filters applied
         </Text>
       )}
+      <GenericModal
+        title={
+          <ModalHeader
+            title='Select Location 🌍'
+            subtitle='Please select a location on map to filter the posts by, all the results will be within 5km from the chosen location.'
+          />
+        }
+        body={
+          <Box
+            w='100%'
+            h='450px'
+            position={'relative'}
+            borderRadius='4px'
+            overflow={'hidden'}
+            boxShadow={'md'}
+          >
+            <CustomLocationPicker
+              includeMarker
+              handleLocationChange={(coords) => {
+                console.log(
+                  `🚀 ~ file: PostsOptions.tsx ~ line 342 ~ coords`,
+                  coords
+                );
+                setLocationLatLng(coords);
+              }}
+            />
+          </Box>
+        }
+        footer={
+          <HStack align='flex-start'>
+            <Button
+              h='38px'
+              mr={3}
+              variant='ghost'
+              size='sm'
+              onClick={() => setOpenLocationDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              h='38px'
+              w={'100%'}
+              colorScheme='teal'
+              size='sm'
+              onClick={() => {
+                setLocationFilter(LocationFilters.NearCustomLocation);
+
+                setOpenLocationDialog(false);
+              }}
+            >
+              Confirm Location
+            </Button>
+          </HStack>
+        }
+        isOpen={openLocationDialog}
+        modalProps={{ size: 'xl' } as ModalProps}
+        onClose={() => setOpenLocationDialog(false)}
+      />
     </HStack>
   );
 };
