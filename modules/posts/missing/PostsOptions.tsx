@@ -190,10 +190,7 @@ const FiltersComponent: React.FC = () => {
       } else {
         //check the user has a location stored
         const { lat, lng } = data.me;
-        console.log(
-          `🚀 ~ file: PostsOptions.tsx ~ line 179 ~ handleAddLocationFilter ~ lat`,
-          lat
-        );
+
         if (!lat || !lng) {
           //redirect the user to set his location to set the location
           return router.replace('/settings/location?next=' + router.pathname);

@@ -1,10 +1,16 @@
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions =  {}
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
+const defaultOptions = {};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -88,7 +94,7 @@ export type AdoptionPostUpdateInput = {
 /** Basic Pet Breeds */
 export enum Breeds {
   Bulldog = 'BULLDOG',
-  Huskey = 'HUSKEY'
+  Huskey = 'HUSKEY',
 }
 
 export type ChangePasswordInput = {
@@ -174,7 +180,7 @@ export enum DateFilters {
   LastMonth = 'LAST_MONTH',
   LastWeek = 'LAST_WEEK',
   LastYear = 'LAST_YEAR',
-  Today = 'TODAY'
+  Today = 'TODAY',
 }
 
 export type DeleteResponse = {
@@ -207,7 +213,7 @@ export enum LocationFilters {
   NearCustomLocation = 'NEAR_CUSTOM_LOCATION',
   NearMe = 'NEAR_ME',
   Within_5Km = 'WITHIN_5KM',
-  Within_10Km = 'WITHIN_10KM'
+  Within_10Km = 'WITHIN_10KM',
 }
 
 export type LoginInput = {
@@ -240,7 +246,6 @@ export type MissingPost = {
   voteStatus?: Maybe<Scalars['Int']>;
 };
 
-
 export type MissingPostDescriptionSnippetArgs = {
   length?: Maybe<Scalars['Int']>;
 };
@@ -258,7 +263,7 @@ export enum MissingPostTags {
   Missing = 'Missing',
   NearYou = 'NearYou',
   Rescued = 'Rescued',
-  Urgent = 'Urgent'
+  Urgent = 'Urgent',
 }
 
 /** Either missing, found, rescued, or all */
@@ -266,7 +271,7 @@ export enum MissingPostTypes {
   All = 'ALL',
   Found = 'Found',
   Missing = 'Missing',
-  Rescued = 'Rescued'
+  Rescued = 'Rescued',
 }
 
 export type Mutation = {
@@ -295,112 +300,91 @@ export type Mutation = {
   vote: VotingResponse;
 };
 
-
 export type MutationAddUserTagArgs = {
   tag: UserTagsType;
 };
-
 
 export type MutationChangePasswordArgs = {
   options: ChangePasswordInput;
 };
 
-
 export type MutationCommentArgs = {
   input: CreateCommentInputType;
 };
-
 
 export type MutationCreateAdoptionPostArgs = {
   images: Array<Scalars['Upload']>;
   input: AdoptionPostInput;
 };
 
-
 export type MutationCreateMissingPostArgs = {
   images: Array<Scalars['Upload']>;
   input: CreateMissingPostInput;
 };
 
-
 export type MutationCreatePetArgs = {
   createPetOptions: CreatePetOptions;
 };
-
 
 export type MutationDeleteAdoptionPostArgs = {
   id: Scalars['Float'];
 };
 
-
 export type MutationDeleteCommentArgs = {
   commentId: Scalars['Int'];
 };
-
 
 export type MutationDeleteMissingPostArgs = {
   id: Scalars['Float'];
 };
 
-
 export type MutationDeletePetArgs = {
   id: Scalars['Float'];
 };
 
-
 export type MutationDeleteUserArgs = {
   id: Scalars['Float'];
 };
-
 
 export type MutationEditCommentArgs = {
   commentId: Scalars['Int'];
   text: Scalars['String'];
 };
 
-
 export type MutationForgotPasswordArgs = {
   identifier: Scalars['String'];
 };
-
 
 export type MutationLoginArgs = {
   options: LoginInput;
 };
 
-
 export type MutationRegisterArgs = {
   registerOptions: RegisterOptions;
 };
-
 
 export type MutationSendOtpArgs = {
   email: Scalars['String'];
   phone: Scalars['String'];
 };
 
-
 export type MutationUpdateAdoptionPostArgs = {
   id: Scalars['Int'];
   newPetInfo: AdoptionPostUpdateInput;
 };
 
-
 export type MutationUpdateUserArgs = {
   updateOptions: UpdateUserInfo;
 };
-
 
 export type MutationUpdootCommentArgs = {
   commentId: Scalars['Int'];
   value: Scalars['Int'];
 };
 
-
 export type MutationUploadAvatarArgs = {
   image: Scalars['Upload'];
 };
-
 
 export type MutationVoteArgs = {
   postId: Scalars['Int'];
@@ -410,7 +394,7 @@ export type MutationVoteArgs = {
 export enum Notification_Content_Types {
   Comment = 'COMMENT',
   Post = 'POST',
-  User = 'USER'
+  User = 'USER',
 }
 
 export type Notification = {
@@ -436,7 +420,7 @@ export enum NotificationType {
   Downvote = 'DOWNVOTE',
   MissingPetAroundYou = 'MISSING_PET_AROUND_YOU',
   ReplyNotification = 'REPLY_NOTIFICATION',
-  Upvote = 'UPVOTE'
+  Upvote = 'UPVOTE',
 }
 
 export type PaginatedAdoptionPosts = {
@@ -519,7 +503,7 @@ export type PetColor = {
 export enum PetGender {
   Female = 'FEMALE',
   Male = 'MALE',
-  Other = 'OTHER'
+  Other = 'OTHER',
 }
 
 export type PetImages = {
@@ -540,14 +524,14 @@ export type PetResponse = {
 export enum PetSize {
   Large = 'LARGE',
   Medium = 'MEDIUM',
-  Small = 'SMALL'
+  Small = 'SMALL',
 }
 
 /** Basic Pet Type */
 export enum PetType {
   Cat = 'CAT',
   Dog = 'DOG',
-  Rabbit = 'RABBIT'
+  Rabbit = 'RABBIT',
 }
 
 export type Photo = {
@@ -587,7 +571,7 @@ export type PostUpdoot = {
 export enum PrivacyType {
   OnlyMe = 'ONLY_ME',
   Private = 'PRIVATE',
-  Public = 'PUBLIC'
+  Public = 'PUBLIC',
 }
 
 export type Query = {
@@ -608,11 +592,9 @@ export type Query = {
   usersCount: Scalars['Int'];
 };
 
-
 export type QueryAdoptionPostArgs = {
   id: Scalars['Int'];
 };
-
 
 export type QueryAdoptionPostsArgs = {
   cursor?: Maybe<Scalars['String']>;
@@ -620,26 +602,21 @@ export type QueryAdoptionPostsArgs = {
   limit?: Maybe<Scalars['Int']>;
 };
 
-
 export type QueryCommentsArgs = {
   options: MissingPostComments;
 };
-
 
 export type QueryGetCommentRepliesArgs = {
   options: ParentCommentReplies;
 };
 
-
 export type QueryGetNearestUsersArgs = {
   options: FindNearestUsersInput;
 };
 
-
 export type QueryIsValidTokenArgs = {
   token: Scalars['String'];
 };
-
 
 export type QueryMissingPostsArgs = {
   filters?: Maybe<PostFilters>;
@@ -647,16 +624,13 @@ export type QueryMissingPostsArgs = {
   type?: Maybe<MissingPostTypes>;
 };
 
-
 export type QueryPetArgs = {
   petId: Scalars['Int'];
 };
 
-
 export type QueryUserArgs = {
   id: Scalars['Int'];
 };
-
 
 export type QueryUsersArgs = {
   where: WhereClause;
@@ -679,7 +653,7 @@ export type RegularResponse = {
 /** Sorting Order Filters */
 export enum SortingOrder {
   Ascending = 'ASCENDING',
-  Descending = 'DESCENDING'
+  Descending = 'DESCENDING',
 }
 
 export type UpdateUserInfo = {
@@ -763,7 +737,7 @@ export enum UserTagsType {
   AnimalOwnerAdopter = 'ANIMAL_OWNER_ADOPTER',
   AnimalPartner = 'ANIMAL_PARTNER',
   CatPerson = 'CAT_PERSON',
-  DogPerson = 'DOG_PERSON'
+  DogPerson = 'DOG_PERSON',
 }
 
 export type VotingResponse = {
@@ -777,89 +751,374 @@ export type WhereClause = {
   limit?: Maybe<Scalars['Int']>;
 };
 
-export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
+export type MissingPostFragmentFragment = {
+  __typename?: 'MissingPost';
+  id: number;
+  title: string;
+  voteStatus?: Maybe<number>;
+  commentsCount: number;
+  tags: Array<MissingPostTags>;
+  points: number;
+  createdAt: any;
+  updatedAt: any;
+  user: {
+    __typename?: 'User';
+    id: number;
+    displayName: string;
+    avatar?: Maybe<{ __typename?: 'Photo'; id: number; url?: Maybe<string> }>;
+  };
+  address?: Maybe<{
+    __typename?: 'Address';
+    id: number;
+    distance?: Maybe<number>;
+  }>;
+  thumbnail?: Maybe<{ __typename?: 'Photo'; id: number; url?: Maybe<string> }>;
+};
 
-export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
+export type RequiredUserInfoFragment = {
+  __typename?: 'User';
+  id: number;
+  email: string;
+  phone: string;
+  displayName: string;
+  full_name: string;
+  confirmed: boolean;
+  blocked: boolean;
+  lng?: Maybe<string>;
+  lat?: Maybe<string>;
+  bio?: Maybe<string>;
+  last_login?: Maybe<any>;
+  createdAt: any;
+  updatedAt: any;
+  provider: string;
+  provider_id?: Maybe<number>;
+  avatar?: Maybe<{ __typename?: 'Photo'; id: number; url?: Maybe<string> }>;
+};
 
 export type CreateAdoptionPostMutationVariables = Exact<{
   petImages: Array<Scalars['Upload']> | Scalars['Upload'];
   postInput: AdoptionPostInput;
 }>;
 
-
-export type CreateAdoptionPostMutation = { __typename?: 'Mutation', createAdoptionPost: { __typename?: 'AdoptionPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, adoptionPost?: Maybe<{ __typename?: 'AdoptionPost', id: number, userId: number, petId: number, createdAt: any, updatedAt: any, pet: { __typename?: 'Pet', id: number, name: string }, user: { __typename?: 'User', id: number, email: string }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }> }> } };
+export type CreateAdoptionPostMutation = {
+  __typename?: 'Mutation';
+  createAdoptionPost: {
+    __typename?: 'AdoptionPostResponse';
+    errors?: Maybe<
+      Array<{
+        __typename?: 'FieldError';
+        field: string;
+        message: string;
+        code: number;
+      }>
+    >;
+    adoptionPost?: Maybe<{
+      __typename?: 'AdoptionPost';
+      id: number;
+      userId: number;
+      petId: number;
+      createdAt: any;
+      updatedAt: any;
+      pet: { __typename?: 'Pet'; id: number; name: string };
+      user: { __typename?: 'User'; id: number; email: string };
+      address?: Maybe<{ __typename?: 'Address'; distance?: Maybe<number> }>;
+    }>;
+  };
+};
 
 export type CreateMissingPostMutationVariables = Exact<{
   input: CreateMissingPostInput;
   images: Array<Scalars['Upload']> | Scalars['Upload'];
 }>;
 
-
-export type CreateMissingPostMutation = { __typename?: 'Mutation', createMissingPost: { __typename?: 'CreateMissingPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, post?: Maybe<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type CreateMissingPostMutation = {
+  __typename?: 'Mutation';
+  createMissingPost: {
+    __typename?: 'CreateMissingPostResponse';
+    errors?: Maybe<
+      Array<{
+        __typename?: 'FieldError';
+        field: string;
+        message: string;
+        code: number;
+      }>
+    >;
+    post?: Maybe<{
+      __typename?: 'MissingPost';
+      descriptionSnippet: string;
+      id: number;
+      title: string;
+      voteStatus?: Maybe<number>;
+      commentsCount: number;
+      tags: Array<MissingPostTags>;
+      points: number;
+      createdAt: any;
+      updatedAt: any;
+      user: {
+        __typename?: 'User';
+        id: number;
+        displayName: string;
+        avatar?: Maybe<{
+          __typename?: 'Photo';
+          id: number;
+          url?: Maybe<string>;
+        }>;
+      };
+      address?: Maybe<{
+        __typename?: 'Address';
+        id: number;
+        distance?: Maybe<number>;
+      }>;
+      thumbnail?: Maybe<{
+        __typename?: 'Photo';
+        id: number;
+        url?: Maybe<string>;
+      }>;
+    }>;
+  };
+};
 
 export type CreatePetMutationVariables = Exact<{
   createPetOptions: CreatePetOptions;
 }>;
 
-
-export type CreatePetMutation = { __typename?: 'Mutation', createPet: { __typename?: 'PetResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, pet?: Maybe<{ __typename?: 'Pet', id: number, updatedAt: any, createdAt: any, name: string, type: PetType }> } };
+export type CreatePetMutation = {
+  __typename?: 'Mutation';
+  createPet: {
+    __typename?: 'PetResponse';
+    errors?: Maybe<
+      Array<{
+        __typename?: 'FieldError';
+        field: string;
+        message: string;
+        code: number;
+      }>
+    >;
+    pet?: Maybe<{
+      __typename?: 'Pet';
+      id: number;
+      updatedAt: any;
+      createdAt: any;
+      name: string;
+      type: PetType;
+    }>;
+  };
+};
 
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
 }>;
 
-
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', code: number, field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
+export type LoginMutation = {
+  __typename?: 'Mutation';
+  login: {
+    __typename?: 'UserResponse';
+    errors?: Maybe<
+      Array<{
+        __typename?: 'FieldError';
+        code: number;
+        field: string;
+        message: string;
+      }>
+    >;
+    user?: Maybe<{
+      __typename?: 'User';
+      id: number;
+      email: string;
+      phone: string;
+      displayName: string;
+      full_name: string;
+      confirmed: boolean;
+      blocked: boolean;
+      lng?: Maybe<string>;
+      lat?: Maybe<string>;
+      bio?: Maybe<string>;
+      last_login?: Maybe<any>;
+      createdAt: any;
+      updatedAt: any;
+      provider: string;
+      provider_id?: Maybe<number>;
+      avatar?: Maybe<{ __typename?: 'Photo'; url?: Maybe<string>; id: number }>;
+    }>;
+  };
+};
 
 export type PostVoteMutationVariables = Exact<{
   value: Scalars['Int'];
   postId: Scalars['Int'];
 }>;
 
-
-export type PostVoteMutation = { __typename?: 'Mutation', vote: { __typename?: 'VotingResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+export type PostVoteMutation = {
+  __typename?: 'Mutation';
+  vote: {
+    __typename?: 'VotingResponse';
+    success?: Maybe<boolean>;
+    errors?: Maybe<
+      Array<{
+        __typename?: 'FieldError';
+        field: string;
+        message: string;
+        code: number;
+      }>
+    >;
+  };
+};
 
 export type RegisterMutationVariables = Exact<{
   registerRegisterOptions: RegisterOptions;
 }>;
 
-
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type RegisterMutation = {
+  __typename?: 'Mutation';
+  register: {
+    __typename?: 'UserResponse';
+    errors?: Maybe<
+      Array<{
+        __typename?: 'FieldError';
+        field: string;
+        message: string;
+        code: number;
+      }>
+    >;
+    user?: Maybe<{
+      __typename?: 'User';
+      id: number;
+      email: string;
+      phone: string;
+      displayName: string;
+      full_name: string;
+      confirmed: boolean;
+      blocked: boolean;
+      lng?: Maybe<string>;
+      lat?: Maybe<string>;
+      bio?: Maybe<string>;
+      last_login?: Maybe<any>;
+      createdAt: any;
+      updatedAt: any;
+      provider: string;
+      provider_id?: Maybe<number>;
+      avatar?: Maybe<{ __typename?: 'Photo'; id: number; url?: Maybe<string> }>;
+    }>;
+  };
+};
 
 export type SendOtpMutationVariables = Exact<{
   sendOtpPhone: Scalars['String'];
   email: Scalars['String'];
 }>;
 
-
-export type SendOtpMutation = { __typename?: 'Mutation', sendOTP: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, code: number, field: string }>> } };
+export type SendOtpMutation = {
+  __typename?: 'Mutation';
+  sendOTP: {
+    __typename?: 'RegularResponse';
+    success?: Maybe<boolean>;
+    errors?: Maybe<
+      Array<{
+        __typename?: 'FieldError';
+        message: string;
+        code: number;
+        field: string;
+      }>
+    >;
+  };
+};
 
 export type UpdateUserInfoMutationVariables = Exact<{
   updateUserUpdateOptions: UpdateUserInfo;
 }>;
 
-
-export type UpdateUserInfoMutation = { __typename?: 'Mutation', updateUser: boolean };
+export type UpdateUserInfoMutation = {
+  __typename?: 'Mutation';
+  updateUser: boolean;
+};
 
 export type UploadAvatarMutationVariables = Exact<{
   uploadAvatarImage: Scalars['Upload'];
 }>;
 
-
-export type UploadAvatarMutation = { __typename?: 'Mutation', uploadAvatar: { __typename?: 'UploadImageResponse', url?: Maybe<string>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+export type UploadAvatarMutation = {
+  __typename?: 'Mutation';
+  uploadAvatar: {
+    __typename?: 'UploadImageResponse';
+    url?: Maybe<string>;
+    errors?: Maybe<
+      Array<{
+        __typename?: 'FieldError';
+        field: string;
+        message: string;
+        code: number;
+      }>
+    >;
+  };
+};
 
 export type AdoptionPostsQueryVariables = Exact<{
   cursor?: Maybe<Scalars['String']>;
   limit?: Maybe<Scalars['Int']>;
 }>;
 
+export type AdoptionPostsQuery = {
+  __typename?: 'Query';
+  adoptionPosts: {
+    __typename?: 'PaginatedAdoptionPosts';
+    hasMore: boolean;
+    posts: Array<{
+      __typename?: 'AdoptionPost';
+      id: number;
+      createdAt: any;
+      updatedAt: any;
+      pet: {
+        __typename?: 'Pet';
+        id: number;
+        name: string;
+        gender: PetGender;
+        size: PetSize;
+        birthDate: any;
+        breeds: Array<{ __typename?: 'PetBreed'; breed: Breeds }>;
+        thumbnail?: Maybe<{ __typename?: 'Photo'; url?: Maybe<string> }>;
+      };
+      address?: Maybe<{
+        __typename?: 'Address';
+        distance?: Maybe<number>;
+        country?: Maybe<string>;
+        state?: Maybe<string>;
+      }>;
+    }>;
+    errors?: Maybe<
+      Array<{
+        __typename?: 'FieldError';
+        field: string;
+        message: string;
+        code: number;
+      }>
+    >;
+  };
+};
 
-export type AdoptionPostsQuery = { __typename?: 'Query', adoptionPosts: { __typename?: 'PaginatedAdoptionPosts', hasMore: boolean, posts: Array<{ __typename?: 'AdoptionPost', id: number, createdAt: any, updatedAt: any, pet: { __typename?: 'Pet', id: number, name: string, gender: PetGender, size: PetSize, birthDate: any, breeds: Array<{ __typename?: 'PetBreed', breed: Breeds }>, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number>, country?: Maybe<string>, state?: Maybe<string> }> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+export type MeQueryVariables = Exact<{ [key: string]: never }>;
 
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
+export type MeQuery = {
+  __typename?: 'Query';
+  me?: Maybe<{
+    __typename?: 'User';
+    id: number;
+    email: string;
+    phone: string;
+    displayName: string;
+    full_name: string;
+    confirmed: boolean;
+    blocked: boolean;
+    lng?: Maybe<string>;
+    lat?: Maybe<string>;
+    bio?: Maybe<string>;
+    last_login?: Maybe<any>;
+    createdAt: any;
+    updatedAt: any;
+    provider: string;
+    provider_id?: Maybe<number>;
+    avatar?: Maybe<{ __typename?: 'Photo'; url?: Maybe<string>; id: number }>;
+  }>;
+};
 
 export type MissingPostsQueryVariables = Exact<{
   input: PaginationArgs;
@@ -868,97 +1127,167 @@ export type MissingPostsQueryVariables = Exact<{
   length?: Maybe<Scalars['Int']>;
 }>;
 
-
-export type MissingPostsQuery = { __typename?: 'Query', missingPosts: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type MissingPostsQuery = {
+  __typename?: 'Query';
+  missingPosts: {
+    __typename?: 'PaginatedMissingPosts';
+    hasMore?: Maybe<boolean>;
+    errors?: Maybe<
+      Array<{
+        __typename?: 'FieldError';
+        field: string;
+        message: string;
+        code: number;
+      }>
+    >;
+    missingPosts: Array<{
+      __typename?: 'MissingPost';
+      descriptionSnippet: string;
+      id: number;
+      title: string;
+      voteStatus?: Maybe<number>;
+      commentsCount: number;
+      tags: Array<MissingPostTags>;
+      points: number;
+      createdAt: any;
+      updatedAt: any;
+      user: {
+        __typename?: 'User';
+        id: number;
+        displayName: string;
+        avatar?: Maybe<{
+          __typename?: 'Photo';
+          id: number;
+          url?: Maybe<string>;
+        }>;
+      };
+      address?: Maybe<{
+        __typename?: 'Address';
+        id: number;
+        distance?: Maybe<number>;
+      }>;
+      thumbnail?: Maybe<{
+        __typename?: 'Photo';
+        id: number;
+        url?: Maybe<string>;
+      }>;
+    }>;
+  };
+};
 
 export type PaginatedUsersQueryVariables = Exact<{
   usersWhere: WhereClause;
 }>;
 
-
-export type PaginatedUsersQuery = { __typename?: 'Query', users: { __typename?: 'PaginatedUsers', hasMore: boolean, users: Array<{ __typename?: 'User', id: number, email: string, phone: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+export type PaginatedUsersQuery = {
+  __typename?: 'Query';
+  users: {
+    __typename?: 'PaginatedUsers';
+    hasMore: boolean;
+    users: Array<{
+      __typename?: 'User';
+      id: number;
+      email: string;
+      phone: string;
+    }>;
+    errors?: Maybe<
+      Array<{
+        __typename?: 'FieldError';
+        field: string;
+        message: string;
+        code: number;
+      }>
+    >;
+  };
+};
 
 export const MissingPostFragmentFragmentDoc = gql`
-    fragment MissingPostFragment on MissingPost {
-  id
-  title
-  voteStatus
-  user {
+  fragment MissingPostFragment on MissingPost {
     id
+    title
+    voteStatus
+    user {
+      id
+      displayName
+      avatar {
+        id
+        url
+      }
+    }
+    commentsCount
+    tags
+    address {
+      id
+      distance
+    }
+    points
+    thumbnail {
+      id
+      url
+    }
+    createdAt
+    updatedAt
+  }
+`;
+export const RequiredUserInfoFragmentDoc = gql`
+  fragment RequiredUserInfo on User {
+    id
+    email
+    phone
     displayName
+    full_name
+    confirmed
+    blocked
+    lng
+    lat
+    bio
+    last_login
+    createdAt
+    updatedAt
+    provider
+    provider_id
     avatar {
       id
       url
     }
   }
-  commentsCount
-  tags
-  address {
-    id
-    distance
-  }
-  points
-  thumbnail {
-    id
-    url
-  }
-  createdAt
-  updatedAt
-}
-    `;
-export const RequiredUserInfoFragmentDoc = gql`
-    fragment RequiredUserInfo on User {
-  id
-  email
-  phone
-  displayName
-  full_name
-  confirmed
-  blocked
-  lng
-  lat
-  bio
-  last_login
-  createdAt
-  updatedAt
-  provider
-  provider_id
-  avatar {
-    id
-    url
-  }
-}
-    `;
+`;
 export const CreateAdoptionPostDocument = gql`
-    mutation CreateAdoptionPost($petImages: [Upload!]!, $postInput: AdoptionPostInput!) {
-  createAdoptionPost(images: $petImages, input: $postInput) {
-    errors {
-      field
-      message
-      code
-    }
-    adoptionPost {
-      id
-      userId
-      petId
-      pet {
+  mutation CreateAdoptionPost(
+    $petImages: [Upload!]!
+    $postInput: AdoptionPostInput!
+  ) {
+    createAdoptionPost(images: $petImages, input: $postInput) {
+      errors {
+        field
+        message
+        code
+      }
+      adoptionPost {
         id
-        name
+        userId
+        petId
+        pet {
+          id
+          name
+        }
+        user {
+          id
+          email
+        }
+        address {
+          distance
+        }
+        createdAt
+        updatedAt
       }
-      user {
-        id
-        email
-      }
-      address {
-        distance
-      }
-      createdAt
-      updatedAt
     }
   }
-}
-    `;
-export type CreateAdoptionPostMutationFn = Apollo.MutationFunction<CreateAdoptionPostMutation, CreateAdoptionPostMutationVariables>;
+`;
+export type CreateAdoptionPostMutationFn = Apollo.MutationFunction<
+  CreateAdoptionPostMutation,
+  CreateAdoptionPostMutationVariables
+>;
 
 /**
  * __useCreateAdoptionPostMutation__
@@ -978,29 +1307,50 @@ export type CreateAdoptionPostMutationFn = Apollo.MutationFunction<CreateAdoptio
  *   },
  * });
  */
-export function useCreateAdoptionPostMutation(baseOptions?: Apollo.MutationHookOptions<CreateAdoptionPostMutation, CreateAdoptionPostMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateAdoptionPostMutation, CreateAdoptionPostMutationVariables>(CreateAdoptionPostDocument, options);
-      }
-export type CreateAdoptionPostMutationHookResult = ReturnType<typeof useCreateAdoptionPostMutation>;
-export type CreateAdoptionPostMutationResult = Apollo.MutationResult<CreateAdoptionPostMutation>;
-export type CreateAdoptionPostMutationOptions = Apollo.BaseMutationOptions<CreateAdoptionPostMutation, CreateAdoptionPostMutationVariables>;
+export function useCreateAdoptionPostMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateAdoptionPostMutation,
+    CreateAdoptionPostMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateAdoptionPostMutation,
+    CreateAdoptionPostMutationVariables
+  >(CreateAdoptionPostDocument, options);
+}
+export type CreateAdoptionPostMutationHookResult = ReturnType<
+  typeof useCreateAdoptionPostMutation
+>;
+export type CreateAdoptionPostMutationResult =
+  Apollo.MutationResult<CreateAdoptionPostMutation>;
+export type CreateAdoptionPostMutationOptions = Apollo.BaseMutationOptions<
+  CreateAdoptionPostMutation,
+  CreateAdoptionPostMutationVariables
+>;
 export const CreateMissingPostDocument = gql`
-    mutation CreateMissingPost($input: CreateMissingPostInput!, $images: [Upload!]!) {
-  createMissingPost(input: $input, images: $images) {
-    errors {
-      field
-      message
-      code
-    }
-    post {
-      ...MissingPostFragment
-      descriptionSnippet(length: 120)
+  mutation CreateMissingPost(
+    $input: CreateMissingPostInput!
+    $images: [Upload!]!
+  ) {
+    createMissingPost(input: $input, images: $images) {
+      errors {
+        field
+        message
+        code
+      }
+      post {
+        ...MissingPostFragment
+        descriptionSnippet(length: 120)
+      }
     }
   }
-}
-    ${MissingPostFragmentFragmentDoc}`;
-export type CreateMissingPostMutationFn = Apollo.MutationFunction<CreateMissingPostMutation, CreateMissingPostMutationVariables>;
+  ${MissingPostFragmentFragmentDoc}
+`;
+export type CreateMissingPostMutationFn = Apollo.MutationFunction<
+  CreateMissingPostMutation,
+  CreateMissingPostMutationVariables
+>;
 
 /**
  * __useCreateMissingPostMutation__
@@ -1020,32 +1370,49 @@ export type CreateMissingPostMutationFn = Apollo.MutationFunction<CreateMissingP
  *   },
  * });
  */
-export function useCreateMissingPostMutation(baseOptions?: Apollo.MutationHookOptions<CreateMissingPostMutation, CreateMissingPostMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateMissingPostMutation, CreateMissingPostMutationVariables>(CreateMissingPostDocument, options);
-      }
-export type CreateMissingPostMutationHookResult = ReturnType<typeof useCreateMissingPostMutation>;
-export type CreateMissingPostMutationResult = Apollo.MutationResult<CreateMissingPostMutation>;
-export type CreateMissingPostMutationOptions = Apollo.BaseMutationOptions<CreateMissingPostMutation, CreateMissingPostMutationVariables>;
+export function useCreateMissingPostMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreateMissingPostMutation,
+    CreateMissingPostMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    CreateMissingPostMutation,
+    CreateMissingPostMutationVariables
+  >(CreateMissingPostDocument, options);
+}
+export type CreateMissingPostMutationHookResult = ReturnType<
+  typeof useCreateMissingPostMutation
+>;
+export type CreateMissingPostMutationResult =
+  Apollo.MutationResult<CreateMissingPostMutation>;
+export type CreateMissingPostMutationOptions = Apollo.BaseMutationOptions<
+  CreateMissingPostMutation,
+  CreateMissingPostMutationVariables
+>;
 export const CreatePetDocument = gql`
-    mutation CreatePet($createPetOptions: CreatePetOptions!) {
-  createPet(createPetOptions: $createPetOptions) {
-    errors {
-      field
-      message
-      code
-    }
-    pet {
-      id
-      updatedAt
-      createdAt
-      name
-      type
+  mutation CreatePet($createPetOptions: CreatePetOptions!) {
+    createPet(createPetOptions: $createPetOptions) {
+      errors {
+        field
+        message
+        code
+      }
+      pet {
+        id
+        updatedAt
+        createdAt
+        name
+        type
+      }
     }
   }
-}
-    `;
-export type CreatePetMutationFn = Apollo.MutationFunction<CreatePetMutation, CreatePetMutationVariables>;
+`;
+export type CreatePetMutationFn = Apollo.MutationFunction<
+  CreatePetMutation,
+  CreatePetMutationVariables
+>;
 
 /**
  * __useCreatePetMutation__
@@ -1064,31 +1431,48 @@ export type CreatePetMutationFn = Apollo.MutationFunction<CreatePetMutation, Cre
  *   },
  * });
  */
-export function useCreatePetMutation(baseOptions?: Apollo.MutationHookOptions<CreatePetMutation, CreatePetMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePetMutation, CreatePetMutationVariables>(CreatePetDocument, options);
-      }
-export type CreatePetMutationHookResult = ReturnType<typeof useCreatePetMutation>;
+export function useCreatePetMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    CreatePetMutation,
+    CreatePetMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<CreatePetMutation, CreatePetMutationVariables>(
+    CreatePetDocument,
+    options
+  );
+}
+export type CreatePetMutationHookResult = ReturnType<
+  typeof useCreatePetMutation
+>;
 export type CreatePetMutationResult = Apollo.MutationResult<CreatePetMutation>;
-export type CreatePetMutationOptions = Apollo.BaseMutationOptions<CreatePetMutation, CreatePetMutationVariables>;
+export type CreatePetMutationOptions = Apollo.BaseMutationOptions<
+  CreatePetMutation,
+  CreatePetMutationVariables
+>;
 export const LoginDocument = gql`
-    mutation Login($loginOptions: LoginInput!) {
-  login(options: $loginOptions) {
-    errors {
-      code
-      field
-      message
-    }
-    user {
-      ...RequiredUserInfo
-      avatar {
-        url
+  mutation Login($loginOptions: LoginInput!) {
+    login(options: $loginOptions) {
+      errors {
+        code
+        field
+        message
+      }
+      user {
+        ...RequiredUserInfo
+        avatar {
+          url
+        }
       }
     }
   }
-}
-    ${RequiredUserInfoFragmentDoc}`;
-export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
+  ${RequiredUserInfoFragmentDoc}
+`;
+export type LoginMutationFn = Apollo.MutationFunction<
+  LoginMutation,
+  LoginMutationVariables
+>;
 
 /**
  * __useLoginMutation__
@@ -1107,26 +1491,40 @@ export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutati
  *   },
  * });
  */
-export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
-      }
+export function useLoginMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    LoginMutation,
+    LoginMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<LoginMutation, LoginMutationVariables>(
+    LoginDocument,
+    options
+  );
+}
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
-export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<
+  LoginMutation,
+  LoginMutationVariables
+>;
 export const PostVoteDocument = gql`
-    mutation PostVote($value: Int!, $postId: Int!) {
-  vote(value: $value, postId: $postId) {
-    errors {
-      field
-      message
-      code
+  mutation PostVote($value: Int!, $postId: Int!) {
+    vote(value: $value, postId: $postId) {
+      errors {
+        field
+        message
+        code
+      }
+      success
     }
-    success
   }
-}
-    `;
-export type PostVoteMutationFn = Apollo.MutationFunction<PostVoteMutation, PostVoteMutationVariables>;
+`;
+export type PostVoteMutationFn = Apollo.MutationFunction<
+  PostVoteMutation,
+  PostVoteMutationVariables
+>;
 
 /**
  * __usePostVoteMutation__
@@ -1146,28 +1544,43 @@ export type PostVoteMutationFn = Apollo.MutationFunction<PostVoteMutation, PostV
  *   },
  * });
  */
-export function usePostVoteMutation(baseOptions?: Apollo.MutationHookOptions<PostVoteMutation, PostVoteMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<PostVoteMutation, PostVoteMutationVariables>(PostVoteDocument, options);
-      }
+export function usePostVoteMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    PostVoteMutation,
+    PostVoteMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<PostVoteMutation, PostVoteMutationVariables>(
+    PostVoteDocument,
+    options
+  );
+}
 export type PostVoteMutationHookResult = ReturnType<typeof usePostVoteMutation>;
 export type PostVoteMutationResult = Apollo.MutationResult<PostVoteMutation>;
-export type PostVoteMutationOptions = Apollo.BaseMutationOptions<PostVoteMutation, PostVoteMutationVariables>;
+export type PostVoteMutationOptions = Apollo.BaseMutationOptions<
+  PostVoteMutation,
+  PostVoteMutationVariables
+>;
 export const RegisterDocument = gql`
-    mutation Register($registerRegisterOptions: RegisterOptions!) {
-  register(registerOptions: $registerRegisterOptions) {
-    errors {
-      field
-      message
-      code
-    }
-    user {
-      ...RequiredUserInfo
+  mutation Register($registerRegisterOptions: RegisterOptions!) {
+    register(registerOptions: $registerRegisterOptions) {
+      errors {
+        field
+        message
+        code
+      }
+      user {
+        ...RequiredUserInfo
+      }
     }
   }
-}
-    ${RequiredUserInfoFragmentDoc}`;
-export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
+  ${RequiredUserInfoFragmentDoc}
+`;
+export type RegisterMutationFn = Apollo.MutationFunction<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
 
 /**
  * __useRegisterMutation__
@@ -1186,26 +1599,40 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  *   },
  * });
  */
-export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
-      }
+export function useRegisterMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    RegisterMutation,
+    RegisterMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(
+    RegisterDocument,
+    options
+  );
+}
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
-export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<
+  RegisterMutation,
+  RegisterMutationVariables
+>;
 export const SendOtpDocument = gql`
-    mutation SendOTP($sendOtpPhone: String!, $email: String!) {
-  sendOTP(phone: $sendOtpPhone, email: $email) {
-    success
-    errors {
-      message
-      code
-      field
+  mutation SendOTP($sendOtpPhone: String!, $email: String!) {
+    sendOTP(phone: $sendOtpPhone, email: $email) {
+      success
+      errors {
+        message
+        code
+        field
+      }
     }
   }
-}
-    `;
-export type SendOtpMutationFn = Apollo.MutationFunction<SendOtpMutation, SendOtpMutationVariables>;
+`;
+export type SendOtpMutationFn = Apollo.MutationFunction<
+  SendOtpMutation,
+  SendOtpMutationVariables
+>;
 
 /**
  * __useSendOtpMutation__
@@ -1225,19 +1652,33 @@ export type SendOtpMutationFn = Apollo.MutationFunction<SendOtpMutation, SendOtp
  *   },
  * });
  */
-export function useSendOtpMutation(baseOptions?: Apollo.MutationHookOptions<SendOtpMutation, SendOtpMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SendOtpMutation, SendOtpMutationVariables>(SendOtpDocument, options);
-      }
+export function useSendOtpMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    SendOtpMutation,
+    SendOtpMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<SendOtpMutation, SendOtpMutationVariables>(
+    SendOtpDocument,
+    options
+  );
+}
 export type SendOtpMutationHookResult = ReturnType<typeof useSendOtpMutation>;
 export type SendOtpMutationResult = Apollo.MutationResult<SendOtpMutation>;
-export type SendOtpMutationOptions = Apollo.BaseMutationOptions<SendOtpMutation, SendOtpMutationVariables>;
+export type SendOtpMutationOptions = Apollo.BaseMutationOptions<
+  SendOtpMutation,
+  SendOtpMutationVariables
+>;
 export const UpdateUserInfoDocument = gql`
-    mutation updateUserInfo($updateUserUpdateOptions: UpdateUserInfo!) {
-  updateUser(updateOptions: $updateUserUpdateOptions)
-}
-    `;
-export type UpdateUserInfoMutationFn = Apollo.MutationFunction<UpdateUserInfoMutation, UpdateUserInfoMutationVariables>;
+  mutation updateUserInfo($updateUserUpdateOptions: UpdateUserInfo!) {
+    updateUser(updateOptions: $updateUserUpdateOptions)
+  }
+`;
+export type UpdateUserInfoMutationFn = Apollo.MutationFunction<
+  UpdateUserInfoMutation,
+  UpdateUserInfoMutationVariables
+>;
 
 /**
  * __useUpdateUserInfoMutation__
@@ -1256,26 +1697,43 @@ export type UpdateUserInfoMutationFn = Apollo.MutationFunction<UpdateUserInfoMut
  *   },
  * });
  */
-export function useUpdateUserInfoMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserInfoMutation, UpdateUserInfoMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateUserInfoMutation, UpdateUserInfoMutationVariables>(UpdateUserInfoDocument, options);
-      }
-export type UpdateUserInfoMutationHookResult = ReturnType<typeof useUpdateUserInfoMutation>;
-export type UpdateUserInfoMutationResult = Apollo.MutationResult<UpdateUserInfoMutation>;
-export type UpdateUserInfoMutationOptions = Apollo.BaseMutationOptions<UpdateUserInfoMutation, UpdateUserInfoMutationVariables>;
-export const UploadAvatarDocument = gql`
-    mutation UploadAvatar($uploadAvatarImage: Upload!) {
-  uploadAvatar(image: $uploadAvatarImage) {
-    errors {
-      field
-      message
-      code
-    }
-    url
-  }
+export function useUpdateUserInfoMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UpdateUserInfoMutation,
+    UpdateUserInfoMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UpdateUserInfoMutation,
+    UpdateUserInfoMutationVariables
+  >(UpdateUserInfoDocument, options);
 }
-    `;
-export type UploadAvatarMutationFn = Apollo.MutationFunction<UploadAvatarMutation, UploadAvatarMutationVariables>;
+export type UpdateUserInfoMutationHookResult = ReturnType<
+  typeof useUpdateUserInfoMutation
+>;
+export type UpdateUserInfoMutationResult =
+  Apollo.MutationResult<UpdateUserInfoMutation>;
+export type UpdateUserInfoMutationOptions = Apollo.BaseMutationOptions<
+  UpdateUserInfoMutation,
+  UpdateUserInfoMutationVariables
+>;
+export const UploadAvatarDocument = gql`
+  mutation UploadAvatar($uploadAvatarImage: Upload!) {
+    uploadAvatar(image: $uploadAvatarImage) {
+      errors {
+        field
+        message
+        code
+      }
+      url
+    }
+  }
+`;
+export type UploadAvatarMutationFn = Apollo.MutationFunction<
+  UploadAvatarMutation,
+  UploadAvatarMutationVariables
+>;
 
 /**
  * __useUploadAvatarMutation__
@@ -1294,48 +1752,62 @@ export type UploadAvatarMutationFn = Apollo.MutationFunction<UploadAvatarMutatio
  *   },
  * });
  */
-export function useUploadAvatarMutation(baseOptions?: Apollo.MutationHookOptions<UploadAvatarMutation, UploadAvatarMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UploadAvatarMutation, UploadAvatarMutationVariables>(UploadAvatarDocument, options);
-      }
-export type UploadAvatarMutationHookResult = ReturnType<typeof useUploadAvatarMutation>;
-export type UploadAvatarMutationResult = Apollo.MutationResult<UploadAvatarMutation>;
-export type UploadAvatarMutationOptions = Apollo.BaseMutationOptions<UploadAvatarMutation, UploadAvatarMutationVariables>;
+export function useUploadAvatarMutation(
+  baseOptions?: Apollo.MutationHookOptions<
+    UploadAvatarMutation,
+    UploadAvatarMutationVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useMutation<
+    UploadAvatarMutation,
+    UploadAvatarMutationVariables
+  >(UploadAvatarDocument, options);
+}
+export type UploadAvatarMutationHookResult = ReturnType<
+  typeof useUploadAvatarMutation
+>;
+export type UploadAvatarMutationResult =
+  Apollo.MutationResult<UploadAvatarMutation>;
+export type UploadAvatarMutationOptions = Apollo.BaseMutationOptions<
+  UploadAvatarMutation,
+  UploadAvatarMutationVariables
+>;
 export const AdoptionPostsDocument = gql`
-    query AdoptionPosts($cursor: String, $limit: Int) {
-  adoptionPosts(cursor: $cursor, limit: $limit) {
-    posts {
-      id
-      pet {
+  query AdoptionPosts($cursor: String, $limit: Int) {
+    adoptionPosts(cursor: $cursor, limit: $limit) {
+      posts {
         id
-        name
-        gender
-        size
-        birthDate
-        breeds {
-          breed
+        pet {
+          id
+          name
+          gender
+          size
+          birthDate
+          breeds {
+            breed
+          }
+          thumbnail {
+            url
+          }
         }
-        thumbnail {
-          url
+        address {
+          distance
+          country
+          state
         }
+        createdAt
+        updatedAt
       }
-      address {
-        distance
-        country
-        state
+      hasMore
+      errors {
+        field
+        message
+        code
       }
-      createdAt
-      updatedAt
-    }
-    hasMore
-    errors {
-      field
-      message
-      code
     }
   }
-}
-    `;
+`;
 
 /**
  * __useAdoptionPostsQuery__
@@ -1354,27 +1826,51 @@ export const AdoptionPostsDocument = gql`
  *   },
  * });
  */
-export function useAdoptionPostsQuery(baseOptions?: Apollo.QueryHookOptions<AdoptionPostsQuery, AdoptionPostsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AdoptionPostsQuery, AdoptionPostsQueryVariables>(AdoptionPostsDocument, options);
-      }
-export function useAdoptionPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AdoptionPostsQuery, AdoptionPostsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AdoptionPostsQuery, AdoptionPostsQueryVariables>(AdoptionPostsDocument, options);
-        }
-export type AdoptionPostsQueryHookResult = ReturnType<typeof useAdoptionPostsQuery>;
-export type AdoptionPostsLazyQueryHookResult = ReturnType<typeof useAdoptionPostsLazyQuery>;
-export type AdoptionPostsQueryResult = Apollo.QueryResult<AdoptionPostsQuery, AdoptionPostsQueryVariables>;
+export function useAdoptionPostsQuery(
+  baseOptions?: Apollo.QueryHookOptions<
+    AdoptionPostsQuery,
+    AdoptionPostsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<AdoptionPostsQuery, AdoptionPostsQueryVariables>(
+    AdoptionPostsDocument,
+    options
+  );
+}
+export function useAdoptionPostsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    AdoptionPostsQuery,
+    AdoptionPostsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<AdoptionPostsQuery, AdoptionPostsQueryVariables>(
+    AdoptionPostsDocument,
+    options
+  );
+}
+export type AdoptionPostsQueryHookResult = ReturnType<
+  typeof useAdoptionPostsQuery
+>;
+export type AdoptionPostsLazyQueryHookResult = ReturnType<
+  typeof useAdoptionPostsLazyQuery
+>;
+export type AdoptionPostsQueryResult = Apollo.QueryResult<
+  AdoptionPostsQuery,
+  AdoptionPostsQueryVariables
+>;
 export const MeDocument = gql`
-    query Me {
-  me {
-    ...RequiredUserInfo
-    avatar {
-      url
+  query Me {
+    me {
+      ...RequiredUserInfo
+      avatar {
+        url
+      }
     }
   }
-}
-    ${RequiredUserInfoFragmentDoc}`;
+  ${RequiredUserInfoFragmentDoc}
+`;
 
 /**
  * __useMeQuery__
@@ -1391,33 +1887,43 @@ export const MeDocument = gql`
  *   },
  * });
  */
-export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-      }
-export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
-        }
+export function useMeQuery(
+  baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+}
+export function useMeLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, options);
+}
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const MissingPostsDocument = gql`
-    query MissingPosts($input: PaginationArgs!, $filters: PostFilters, $type: MissingPostTypes, $length: Int) {
-  missingPosts(input: $input, filters: $filters, type: $type) {
-    hasMore
-    errors {
-      field
-      message
-      code
-    }
-    missingPosts {
-      ...MissingPostFragment
-      descriptionSnippet(length: $length)
+  query MissingPosts(
+    $input: PaginationArgs!
+    $filters: PostFilters
+    $type: MissingPostTypes
+    $length: Int
+  ) {
+    missingPosts(input: $input, filters: $filters, type: $type) {
+      hasMore
+      errors {
+        field
+        message
+        code
+      }
+      missingPosts {
+        ...MissingPostFragment
+        descriptionSnippet(length: $length)
+      }
     }
   }
-}
-    ${MissingPostFragmentFragmentDoc}`;
+  ${MissingPostFragmentFragmentDoc}
+`;
 
 /**
  * __useMissingPostsQuery__
@@ -1438,34 +1944,57 @@ export const MissingPostsDocument = gql`
  *   },
  * });
  */
-export function useMissingPostsQuery(baseOptions: Apollo.QueryHookOptions<MissingPostsQuery, MissingPostsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MissingPostsQuery, MissingPostsQueryVariables>(MissingPostsDocument, options);
-      }
-export function useMissingPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MissingPostsQuery, MissingPostsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MissingPostsQuery, MissingPostsQueryVariables>(MissingPostsDocument, options);
-        }
-export type MissingPostsQueryHookResult = ReturnType<typeof useMissingPostsQuery>;
-export type MissingPostsLazyQueryHookResult = ReturnType<typeof useMissingPostsLazyQuery>;
-export type MissingPostsQueryResult = Apollo.QueryResult<MissingPostsQuery, MissingPostsQueryVariables>;
-export const PaginatedUsersDocument = gql`
-    query PaginatedUsers($usersWhere: WhereClause!) {
-  users(where: $usersWhere) {
-    users {
-      id
-      email
-      phone
-    }
-    errors {
-      field
-      message
-      code
-    }
-    hasMore
-  }
+export function useMissingPostsQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    MissingPostsQuery,
+    MissingPostsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<MissingPostsQuery, MissingPostsQueryVariables>(
+    MissingPostsDocument,
+    options
+  );
 }
-    `;
+export function useMissingPostsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    MissingPostsQuery,
+    MissingPostsQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<MissingPostsQuery, MissingPostsQueryVariables>(
+    MissingPostsDocument,
+    options
+  );
+}
+export type MissingPostsQueryHookResult = ReturnType<
+  typeof useMissingPostsQuery
+>;
+export type MissingPostsLazyQueryHookResult = ReturnType<
+  typeof useMissingPostsLazyQuery
+>;
+export type MissingPostsQueryResult = Apollo.QueryResult<
+  MissingPostsQuery,
+  MissingPostsQueryVariables
+>;
+export const PaginatedUsersDocument = gql`
+  query PaginatedUsers($usersWhere: WhereClause!) {
+    users(where: $usersWhere) {
+      users {
+        id
+        email
+        phone
+      }
+      errors {
+        field
+        message
+        code
+      }
+      hasMore
+    }
+  }
+`;
 
 /**
  * __usePaginatedUsersQuery__
@@ -1483,14 +2012,37 @@ export const PaginatedUsersDocument = gql`
  *   },
  * });
  */
-export function usePaginatedUsersQuery(baseOptions: Apollo.QueryHookOptions<PaginatedUsersQuery, PaginatedUsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PaginatedUsersQuery, PaginatedUsersQueryVariables>(PaginatedUsersDocument, options);
-      }
-export function usePaginatedUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaginatedUsersQuery, PaginatedUsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PaginatedUsersQuery, PaginatedUsersQueryVariables>(PaginatedUsersDocument, options);
-        }
-export type PaginatedUsersQueryHookResult = ReturnType<typeof usePaginatedUsersQuery>;
-export type PaginatedUsersLazyQueryHookResult = ReturnType<typeof usePaginatedUsersLazyQuery>;
-export type PaginatedUsersQueryResult = Apollo.QueryResult<PaginatedUsersQuery, PaginatedUsersQueryVariables>;
+export function usePaginatedUsersQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    PaginatedUsersQuery,
+    PaginatedUsersQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useQuery<PaginatedUsersQuery, PaginatedUsersQueryVariables>(
+    PaginatedUsersDocument,
+    options
+  );
+}
+export function usePaginatedUsersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    PaginatedUsersQuery,
+    PaginatedUsersQueryVariables
+  >
+) {
+  const options = { ...defaultOptions, ...baseOptions };
+  return Apollo.useLazyQuery<PaginatedUsersQuery, PaginatedUsersQueryVariables>(
+    PaginatedUsersDocument,
+    options
+  );
+}
+export type PaginatedUsersQueryHookResult = ReturnType<
+  typeof usePaginatedUsersQuery
+>;
+export type PaginatedUsersLazyQueryHookResult = ReturnType<
+  typeof usePaginatedUsersLazyQuery
+>;
+export type PaginatedUsersQueryResult = Apollo.QueryResult<
+  PaginatedUsersQuery,
+  PaginatedUsersQueryVariables
+>;

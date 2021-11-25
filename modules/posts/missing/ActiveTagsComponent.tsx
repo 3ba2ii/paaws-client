@@ -11,8 +11,8 @@ import { SortingOrder } from 'generated/graphql';
 import React from 'react';
 import { IconType } from 'react-icons';
 import {
-  FiChevronsDown,
-  FiChevronsUp,
+  FiArrowDown,
+  FiArrowUp,
   FiClock,
   FiFilter,
   FiMapPin,
@@ -36,8 +36,7 @@ export const ActiveTagsComponent: React.FC<{
         break;
 
       case 'order':
-        icon =
-          filters[0] === SortingOrder.Ascending ? FiChevronsUp : FiChevronsDown;
+        icon = filters[0] === SortingOrder.Ascending ? FiArrowUp : FiArrowDown;
         break;
       default:
         icon = FiFilter;
