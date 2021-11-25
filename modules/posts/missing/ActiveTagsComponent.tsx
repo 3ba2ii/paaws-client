@@ -1,8 +1,15 @@
 import { CloseIcon } from '@chakra-ui/icons';
 import { HStack } from '@chakra-ui/layout';
-import { Tag, TagLabel, TagRightIcon, Tooltip } from '@chakra-ui/react';
+import {
+  Tag,
+  TagLabel,
+  TagLeftIcon,
+  TagRightIcon,
+  Tooltip,
+} from '@chakra-ui/react';
 import { DateFilters, LocationFilters } from 'generated/graphql';
 import React from 'react';
+import { FiClock, FiMapPin } from 'react-icons/fi';
 import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
 
 export const ActiveTagsComponent: React.FC<{
@@ -14,6 +21,10 @@ export const ActiveTagsComponent: React.FC<{
     <HStack>
       {filters.map((filter) => (
         <Tag colorScheme={'gray'} boxShadow={'base'} key={filter}>
+          <TagLeftIcon
+            boxSize={'10px'}
+            as={type === 'date' ? FiClock : FiMapPin}
+          />
           <TagLabel>{capitalizeTheFirstLetterOfEachWord(filter)}</TagLabel>
           <Tooltip label='Delete' placement='top'>
             <TagRightIcon

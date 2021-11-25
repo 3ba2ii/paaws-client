@@ -129,7 +129,7 @@ export const PostsOptions: React.FC = () => {
           size='sm'
           px={6}
         >
-          New Post
+          Add Post
         </Button>
       </HStack>
       <CustomDrawer
@@ -213,16 +213,15 @@ const FiltersComponent: React.FC = () => {
   return (
     <HStack w='100%'>
       <Menu closeOnSelect={false} autoSelect={false}>
-        <MenuButton>
-          <Button
-            aria-label='Filters'
-            colorScheme='gray'
-            leftIcon={<GoSettings />}
-            minW='92px'
-            size='sm'
-          >
-            Add Filter
-          </Button>
+        <MenuButton
+          as={Button}
+          aria-label='Filters'
+          colorScheme='gray'
+          leftIcon={<GoSettings />}
+          minW='92px'
+          size='sm'
+        >
+          Add Filter
         </MenuButton>
         <Portal>
           <MenuList>
