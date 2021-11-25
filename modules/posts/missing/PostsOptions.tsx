@@ -1,9 +1,8 @@
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
-import { Box, HStack, Stack, VStack } from '@chakra-ui/layout';
+import { Box, HStack, VStack } from '@chakra-ui/layout';
 import {
   Button,
   DrawerProps,
-  forwardRef,
   IconButton,
   Input,
   Menu,
@@ -11,15 +10,9 @@ import {
   MenuButtonProps,
   MenuItem,
   MenuList,
-  MenuOptionGroup,
   MenuOptionGroupProps,
   Portal,
-  Radio,
-  Tag,
-  TagLabel,
-  TagRightIcon,
   Text,
-  Tooltip,
   useColorModeValue,
 } from '@chakra-ui/react';
 import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
@@ -28,11 +21,12 @@ import { DateFilters, LocationFilters, useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import { MissingPageContext } from 'pages/missing';
 import React, { useContext, useEffect, useState } from 'react';
-import { CgCalendarToday, CgChevronRight, CgGlobe } from 'react-icons/cg';
+import { CgChevronRight } from 'react-icons/cg';
 import { GoPlus, GoSettings } from 'react-icons/go';
-import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
 import { DateFiltersObj, LocationFiltersObject } from 'utils/constants/enums';
+import { ActiveTagsComponent } from './ActiveTagsComponent';
 import { NewMissingPostForm } from './CreateMissingPostForm';
+import { FilterSubMenu } from './SubMenuProps';
 const variants = {
   closed: {
     opacity: 0,
@@ -157,16 +151,27 @@ export const PostsOptions: React.FC = () => {
 };
 const FiltersComponent: React.FC = () => {
   const [dateFilter, setDateFilters] = useState<DateFilters | null>(null);
+  const [locationFilter, setLocationFilter] = useState<LocationFilters | null>(
+    null
+  );
   const { handleSelectFilters } = useContext(MissingPageContext);
 
-  const handleAddFilter = (filter: DateFilters) => {
+  const handleAddDateFilter = (filter: DateFilters) => {
     setDateFilters(filter);
+  };
+  const handleAddLocationFilter = (filter: LocationFilters) => {
+    setLocationFilter(filter);
   };
 
   const handleDeleteFilter = (type: 'date' | 'location') => {
     if (type === 'date') setDateFilters(null);
+    else setLocationFilter(null);
   };
 
+  const handleClearAll = () => {
+    setDateFilters(null);
+    setLocationFilter(null);
+  };
   useEffect(() => {
     handleSelectFilters && handleSelectFilters({ date: dateFilter });
   }, [dateFilter]);
@@ -188,7 +193,7 @@ const FiltersComponent: React.FC = () => {
           <MenuList>
             <MenuItem
               as={FilterSubMenu}
-              handleAddFilter={handleAddFilter}
+              handleAddDateFilter={handleAddDateFilter}
               options={DateFiltersObj}
               checked={dateFilter}
               buttonText='Date'
@@ -196,7 +201,6 @@ const FiltersComponent: React.FC = () => {
                 {
                   as: Button,
                   variant: 'ghost',
-                  leftIcon: <CgCalendarToday />,
                   rightIcon: <CgChevronRight />,
                   w: '100%',
                   textAlign: 'left',
@@ -208,15 +212,14 @@ const FiltersComponent: React.FC = () => {
             />
             <MenuItem
               as={FilterSubMenu}
-              handleAddFilter={handleAddFilter}
+              handleAddDateFilter={handleAddLocationFilter}
               options={LocationFiltersObject}
-              checked={dateFilter}
+              checked={locationFilter}
               buttonText='Location'
               menuButtonProps={
                 {
                   as: Button,
                   variant: 'ghost',
-                  leftIcon: <CgGlobe />,
                   rightIcon: <CgChevronRight />,
                   w: '100%',
                   textAlign: 'left',
@@ -232,32 +235,38 @@ const FiltersComponent: React.FC = () => {
         </Portal>
       </Menu>
       <Box h='20px' w='1px' bg={useColorModeValue('gray.300', 'gray.700')} />
-      {dateFilter ? (
-        <HStack>
-          {[dateFilter].map((filter) => (
-            <Tag colorScheme={'gray'} boxShadow={'base'}>
-              <TagLabel>{capitalizeTheFirstLetterOfEachWord(filter)}</TagLabel>
-              <Tooltip label='Delete' placement='top'>
-                <TagRightIcon
-                  boxSize={'8px'}
-                  as={CloseIcon}
-                  cursor={'pointer'}
-                  onClick={() => handleDeleteFilter('date')}
-                />
-              </Tooltip>
-            </Tag>
-          ))}
+      {dateFilter || locationFilter ? (
+        <>
+          {dateFilter && (
+            <ActiveTagsComponent
+              {...{
+                type: 'date',
+                filters: [dateFilter],
+                handleDeleteFilter,
+              }}
+            />
+          )}
+          {locationFilter && (
+            <ActiveTagsComponent
+              {...{
+                type: 'location',
+
+                filters: [locationFilter],
+                handleDeleteFilter,
+              }}
+            />
+          )}
           <Button
             size='xs'
             variant={'ghost'}
             colorScheme={'red'}
-            onClick={() => setDateFilters(null)}
+            onClick={handleClearAll}
             aria-label='Clear Filters'
             icon={<CloseIcon />}
           >
             Clear
           </Button>
-        </HStack>
+        </>
       ) : (
         <Text textStyle={'p1'} fontWeight='normal'>
           No filters applied
@@ -266,57 +275,3 @@ const FiltersComponent: React.FC = () => {
     </HStack>
   );
 };
-
-interface SubMenuProps {
-  handleAddFilter: (filter: DateFilters) => void;
-  options: {
-    key: string;
-    value: DateFilters;
-  }[];
-  checked: DateFilters | LocationFilters | null;
-  buttonText: string;
-  menuButtonProps?: MenuButtonProps;
-  menuOptionGroupProps?: MenuOptionGroupProps;
-}
-
-const FilterSubMenu = forwardRef<SubMenuProps, any>(
-  (
-    {
-      handleAddFilter,
-      buttonText,
-      menuButtonProps,
-      menuOptionGroupProps,
-      options,
-      checked,
-    },
-    ref
-  ) => {
-    return (
-      <Menu placement='right-start'>
-        <MenuButton ref={ref} {...menuButtonProps}>
-          {buttonText}
-        </MenuButton>
-        <Portal appendToParentPortal>
-          <MenuList>
-            <MenuOptionGroup opacity={0.5} {...menuOptionGroupProps}>
-              <Stack pl={4}>
-                {options.map(({ key, value }) => (
-                  <Radio
-                    key={key}
-                    value={value}
-                    onClick={() => handleAddFilter(value)}
-                    fontSize={'sm'}
-                    cursor={'pointer'}
-                    isChecked={checked === value}
-                  >
-                    {capitalizeTheFirstLetterOfEachWord(value)}
-                  </Radio>
-                ))}
-              </Stack>
-            </MenuOptionGroup>
-          </MenuList>
-        </Portal>
-      </Menu>
-    );
-  }
-);
