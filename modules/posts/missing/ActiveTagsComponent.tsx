@@ -18,12 +18,12 @@ import {
   FiMapPin,
 } from 'react-icons/fi';
 import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
-import { FiltersTypes } from './PostsOptions';
+import { FiltersTypes, FiltersTypeString } from './PostsOptions';
 
 export const ActiveTagsComponent: React.FC<{
-  type: 'date' | 'location' | 'order';
+  type: FiltersTypeString;
   filters: [FiltersTypes];
-  handleDeleteFilter: (type: 'date' | 'location' | 'order') => void;
+  handleDeleteFilter: (type: FiltersTypeString) => void;
 }> = ({ type, filters, handleDeleteFilter }) => {
   const TagIcon: React.FC = () => {
     let icon: IconType;

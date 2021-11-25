@@ -157,6 +157,7 @@ export const PostsOptions: React.FC = () => {
   );
 };
 export type FiltersTypes = DateFilters | LocationFilters | SortingOrder;
+export type FiltersTypeString = 'date' | 'location' | 'order';
 
 const FiltersComponent: React.FC = () => {
   const { data } = useMeQuery({ fetchPolicy: 'cache-only' });
@@ -182,13 +183,17 @@ const FiltersComponent: React.FC = () => {
     order: null,
   });
 
+  console.log(
+    `🚀 ~ file: PostsOptions.tsx ~ line 185 ~`,
+    Object.entries(tags).filter(
+      ([key, value]) => value !== null && { key, value }
+    )
+  );
+
   const [openLocationDialog, setOpenLocationDialog] = useState(false);
   const { handleSelectFilters } = useContext(MissingPageContext);
 
-  const handleAddFilter = (
-    filter: FiltersTypes,
-    type: 'date' | 'location' | 'order'
-  ) => {
+  const handleAddFilter = (filter: FiltersTypes, type: FiltersTypeString) => {
     if (type === 'location')
       return handleAddLocationFilter(filter as LocationFilters);
     setFilters({ ...filters, [type]: filter });
@@ -226,17 +231,14 @@ const FiltersComponent: React.FC = () => {
     }
   };
 
-  const handleAddTag = (
-    filter: FiltersTypes,
-    type: 'date' | 'location' | 'order'
-  ) => {
+  const handleAddTag = (filter: FiltersTypes, type: FiltersTypeString) => {
     setTags({ ...tags, [type]: filter });
   };
-  const handleDeleteTag = (type: 'date' | 'location' | 'order') => {
+  const handleDeleteTag = (type: FiltersTypeString) => {
     setTags({ ...tags, [type]: null });
   };
 
-  const handleDeleteFilter = (type: 'date' | 'location' | 'order') => {
+  const handleDeleteFilter = (type: FiltersTypeString) => {
     setFilters({ ...filters, [type]: null });
     handleDeleteTag(type);
   };
@@ -245,6 +247,10 @@ const FiltersComponent: React.FC = () => {
     setFilters({ date: null, location: null, order: null });
     setTags({ date: null, location: null, order: null });
   };
+
+  useEffect(() => {
+    handleSelectFilters && handleSelectFilters(filters);
+  }, [filters]);
 
   const FiltersMenu = () => {
     return (
@@ -311,10 +317,6 @@ const FiltersComponent: React.FC = () => {
       </Menu>
     );
   };
-  useEffect(() => {
-    handleSelectFilters && handleSelectFilters(filters);
-  }, [filters]);
-
   return (
     <HStack w='100%' wrap='wrap' sx={{ gap: '8px' }} justify={'flex-start'}>
       <FiltersMenu />
@@ -334,36 +336,18 @@ const FiltersComponent: React.FC = () => {
           align='center'
           justify={'flex-start'}
         >
-          <>
-            {tags.date && (
+          {Object.entries(tags)
+            .filter(([key, value]) => value !== null && { key, value })
+            .map(([type, tag]) => (
               <ActiveTagsComponent
                 {...{
-                  type: 'date',
-                  filters: [tags.date],
+                  type: type as FiltersTypeString,
+                  filters: [tag as FiltersTypes],
                   handleDeleteFilter,
                 }}
               />
-            )}
-            {tags.location && (
-              <ActiveTagsComponent
-                {...{
-                  type: 'location',
+            ))}
 
-                  filters: [tags.location],
-                  handleDeleteFilter,
-                }}
-              />
-            )}
-            {tags.order && (
-              <ActiveTagsComponent
-                {...{
-                  type: 'order',
-                  filters: [tags.order],
-                  handleDeleteFilter,
-                }}
-              />
-            )}
-          </>
           <Button
             size='xs'
             variant={'ghost'}
@@ -421,6 +405,7 @@ const FiltersComponent: React.FC = () => {
               colorScheme='teal'
               size='sm'
               onClick={() => {
+                //set the filter
                 setFilters({
                   ...filters,
                   location: {
@@ -429,7 +414,9 @@ const FiltersComponent: React.FC = () => {
                     locationFilter: LocationFilters.NearCustomLocation,
                   },
                 });
+                //add its tag
                 handleAddTag(LocationFilters.NearCustomLocation, 'location');
+                //close the dialog
                 setOpenLocationDialog(false);
               }}
             >
