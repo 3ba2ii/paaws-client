@@ -51,20 +51,17 @@ const SingleDummySkeleton = (): JSX.Element => {
                 Esse ut elit minim veniam. elit minim veniam.
               </Skeleton>
             </HStack>
-            <Skeleton w='50px' h='16px' />
           </HStack>
           <HStack>
             <SkeletonCircle width='24px' height='24px' />
-            <Skeleton height='14px'>Lorem Lorem Ipsum</Skeleton>
+            <Skeleton height='12px'>Lorem Lorem Ipsum</Skeleton>
           </HStack>
           <SkeletonText w='100%' h='100%' />
         </VStack>
         <HStack>
-          {[...Array(3)].map((_, index) => (
-            <Skeleton width='100%' key={index}>
-              <Box w={'32px'} h='20px' />
-            </Skeleton>
-          ))}
+          <Skeleton width='100%'>
+            <Box w={'90px'} h='20px' />
+          </Skeleton>
         </HStack>
       </Flex>
     </Flex>

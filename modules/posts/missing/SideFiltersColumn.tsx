@@ -5,8 +5,8 @@ import React from 'react';
 import { MissingPageTaps } from './MissingPageTaps';
 
 export const SideFiltersColumn: React.FC<{
-  handleSelectFilter: (type: MissingPostTypes) => void;
-}> = ({ handleSelectFilter }) => {
+  handleSelectType: (type: MissingPostTypes) => void;
+}> = ({ handleSelectType }) => {
   return (
     <Flex
       w='100%'
@@ -17,7 +17,7 @@ export const SideFiltersColumn: React.FC<{
       maxW={['100%', '250px']}
       position='relative'
     >
-      <MissingPageTaps handleSelectFilter={handleSelectFilter} />
+      <MissingPageTaps handleSelectType={handleSelectType} />
       <VStack
         display={['none', 'none', 'flex']}
         flexDir={'column'}

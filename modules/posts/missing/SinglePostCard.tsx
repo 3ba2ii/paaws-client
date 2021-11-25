@@ -7,6 +7,7 @@ import React, { useMemo } from 'react';
 import { fallbackSrc } from 'utils/constants';
 import { PostActions } from './PostActions';
 import { PostTags } from '../common/PostTags';
+import { rgbDataURL } from 'utils/rgbDataURL';
 
 interface SinglePostCardProps {
   id: number;
@@ -75,7 +76,6 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
       </HStack>
     );
   };
-
   return (
     <Flex
       key={id}
@@ -86,14 +86,14 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
       borderColor={useColorModeValue('gray.200', 'gray.700')}
       w='100%'
       h='100%'
-      borderRadius={'10px'}
+      borderRadius={'4px'}
       overflow='hidden'
     >
       <Box
         w={['clamp(250px, 100%, minmax(350px,100%))', '100%', '250px']}
         h='100%'
-        borderTopLeftRadius={['0px', '0px', '10px']}
-        borderBottomLeftRadius={['0px', '0px', '10px']}
+        borderTopLeftRadius={['0px', '0px', '4px']}
+        borderBottomLeftRadius={['0px', '0px', '4px']}
         overflow='hidden'
         boxShadow='base'
       >
@@ -101,11 +101,12 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
           fallbackSrc={fallbackSrc}
           props={{
             src: thumbnailImage,
-            loading: 'eager',
             alt: title,
             width: '100%',
             height: '100%',
             objectFit: 'cover',
+            placeholder: 'blur',
+            blurDataURL: rgbDataURL(200, 200, 200),
           }}
         />
       </Box>

@@ -1,5 +1,5 @@
 import { OperationVariables, QueryResult } from '@apollo/client';
-import { GridItem, Heading, HStack, VStack } from '@chakra-ui/layout';
+import { Box, GridItem, Heading, HStack, VStack } from '@chakra-ui/layout';
 import { Button, IconButton, Skeleton } from '@chakra-ui/react';
 import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
 import { MissingPost, MissingPostsQuery } from 'generated/graphql';
@@ -12,29 +12,30 @@ interface IMissingPageContent {
   fetchMorePosts: VoidFunction;
   data: QueryResult<MissingPostsQuery, OperationVariables>['data'];
   loading: boolean;
+  paginationLoading: boolean;
 }
 
 const PostsLoadingSkeleton: React.FC = () => (
-  <VStack w='100%' sx={{ gap: '24px' }}>
-    <HStack
-      w='100%'
-      alignSelf={'flex-end'}
-      justify='flex-end'
-      position='relative'
-      wrap={['wrap', 'unset']}
-      sx={{ rowGap: '1rem' }}
-    >
-      <Skeleton>
-        <IconButton disabled aria-label='loading-skeleton' />
-      </Skeleton>
+  <VStack w='100%'>
+    <Box w='100%'>
+      <HStack
+        w='100%'
+        alignSelf={'flex-end'}
+        justify='flex-end'
+        position='relative'
+        wrap={['wrap', 'unset']}
+      >
+        <Skeleton as={IconButton} borderRadius={4} />
 
-      <Skeleton>
-        <Button disabled>Filters</Button>
+        <Skeleton as={Button} borderRadius={4}>
+          New Post
+        </Skeleton>
+      </HStack>
+
+      <Skeleton as={Button} w='90px' h='28px' borderRadius={4}>
+        Add Filter
       </Skeleton>
-      <Skeleton>
-        <Button disabled>New Post</Button>
-      </Skeleton>
-    </HStack>
+    </Box>
     <DummyPostsSkeleton noOfPosts={3} />
   </VStack>
 );
@@ -43,6 +44,7 @@ export const MissingPageContent: React.FC<IMissingPageContent> = ({
   fetchMorePosts,
   data,
   loading,
+  paginationLoading,
 }) => {
   if (!hasLoadedFirstTime) return <PostsLoadingSkeleton />;
 
@@ -57,12 +59,16 @@ export const MissingPageContent: React.FC<IMissingPageContent> = ({
         <PostsOptions />
       </GridItem>
       <GridItem w='100%' h='100%'>
-        <MissingPostsList
-          posts={posts as Array<MissingPost>}
-          fetchMorePosts={fetchMorePosts}
-          hasMore={hasMore}
-          loading={loading}
-        />
+        {loading && !paginationLoading ? (
+          <DummyPostsSkeleton noOfPosts={3} />
+        ) : (
+          <MissingPostsList
+            posts={posts as Array<MissingPost>}
+            fetchMorePosts={fetchMorePosts}
+            hasMore={hasMore}
+            loading={paginationLoading}
+          />
+        )}
       </GridItem>
     </VStack>
   );

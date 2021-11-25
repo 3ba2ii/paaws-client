@@ -1,4 +1,4 @@
-import { Box, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
+import { Box, HStack, Text, VStack } from '@chakra-ui/layout';
 import {
   Button,
   CircularProgress,
@@ -38,6 +38,7 @@ import { useIsAuth } from 'utils/useIsAuth';
 import { CustomAlertDialog } from '../../../components/common/overlays/AlertDialog';
 import { NotAuthenticatedComponent } from '../../../components/NotAuthenticatedComponent';
 import { UserAvatar } from '../../../components/UserAvatar';
+import ModalHeader from '../../../components/common/overlays/ModalHeader';
 import { PostLocationFields } from './PostLocationFields';
 export type PostInputType = CreateMissingPostInput & {
   images: Array<Scalars['Upload']>;
@@ -52,22 +53,6 @@ const initialValues: PostInputType = {
   thumbnailIdx: 0,
   images: [],
 };
-const LocationHeader = React.memo(() => {
-  return (
-    <VStack align='flex-start' mt={4}>
-      <Heading size='md'>Select Location 🌍</Heading>
-      <Text
-        fontSize='.875rem'
-        color={'gray.500'}
-        fontWeight={'medium'}
-        textAlign={'left'}
-      >
-        Select the location where you missed or found the pet on map, Locations
-        are used to send notifications and alerts to nearby users
-      </Text>
-    </VStack>
-  );
-});
 export const NewMissingPostForm: React.FC<{
   closeDrawer: VoidFunction;
 }> = ({ closeDrawer }) => {
@@ -301,7 +286,13 @@ export const NewMissingPostForm: React.FC<{
               </HStack>
               {/* Location modal */}
               <GenericModal
-                title={<LocationHeader />}
+                title={
+                  <ModalHeader
+                    title='Select Location'
+                    subtitle='Select the location where you missed or found the pet on map, Locations
+                are used to send notifications and alerts to nearby users'
+                  />
+                }
                 footer={
                   <HStack align='flex-start'>
                     <Button

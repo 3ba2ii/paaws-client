@@ -22,8 +22,8 @@ const buttons: TapsProps[] = [
   },
 ];
 export const MissingPageTaps: React.FC<{
-  handleSelectFilter: (type: MissingPostTypes) => void;
-}> = ({ handleSelectFilter }) => {
+  handleSelectType: (type: MissingPostTypes) => void;
+}> = ({ handleSelectType }) => {
   /* This component will have 4 basic taps at first
     1. Missing Pets Only
     2. Found Pets
@@ -36,7 +36,7 @@ export const MissingPageTaps: React.FC<{
     setSelectedTap(index);
   };
   useEffect(() => {
-    handleSelectFilter(buttons[selectedTap].types);
+    handleSelectType(buttons[selectedTap].types);
   }, [selectedTap]);
 
   return (
