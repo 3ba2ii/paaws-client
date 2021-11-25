@@ -12,6 +12,7 @@ interface IMissingPageContent {
   fetchMorePosts: VoidFunction;
   data: QueryResult<MissingPostsQuery, OperationVariables>['data'];
   loading: boolean;
+  paginationLoading: boolean;
 }
 
 const PostsLoadingSkeleton: React.FC = () => (
@@ -43,6 +44,7 @@ export const MissingPageContent: React.FC<IMissingPageContent> = ({
   fetchMorePosts,
   data,
   loading,
+  paginationLoading,
 }) => {
   if (!hasLoadedFirstTime) return <PostsLoadingSkeleton />;
 
@@ -57,12 +59,16 @@ export const MissingPageContent: React.FC<IMissingPageContent> = ({
         <PostsOptions />
       </GridItem>
       <GridItem w='100%' h='100%'>
-        <MissingPostsList
-          posts={posts as Array<MissingPost>}
-          fetchMorePosts={fetchMorePosts}
-          hasMore={hasMore}
-          loading={loading}
-        />
+        {loading && !paginationLoading ? (
+          <DummyPostsSkeleton noOfPosts={3} />
+        ) : (
+          <MissingPostsList
+            posts={posts as Array<MissingPost>}
+            fetchMorePosts={fetchMorePosts}
+            hasMore={hasMore}
+            loading={paginationLoading}
+          />
+        )}
       </GridItem>
     </VStack>
   );

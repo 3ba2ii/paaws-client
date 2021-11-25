@@ -21,18 +21,21 @@ const MissingPage = () => {
     MissingPostTypes.All
   );
 
-  const { data, loading, fetchMore, refetch } = useMissingPostsQuery({
-    variables: {
-      input: { limit: 5, cursor: null },
-      length: 120,
-      filters: { date: null, location: null },
-    },
-    notifyOnNetworkStatusChange: true,
+  const { data, loading, fetchMore, refetch, variables } = useMissingPostsQuery(
+    {
+      variables: {
+        input: { limit: 5, cursor: null },
+        length: 120,
+        filters: { date: null, location: null },
+      },
+      notifyOnNetworkStatusChange: true,
 
-    onCompleted: () => {
-      setHasLoaded(true);
-    },
-  });
+      onCompleted: () => {
+        setHasLoaded(true);
+      },
+    }
+  );
+  const [paginationLoading, setPaginationLoading] = useState(false);
 
   const handleSelectType = (type: MissingPostTypes) => {
     refetch({ input: { limit: 5, cursor: null }, length: 120, type });
@@ -52,9 +55,13 @@ const MissingPage = () => {
     if (!hasMore) return;
     const { createdAt: cursor } = missingPosts[missingPosts.length - 1];
     const newVariables = {
+      ...variables,
       input: { limit: 5, cursor },
     };
-    fetchMore({ variables: newVariables });
+    setPaginationLoading(true);
+    fetchMore({ variables: newVariables }).finally(() => {
+      setPaginationLoading(false);
+    });
   };
 
   return (
@@ -78,6 +85,7 @@ const MissingPage = () => {
               fetchMorePosts={fetchMorePosts}
               data={data}
               loading={loading}
+              paginationLoading={paginationLoading}
             />
           </Box>
           <Box display={['none', 'none', 'block']} flex='.15'>
