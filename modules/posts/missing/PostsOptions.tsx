@@ -1,5 +1,5 @@
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
-import { Box, Heading, HStack, VStack } from '@chakra-ui/layout';
+import { Box, HStack, VStack } from '@chakra-ui/layout';
 import {
   Button,
   DrawerProps,
@@ -19,7 +19,7 @@ import {
 import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
 import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
 import GenericModal from 'components/common/overlays/CustomModal';
-import { ModalHeader } from 'components/common/overlays/ModalHeader';
+import ModalHeader from 'components/common/overlays/ModalHeader';
 import { motion } from 'framer-motion';
 import { DateFilters, LocationFilters, useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
@@ -29,7 +29,6 @@ import { CgChevronRight } from 'react-icons/cg';
 import { GoPlus, GoSettings } from 'react-icons/go';
 import { LocationType } from 'types';
 import { DateFiltersObj, LocationFiltersObject } from 'utils/constants/enums';
-import { useIsAuth } from 'utils/useIsAuth';
 import { ActiveTagsComponent } from './ActiveTagsComponent';
 import { NewMissingPostForm } from './CreateMissingPostForm';
 import { FilterSubMenu } from './SubMenuProps';
