@@ -564,6 +564,7 @@ export type Photo = {
 export type PostFilters = {
   date?: Maybe<DateFilters>;
   location?: Maybe<LocationFilterComponents>;
+  order?: Maybe<SortingOrder>;
 };
 
 export type PostImages = {
@@ -674,6 +675,12 @@ export type RegularResponse = {
   errors?: Maybe<Array<FieldError>>;
   success?: Maybe<Scalars['Boolean']>;
 };
+
+/** Sorting Order Filters */
+export enum SortingOrder {
+  Ascending = 'ASCENDING',
+  Descending = 'DESCENDING'
+}
 
 export type UpdateUserInfo = {
   avatar?: Maybe<Scalars['String']>;
