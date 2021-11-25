@@ -14,6 +14,7 @@ import {
   ModalProps,
   Portal,
   Radio,
+  RadioGroup,
   Tab,
   TabList,
   TabPanel,
@@ -219,7 +220,7 @@ const FiltersComponent: React.FC = () => {
   }, [dateFilter, locationFilter]);
   return (
     <HStack w='100%'>
-      <Menu closeOnSelect={false} autoSelect={false}>
+      <Menu closeOnSelect={false} autoSelect={false} isLazy>
         <MenuButton
           as={Button}
           aria-label='Filters'
@@ -231,11 +232,26 @@ const FiltersComponent: React.FC = () => {
           Add Filter
         </MenuButton>
         <Portal>
-          <MenuList>
-            <Tabs>
+          <MenuList
+            boxShadow={'2xl'}
+            borderRadius={'8px'}
+            bg={useColorModeValue('white', 'gray.800')}
+            px={2}
+            pt={3}
+            pb={4}
+            borderColor={useColorModeValue('blackAlpha.100', 'whiteAlpha.100')}
+          >
+            <Tabs isLazy>
               <TabList>
-                <Tab>Date</Tab>
-                <Tab>Location</Tab>
+                <Tab fontSize={'sm'} fontWeight={'medium'}>
+                  Date
+                </Tab>
+                <Tab fontSize={'sm'} fontWeight={'medium'}>
+                  Location
+                </Tab>
+                <Tab fontSize={'sm'} fontWeight={'medium'}>
+                  Order
+                </Tab>
               </TabList>
 
               <TabPanels>
@@ -376,20 +392,23 @@ const CustomTabPanel: React.FC<CustomTabPanelProps> = ({
   options,
   checked,
 }) => {
+  const onChange = (val: DateFilters | LocationFilters) => {
+    handleChange(val);
+  };
   return (
-    <Stack>
-      {options.map(({ key, value }) => (
-        <Radio
-          key={key}
-          value={value}
-          onClick={() => handleChange(value)}
-          fontSize={'sm'}
-          cursor={'pointer'}
-          isChecked={checked === value}
-        >
-          {capitalizeTheFirstLetterOfEachWord(value)}
-        </Radio>
-      ))}
-    </Stack>
+    <RadioGroup onChange={onChange} size={'sm'} fontWeight={'normal'}>
+      <Stack>
+        {options.map(({ key, value }) => (
+          <Radio
+            key={key}
+            value={value}
+            cursor={'pointer'}
+            isChecked={checked === value}
+          >
+            {capitalizeTheFirstLetterOfEachWord(value)}
+          </Radio>
+        ))}
+      </Stack>
+    </RadioGroup>
   );
 };
