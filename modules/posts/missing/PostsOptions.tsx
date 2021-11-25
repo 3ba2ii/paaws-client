@@ -2,20 +2,19 @@ import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
 import { Box, HStack, Stack, VStack } from '@chakra-ui/layout';
 import {
   Button,
-  Checkbox,
   DrawerProps,
   forwardRef,
   IconButton,
   Input,
   Menu,
   MenuButton,
+  MenuButtonProps,
   MenuItem,
-  MenuItemOption,
   MenuList,
   MenuOptionGroup,
+  MenuOptionGroupProps,
   Portal,
   Radio,
-  RadioGroup,
   Tag,
   TagLabel,
   TagRightIcon,
@@ -25,14 +24,14 @@ import {
 } from '@chakra-ui/react';
 import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
 import { motion } from 'framer-motion';
-import { DateFilters, useMeQuery } from 'generated/graphql';
+import { DateFilters, LocationFilters, useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import { MissingPageContext } from 'pages/missing';
 import React, { useContext, useEffect, useState } from 'react';
 import { CgCalendarToday, CgChevronRight, CgGlobe } from 'react-icons/cg';
 import { GoPlus, GoSettings } from 'react-icons/go';
 import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
-import { DateFiltersObj } from 'utils/constants/enums';
+import { DateFiltersObj, LocationFiltersObject } from 'utils/constants/enums';
 import { NewMissingPostForm } from './CreateMissingPostForm';
 const variants = {
   closed: {
@@ -69,11 +68,12 @@ const AnimatedSearchBox = () => {
         ml='auto'
         onClick={toggleShowOptions}
         zIndex={2}
+        size='sm'
       />
       <motion.div
         style={{
           position: 'absolute',
-          width: '90%',
+          width: '93%',
           height: '100%',
           top: '100%',
         }}
@@ -134,8 +134,9 @@ export const PostsOptions: React.FC = () => {
         <Button
           leftIcon={<GoPlus />}
           aria-label='Report Missing Pet'
-          colorScheme='blue'
+          colorScheme='teal'
           onClick={openNewPostModal}
+          size='sm'
           px={6}
         >
           New Post
@@ -186,12 +187,47 @@ const FiltersComponent: React.FC = () => {
         <Portal>
           <MenuList>
             <MenuItem
-              as={DateSubMenu}
+              as={FilterSubMenu}
               handleAddFilter={handleAddFilter}
               options={DateFiltersObj}
               checked={dateFilter}
+              buttonText='Date'
+              menuButtonProps={
+                {
+                  as: Button,
+                  variant: 'ghost',
+                  leftIcon: <CgCalendarToday />,
+                  rightIcon: <CgChevronRight />,
+                  w: '100%',
+                  textAlign: 'left',
+                  borderRadius: 0,
+                  size: 'sm',
+                } as MenuButtonProps
+              }
+              menuOptionGroupProps={{ title: 'Date' } as MenuOptionGroupProps}
             />
-            <MenuItem as={LocationSubMenu} />
+            <MenuItem
+              as={FilterSubMenu}
+              handleAddFilter={handleAddFilter}
+              options={LocationFiltersObject}
+              checked={dateFilter}
+              buttonText='Location'
+              menuButtonProps={
+                {
+                  as: Button,
+                  variant: 'ghost',
+                  leftIcon: <CgGlobe />,
+                  rightIcon: <CgChevronRight />,
+                  w: '100%',
+                  textAlign: 'left',
+                  borderRadius: 0,
+                  size: 'sm',
+                } as MenuButtonProps
+              }
+              menuOptionGroupProps={
+                { title: 'Location' } as MenuOptionGroupProps
+              }
+            />
           </MenuList>
         </Portal>
       </Menu>
@@ -199,7 +235,7 @@ const FiltersComponent: React.FC = () => {
       {dateFilter ? (
         <HStack>
           {[dateFilter].map((filter) => (
-            <Tag colorScheme={'cyan'} boxShadow={'base'}>
+            <Tag colorScheme={'gray'} boxShadow={'base'}>
               <TagLabel>{capitalizeTheFirstLetterOfEachWord(filter)}</TagLabel>
               <Tooltip label='Delete' placement='top'>
                 <TagRightIcon
@@ -231,35 +267,38 @@ const FiltersComponent: React.FC = () => {
   );
 };
 
-interface DateMenuProps {
+interface SubMenuProps {
   handleAddFilter: (filter: DateFilters) => void;
   options: {
     key: string;
     value: DateFilters;
   }[];
-  checked: DateFilters | null;
+  checked: DateFilters | LocationFilters | null;
+  buttonText: string;
+  menuButtonProps?: MenuButtonProps;
+  menuOptionGroupProps?: MenuOptionGroupProps;
 }
 
-const DateSubMenu = forwardRef<DateMenuProps, any>(
-  ({ handleAddFilter, options, checked }, ref) => {
+const FilterSubMenu = forwardRef<SubMenuProps, any>(
+  (
+    {
+      handleAddFilter,
+      buttonText,
+      menuButtonProps,
+      menuOptionGroupProps,
+      options,
+      checked,
+    },
+    ref
+  ) => {
     return (
       <Menu placement='right-start'>
-        <MenuButton
-          as={Button}
-          variant='ghost'
-          leftIcon={<CgCalendarToday />}
-          rightIcon={<CgChevronRight />}
-          ref={ref}
-          w='100%'
-          textAlign={'left'}
-          borderRadius={0}
-          size='sm'
-        >
-          Date
+        <MenuButton ref={ref} {...menuButtonProps}>
+          {buttonText}
         </MenuButton>
         <Portal appendToParentPortal>
           <MenuList>
-            <MenuOptionGroup title='Date' opacity={0.5}>
+            <MenuOptionGroup opacity={0.5} {...menuOptionGroupProps}>
               <Stack pl={4}>
                 {options.map(({ key, value }) => (
                   <Radio
@@ -267,8 +306,8 @@ const DateSubMenu = forwardRef<DateMenuProps, any>(
                     value={value}
                     onClick={() => handleAddFilter(value)}
                     fontSize={'sm'}
-                    isChecked={checked === value}
                     cursor={'pointer'}
+                    isChecked={checked === value}
                   >
                     {capitalizeTheFirstLetterOfEachWord(value)}
                   </Radio>
@@ -281,27 +320,3 @@ const DateSubMenu = forwardRef<DateMenuProps, any>(
     );
   }
 );
-
-const LocationSubMenu = forwardRef((props, ref) => {
-  return (
-    <Menu placement='right-start' autoSelect={false}>
-      <MenuButton
-        as={Button}
-        variant='ghost'
-        borderRadius={0}
-        rightIcon={<CgChevronRight />}
-        leftIcon={<CgGlobe />}
-        ref={ref}
-        {...props}
-        size='sm'
-      >
-        Location
-      </MenuButton>
-      <Portal appendToParentPortal>
-        <MenuList>
-          <MenuItem>New Tap</MenuItem>
-        </MenuList>
-      </Portal>
-    </Menu>
-  );
-});
