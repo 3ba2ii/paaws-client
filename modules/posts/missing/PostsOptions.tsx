@@ -236,7 +236,7 @@ const FiltersComponent: React.FC = () => {
   }, [dateFilter, locationFilter, sortingOrderFilter]);
 
   return (
-    <HStack w='100%'>
+    <HStack w='100%' wrap='wrap' sx={{ gap: '16px' }} justify={'flex-start'}>
       <Menu closeOnSelect={false} autoSelect={false} isLazy>
         <MenuButton
           as={Button}
@@ -307,37 +307,49 @@ const FiltersComponent: React.FC = () => {
           </MenuList>
         </Portal>
       </Menu>
-      <Box h='20px' w='1px' bg={useColorModeValue('gray.300', 'gray.700')} />
       {dateFilter || locationFilter || sortingOrderFilter ? (
-        <>
-          {dateFilter && (
-            <ActiveTagsComponent
-              {...{
-                type: 'date',
-                filters: [dateFilter],
-                handleDeleteFilter,
-              }}
-            />
-          )}
-          {locationFilter && (
-            <ActiveTagsComponent
-              {...{
-                type: 'location',
+        <HStack
+          wrap='wrap'
+          css={{
+            marginInlineStart: '0 !important',
+            gap: '.75rem',
+            '& > *': {
+              marginInlineStart: '0 !important',
+            },
+          }}
+          align='center'
+          justify={'flex-start'}
+        >
+          <>
+            {dateFilter && (
+              <ActiveTagsComponent
+                {...{
+                  type: 'date',
+                  filters: [dateFilter],
+                  handleDeleteFilter,
+                }}
+              />
+            )}
+            {locationFilter && (
+              <ActiveTagsComponent
+                {...{
+                  type: 'location',
 
-                filters: [locationFilter],
-                handleDeleteFilter,
-              }}
-            />
-          )}
-          {sortingOrderFilter && (
-            <ActiveTagsComponent
-              {...{
-                type: 'order',
-                filters: [sortingOrderFilter],
-                handleDeleteFilter,
-              }}
-            />
-          )}
+                  filters: [locationFilter],
+                  handleDeleteFilter,
+                }}
+              />
+            )}
+            {sortingOrderFilter && (
+              <ActiveTagsComponent
+                {...{
+                  type: 'order',
+                  filters: [sortingOrderFilter],
+                  handleDeleteFilter,
+                }}
+              />
+            )}
+          </>
           <Button
             size='xs'
             variant={'ghost'}
@@ -348,7 +360,7 @@ const FiltersComponent: React.FC = () => {
           >
             Clear
           </Button>
-        </>
+        </HStack>
       ) : (
         <Text textStyle={'p1'} fontWeight='normal'>
           No filters applied
