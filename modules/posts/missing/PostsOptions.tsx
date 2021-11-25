@@ -1,5 +1,5 @@
 import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
-import { Box, HStack, VStack } from '@chakra-ui/layout';
+import { Box, Center, Divider, HStack, VStack } from '@chakra-ui/layout';
 import {
   Button,
   DrawerProps,
@@ -26,6 +26,7 @@ import { motion } from 'framer-motion';
 import {
   DateFilters,
   LocationFilters,
+  PostFilters,
   SortingOrder,
   useMeQuery,
 } from 'generated/graphql';
@@ -41,7 +42,7 @@ import {
 } from 'utils/constants/enums';
 import { ActiveTagsComponent } from './ActiveTagsComponent';
 import { NewMissingPostForm } from './CreateMissingPostForm';
-import { CustomTabPanel } from './CustomTabPanelProps';
+import { CustomTabPanel } from './CustomTabPanel';
 const variants = {
   closed: {
     opacity: 0,
@@ -161,24 +162,39 @@ const FiltersComponent: React.FC = () => {
   const { data } = useMeQuery({ fetchPolicy: 'cache-only' });
   const router = useRouter();
 
-  const [dateFilter, setDateFilters] = useState<DateFilters | null>(null);
-  const [locationFilter, setLocationFilter] = useState<LocationFilters | null>(
-    null
-  );
-  const [sortingOrderFilter, setSortingOrderFilter] =
-    useState<SortingOrder | null>(null);
-
   const [locationLatLng, setLocationLatLng] = useState<LocationType>({
     lat: 0,
     lng: 0,
   });
 
+  const [filters, setFilters] = useState<PostFilters>({
+    date: null,
+    location: { lat: null, lng: null, locationFilter: null },
+    order: null,
+  });
+  const [tags, setTags] = useState<{
+    date: DateFilters | null;
+    location: LocationFilters | null;
+    order: SortingOrder | null;
+  }>({
+    date: null,
+    location: null,
+    order: null,
+  });
+
   const [openLocationDialog, setOpenLocationDialog] = useState(false);
   const { handleSelectFilters } = useContext(MissingPageContext);
 
-  const handleAddDateFilter = (filter: DateFilters) => {
-    setDateFilters(filter);
+  const handleAddFilter = (
+    filter: FiltersTypes,
+    type: 'date' | 'location' | 'order'
+  ) => {
+    if (type === 'location')
+      return handleAddLocationFilter(filter as LocationFilters);
+    setFilters({ ...filters, [type]: filter });
+    handleAddTag(filter, type);
   };
+
   const handleAddLocationFilter = (filter: LocationFilters) => {
     if (filter !== LocationFilters.NearCustomLocation) {
       //check if he is logged in
@@ -193,8 +209,15 @@ const FiltersComponent: React.FC = () => {
           //redirect the user to set his location to set the location
           return router.replace('/settings/location?next=' + router.pathname);
         } else {
-          setLocationLatLng({ lat: parseFloat(lat), lng: parseFloat(lng) });
-          setLocationFilter(filter);
+          setFilters({
+            ...filters,
+            location: {
+              lat: parseFloat(lat),
+              lng: parseFloat(lng),
+              locationFilter: filter,
+            },
+          });
+          handleAddTag(filter, 'location');
         }
       }
     } else {
@@ -202,39 +225,29 @@ const FiltersComponent: React.FC = () => {
       setOpenLocationDialog(true);
     }
   };
-  const handleAddOrderFilter = (filter: SortingOrder) => {
-    setSortingOrderFilter(filter);
+
+  const handleAddTag = (
+    filter: FiltersTypes,
+    type: 'date' | 'location' | 'order'
+  ) => {
+    setTags({ ...tags, [type]: filter });
+  };
+  const handleDeleteTag = (type: 'date' | 'location' | 'order') => {
+    setTags({ ...tags, [type]: null });
   };
 
   const handleDeleteFilter = (type: 'date' | 'location' | 'order') => {
-    switch (type) {
-      case 'date':
-        return setDateFilters(null);
-      case 'location':
-        return setLocationFilter(null);
-      case 'order':
-        return setSortingOrderFilter(null);
-    }
+    setFilters({ ...filters, [type]: null });
+    handleDeleteTag(type);
   };
 
   const handleClearAll = () => {
-    setDateFilters(null);
-    setLocationFilter(null);
-    setSortingOrderFilter(null);
+    setFilters({ date: null, location: null, order: null });
+    setTags({ date: null, location: null, order: null });
   };
-  useEffect(() => {
-    handleSelectFilters &&
-      handleSelectFilters({
-        date: dateFilter,
-        order: sortingOrderFilter,
-        location: locationFilter
-          ? { ...locationLatLng, locationFilter }
-          : { lat: null, lng: null, locationFilter: null },
-      });
-  }, [dateFilter, locationFilter, sortingOrderFilter]);
 
-  return (
-    <HStack w='100%' wrap='wrap' sx={{ gap: '16px' }} justify={'flex-start'}>
+  const FiltersMenu = () => {
+    return (
       <Menu closeOnSelect={false} autoSelect={false} isLazy>
         <MenuButton
           as={Button}
@@ -279,24 +292,15 @@ const FiltersComponent: React.FC = () => {
                       key={index}
                       options={options}
                       handleChange={(filter: FiltersTypes) => {
-                        switch (index) {
-                          case 0:
-                            return handleAddDateFilter(filter as DateFilters);
-                          case 1:
-                            return handleAddLocationFilter(
-                              filter as LocationFilters
-                            );
-                          case 2:
-                            return handleAddOrderFilter(filter as SortingOrder);
-                        }
+                        const type =
+                          index === 0
+                            ? 'date'
+                            : index === 1
+                            ? 'location'
+                            : 'order';
+                        handleAddFilter(filter, type);
                       }}
-                      checked={
-                        index === 0
-                          ? dateFilter
-                          : index === 1
-                          ? locationFilter
-                          : sortingOrderFilter
-                      }
+                      checked={null}
                     />
                   </TabPanel>
                 ))}
@@ -305,12 +309,24 @@ const FiltersComponent: React.FC = () => {
           </MenuList>
         </Portal>
       </Menu>
-      {dateFilter || locationFilter || sortingOrderFilter ? (
+    );
+  };
+  useEffect(() => {
+    handleSelectFilters && handleSelectFilters(filters);
+  }, [filters]);
+
+  return (
+    <HStack w='100%' wrap='wrap' sx={{ gap: '8px' }} justify={'flex-start'}>
+      <FiltersMenu />
+      <Center height='25px'>
+        <Divider orientation='vertical' />
+      </Center>
+      {Object.values(tags).some((i) => i !== null) ? (
         <HStack
           wrap='wrap'
           css={{
             marginInlineStart: '0 !important',
-            gap: '.75rem',
+            gap: '8px',
             '& > *': {
               marginInlineStart: '0 !important',
             },
@@ -319,30 +335,30 @@ const FiltersComponent: React.FC = () => {
           justify={'flex-start'}
         >
           <>
-            {dateFilter && (
+            {tags.date && (
               <ActiveTagsComponent
                 {...{
                   type: 'date',
-                  filters: [dateFilter],
+                  filters: [tags.date],
                   handleDeleteFilter,
                 }}
               />
             )}
-            {locationFilter && (
+            {tags.location && (
               <ActiveTagsComponent
                 {...{
                   type: 'location',
 
-                  filters: [locationFilter],
+                  filters: [tags.location],
                   handleDeleteFilter,
                 }}
               />
             )}
-            {sortingOrderFilter && (
+            {tags.order && (
               <ActiveTagsComponent
                 {...{
                   type: 'order',
-                  filters: [sortingOrderFilter],
+                  filters: [tags.order],
                   handleDeleteFilter,
                 }}
               />
@@ -405,7 +421,15 @@ const FiltersComponent: React.FC = () => {
               colorScheme='teal'
               size='sm'
               onClick={() => {
-                setLocationFilter(LocationFilters.NearCustomLocation);
+                setFilters({
+                  ...filters,
+                  location: {
+                    lat: locationLatLng.lat,
+                    lng: locationLatLng.lng,
+                    locationFilter: LocationFilters.NearCustomLocation,
+                  },
+                });
+                handleAddTag(LocationFilters.NearCustomLocation, 'location');
                 setOpenLocationDialog(false);
               }}
             >
