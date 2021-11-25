@@ -74,7 +74,6 @@ const NavBarItems = () => {
     nextFetchPolicy: 'cache-only',
   });
 
-  const [mounted, setMounted] = useState(false);
   const { pathname } = useRouter();
 
   const isLoginScreen = pathname.includes('/login');
