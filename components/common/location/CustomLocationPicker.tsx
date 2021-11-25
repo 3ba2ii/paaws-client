@@ -94,12 +94,12 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
         setUserLocation(currentCoords);
       });
     }
-  }, [handleLocationChange]);
+  }, []);
 
   useEffect(() => {
     //this will be fired when location changes to update the referer
     handleLocationChange && handleLocationChange(userLocation);
-  }, [handleLocationChange]);
+  }, [handleLocationChange, userLocation]);
 
   const GoogleMapComponent = useMemo(
     () => (
