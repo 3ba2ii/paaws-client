@@ -254,7 +254,7 @@ const FiltersComponent: React.FC = () => {
 
   const FiltersMenu = () => {
     return (
-      <Menu closeOnSelect={false} autoSelect={false} isLazy>
+      <Menu autoSelect={false} isLazy closeOnSelect={false}>
         <MenuButton
           as={Button}
           aria-label='Filters'
@@ -306,7 +306,7 @@ const FiltersComponent: React.FC = () => {
                             : 'order';
                         handleAddFilter(filter, type);
                       }}
-                      checked={null}
+                      checked={Object.values(tags)[index]}
                     />
                   </TabPanel>
                 ))}
