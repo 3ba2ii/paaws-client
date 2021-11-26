@@ -42,7 +42,7 @@ const GenericModal = ({
 }: GenericModalProps) => {
   return (
     <>
-      <Modal {...modalProps} isOpen={isOpen} onClose={onClose}>
+      <Modal {...modalProps} isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
           {title && (

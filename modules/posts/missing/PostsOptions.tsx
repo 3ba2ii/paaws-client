@@ -25,6 +25,7 @@ import { LocationFilters, PostFilters, useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import { MissingPageContext } from 'pages/missing';
 import React, { useContext, useEffect, useState } from 'react';
+import { FiChevronRight } from 'react-icons/fi';
 import { GoPlus, GoSettings } from 'react-icons/go';
 import { FiltersTypes, FiltersTypeString, LocationType, TagsType } from 'types';
 import {
@@ -112,6 +113,8 @@ const FiltersComponent: React.FC = () => {
   });
 
   const [openLocationDialog, setOpenLocationDialog] = useState(false);
+  const [openUpdateLocationDialog, setOpenUpdateLocationDialog] =
+    useState(false);
   const { handleSelectFilters } = useContext(MissingPageContext);
 
   const handleAddFilter = (filter: FiltersTypes, type: FiltersTypeString) => {
@@ -132,7 +135,7 @@ const FiltersComponent: React.FC = () => {
 
       if (!lat || !lng) {
         //redirect the user to set his location and then comeback
-        return router.replace('/settings/location?next=' + router.pathname);
+        return setOpenUpdateLocationDialog(true);
       }
       //then the user has a location stored
       setFilters({
@@ -155,6 +158,19 @@ const FiltersComponent: React.FC = () => {
 
   const handleClearAll = () => {
     setFilters({ date: null, location: null, order: null });
+  };
+  const handleSelectLocationOnMap = () => {
+    //set the filter
+    setFilters({
+      ...filters,
+      location: {
+        lat: locationLatLng.lat,
+        lng: locationLatLng.lng,
+        locationFilter: LocationFilters.NearCustomLocation,
+      },
+    });
+    //close the dialog
+    setOpenLocationDialog(false);
   };
   const getNewTags = (): TagsType => {
     let newTags: any = { date: null, location: null, order: null };
@@ -327,19 +343,7 @@ const FiltersComponent: React.FC = () => {
               w={'100%'}
               colorScheme='teal'
               size='sm'
-              onClick={() => {
-                //set the filter
-                setFilters({
-                  ...filters,
-                  location: {
-                    lat: locationLatLng.lat,
-                    lng: locationLatLng.lng,
-                    locationFilter: LocationFilters.NearCustomLocation,
-                  },
-                });
-                //close the dialog
-                setOpenLocationDialog(false);
-              }}
+              onClick={handleSelectLocationOnMap}
             >
               Confirm Location
             </Button>
@@ -348,6 +352,46 @@ const FiltersComponent: React.FC = () => {
         isOpen={openLocationDialog}
         modalProps={{ size: 'xl' } as ModalProps}
         onClose={() => setOpenLocationDialog(false)}
+      />
+      <GenericModal
+        isOpen={openUpdateLocationDialog}
+        title={
+          <ModalHeader
+            title='Update Location'
+            subtitle='Please update your location first and then comeback'
+          />
+        }
+        body={
+          <Text as='p' textStyle={'p1'} color={'inherit'} fontWeight={'normal'}>
+            We don't have a stored location of you, so please update your
+            location and comeback.
+          </Text>
+        }
+        onClose={() => setOpenUpdateLocationDialog(false)}
+        modalProps={{ size: 'md' } as ModalProps}
+        footer={
+          <HStack align='flex-start'>
+            <Button
+              mr={3}
+              variant='ghost'
+              size='sm'
+              onClick={() => setOpenUpdateLocationDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              size='sm'
+              w={'100%'}
+              colorScheme='teal'
+              rightIcon={<FiChevronRight />}
+              onClick={() =>
+                router.replace('/settings/location?next=' + router.pathname)
+              }
+            >
+              Update my location
+            </Button>
+          </HStack>
+        }
       />
     </HStack>
   );

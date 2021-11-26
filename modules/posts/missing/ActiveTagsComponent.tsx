@@ -17,7 +17,7 @@ import {
   FiFilter,
   FiMapPin,
 } from 'react-icons/fi';
-import { FiltersTypeString, FiltersTypes } from 'types';
+import { FiltersTypes, FiltersTypeString } from 'types';
 import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
 
 export const ActiveTagsComponent: React.FC<{
@@ -34,7 +34,6 @@ export const ActiveTagsComponent: React.FC<{
       case 'location':
         icon = FiMapPin;
         break;
-
       case 'order':
         icon = filters[0] === SortingOrder.Ascending ? FiArrowUp : FiArrowDown;
         break;
