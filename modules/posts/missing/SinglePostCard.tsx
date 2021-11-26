@@ -5,9 +5,9 @@ import { formatDistance } from 'date-fns';
 import { Maybe, MissingPostTags, Photo } from 'generated/graphql';
 import React, { useMemo } from 'react';
 import { fallbackSrc } from 'utils/constants';
-import { PostActions } from './PostActions';
-import { PostTags } from '../common/PostTags';
 import { rgbDataURL } from 'utils/rgbDataURL';
+import { PostTags } from '../common/PostTags';
+import { PostActions } from './PostActions';
 
 interface SinglePostCardProps {
   id: number;
@@ -86,9 +86,9 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
       borderColor={useColorModeValue('gray.200', 'gray.700')}
       w='100%'
       h='100%'
-      borderRadius={'8px'}
+      borderRadius={'6px'}
       overflow='hidden'
-      bg={useColorModeValue('whiteAlpha.600', 'blackAlpha.200')}
+      bg={useColorModeValue('whiteAlpha.500', 'blackAlpha.200')}
     >
       <Box
         w={['clamp(250px, 100%, minmax(350px,100%))', '100%', '250px']}
