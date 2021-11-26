@@ -21,7 +21,7 @@ export const Layout = ({
 }: ContainerProps) => {
   const { colorMode } = useColorMode();
 
-  const bgColor = { light: 'white', dark: 'gray.900' };
+  const bgColor = { light: '#F8F8FA4D;', dark: 'gray.800' };
 
   const color = { light: 'gray.700', dark: 'white' };
 
@@ -50,6 +50,7 @@ export const Layout = ({
           position={'fixed'}
           h='84px'
           top='0'
+          boxShadow={'sm'}
         >
           <NavBar />
         </Box>

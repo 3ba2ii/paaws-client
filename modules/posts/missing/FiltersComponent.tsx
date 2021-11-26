@@ -329,7 +329,7 @@ export const FiltersComponent: React.FC = () => {
                 router.replace('/settings/location?next=' + router.pathname)
               }
             >
-              Update my location
+              Set my location
             </Button>
           </HStack>
         }
