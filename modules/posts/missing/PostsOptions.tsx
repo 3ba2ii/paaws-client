@@ -1,10 +1,8 @@
-import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
+import { CloseIcon } from '@chakra-ui/icons';
 import { Box, Center, Divider, HStack, VStack } from '@chakra-ui/layout';
 import {
   Button,
   DrawerProps,
-  IconButton,
-  Input,
   Menu,
   MenuButton,
   MenuList,
@@ -23,14 +21,7 @@ import CustomLocationPicker from 'components/common/location/CustomLocationPicke
 import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
 import GenericModal from 'components/common/overlays/CustomModal';
 import ModalHeader from 'components/common/overlays/ModalHeader';
-import { motion } from 'framer-motion';
-import {
-  DateFilters,
-  LocationFilters,
-  PostFilters,
-  SortingOrder,
-  useMeQuery,
-} from 'generated/graphql';
+import { LocationFilters, PostFilters, useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import { MissingPageContext } from 'pages/missing';
 import React, { useContext, useEffect, useState } from 'react';
@@ -171,8 +162,7 @@ const FiltersComponent: React.FC = () => {
       if (value !== null) {
         if (key === 'location') {
           //@ts-ignore
-          const filter = value['locationFilter'] as LocationFilters;
-          newTags[key] = filter;
+          newTags[key] = value.locationFilter;
           return;
         }
         newTags[key] = value as FiltersTypes;
@@ -233,12 +223,10 @@ const FiltersComponent: React.FC = () => {
                       key={index}
                       options={options}
                       handleChange={(filter: FiltersTypes) => {
-                        const type =
-                          index === 0
-                            ? 'date'
-                            : index === 1
-                            ? 'location'
-                            : 'order';
+                        const type = Object.keys(filters)[
+                          index
+                        ] as FiltersTypeString;
+
                         handleAddFilter(filter, type);
                       }}
                       checked={Object.values(tags)[index]}
