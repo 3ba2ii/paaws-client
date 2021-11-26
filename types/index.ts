@@ -1,3 +1,5 @@
+import { DateFilters, LocationFilters, SortingOrder } from 'generated/graphql';
+
 export type LocationType = {
   lat: number;
   lng: number;
@@ -9,3 +11,12 @@ export declare type Libraries = (
   | 'places'
   | 'visualization'
 )[];
+
+export type FiltersTypes = DateFilters | LocationFilters | SortingOrder;
+export type FiltersTypeString = 'date' | 'location' | 'order';
+
+export type TagsType = {
+  date: DateFilters | null;
+  location: LocationFilters | null;
+  order: SortingOrder | null;
+};

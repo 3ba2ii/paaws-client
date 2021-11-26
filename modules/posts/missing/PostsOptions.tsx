@@ -1,10 +1,8 @@
-import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
+import { CloseIcon } from '@chakra-ui/icons';
 import { Box, Center, Divider, HStack, VStack } from '@chakra-ui/layout';
 import {
   Button,
   DrawerProps,
-  IconButton,
-  Input,
   Menu,
   MenuButton,
   MenuList,
@@ -18,23 +16,18 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { AnimatedSearchBox } from 'components/common/input/AnimatedSearchBox';
 import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
 import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
 import GenericModal from 'components/common/overlays/CustomModal';
 import ModalHeader from 'components/common/overlays/ModalHeader';
-import { motion } from 'framer-motion';
-import {
-  DateFilters,
-  LocationFilters,
-  PostFilters,
-  SortingOrder,
-  useMeQuery,
-} from 'generated/graphql';
+import { LocationFilters, PostFilters, useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import { MissingPageContext } from 'pages/missing';
 import React, { useContext, useEffect, useState } from 'react';
+import { FiChevronRight } from 'react-icons/fi';
 import { GoPlus, GoSettings } from 'react-icons/go';
-import { LocationType } from 'types';
+import { FiltersTypes, FiltersTypeString, LocationType, TagsType } from 'types';
 import {
   DateFiltersObj,
   LocationFiltersObject,
@@ -43,64 +36,6 @@ import {
 import { ActiveTagsComponent } from './ActiveTagsComponent';
 import { NewMissingPostForm } from './CreateMissingPostForm';
 import { CustomTabPanel } from './CustomTabPanel';
-const variants = {
-  closed: {
-    opacity: 0,
-    x: '98%',
-    y: '-100%',
-  },
-  open: {
-    opacity: 1,
-    x: '0',
-    y: '-100%',
-  },
-};
-
-const AnimatedSearchBox = () => {
-  const [showOptions, setShowOptions] = useState(false);
-
-  const toggleShowOptions = () => {
-    setShowOptions(!showOptions);
-  };
-  return (
-    <Box
-      position='relative'
-      w='100%'
-      display='flex'
-      align='flex-start'
-      justify='flex-start'
-      overflow='hidden'
-    >
-      <IconButton
-        aria-label='Search Icon'
-        icon={<SearchIcon />}
-        colorScheme='gray'
-        ml='auto'
-        onClick={toggleShowOptions}
-        zIndex={2}
-        size='sm'
-      />
-      <motion.div
-        style={{
-          position: 'absolute',
-          width: '93%',
-          height: '100%',
-          top: '100%',
-        }}
-        animate={showOptions ? 'open' : 'closed'}
-        variants={variants as any}
-      >
-        <Input
-          w='100%'
-          shadow='base'
-          variant='filled'
-          placeholder='Search for post title, pet type or just description'
-          zIndex={1}
-        />
-      </motion.div>
-    </Box>
-  );
-};
 
 export const PostsOptions: React.FC = () => {
   const { data: loggedInUser, loading } = useMeQuery({
@@ -156,8 +91,6 @@ export const PostsOptions: React.FC = () => {
     </VStack>
   );
 };
-export type FiltersTypes = DateFilters | LocationFilters | SortingOrder;
-export type FiltersTypeString = 'date' | 'location' | 'order';
 
 const FiltersComponent: React.FC = () => {
   const { data } = useMeQuery({ fetchPolicy: 'cache-only' });
@@ -167,37 +100,27 @@ const FiltersComponent: React.FC = () => {
     lat: 0,
     lng: 0,
   });
-
   const [filters, setFilters] = useState<PostFilters>({
     date: null,
     location: { lat: null, lng: null, locationFilter: null },
     order: null,
   });
-  const [tags, setTags] = useState<{
-    date: DateFilters | null;
-    location: LocationFilters | null;
-    order: SortingOrder | null;
-  }>({
+
+  const [tags, setTags] = useState<TagsType>({
     date: null,
     location: null,
     order: null,
   });
 
-  console.log(
-    `🚀 ~ file: PostsOptions.tsx ~ line 185 ~`,
-    Object.entries(tags).filter(
-      ([key, value]) => value !== null && { key, value }
-    )
-  );
-
   const [openLocationDialog, setOpenLocationDialog] = useState(false);
+  const [openUpdateLocationDialog, setOpenUpdateLocationDialog] =
+    useState(false);
   const { handleSelectFilters } = useContext(MissingPageContext);
 
   const handleAddFilter = (filter: FiltersTypes, type: FiltersTypeString) => {
     if (type === 'location')
       return handleAddLocationFilter(filter as LocationFilters);
     setFilters({ ...filters, [type]: filter });
-    handleAddTag(filter, type);
   };
 
   const handleAddLocationFilter = (filter: LocationFilters) => {
@@ -206,55 +129,73 @@ const FiltersComponent: React.FC = () => {
       if (!data || !data.me) {
         //not logged in -> log in and comeback
         return router.replace('/login?next=' + router.pathname);
-      } else {
-        //check the user has a location stored
-        const { lat, lng } = data.me;
-
-        if (!lat || !lng) {
-          //redirect the user to set his location to set the location
-          return router.replace('/settings/location?next=' + router.pathname);
-        } else {
-          setFilters({
-            ...filters,
-            location: {
-              lat: parseFloat(lat),
-              lng: parseFloat(lng),
-              locationFilter: filter,
-            },
-          });
-          handleAddTag(filter, 'location');
-        }
       }
+      //check the user has a location stored
+      const { lat, lng } = data.me;
+
+      if (!lat || !lng) {
+        //redirect the user to set his location and then comeback
+        return setOpenUpdateLocationDialog(true);
+      }
+      //then the user has a location stored
+      setFilters({
+        ...filters,
+        location: {
+          lat: parseFloat(lat),
+          lng: parseFloat(lng),
+          locationFilter: filter,
+        },
+      });
     } else {
-      //1. open a dialog to select the location on map
+      //open a dialog to select the location on map
       setOpenLocationDialog(true);
     }
   };
 
-  const handleAddTag = (filter: FiltersTypes, type: FiltersTypeString) => {
-    setTags({ ...tags, [type]: filter });
-  };
-  const handleDeleteTag = (type: FiltersTypeString) => {
-    setTags({ ...tags, [type]: null });
-  };
-
   const handleDeleteFilter = (type: FiltersTypeString) => {
     setFilters({ ...filters, [type]: null });
-    handleDeleteTag(type);
   };
 
   const handleClearAll = () => {
     setFilters({ date: null, location: null, order: null });
-    setTags({ date: null, location: null, order: null });
+  };
+  const handleSelectLocationOnMap = () => {
+    //set the filter
+    setFilters({
+      ...filters,
+      location: {
+        lat: locationLatLng.lat,
+        lng: locationLatLng.lng,
+        locationFilter: LocationFilters.NearCustomLocation,
+      },
+    });
+    //close the dialog
+    setOpenLocationDialog(false);
+  };
+  const getNewTags = (): TagsType => {
+    let newTags: any = { date: null, location: null, order: null };
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== null) {
+        if (key === 'location') {
+          //@ts-ignore
+          newTags[key] = value.locationFilter;
+          return;
+        }
+        newTags[key] = value as FiltersTypes;
+      }
+    });
+    return newTags as TagsType;
   };
 
   useEffect(() => {
+    setTags(getNewTags());
+
     handleSelectFilters && handleSelectFilters(filters);
   }, [filters]);
 
   const FiltersMenu = () => {
     return (
-      <Menu closeOnSelect={false} autoSelect={false} isLazy>
+      <Menu autoSelect={false} isLazy closeOnSelect={false}>
         <MenuButton
           as={Button}
           aria-label='Filters'
@@ -276,13 +217,13 @@ const FiltersComponent: React.FC = () => {
           >
             <Tabs isLazy>
               <TabList>
-                <Tab fontSize={'sm'} fontWeight={'medium'}>
+                <Tab fontSize='sm' fontWeight='medium'>
                   Date
                 </Tab>
-                <Tab fontSize={'sm'} fontWeight={'medium'}>
+                <Tab fontSize='sm' fontWeight='medium'>
                   Location
                 </Tab>
-                <Tab fontSize={'sm'} fontWeight={'medium'}>
+                <Tab fontSize='sm' fontWeight='medium'>
                   Order
                 </Tab>
               </TabList>
@@ -298,15 +239,13 @@ const FiltersComponent: React.FC = () => {
                       key={index}
                       options={options}
                       handleChange={(filter: FiltersTypes) => {
-                        const type =
-                          index === 0
-                            ? 'date'
-                            : index === 1
-                            ? 'location'
-                            : 'order';
+                        const type = Object.keys(filters)[
+                          index
+                        ] as FiltersTypeString;
+
                         handleAddFilter(filter, type);
                       }}
-                      checked={null}
+                      checked={Object.values(tags)[index]}
                     />
                   </TabPanel>
                 ))}
@@ -404,21 +343,7 @@ const FiltersComponent: React.FC = () => {
               w={'100%'}
               colorScheme='teal'
               size='sm'
-              onClick={() => {
-                //set the filter
-                setFilters({
-                  ...filters,
-                  location: {
-                    lat: locationLatLng.lat,
-                    lng: locationLatLng.lng,
-                    locationFilter: LocationFilters.NearCustomLocation,
-                  },
-                });
-                //add its tag
-                handleAddTag(LocationFilters.NearCustomLocation, 'location');
-                //close the dialog
-                setOpenLocationDialog(false);
-              }}
+              onClick={handleSelectLocationOnMap}
             >
               Confirm Location
             </Button>
@@ -427,6 +352,46 @@ const FiltersComponent: React.FC = () => {
         isOpen={openLocationDialog}
         modalProps={{ size: 'xl' } as ModalProps}
         onClose={() => setOpenLocationDialog(false)}
+      />
+      <GenericModal
+        isOpen={openUpdateLocationDialog}
+        title={
+          <ModalHeader
+            title='Update Location'
+            subtitle='Please update your location first and then comeback'
+          />
+        }
+        body={
+          <Text as='p' textStyle={'p1'} color={'inherit'} fontWeight={'normal'}>
+            We don't have a stored location of you, so please update your
+            location and comeback.
+          </Text>
+        }
+        onClose={() => setOpenUpdateLocationDialog(false)}
+        modalProps={{ size: 'md' } as ModalProps}
+        footer={
+          <HStack align='flex-start'>
+            <Button
+              mr={3}
+              variant='ghost'
+              size='sm'
+              onClick={() => setOpenUpdateLocationDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              size='sm'
+              w={'100%'}
+              colorScheme='teal'
+              rightIcon={<FiChevronRight />}
+              onClick={() =>
+                router.replace('/settings/location?next=' + router.pathname)
+              }
+            >
+              Update my location
+            </Button>
+          </HStack>
+        }
       />
     </HStack>
   );

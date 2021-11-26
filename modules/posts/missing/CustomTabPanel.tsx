@@ -1,8 +1,8 @@
 import { Stack } from '@chakra-ui/layout';
-import { Radio, RadioGroup } from '@chakra-ui/react';
+import { Radio } from '@chakra-ui/react';
 import React from 'react';
+import { FiltersTypes } from 'types';
 import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
-import { FiltersTypes } from './PostsOptions';
 
 interface CustomTabPanelProps {
   handleChange: (filter: FiltersTypes) => void;
@@ -17,23 +17,20 @@ export const CustomTabPanel: React.FC<CustomTabPanelProps> = ({
   options,
   checked,
 }) => {
-  const onChange = (val: FiltersTypes) => {
-    handleChange(val);
-  };
   return (
-    <RadioGroup size={'sm'} fontWeight={'normal'} onChange={onChange}>
-      <Stack>
-        {options.map(({ key, value }) => (
-          <Radio
-            key={key}
-            value={value}
-            cursor={'pointer'}
-            isChecked={checked === value}
-          >
-            {capitalizeTheFirstLetterOfEachWord(value)}
-          </Radio>
-        ))}
-      </Stack>
-    </RadioGroup>
+    <Stack>
+      {options.map(({ key, value }) => (
+        <Radio
+          key={key}
+          value={value}
+          cursor={'pointer'}
+          onClick={() => handleChange(value)}
+          isChecked={value === checked}
+          size='sm'
+        >
+          {capitalizeTheFirstLetterOfEachWord(value)}
+        </Radio>
+      ))}
+    </Stack>
   );
 };
