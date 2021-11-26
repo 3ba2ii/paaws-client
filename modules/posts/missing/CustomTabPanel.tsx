@@ -1,9 +1,8 @@
 import { Stack } from '@chakra-ui/layout';
-import { Radio, RadioGroup } from '@chakra-ui/react';
-import { DateFilters } from 'generated/graphql';
+import { Radio } from '@chakra-ui/react';
 import React from 'react';
+import { FiltersTypes } from 'types';
 import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
-import { FiltersTypes } from './PostsOptions';
 
 interface CustomTabPanelProps {
   handleChange: (filter: FiltersTypes) => void;

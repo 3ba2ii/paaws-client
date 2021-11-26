@@ -18,6 +18,7 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
+import { AnimatedSearchBox } from 'components/common/input/AnimatedSearchBox';
 import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
 import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
 import GenericModal from 'components/common/overlays/CustomModal';
@@ -34,7 +35,7 @@ import { useRouter } from 'next/router';
 import { MissingPageContext } from 'pages/missing';
 import React, { useContext, useEffect, useState } from 'react';
 import { GoPlus, GoSettings } from 'react-icons/go';
-import { LocationType } from 'types';
+import { FiltersTypes, FiltersTypeString, LocationType, TagsType } from 'types';
 import {
   DateFiltersObj,
   LocationFiltersObject,
@@ -43,64 +44,6 @@ import {
 import { ActiveTagsComponent } from './ActiveTagsComponent';
 import { NewMissingPostForm } from './CreateMissingPostForm';
 import { CustomTabPanel } from './CustomTabPanel';
-const variants = {
-  closed: {
-    opacity: 0,
-    x: '98%',
-    y: '-100%',
-  },
-  open: {
-    opacity: 1,
-    x: '0',
-    y: '-100%',
-  },
-};
-
-const AnimatedSearchBox = () => {
-  const [showOptions, setShowOptions] = useState(false);
-
-  const toggleShowOptions = () => {
-    setShowOptions(!showOptions);
-  };
-  return (
-    <Box
-      position='relative'
-      w='100%'
-      display='flex'
-      align='flex-start'
-      justify='flex-start'
-      overflow='hidden'
-    >
-      <IconButton
-        aria-label='Search Icon'
-        icon={<SearchIcon />}
-        colorScheme='gray'
-        ml='auto'
-        onClick={toggleShowOptions}
-        zIndex={2}
-        size='sm'
-      />
-      <motion.div
-        style={{
-          position: 'absolute',
-          width: '93%',
-          height: '100%',
-          top: '100%',
-        }}
-        animate={showOptions ? 'open' : 'closed'}
-        variants={variants as any}
-      >
-        <Input
-          w='100%'
-          shadow='base'
-          variant='filled'
-          placeholder='Search for post title, pet type or just description'
-          zIndex={1}
-        />
-      </motion.div>
-    </Box>
-  );
-};
 
 export const PostsOptions: React.FC = () => {
   const { data: loggedInUser, loading } = useMeQuery({
@@ -156,8 +99,6 @@ export const PostsOptions: React.FC = () => {
     </VStack>
   );
 };
-export type FiltersTypes = DateFilters | LocationFilters | SortingOrder;
-export type FiltersTypeString = 'date' | 'location' | 'order';
 
 const FiltersComponent: React.FC = () => {
   const { data } = useMeQuery({ fetchPolicy: 'cache-only' });
@@ -167,28 +108,17 @@ const FiltersComponent: React.FC = () => {
     lat: 0,
     lng: 0,
   });
-
   const [filters, setFilters] = useState<PostFilters>({
     date: null,
     location: { lat: null, lng: null, locationFilter: null },
     order: null,
   });
-  const [tags, setTags] = useState<{
-    date: DateFilters | null;
-    location: LocationFilters | null;
-    order: SortingOrder | null;
-  }>({
+
+  const [tags, setTags] = useState<TagsType>({
     date: null,
     location: null,
     order: null,
   });
-
-  console.log(
-    `🚀 ~ file: PostsOptions.tsx ~ line 185 ~`,
-    Object.entries(tags).filter(
-      ([key, value]) => value !== null && { key, value }
-    )
-  );
 
   const [openLocationDialog, setOpenLocationDialog] = useState(false);
   const { handleSelectFilters } = useContext(MissingPageContext);
@@ -197,7 +127,6 @@ const FiltersComponent: React.FC = () => {
     if (type === 'location')
       return handleAddLocationFilter(filter as LocationFilters);
     setFilters({ ...filters, [type]: filter });
-    handleAddTag(filter, type);
   };
 
   const handleAddLocationFilter = (filter: LocationFilters) => {
@@ -206,49 +135,55 @@ const FiltersComponent: React.FC = () => {
       if (!data || !data.me) {
         //not logged in -> log in and comeback
         return router.replace('/login?next=' + router.pathname);
-      } else {
-        //check the user has a location stored
-        const { lat, lng } = data.me;
-
-        if (!lat || !lng) {
-          //redirect the user to set his location to set the location
-          return router.replace('/settings/location?next=' + router.pathname);
-        } else {
-          setFilters({
-            ...filters,
-            location: {
-              lat: parseFloat(lat),
-              lng: parseFloat(lng),
-              locationFilter: filter,
-            },
-          });
-          handleAddTag(filter, 'location');
-        }
       }
+      //check the user has a location stored
+      const { lat, lng } = data.me;
+
+      if (!lat || !lng) {
+        //redirect the user to set his location and then comeback
+        return router.replace('/settings/location?next=' + router.pathname);
+      }
+      //then the user has a location stored
+      setFilters({
+        ...filters,
+        location: {
+          lat: parseFloat(lat),
+          lng: parseFloat(lng),
+          locationFilter: filter,
+        },
+      });
     } else {
-      //1. open a dialog to select the location on map
+      //open a dialog to select the location on map
       setOpenLocationDialog(true);
     }
   };
 
-  const handleAddTag = (filter: FiltersTypes, type: FiltersTypeString) => {
-    setTags({ ...tags, [type]: filter });
-  };
-  const handleDeleteTag = (type: FiltersTypeString) => {
-    setTags({ ...tags, [type]: null });
-  };
-
   const handleDeleteFilter = (type: FiltersTypeString) => {
     setFilters({ ...filters, [type]: null });
-    handleDeleteTag(type);
   };
 
   const handleClearAll = () => {
     setFilters({ date: null, location: null, order: null });
-    setTags({ date: null, location: null, order: null });
+  };
+  const getNewTags = (): TagsType => {
+    let newTags: any = { date: null, location: null, order: null };
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== null) {
+        if (key === 'location') {
+          //@ts-ignore
+          const filter = value['locationFilter'] as LocationFilters;
+          newTags[key] = filter;
+          return;
+        }
+        newTags[key] = value as FiltersTypes;
+      }
+    });
+    return newTags as TagsType;
   };
 
   useEffect(() => {
+    setTags(getNewTags());
+
     handleSelectFilters && handleSelectFilters(filters);
   }, [filters]);
 
@@ -276,13 +211,13 @@ const FiltersComponent: React.FC = () => {
           >
             <Tabs isLazy>
               <TabList>
-                <Tab fontSize={'sm'} fontWeight={'medium'}>
+                <Tab fontSize='sm' fontWeight='medium'>
                   Date
                 </Tab>
-                <Tab fontSize={'sm'} fontWeight={'medium'}>
+                <Tab fontSize='sm' fontWeight='medium'>
                   Location
                 </Tab>
-                <Tab fontSize={'sm'} fontWeight={'medium'}>
+                <Tab fontSize='sm' fontWeight='medium'>
                   Order
                 </Tab>
               </TabList>
@@ -414,8 +349,6 @@ const FiltersComponent: React.FC = () => {
                     locationFilter: LocationFilters.NearCustomLocation,
                   },
                 });
-                //add its tag
-                handleAddTag(LocationFilters.NearCustomLocation, 'location');
                 //close the dialog
                 setOpenLocationDialog(false);
               }}
