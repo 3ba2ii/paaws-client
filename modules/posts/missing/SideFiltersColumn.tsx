@@ -61,7 +61,7 @@ export const SideFiltersColumn: React.FC<{
       position='relative'
     >
       <MissingPageTaps handleSelectType={handleSelectType} />
-      <RecommendAdoptionCard />
+      {/* <RecommendAdoptionCard /> */}
     </Flex>
   );
 };

@@ -5,7 +5,7 @@ export const SideFooter: React.FC = ({ children }) => {
   return (
     <VStack align='flex-start' w='100%' spacing={5}>
       {children}
-      <VStack spacing={3} color='white' textStyle='p2'>
+      <VStack spacing={3} color='inherit' textStyle='p2'>
         <SimpleGrid w='100%' columns={2} spacing={3}>
           <Link>Help</Link>
           <Link>About</Link>
