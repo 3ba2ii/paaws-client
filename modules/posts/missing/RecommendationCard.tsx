@@ -87,7 +87,7 @@ const NoAdoptionPostsContainer: React.FC = () => {
         </Text>
       </Box>
       <Button size='sm' colorScheme={'teal'} w='80%' variant='ghost'>
-        Offer a Pet
+        Offer your pet
       </Button>
     </VStack>
   );

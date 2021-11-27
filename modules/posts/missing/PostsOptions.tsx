@@ -29,7 +29,7 @@ export const PostsOptions: React.FC = () => {
   };
 
   return (
-    <VStack spacing={4}>
+    <VStack spacing={2}>
       <HStack
         w='100%'
         justify='flex-end'
