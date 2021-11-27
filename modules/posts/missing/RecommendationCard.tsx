@@ -80,7 +80,7 @@ const NoAdoptionPostsContainer: React.FC = () => {
           textAlign={'center'}
           mb={1}
         >
-          No pets for adoption
+          All Pet are Adopted 🎉
         </Heading>
         <Text textStyle='p1' fontSize={'sm'} maxW='26ch'>
           Click the button below to offer one of your pets for adoption.
@@ -95,7 +95,6 @@ const NoAdoptionPostsContainer: React.FC = () => {
 export const RecommendationCardContainer: React.FC = () => {
   const { data, loading } = useAdoptionPostsQuery({ variables: { limit: 5 } });
   const noPosts = data && !data?.adoptionPosts?.posts.length;
-  console.log(`🚀 ~ file: RecommendationCard.tsx ~ line 9 ~ data`, data);
 
   const displayContent = () => {
     if (loading)
