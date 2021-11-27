@@ -1,4 +1,10 @@
-import { Box, Container, Flex, useColorMode } from '@chakra-ui/react';
+import {
+  Box,
+  Container,
+  Flex,
+  useColorMode,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import styles from '../styles/Home.module.css';
@@ -44,11 +50,11 @@ export const Layout = ({
       >
         <Box
           px='inherit'
-          bg='inherit'
+          bg={useColorModeValue('white', 'inherit')}
           zIndex={50}
           w='100%'
-          position={'fixed'}
           h='84px'
+          position={'fixed'}
           top='0'
           boxShadow={'sm'}
         >
