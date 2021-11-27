@@ -1,7 +1,9 @@
-import { Box, Flex, VStack, Text, Heading, Divider } from '@chakra-ui/layout';
-import { Button, Image } from '@chakra-ui/react';
-import { MissingPostTypes } from 'generated/graphql';
+import { Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
+import { Button, IconButton, Image } from '@chakra-ui/react';
+import { UserAvatar } from 'components/UserAvatar';
+import { MissingPostTypes, useMeQuery } from 'generated/graphql';
 import React from 'react';
+import { BsThreeDots } from 'react-icons/bs';
 import { MissingPageTaps } from './MissingPageTaps';
 
 export const RecommendAdoptionCard = () => {
@@ -50,6 +52,8 @@ export const RecommendAdoptionCard = () => {
 export const SideFiltersColumn: React.FC<{
   handleSelectType: (type: MissingPostTypes) => void;
 }> = ({ handleSelectType }) => {
+  const { data } = useMeQuery({ fetchPolicy: 'cache-only' });
+  const user = data?.me;
   return (
     <Flex
       w='100%'
@@ -62,6 +66,45 @@ export const SideFiltersColumn: React.FC<{
     >
       <MissingPageTaps handleSelectType={handleSelectType} />
       {/* <RecommendAdoptionCard /> */}
+      {!user ? null : (
+        <Box
+          h='100%'
+          w='100%'
+          pos='relative'
+          display={['none', 'none', 'none', 'none', 'block']}
+        >
+          <Button
+            variant='ghost'
+            w='100%'
+            pos='absolute'
+            bottom='1rem'
+            rounded={'full'}
+            h='64px'
+          >
+            <HStack w='100%'>
+              <UserAvatar />
+              <VStack
+                align='flex-start'
+                spacing={1}
+                display={['none', 'none', 'none', 'flex']}
+              >
+                <Text fontWeight={'semibold'} color='inherit'>
+                  {user.displayName}
+                </Text>
+                <Text fontSize={'sm'} color='gray.500' isTruncated maxW='12ch'>
+                  {user.email}
+                </Text>
+              </VStack>
+              <IconButton
+                aria-label='three-dots'
+                variant='unstyled'
+                display={['none', 'none', 'none', 'block']}
+                icon={<BsThreeDots />}
+              />
+            </HStack>
+          </Button>
+        </Box>
+      )}
     </Flex>
   );
 };

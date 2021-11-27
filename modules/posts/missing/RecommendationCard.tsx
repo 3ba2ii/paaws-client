@@ -80,7 +80,7 @@ const NoAdoptionPostsContainer: React.FC = () => {
           textAlign={'center'}
           mb={1}
         >
-          All Pet are Adopted 🎉
+          All Pets are Adopted 🎉
         </Heading>
         <Text textStyle='p1' fontSize={'sm'} maxW='26ch'>
           Click the button below to offer one of your pets for adoption.
@@ -111,8 +111,8 @@ export const RecommendationCardContainer: React.FC = () => {
     return (
       <VStack spacing={5}>
         <VStack divider={<Divider />} w='100%'>
-          {[1, 2].map((_) => (
-            <RecommendationCard />
+          {[1, 2].map((_, index) => (
+            <RecommendationCard key={index} />
           ))}
         </VStack>
         <Button

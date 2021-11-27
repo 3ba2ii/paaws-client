@@ -234,7 +234,9 @@ export const NewMissingPostForm: React.FC<{
                   name='title'
                   placeholder='I found a dog near manara street'
                   label='Title'
-                  maxLength={90}
+                  maxLength={50}
+                  maxInputLength={50}
+                  showLength
                 />
                 <InputField
                   name='description'
@@ -242,6 +244,8 @@ export const NewMissingPostForm: React.FC<{
                   helperText='Give us more information about the pet you missed or found'
                   label='Description'
                   maxLength={255}
+                  maxInputLength={255}
+                  showLength
                   textarea
                 />
                 <MyDropzone label='Pet Images' name='images' />
