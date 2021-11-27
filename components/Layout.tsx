@@ -33,7 +33,7 @@ export const Layout = ({
       </Head>
       <Flex
         className={styles.container + ` ${className}`}
-        px={['3%', '3%', '3%', '3%', '180px']}
+        px={['3%', '3%', '3%', '3%', '150px']}
         direction='column'
         alignItems='center'
         justifyContent='flex-start'

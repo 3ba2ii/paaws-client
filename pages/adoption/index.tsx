@@ -52,7 +52,26 @@ const MissingPage: React.FC = ({}) => {
 
   //No errors but no posts
   if (!data?.adoptionPosts?.posts?.length) {
-    return <Layout>No posts</Layout>;
+    return (
+      <Layout>
+        No posts
+        <Button
+          onClick={() => {
+            setOpenModal(true);
+          }}
+        >
+          Create Post
+        </Button>
+        {openModal && (
+          <CreateAdoptionPostModal
+            {...{
+              isOpen: openModal,
+              onClose: () => setOpenModal(false),
+            }}
+          />
+        )}
+      </Layout>
+    );
   }
 
   const { hasMore, posts } = data.adoptionPosts;
@@ -61,6 +80,7 @@ const MissingPage: React.FC = ({}) => {
     <Layout>
       <div className={styles.grid_container}>
         <section className={styles.filters_container}>FILTERS</section>
+
         <section>
           <ul>
             {posts.map(({ id, pet, createdAt, address }) => {
@@ -87,24 +107,8 @@ const MissingPage: React.FC = ({}) => {
               Load More
             </Button>
           )}
-          <Button
-            onClick={() => {
-              setOpenModal(true);
-            }}
-          >
-            Create Post
-          </Button>
         </section>
       </div>
-
-      {openModal && (
-        <CreateAdoptionPostModal
-          {...{
-            isOpen: openModal,
-            onClose: () => setOpenModal(false),
-          }}
-        />
-      )}
     </Layout>
   );
 };

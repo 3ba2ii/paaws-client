@@ -1,18 +1,17 @@
 import { getDataFromTree } from '@apollo/client/react/ssr';
 import { Box, Flex } from '@chakra-ui/layout';
-import { CircularProgress } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
+import { SideFooter } from 'components/SideFooter';
 import {
   MissingPostTypes,
   PostFilters,
   useMissingPostsQuery,
 } from 'generated/graphql';
+import { MissingPageContent } from 'modules/posts/missing/MissingPageContent';
+import { RecommendationCardContainer } from 'modules/posts/missing/RecommendationCard';
+import { SideFiltersColumn } from 'modules/posts/missing/SideFiltersColumn';
 import React, { useState } from 'react';
 import withApollo from 'utils/withApollo';
-import { SideFooter } from '../../components/SideFooter';
-import { MissingPageContent } from '../../modules/posts/missing/MissingPageContent';
-import { SideFiltersColumn } from '../../modules/posts/missing/SideFiltersColumn';
-import { RecommendationCard } from '../../modules/posts/missing/RecommendationCard';
 
 export const MissingPageContext = React.createContext<{
   handleSelectFilters?: (filters: PostFilters) => void;
@@ -78,10 +77,10 @@ const MissingPage = () => {
           justify='center'
           sx={{ gap: '1.5rem' }}
         >
-          <Box w={['100%', '220px', '230px']} flex='.15'>
+          <Box w={['100%', '220px', '230px']} flex='.175'>
             <SideFiltersColumn handleSelectType={handleSelectType} />
           </Box>
-          <Box w='100%' h='100%' maxW='800px' p={0} flex='.625'>
+          <Box w='100%' h='100%' maxW='800px' p={0} flex='.6'>
             <MissingPageContent
               hasLoadedFirstTime={hasLoadedFirstTime}
               fetchMorePosts={fetchMorePosts}
@@ -92,7 +91,7 @@ const MissingPage = () => {
           </Box>
           <Box display={['none', 'none', 'block']} flex='.225'>
             <SideFooter>
-              <RecommendationCard />
+              <RecommendationCardContainer />
             </SideFooter>
           </Box>
         </Flex>

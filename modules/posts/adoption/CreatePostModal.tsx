@@ -48,6 +48,7 @@ export const CreateAdoptionPostModal: React.FC<createPostProps> = ({
   onClose,
 }) => {
   const [step, setStep] = useState<number>(1);
+  console.log(`🚀 ~ file: CreatePostModal.tsx ~ line 51 ~ step`, step);
   const [createAdoptionPost] = useCreateAdoptionPostMutation();
 
   const prevStep = () => {
@@ -120,6 +121,7 @@ export const CreateAdoptionPostModal: React.FC<createPostProps> = ({
               },
               { setErrors }
             ) => {
+              console.log('a7a');
               if (step === 3) {
                 const { lat, lng } = address;
                 if (
@@ -176,7 +178,7 @@ export const CreateAdoptionPostModal: React.FC<createPostProps> = ({
               nextStep();
             }}
           >
-            {({ isSubmitting, handleChange, values }) => (
+            {({ isSubmitting, handleChange, values, submitForm }) => (
               <Form className={s.form_container}>
                 <>{renderFormStep(step)}</>
                 <>{JSON.stringify(values, null, 2)}</>
@@ -202,6 +204,7 @@ export const CreateAdoptionPostModal: React.FC<createPostProps> = ({
                     bgColor='teal.400'
                     rightIcon={<FaChevronRight size='12px' />}
                     isLoading={isSubmitting}
+                    onClick={submitForm}
                   >
                     Next
                   </Button>
