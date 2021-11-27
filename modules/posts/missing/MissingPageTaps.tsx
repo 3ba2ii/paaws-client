@@ -47,8 +47,9 @@ export const MissingPageTaps: React.FC<{
       align='flex-start'
       justifyContent={['center', 'flex-start']}
       flexWrap='wrap'
-      sx={{ gap: '4px' }}
+      sx={{ gap: '12px' }}
       flex='1'
+      mt={['0', '2.5rem']}
     >
       {buttons.map((button, index) => (
         <SingleNavTap
@@ -104,6 +105,7 @@ const SingleNavTap: React.FC<{
         w='100%'
         paddingInlineStart={1}
         px={[2, 4]}
+        h='40px'
         fontSize='sm'
         textAlign={['center', 'left']}
         fontWeight={isActive ? 'bold' : 'semibold'}

@@ -1,4 +1,10 @@
-import { Box, Container, Flex, useColorMode } from '@chakra-ui/react';
+import {
+  Box,
+  Container,
+  Flex,
+  useColorMode,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import Head from 'next/head';
 import { useEffect } from 'react';
 import styles from '../styles/Home.module.css';
@@ -21,7 +27,7 @@ export const Layout = ({
 }: ContainerProps) => {
   const { colorMode } = useColorMode();
 
-  const bgColor = { light: 'white', dark: 'gray.900' };
+  const bgColor = { light: '#F8F8FA4D;', dark: 'gray.800' };
 
   const color = { light: 'gray.700', dark: 'white' };
 
@@ -33,7 +39,7 @@ export const Layout = ({
       </Head>
       <Flex
         className={styles.container + ` ${className}`}
-        px={['2%', '3%', '5%', '10%', '200px']}
+        px={['3%', '3%', '3%', '3%', '150px']}
         direction='column'
         alignItems='center'
         justifyContent='flex-start'
@@ -44,12 +50,13 @@ export const Layout = ({
       >
         <Box
           px='inherit'
-          bg='inherit'
+          bg={useColorModeValue('white', 'inherit')}
           zIndex={50}
           w='100%'
-          position={'fixed'}
           h='84px'
+          position={'fixed'}
           top='0'
+          boxShadow={'sm'}
         >
           <NavBar />
         </Box>
