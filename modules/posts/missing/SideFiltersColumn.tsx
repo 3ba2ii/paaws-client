@@ -58,14 +58,13 @@ export const SideFiltersColumn: React.FC<{
     <Flex
       w='100%'
       flexDirection={['row', 'column']}
-      h={['fit-content', 'calc(100vh - 10rem)']}
+      h={['fit-content', 'calc(100vh - 8rem)']}
       align='flex-start'
       justify='space-between'
       maxW={['100%', '250px']}
       position='relative'
     >
       <MissingPageTaps handleSelectType={handleSelectType} />
-      {/* <RecommendAdoptionCard /> */}
       {!user ? null : (
         <Box
           h='100%'
@@ -81,17 +80,17 @@ export const SideFiltersColumn: React.FC<{
             rounded={'full'}
             h='64px'
           >
-            <HStack w='100%'>
+            <HStack w='100%' justify={'space-evenly'}>
               <UserAvatar />
               <VStack
                 align='flex-start'
                 spacing={1}
                 display={['none', 'none', 'none', 'flex']}
               >
-                <Text fontWeight={'semibold'} color='inherit'>
+                <Text fontWeight={'semibold'} color='inherit' fontSize='sm'>
                   {user.displayName}
                 </Text>
-                <Text fontSize={'sm'} color='gray.500' isTruncated maxW='12ch'>
+                <Text fontSize={'xs'} color='gray.500' isTruncated maxW='12ch'>
                   {user.email}
                 </Text>
               </VStack>
@@ -100,6 +99,8 @@ export const SideFiltersColumn: React.FC<{
                 variant='unstyled'
                 display={['none', 'none', 'none', 'block']}
                 icon={<BsThreeDots />}
+                _focus={{ border: 'none' }}
+                size='sm'
               />
             </HStack>
           </Button>

@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
 import GenericModal from 'components/common/overlays/CustomModal';
-import ModalHeader from 'components/common/overlays/ModalHeader';
+import { ModalHeader } from 'components/common/overlays/ModalHeader';
 import { LocationFilters, PostFilters, useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import { MissingPageContext } from 'pages/missing';
