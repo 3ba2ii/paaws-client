@@ -1,9 +1,10 @@
 import { Link, SimpleGrid, Text, VStack } from '@chakra-ui/layout';
 import React from 'react';
 
-export const SideFooter = () => {
+export const SideFooter: React.FC = ({ children }) => {
   return (
     <VStack spacing={3}>
+      {children}
       <SimpleGrid w='100%' columns={2} spacing={3}>
         <Link textStyle='p2'>Help</Link>
         <Link textStyle='p2'>About</Link>

@@ -1,12 +1,11 @@
 import {
   Box,
-  Container,
   Flex,
+  FlexProps,
   useColorMode,
   useColorModeValue,
 } from '@chakra-ui/react';
 import Head from 'next/head';
-import { useEffect } from 'react';
 import styles from '../styles/Home.module.css';
 import Footer from './Footer';
 import NavBar from './NavBar';
@@ -16,6 +15,7 @@ interface ContainerProps {
   title?: string;
   className?: string;
   includeFooter?: boolean;
+  layoutProps?: FlexProps;
 }
 //Container will be the main container of each page in the app
 
@@ -24,6 +24,7 @@ export const Layout = ({
   className,
   title = 'Paaws',
   includeFooter = true,
+  layoutProps,
 }: ContainerProps) => {
   const { colorMode } = useColorMode();
 
@@ -47,6 +48,7 @@ export const Layout = ({
         color={color[colorMode]}
         w='100%'
         h='100%'
+        {...layoutProps}
       >
         <Box
           px='inherit'
