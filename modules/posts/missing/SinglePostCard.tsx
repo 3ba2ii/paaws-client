@@ -82,16 +82,17 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
       flexDirection={['column', 'column', 'row']}
       p={'0px'}
       boxShadow='sm'
-      //borderWidth={'0.5px'}
-      //borderColor={useColorModeValue('gray.200', 'gray.700')}
+      borderWidth={'0.5px'}
+      borderColor={useColorModeValue('gray.200', 'gray.700')}
       w='100%'
       h='100%'
       borderRadius={'6px'}
       overflow='hidden'
       //bg={useColorModeValue('whiteAlpha.500', 'blackAlpha.200')}
+      align={['unset', 'center']}
     >
       <Box
-        w={['clamp(250px, 100%, minmax(350px,100%))', '100%', '250px']}
+        w={['clamp(150px, 100%, minmax(350px,100%))', '100%', '200px']}
         h='100%'
         borderTopLeftRadius={['0px', '0px', '4px']}
         borderBottomLeftRadius={['0px', '0px', '4px']}
@@ -117,7 +118,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         align='flex-start'
         justify='space-between'
         overflow='hidden'
-        p={['16px', '10px 0 10px 16px']}
+        p={['16px', '0 0 0 16px']}
         sx={{ gap: ['24px', '18px'] }}
       >
         <VStack w='100%' pr={[1, 2, 4]} spacing='6px' align='flex-start'>
@@ -132,6 +133,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
                 color={useColorModeValue('gray.700', 'gray.400')}
                 as='h2'
                 textStyle='h5'
+                noOfLines={1}
               >
                 {title}
               </Text>
