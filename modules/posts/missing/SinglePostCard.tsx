@@ -82,13 +82,13 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
       flexDirection={['column', 'column', 'row']}
       p={'0px'}
       boxShadow='sm'
-      borderWidth={'0.5px'}
-      borderColor={useColorModeValue('gray.200', 'gray.700')}
+      //borderWidth={'0.5px'}
+      //borderColor={useColorModeValue('gray.200', 'gray.700')}
       w='100%'
       h='100%'
       borderRadius={'6px'}
       overflow='hidden'
-      bg={useColorModeValue('whiteAlpha.500', 'blackAlpha.200')}
+      //bg={useColorModeValue('whiteAlpha.500', 'blackAlpha.200')}
     >
       <Box
         w={['clamp(250px, 100%, minmax(350px,100%))', '100%', '250px']}

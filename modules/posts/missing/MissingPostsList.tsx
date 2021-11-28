@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/layout';
+import { Divider, Flex, VStack } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/react';
 import NotFound from 'components/NotFound';
 import { MissingPost } from 'generated/graphql';
@@ -31,7 +31,7 @@ export const MissingPostsList: React.FC<{
       />
     );
   return (
-    <Flex flexDirection='column' sx={{ gap: '16px' }} w='100%'>
+    <VStack spacing={4} w='100%' divider={<Divider />}>
       {posts.map(
         ({
           id,
@@ -78,6 +78,6 @@ export const MissingPostsList: React.FC<{
           Load More
         </Button>
       ) : null}
-    </Flex>
+    </VStack>
   );
 };

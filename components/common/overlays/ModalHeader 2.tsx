@@ -1,8 +1,8 @@
 import { Heading, Text, VStack } from '@chakra-ui/layout';
 import React from 'react';
 
-export const ModalHeader: React.FC<{ title: string; subtitle: string }> =
-  React.memo(({ title, subtitle }) => {
+const ModalHeader: React.FC<{ title: string; subtitle: string }> = React.memo(
+  ({ title, subtitle }) => {
     return (
       <VStack align='flex-start' mt={4}>
         <Heading size='md'>{title}</Heading>
@@ -16,4 +16,9 @@ export const ModalHeader: React.FC<{ title: string; subtitle: string }> =
         </Text>
       </VStack>
     );
-  });
+  }
+);
+
+ModalHeader.displayName = 'ModalHeader';
+
+export default ModalHeader;
