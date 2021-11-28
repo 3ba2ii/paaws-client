@@ -1,4 +1,4 @@
-import { VStack } from '@chakra-ui/layout';
+import { Divider, VStack } from '@chakra-ui/layout';
 import {
   Box,
   Flex,
@@ -14,10 +14,9 @@ const SingleDummySkeleton = (): JSX.Element => {
   return (
     <Flex
       flexDirection={['column', 'row']}
-      p={['0px', '12px']}
       boxShadow='base'
-      border='1px'
-      borderColor={useColorModeValue('gray.200', 'gray.700')}
+      //border='1px'
+      //borderColor={useColorModeValue('gray.200', 'gray.700')}
       w='100%'
       h={['100%', '200px']}
       borderRadius={'10px'}
@@ -77,6 +76,7 @@ export const DummyPostsSkeleton: React.FC<{ noOfPosts?: number }> = ({
         gap: '16px',
       }}
       w='100%'
+      divider={<Divider />}
     >
       {[...Array(noOfPosts)].map((_, index) => (
         <SingleDummySkeleton key={index} />

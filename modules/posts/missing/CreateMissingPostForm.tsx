@@ -38,7 +38,7 @@ import { useIsAuth } from 'utils/useIsAuth';
 import { CustomAlertDialog } from '../../../components/common/overlays/AlertDialog';
 import { NotAuthenticatedComponent } from '../../../components/NotAuthenticatedComponent';
 import { UserAvatar } from 'components/UserAvatar';
-import { ModalHeader } from 'components/common/overlays/ModalHeader';
+import ModalHeader from 'components/common/overlays/ModalHeader';
 import { PostLocationFields } from './PostLocationFields';
 export type PostInputType = CreateMissingPostInput & {
   images: Array<Scalars['Upload']>;
