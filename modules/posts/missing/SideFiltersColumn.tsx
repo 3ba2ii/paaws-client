@@ -61,8 +61,8 @@ export const SideFiltersColumn: React.FC<{
       h={['fit-content', 'calc(100vh - 8rem)']}
       align='flex-start'
       justify='space-between'
-      maxW={['100%', '250px']}
-      position='relative'
+      maxW={['100%', '200px']}
+      position={['relative', 'relative', 'relative', 'relative', 'fixed']}
     >
       <MissingPageTaps handleSelectType={handleSelectType} />
       {!user ? null : (
@@ -80,7 +80,7 @@ export const SideFiltersColumn: React.FC<{
             rounded={'full'}
             h='64px'
           >
-            <HStack w='100%' justify={'space-between'}>
+            <HStack w='100%' justify={'space-evenly'}>
               <UserAvatar avatarProps={{ size: 'sm' }} />
               <VStack
                 align='flex-start'

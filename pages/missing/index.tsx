@@ -71,7 +71,7 @@ const MissingPage = () => {
       <MissingPageContext.Provider value={{ handleSelectFilters }}>
         <Flex
           w='100%'
-          h='100%'
+          h='100vh'
           flexDirection={['column', 'row', 'row']}
           alignItems='flex-start'
           justifyContent={'center'}
