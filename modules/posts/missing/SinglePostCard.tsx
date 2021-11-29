@@ -3,6 +3,7 @@ import { Avatar, Tag, useColorModeValue } from '@chakra-ui/react';
 import ImageWithFallback from 'components/common/media/ImageWithFallback';
 import { formatDistance } from 'date-fns';
 import { Maybe, MissingPostTags, Photo } from 'generated/graphql';
+import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import { fallbackSrc } from 'utils/constants';
 import { rgbDataURL } from 'utils/rgbDataURL';
@@ -46,6 +47,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
   if (address?.distance) {
     isNear = address.distance <= 100;
   }
+  const router = useRouter();
 
   const thumbnailImage = thumbnail?.url || '';
 
@@ -56,6 +58,9 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
   const { displayName, avatar } = user;
   const hasVoted = voteStatus != null;
 
+  const redirectToPost = () => {
+    router.push(`/missing/${id}`);
+  };
   const ComponentTags = () => {
     return (
       <HStack>
@@ -90,6 +95,11 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
       overflow='hidden'
       //bg={useColorModeValue('whiteAlpha.500', 'blackAlpha.200')}
       align={['unset', 'center']}
+      sx={{ gap: ['10px', '0px'] }}
+      cursor={'pointer'}
+      transition={'all 0.2s ease-in-out'}
+      _hover={{ transform: 'scale(1.02)' }}
+      onClick={redirectToPost}
     >
       <Box
         w={['clamp(150px, 100%, minmax(350px,100%))', '100%', '200px']}
@@ -165,7 +175,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
               </Text>
             </Text>
           </HStack>
-          <Text as='p' textStyle='p1' maxW={'70ch'} fontWeight='normal'>
+          <Text as='p' textStyle='p1' fontWeight='normal' noOfLines={2}>
             {descriptionSnippet}
           </Text>
         </VStack>

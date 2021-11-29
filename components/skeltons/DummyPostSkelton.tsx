@@ -13,22 +13,24 @@ import React from 'react';
 const SingleDummySkeleton = (): JSX.Element => {
   return (
     <Flex
-      flexDirection={['column', 'row']}
+      flexDirection={['column', 'column', 'row']}
       boxShadow='base'
-      //border='1px'
-      //borderColor={useColorModeValue('gray.200', 'gray.700')}
+      p={'0px'}
+      borderWidth={'.5px'}
+      borderColor={useColorModeValue('gray.200', 'gray.700')}
       w='100%'
-      h={['100%', '200px']}
+      h='100%'
       borderRadius={'10px'}
       overflow='hidden'
+      sx={{ gap: '10px' }}
     >
       <Box
-        w={['100%', '200px']}
-        mr={4}
-        borderTopLeftRadius={['0px', '10px']}
-        borderBottomLeftRadius={['0px', '10px']}
+        w='200px'
+        h={'auto'}
+        borderTopLeftRadius={['0px', '0px', '4px']}
+        borderBottomLeftRadius={['0px', '0px', '4px']}
         overflow='hidden'
-        boxShadow='md'
+        boxShadow='base'
       >
         <Skeleton w='100%' h='100%' />
       </Box>
@@ -76,6 +78,7 @@ export const DummyPostsSkeleton: React.FC<{ noOfPosts?: number }> = ({
         gap: '16px',
       }}
       w='100%'
+      h='100%'
       divider={<Divider />}
     >
       {[...Array(noOfPosts)].map((_, index) => (

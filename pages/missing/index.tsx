@@ -12,7 +12,6 @@ import { RecommendationCardContainer } from 'modules/posts/missing/Recommendatio
 import { SideFiltersColumn } from 'modules/posts/missing/SideFiltersColumn';
 import React, { useState } from 'react';
 import withApollo from 'utils/withApollo';
-import { FixedAnnouncementIndication } from 'modules/posts/missing/FixedAnnouncementIndication';
 
 export const MissingPageContext = React.createContext<{
   handleSelectFilters?: (filters: PostFilters) => void;
