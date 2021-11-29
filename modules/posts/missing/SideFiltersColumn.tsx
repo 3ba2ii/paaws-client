@@ -80,14 +80,19 @@ export const SideFiltersColumn: React.FC<{
             rounded={'full'}
             h='64px'
           >
-            <HStack w='100%' justify={'space-evenly'}>
-              <UserAvatar />
+            <HStack w='100%' justify={'space-between'}>
+              <UserAvatar avatarProps={{ size: 'sm' }} />
               <VStack
                 align='flex-start'
                 spacing={1}
                 display={['none', 'none', 'none', 'flex']}
               >
-                <Text fontWeight={'semibold'} color='inherit' fontSize='sm'>
+                <Text
+                  fontWeight={'semibold'}
+                  color='inherit'
+                  fontSize='sm'
+                  isTruncated
+                >
                   {user.displayName}
                 </Text>
                 <Text fontSize={'xs'} color='gray.500' isTruncated maxW='12ch'>

@@ -23,7 +23,7 @@ const SingleDummySkeleton = (): JSX.Element => {
       overflow='hidden'
     >
       <Box
-        w={['100%', '250px']}
+        w={['100%', '200px']}
         mr={4}
         borderTopLeftRadius={['0px', '10px']}
         borderBottomLeftRadius={['0px', '10px']}
