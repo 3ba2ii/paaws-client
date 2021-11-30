@@ -19,21 +19,18 @@ const SingleDummySkeleton = (): JSX.Element => {
       borderWidth={'.5px'}
       borderColor={useColorModeValue('gray.200', 'gray.700')}
       w='100%'
-      h='100%'
       borderRadius={'10px'}
-      overflow='hidden'
       sx={{ gap: '10px' }}
     >
-      <Box
-        w='200px'
-        h={'auto'}
+      <Skeleton
+        as={Box}
+        w={['clamp(150px, 100%, minmax(350px,100%))', '100%', '200px']}
+        h='100%'
         borderTopLeftRadius={['0px', '0px', '4px']}
         borderBottomLeftRadius={['0px', '0px', '4px']}
         overflow='hidden'
         boxShadow='base'
-      >
-        <Skeleton w='100%' h='100%' />
-      </Box>
+      />
 
       <Flex
         flexDirection='column'

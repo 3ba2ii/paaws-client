@@ -14,6 +14,8 @@ import InputField from 'components/common/input/InputField';
 import TwoOptionsSwitch from 'components/common/input/TwoOptionsSwitch';
 import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
 import GenericModal from 'components/common/overlays/CustomModal';
+import ModalHeader from 'components/common/overlays/ModalHeader';
+import { UserAvatar } from 'components/UserAvatar';
 import { Form, Formik } from 'formik';
 import {
   CreateMissingPostInput,
@@ -37,9 +39,8 @@ import { toErrorMap } from 'utils/toErrorMap';
 import { useIsAuth } from 'utils/useIsAuth';
 import { CustomAlertDialog } from '../../../components/common/overlays/AlertDialog';
 import { NotAuthenticatedComponent } from '../../../components/NotAuthenticatedComponent';
-import { UserAvatar } from 'components/UserAvatar';
-import ModalHeader from 'components/common/overlays/ModalHeader';
 import { PostLocationFields } from './PostLocationFields';
+
 export type PostInputType = CreateMissingPostInput & {
   images: Array<Scalars['Upload']>;
 };
@@ -158,7 +159,8 @@ export const NewMissingPostForm: React.FC<{
             setErrors(toErrorMap(data?.createMissingPost.errors));
             toast({
               title: 'Create Post Failed ❌',
-              description: 'An error occurred while trying to create your post',
+              description:
+                'An error occurred while trying to create your post, please try again',
               status: 'error',
               duration: 5000,
               isClosable: true,

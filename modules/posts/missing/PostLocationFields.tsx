@@ -33,6 +33,7 @@ Locations are used to send notifications and alerts to nearby users'
             handleChange={(value) => {
               setLocationOption(value);
             }}
+            menuOptionGroupProps={{ title: 'Select Method', opacity: '.5' }}
             menuButtonProps={{
               as: Button,
               size: 'sm',

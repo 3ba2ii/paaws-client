@@ -10,7 +10,7 @@ import {
   MenuProps,
   Text,
 } from '@chakra-ui/react';
-import { capitalizeString } from 'utils/capitalizeString';
+import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
 
 type DropdownMenuProps = {
   options: Array<{ key: string; value: string }>;
@@ -40,7 +40,9 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
               value={value}
               onClick={() => handleChange(value)}
             >
-              <Text fontWeight={'medium'}>{capitalizeString(value)}</Text>
+              <Text fontWeight={'medium'}>
+                {capitalizeTheFirstLetterOfEachWord(value)}
+              </Text>
             </MenuItemOption>
           ))}
         </MenuOptionGroup>
