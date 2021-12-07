@@ -3,6 +3,7 @@ import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { Layout } from 'components/Layout';
 import NotFound from 'components/NotFound';
 import { useMissingPostQuery } from 'generated/graphql';
+import MissingPostContainer from 'modules/posts/missing/MissingPostContainer';
 import router, { useRouter } from 'next/router';
 import React from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
@@ -27,11 +28,9 @@ const MissingPost: React.FC<MissingPostProps> = ({}) => {
     variables: { missingPostId: parseInt(id) },
   });
 
-  const post = data?.missingPost.missingPost;
-  const isFound = !loading && post;
+  const post = data?.missingPost;
+  const isFound = !loading && post?.missingPost && !post.errors?.length;
 
-  console.log(`🚀 ~ file: [id].tsx ~ line 14 ~ data`, data);
-  console.log(`🚀 ~ file: [id].tsx ~ line 8 ~ query`, id);
   return (
     <Layout>
       {loading ? (
@@ -50,7 +49,7 @@ const MissingPost: React.FC<MissingPostProps> = ({}) => {
           </Button>
         </VStack>
       ) : (
-        <div>{post?.title}</div>
+        <MissingPostContainer post={post} />
       )}
     </Layout>
   );

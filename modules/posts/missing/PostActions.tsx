@@ -1,17 +1,17 @@
 import { ApolloCache, gql } from '@apollo/client';
 import { HStack, Text } from '@chakra-ui/layout';
-import { Button, IconButton, Tooltip, useToast } from '@chakra-ui/react';
+import {
+  Button,
+  IconButton,
+  IconButtonProps,
+  Tooltip,
+  useToast,
+} from '@chakra-ui/react';
 import VoteIcon from 'modules/posts/common/VoteIconComponent';
 import { MissingPost, usePostVoteMutation } from 'generated/graphql';
 import React from 'react';
 import { BiMessageRounded, BiShareAlt } from 'react-icons/bi';
-
-function getPointsColor(voteStatus: number | undefined | null): string {
-  if (!voteStatus) {
-    return 'gray.400';
-  }
-  return voteStatus === 1 ? 'teal.400' : 'red.400';
-}
+import { VoteComponent } from 'components/VoteComponent';
 
 export const PostActions: React.FC<{
   postId: number;
@@ -133,29 +133,26 @@ export const PostActions: React.FC<{
       }}
       tabIndex={5}
     >
-      <Tooltip label='Upvote'>
-        <IconButton
-          aria-label='Upvote'
-          icon={
-            <VoteIcon isUpvote outlined={!(hasVoted && voteStatus === 1)} />
-          }
-          onClick={() => onVote(1)}
-          isLoading={actionLoading.upvoteLoading}
-          variant='ghost'
-        />
-      </Tooltip>
-      <Text color={getPointsColor(voteStatus)} textStyle='p1'>
-        {points}
-      </Text>
-      <Tooltip label='Downvote'>
-        <IconButton
-          variant='ghost'
-          icon={<VoteIcon outlined={!(hasVoted && voteStatus === -1)} />}
-          aria-label='Downvote'
-          isLoading={actionLoading.downvoteLoading}
-          onClick={() => onVote(-1)}
-        />
-      </Tooltip>
+      {/* Upvote and downvote section */}
+      <VoteComponent
+        {...{
+          points,
+          voteStatus,
+          onUpvote: () => onVote(1),
+          onDownvote: () => onVote(-1),
+          loading: actionLoading.upvoteLoading
+            ? 'upvote'
+            : actionLoading.downvoteLoading
+            ? 'downvote'
+            : null,
+          buttonProps: {
+            minW: 'auto',
+            height: 'auto',
+            padding: '6px',
+            variant: 'ghost',
+          } as IconButtonProps,
+        }}
+      />
 
       {/* Comments Section */}
       <Tooltip label='Comment'>

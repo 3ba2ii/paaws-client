@@ -99,7 +99,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
       cursor={'pointer'}
       transition={'all 0.2s ease-in-out'}
       _hover={{ transform: 'scale(1.02)' }}
-      onClick={redirectToPost}
+      tabIndex={1}
     >
       <Box
         w={['clamp(150px, 100%, minmax(350px,100%))', '100%', '200px']}
@@ -108,6 +108,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         borderBottomLeftRadius={['0px', '0px', '4px']}
         overflow='hidden'
         boxShadow='base'
+        onClick={redirectToPost}
       >
         <ImageWithFallback
           fallbackSrc={fallbackSrc}
@@ -131,7 +132,13 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         p={['16px', '0 0 0 16px']}
         sx={{ gap: ['24px', '18px'] }}
       >
-        <VStack w='100%' pr={[1, 2, 4]} spacing='6px' align='flex-start'>
+        <VStack
+          w='100%'
+          pr={[1, 2, 4]}
+          spacing='6px'
+          align='flex-start'
+          onClick={redirectToPost}
+        >
           <HStack
             w='100%'
             h='inherit'
