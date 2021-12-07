@@ -1,6 +1,6 @@
 import { ApolloCache, gql } from '@apollo/client';
 import { HStack, Text } from '@chakra-ui/layout';
-import { Button, IconButton, Tooltip } from '@chakra-ui/react';
+import { Button, IconButton, Tooltip, useToast } from '@chakra-ui/react';
 import VoteIcon from 'modules/posts/common/VoteIconComponent';
 import { MissingPost, usePostVoteMutation } from 'generated/graphql';
 import React from 'react';
@@ -20,6 +20,8 @@ export const PostActions: React.FC<{
   points: number;
   commentsCount: number;
 }> = ({ postId, hasVoted, voteStatus, points, commentsCount }) => {
+  const toaster = useToast();
+
   const [vote] = usePostVoteMutation();
   const [actionLoading, setLoading] = React.useState({
     upvoteLoading: false,
@@ -100,7 +102,14 @@ export const PostActions: React.FC<{
       });
       if (data?.vote.errors?.length) {
         if (data?.vote.errors[0].field === 'spam') {
-          //todo: open a dialog to warn the user
+          toaster({
+            title: 'Spam detected',
+            description:
+              'You have changed your vote 5 times in the last 10 minutes, Stop spamming before your get banned',
+            status: 'warning',
+            variant: 'solid',
+            duration: 5000,
+          });
         }
       }
     } catch (err) {
@@ -122,6 +131,7 @@ export const PostActions: React.FC<{
           padding: '6px',
         },
       }}
+      tabIndex={5}
     >
       <Tooltip label='Upvote'>
         <IconButton
