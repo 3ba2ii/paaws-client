@@ -1,0 +1,34 @@
+query MissingPost($missingPostId: Int!) {
+  missingPost(id: $missingPostId) {
+    missingPost {
+      title
+      id
+      addressId
+      address {
+        id
+        street_name
+        street_number
+        city
+        state
+        zip
+        country
+      }
+      user {
+        full_name
+        id
+      }
+      description
+      type
+      points
+      voteStatus
+      commentsCount
+      tags
+    }
+    isOwner
+    errors {
+      field
+      message
+      code
+    }
+  }
+}
