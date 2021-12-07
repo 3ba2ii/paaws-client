@@ -2,7 +2,7 @@ import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout';
 import { Avatar, Tag, useColorModeValue } from '@chakra-ui/react';
 import ImageWithFallback from 'components/common/media/ImageWithFallback';
 import { formatDistance } from 'date-fns';
-import { Maybe, MissingPostTags, Photo } from 'generated/graphql';
+import { MissingPostsQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import { fallbackSrc } from 'utils/constants';
@@ -11,37 +11,22 @@ import { PostTags } from '../common/PostTags';
 import { PostActions } from './PostActions';
 
 interface SinglePostCardProps {
-  id: number;
-  title: string;
-  descriptionSnippet: string;
-  thumbnail?: Partial<Photo> | null;
-  points: number;
-  createdAt: string;
-  voteStatus?: number | null;
-  commentsCount: number;
-  user: {
-    id: number;
-    displayName: string;
-    avatar?: Maybe<{ __typename?: 'Photo'; url?: Maybe<string> }>;
-  };
-  tags?: MissingPostTags[];
-  address?: Maybe<{
-    __typename?: 'Address';
-    distance?: Maybe<number>;
-  }>;
+  post: MissingPostsQuery['missingPosts']['missingPosts'][0];
 }
 export const SinglePostCard: React.FC<SinglePostCardProps> = ({
-  id,
-  title,
-  thumbnail,
-  createdAt,
-  points,
-  user,
-  tags,
-  address,
-  voteStatus,
-  descriptionSnippet,
-  commentsCount,
+  post: {
+    id,
+    title,
+    thumbnail,
+    createdAt,
+    points,
+    user,
+    tags,
+    address,
+    voteStatus,
+    descriptionSnippet,
+    commentsCount,
+  },
 }) => {
   let isNear = false;
   if (address?.distance) {
@@ -87,19 +72,19 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
       flexDirection={['column', 'column', 'row']}
       p={'0px'}
       boxShadow='sm'
-      borderWidth={'0.5px'}
-      borderColor={useColorModeValue('gray.200', 'gray.700')}
       w='100%'
       h='100%'
       borderRadius={'6px'}
       overflow='hidden'
-      //bg={useColorModeValue('whiteAlpha.500', 'blackAlpha.200')}
       align={['unset', 'center']}
       sx={{ gap: ['10px', '0px'] }}
       cursor={'pointer'}
       transition={'all 0.2s ease-in-out'}
-      _hover={{ transform: 'scale(1.02)' }}
+      _hover={{ transform: 'scale(1.005)' }}
       tabIndex={1}
+      //borderWidth={'0.5px'}
+      //borderColor={useColorModeValue('gray.200', 'gray.700')}
+      //bg={useColorModeValue('whiteAlpha.500', 'blackAlpha.200')}
     >
       <Box
         w={['clamp(150px, 100%, minmax(350px,100%))', '100%', '200px']}
