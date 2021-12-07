@@ -41,7 +41,6 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
     [createdAt]
   );
   const { displayName, avatar } = user;
-  const hasVoted = voteStatus != null;
 
   const redirectToPost = () => {
     router.push(`/missing/${id}`);
@@ -172,9 +171,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
           </Text>
         </VStack>
         {/* Actions */}
-        <PostActions
-          {...{ postId: id, hasVoted, voteStatus, points, commentsCount }}
-        />
+        <PostActions {...{ postId: id, voteStatus, points, commentsCount }} />
       </VStack>
     </Flex>
   );

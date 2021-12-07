@@ -1,8 +1,8 @@
-import { Box, Flex, IconButton, Text, VStack } from '@chakra-ui/react';
+import { Flex, FlexProps, IconButtonProps } from '@chakra-ui/react';
 import NotFound from 'components/NotFound';
+import { VoteComponent } from 'components/VoteComponent';
 import { MissingPostQuery } from 'generated/graphql';
 import React from 'react';
-import VoteIcon from '../common/VoteIconComponent';
 
 interface MissingPostContainerProps {
   post: MissingPostQuery['missingPost'];
@@ -25,11 +25,16 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
   return (
     <Flex>
       {/* First Column - Voting column */}
-      <VStack>
-        <VoteIcon isUpvote />
-        <Text>{points}</Text>
-        <VoteIcon />
-      </VStack>
+      <VoteComponent
+        {...{
+          points,
+          voteStatus,
+          onDownvote: () => {},
+          onUpvote: () => {},
+          flexProps: { flexDir: 'column' } as FlexProps,
+          buttonProps: { variant: 'ghost' } as IconButtonProps,
+        }}
+      />
     </Flex>
   );
 };

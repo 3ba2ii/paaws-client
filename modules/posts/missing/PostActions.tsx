@@ -1,5 +1,5 @@
 import { ApolloCache, gql } from '@apollo/client';
-import { HStack, Text } from '@chakra-ui/layout';
+import { HStack } from '@chakra-ui/layout';
 import {
   Button,
   IconButton,
@@ -7,19 +7,20 @@ import {
   Tooltip,
   useToast,
 } from '@chakra-ui/react';
-import VoteIcon from 'modules/posts/common/VoteIconComponent';
+import { VoteComponent } from 'components/VoteComponent';
 import { MissingPost, usePostVoteMutation } from 'generated/graphql';
 import React from 'react';
 import { BiMessageRounded, BiShareAlt } from 'react-icons/bi';
-import { VoteComponent } from 'components/VoteComponent';
+import { updateMissingPostCacheOnVote } from 'utils/cache/updateMissingPostOnVote';
 
 export const PostActions: React.FC<{
   postId: number;
-  hasVoted: boolean;
   voteStatus?: number | null;
   points: number;
   commentsCount: number;
-}> = ({ postId, hasVoted, voteStatus, points, commentsCount }) => {
+}> = ({ postId, voteStatus, points, commentsCount }) => {
+  const hasVoted = voteStatus != null;
+
   const toaster = useToast();
 
   const [vote] = usePostVoteMutation();
@@ -35,58 +36,7 @@ export const PostActions: React.FC<{
         [`${type}Loading`]: loading,
       });
     };
-  const updateCache = (
-    cache: ApolloCache<any>,
-    data: any,
-    votingValue: 1 | -1
-  ) => {
-    if (!data?.vote?.success) return;
-    const cachedPost = cache.readFragment({
-      id: `MissingPost:${postId}`,
-      fragment: gql`
-        fragment MissingPost on MissingPost {
-          id
-          points
-          voteStatus
-        }
-      `,
-    }) as Partial<MissingPost>;
 
-    if (cachedPost && typeof cachedPost.points === 'number') {
-      /* update the cache
-      updated points value has 3 cases
-       1. the user has already voted
-       2. the user did not vote before 
-       3. the user revoted the  same vote again (he wants to remove his vote)
-       */
-
-      let addedPoints = 0;
-      let newVoteStatus: 1 | -1 | null = null;
-      //if the user has already voted, then the did not change his vote value then just decrease it by the voting value
-      if (cachedPost.voteStatus === votingValue) {
-        //then the user want to just delete his vote
-        //1. decrease the points by the voting value
-        addedPoints = -votingValue;
-        //2. set the voteStatus to null
-      } else {
-        addedPoints = hasVoted ? votingValue * 2 : votingValue;
-        newVoteStatus = votingValue;
-      }
-      cache.writeFragment({
-        id: `MissingPost:${postId}`,
-        fragment: gql`
-          fragment MissingPost on MissingPost {
-            points
-            voteStatus
-          }
-        `,
-        data: {
-          points: cachedPost.points + addedPoints,
-          voteStatus: newVoteStatus,
-        },
-      });
-    }
-  };
   const onVote = async (votingValue: 1 | -1) => {
     handleVotingLoading(votingValue === 1 ? 'upvote' : 'downvote')(true);
     try {
@@ -97,7 +47,14 @@ export const PostActions: React.FC<{
         },
         update: (cache, { data: returnedData, errors }) => {
           if (!returnedData || errors?.length) return;
-          updateCache(cache, returnedData, votingValue);
+          //updateCache(cache, returnedData, votingValue);
+          updateMissingPostCacheOnVote(
+            cache,
+            returnedData,
+            votingValue,
+            postId,
+            voteStatus
+          );
         },
       });
       if (data?.vote.errors?.length) {
