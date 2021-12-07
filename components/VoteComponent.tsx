@@ -4,6 +4,7 @@ import {
   IconButton,
   IconButtonProps,
   Text,
+  Tooltip,
 } from '@chakra-ui/react';
 import VoteIcon from 'modules/posts/common/VoteIconComponent';
 import React from 'react';
@@ -35,24 +36,28 @@ export const VoteComponent: React.FC<VoteComponentProps> = ({
   loading,
 }) => {
   return (
-    <Flex align={'center'} sx={{ gap: '16px' }} {...flexProps}>
-      <IconButton
-        onClick={onUpvote}
-        icon={<VoteIcon type='up' voteStatus={voteStatus} />}
-        aria-label='upvote'
-        isLoading={loading === 'upvote'}
-        {...buttonProps}
-      />
+    <Flex align={'center'} sx={{ gap: '8px' }} {...flexProps}>
+      <Tooltip label='Upvote'>
+        <IconButton
+          onClick={onUpvote}
+          icon={<VoteIcon type='up' voteStatus={voteStatus} />}
+          aria-label='upvote'
+          isLoading={loading === 'upvote'}
+          {...buttonProps}
+        />
+      </Tooltip>
       <Text textStyle={'p1'} color={getPointsColor(voteStatus)}>
         {points}
       </Text>
-      <IconButton
-        onClick={onDownvote}
-        icon={<VoteIcon type='down' voteStatus={voteStatus} />}
-        aria-label='downvote'
-        isLoading={loading === 'downvote'}
-        {...buttonProps}
-      />
+      <Tooltip label='Downvote'>
+        <IconButton
+          onClick={onDownvote}
+          icon={<VoteIcon type='down' voteStatus={voteStatus} />}
+          aria-label='downvote'
+          isLoading={loading === 'downvote'}
+          {...buttonProps}
+        />
+      </Tooltip>
     </Flex>
   );
 };
