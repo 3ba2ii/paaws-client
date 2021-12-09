@@ -1,14 +1,19 @@
 import {
   Box,
+  Button,
   Flex,
   FlexProps,
   Heading,
+  HStack,
+  IconButton,
   IconButtonProps,
 } from '@chakra-ui/react';
 import NotFound from 'components/NotFound';
 import { VoteComponent } from 'components/VoteComponent';
 import { MissingPostQuery } from 'generated/graphql';
+import { useRouter } from 'next/router';
 import React from 'react';
+import { FiArrowLeft, FiChevronLeft } from 'react-icons/fi';
 import MissingPostDetails from './MissingPostDetails';
 
 interface MissingPostContainerProps {
@@ -18,6 +23,7 @@ interface MissingPostContainerProps {
 const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
   post,
 }) => {
+  const router = useRouter();
   const { missingPost, isOwner } = post;
 
   const onVote = (vote: 1 | -1) => {
@@ -40,7 +46,17 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
       justifyContent={'space-between'}
     >
       {/* First Column - Voting column */}
-      <Box flex='.2'>
+      <HStack flex='.15' align={'base-line'} justify={'space-between'}>
+        <Button
+          aria-label='back'
+          leftIcon={<FiArrowLeft />}
+          variant={'ghost'}
+          size='sm'
+          fontWeight={'normal'}
+          onClick={() => router.back()}
+        >
+          Back
+        </Button>
         <VoteComponent
           {...{
             points,
@@ -51,7 +67,7 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
             buttonProps: { variant: 'ghost' } as IconButtonProps,
           }}
         />
-      </Box>
+      </HStack>
       <Box flex='.8'>
         <MissingPostDetails post={missingPost} />
       </Box>
