@@ -95,7 +95,7 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
     maxFiles: 10,
     maxSize: 1024 * 1024 * 2,
     multiple: true,
-    accept: 'image/*',
+    accept: '.jpeg , .jpg , .png',
   });
 
   const handleThumbnailChange = (idx: number) => {
