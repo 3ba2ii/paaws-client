@@ -65,7 +65,11 @@ export const Layout = ({
         <Box className={styles.main} mt={'6rem'} w='100%' maxW='1500px'>
           {children}
         </Box>
-        {includeFooter && <Footer />}
+        {includeFooter && (
+          <Box w='100%'>
+            <Footer />
+          </Box>
+        )}
       </Flex>
     </>
   );

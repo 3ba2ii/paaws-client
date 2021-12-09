@@ -88,7 +88,7 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
         consequat culpa sunt laborum sunt et. Cillum minim velit elit amet
         aliqua do ea veniam labore aliqua ea officia sunt.
       </Text>
-      <Box w='500px'>
+      <Box w='100%' h='100%' py={4} maxW='600px'>
         <Carousel
           showArrows
           showThumbs
@@ -100,9 +100,10 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
                   '& > *': {
                     borderRadius: '0',
                     border: '0 !important',
-                    objectFit: 'contain',
                     padding: '0 ',
                     margin: '0 ',
+                    width: '80px',
+                    height: 'fit-content',
                   },
                 }}
               >
@@ -111,19 +112,18 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
             ))
           }
         >
-          {images.concat(images).map((image) => (
+          {images.map((image) => (
             <Box
               borderRadius={'6px'}
               boxShadow={'md'}
-              bg='red'
               overflow={'hidden'}
               id={image.photo.id + ''}
             >
               <ImageWithFallback
                 props={{
                   src: image.photo?.url + '',
-                  width: '250px',
-                  height: '200px',
+                  width: '100px',
+                  height: '100%',
                   objectFit: 'cover',
                 }}
                 fallbackSrc={fallbackSrc}
@@ -132,6 +132,7 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
           ))}
         </Carousel>
       </Box>
+      <Box>Lorem</Box>
     </VStack>
   );
 };
