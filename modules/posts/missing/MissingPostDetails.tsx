@@ -18,6 +18,7 @@ import { Carousel } from 'react-responsive-carousel';
 import Image from 'next/image';
 import ImageWithFallback from 'components/common/media/ImageWithFallback';
 import { fallbackSrc } from 'utils/constants';
+import CustomCarousel from 'components/common/media/CustomCarousel';
 interface MissingPostProps {
   post: MissingPostQuery['missingPost']['missingPost'];
 }
@@ -89,48 +90,9 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
         aliqua do ea veniam labore aliqua ea officia sunt.
       </Text>
       <Box w='100%' h='100%' py={4} maxW='600px'>
-        <Carousel
-          showArrows
-          showThumbs
-          className='carousel-container'
-          renderThumbs={(children) =>
-            children.map((child) => (
-              <Box
-                css={{
-                  '& > *': {
-                    borderRadius: '0',
-                    border: '0 !important',
-                    padding: '0 ',
-                    margin: '0 ',
-                    width: '80px',
-                    height: 'fit-content',
-                  },
-                }}
-              >
-                {child}
-              </Box>
-            ))
-          }
-        >
-          {images.map((image) => (
-            <Box
-              borderRadius={'6px'}
-              boxShadow={'md'}
-              overflow={'hidden'}
-              id={image.photo.id + ''}
-            >
-              <ImageWithFallback
-                props={{
-                  src: image.photo?.url + '',
-                  width: '100px',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-                fallbackSrc={fallbackSrc}
-              />
-            </Box>
-          ))}
-        </Carousel>
+        <CustomCarousel
+          images={images.map((image) => image.photo.url?.toString() || '')}
+        />
       </Box>
       <Box>Lorem</Box>
     </VStack>
