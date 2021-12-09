@@ -2,14 +2,14 @@ import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout';
 import { Tag, useColorModeValue } from '@chakra-ui/react';
 import ImageWithFallback from 'components/common/media/ImageWithFallback';
 import { formatDistance } from 'date-fns';
-import { MissingPostsQuery, User } from 'generated/graphql';
+import { MissingPostsQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import { fallbackSrc } from 'utils/constants';
 import { rgbDataURL } from 'utils/rgbDataURL';
+import { PostOwner } from '../../../components/PostOwner';
 import { PostTags } from '../common/PostTags';
 import { PostActions } from './PostActions';
-import { PostOwner } from '../../../components/PostOwner';
 
 interface SinglePostCardProps {
   post: MissingPostsQuery['missingPosts']['missingPosts'][0];
@@ -47,7 +47,18 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
   const TagsComponent = () => {
     return (
       <HStack>
-        {tags && <PostTags tags={tags} />}
+        {tags && (
+          <PostTags
+            tags={tags}
+            tagProps={{
+              borderRadius: '3',
+              boxShadow: 'sm',
+              fontSize: '12px',
+              fontWeight: 'semibold',
+              size: 'sm',
+            }}
+          />
+        )}
         {isNear && (
           <Tag
             colorScheme='cyan'

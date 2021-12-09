@@ -1,4 +1,4 @@
-import { Tag } from '@chakra-ui/react';
+import { Tag, TagProps } from '@chakra-ui/react';
 import { MissingPostTags } from 'generated/graphql';
 import React from 'react';
 
@@ -14,19 +14,18 @@ const getColorProps = (tag: MissingPostTags) => {
       return '';
   }
 };
-export const PostTags: React.FC<{ tags: MissingPostTags[] }> = ({ tags }) => {
+export const PostTags: React.FC<{
+  tags: MissingPostTags[];
+  tagProps?: TagProps;
+}> = ({ tags, tagProps }) => {
   return (
     <>
       {tags?.map((tag) => (
         <Tag
           key={tag}
-          borderRadius='3'
-          boxShadow='sm'
-          fontSize='12px'
-          fontWeight='semibold'
-          size='sm'
-          {...getColorProps(tag)}
           whiteSpace={'nowrap'}
+          {...getColorProps(tag)}
+          {...tagProps}
         >
           {tag}
         </Tag>

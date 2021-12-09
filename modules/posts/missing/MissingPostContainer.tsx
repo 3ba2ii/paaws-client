@@ -40,7 +40,7 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
       justifyContent={'space-between'}
     >
       {/* First Column - Voting column */}
-      <Box flex='.1'>
+      <Box flex='.2'>
         <VoteComponent
           {...{
             points,
@@ -54,9 +54,6 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
       </Box>
       <Box flex='.8'>
         <MissingPostDetails post={missingPost} />
-      </Box>
-      <Box flex='.1'>
-        <Heading>{title}</Heading>
       </Box>
     </Flex>
   );

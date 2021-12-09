@@ -1,9 +1,10 @@
 query MissingPost($missingPostId: Int!) {
   missingPost(id: $missingPostId) {
     missingPost {
-      title
       id
       addressId
+      title
+      createdAt
       address {
         id
         street_name
@@ -14,8 +15,12 @@ query MissingPost($missingPostId: Int!) {
         country
       }
       user {
-        full_name
         id
+        full_name
+        displayName
+        avatar {
+          url
+        }
       }
       description
       type

@@ -899,7 +899,7 @@ export type MissingPostQueryVariables = Exact<{
 }>;
 
 
-export type MissingPostQuery = { __typename?: 'Query', missingPost: { __typename?: 'MissingPostResponse', isOwner?: Maybe<boolean>, missingPost?: Maybe<{ __typename?: 'MissingPost', title: string, id: number, addressId?: Maybe<number>, description: string, type: MissingPostTypes, points: number, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, address?: Maybe<{ __typename?: 'Address', id: number, street_name?: Maybe<string>, street_number?: Maybe<number>, city?: Maybe<string>, state?: Maybe<string>, zip?: Maybe<string>, country?: Maybe<string> }>, user: { __typename?: 'User', full_name: string, id: number } }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+export type MissingPostQuery = { __typename?: 'Query', missingPost: { __typename?: 'MissingPostResponse', isOwner?: Maybe<boolean>, missingPost?: Maybe<{ __typename?: 'MissingPost', id: number, addressId?: Maybe<number>, title: string, createdAt: any, description: string, type: MissingPostTypes, points: number, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, address?: Maybe<{ __typename?: 'Address', id: number, street_name?: Maybe<string>, street_number?: Maybe<number>, city?: Maybe<string>, state?: Maybe<string>, zip?: Maybe<string>, country?: Maybe<string> }>, user: { __typename?: 'User', id: number, full_name: string, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
 export type MissingPostsQueryVariables = Exact<{
   input: PaginationArgs;
@@ -1446,9 +1446,10 @@ export const MissingPostDocument = gql`
     query MissingPost($missingPostId: Int!) {
   missingPost(id: $missingPostId) {
     missingPost {
-      title
       id
       addressId
+      title
+      createdAt
       address {
         id
         street_name
@@ -1459,8 +1460,12 @@ export const MissingPostDocument = gql`
         country
       }
       user {
-        full_name
         id
+        full_name
+        displayName
+        avatar {
+          url
+        }
       }
       description
       type
