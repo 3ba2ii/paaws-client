@@ -9,10 +9,17 @@ query MissingPost($missingPostId: Int!) {
         id
         street_name
         street_number
+        formatted_address
         city
         state
         zip
         country
+      }
+      images {
+        photo {
+          id
+          url
+        }
       }
       user {
         id

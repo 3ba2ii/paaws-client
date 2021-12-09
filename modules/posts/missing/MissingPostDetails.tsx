@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Heading,
   HStack,
@@ -12,14 +13,29 @@ import { MissingPostQuery } from 'generated/graphql';
 import { useMemo } from 'react';
 import { FiShare2 } from 'react-icons/fi';
 import { PostTags } from '../common/PostTags';
-
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+import { Carousel } from 'react-responsive-carousel';
+import Image from 'next/image';
+import ImageWithFallback from 'components/common/media/ImageWithFallback';
+import { fallbackSrc } from 'utils/constants';
 interface MissingPostProps {
   post: MissingPostQuery['missingPost']['missingPost'];
 }
 const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
   if (!post) return null;
-  const { voteStatus, points, title, description, tags, id, user, createdAt } =
-    post;
+  const {
+    voteStatus,
+    points,
+    title,
+    description,
+    tags,
+    id,
+    user,
+    createdAt,
+    address,
+    images,
+  } = post;
+  console.log(`🚀 ~ file: MissingPostDetails.tsx ~ line 32 ~ address`, address);
   const createdAtDistance = useMemo(
     () => formatDistance(new Date(createdAt), new Date(), { addSuffix: true }),
     [createdAt]
@@ -72,6 +88,50 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
         consequat culpa sunt laborum sunt et. Cillum minim velit elit amet
         aliqua do ea veniam labore aliqua ea officia sunt.
       </Text>
+      <Box w='500px'>
+        <Carousel
+          showArrows
+          showThumbs
+          className='carousel-container'
+          renderThumbs={(children) =>
+            children.map((child) => (
+              <Box
+                css={{
+                  '& > *': {
+                    borderRadius: '0',
+                    border: '0 !important',
+                    objectFit: 'contain',
+                    padding: '0 ',
+                    margin: '0 ',
+                  },
+                }}
+              >
+                {child}
+              </Box>
+            ))
+          }
+        >
+          {images.concat(images).map((image) => (
+            <Box
+              borderRadius={'6px'}
+              boxShadow={'md'}
+              bg='red'
+              overflow={'hidden'}
+              id={image.photo.id + ''}
+            >
+              <ImageWithFallback
+                props={{
+                  src: image.photo?.url + '',
+                  width: '250px',
+                  height: '200px',
+                  objectFit: 'cover',
+                }}
+                fallbackSrc={fallbackSrc}
+              />
+            </Box>
+          ))}
+        </Carousel>
+      </Box>
     </VStack>
   );
 };

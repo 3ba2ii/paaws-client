@@ -899,7 +899,7 @@ export type MissingPostQueryVariables = Exact<{
 }>;
 
 
-export type MissingPostQuery = { __typename?: 'Query', missingPost: { __typename?: 'MissingPostResponse', isOwner?: Maybe<boolean>, missingPost?: Maybe<{ __typename?: 'MissingPost', id: number, addressId?: Maybe<number>, title: string, createdAt: any, description: string, type: MissingPostTypes, points: number, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, address?: Maybe<{ __typename?: 'Address', id: number, street_name?: Maybe<string>, street_number?: Maybe<number>, city?: Maybe<string>, state?: Maybe<string>, zip?: Maybe<string>, country?: Maybe<string> }>, user: { __typename?: 'User', id: number, full_name: string, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+export type MissingPostQuery = { __typename?: 'Query', missingPost: { __typename?: 'MissingPostResponse', isOwner?: Maybe<boolean>, missingPost?: Maybe<{ __typename?: 'MissingPost', id: number, addressId?: Maybe<number>, title: string, createdAt: any, description: string, type: MissingPostTypes, points: number, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, address?: Maybe<{ __typename?: 'Address', id: number, street_name?: Maybe<string>, street_number?: Maybe<number>, formatted_address?: Maybe<string>, city?: Maybe<string>, state?: Maybe<string>, zip?: Maybe<string>, country?: Maybe<string> }>, images: Array<{ __typename?: 'PostImages', photo: { __typename?: 'Photo', id: number, url?: Maybe<string> } }>, user: { __typename?: 'User', id: number, full_name: string, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
 export type MissingPostsQueryVariables = Exact<{
   input: PaginationArgs;
@@ -1454,10 +1454,17 @@ export const MissingPostDocument = gql`
         id
         street_name
         street_number
+        formatted_address
         city
         state
         zip
         country
+      }
+      images {
+        photo {
+          id
+          url
+        }
       }
       user {
         id
