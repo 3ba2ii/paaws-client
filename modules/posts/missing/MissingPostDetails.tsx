@@ -12,13 +12,14 @@ import { PostOwner } from 'components/PostOwner';
 import { formatDistance } from 'date-fns';
 import { MissingPostQuery } from 'generated/graphql';
 import { useMemo } from 'react';
-import { FiGlobe, FiShare2 } from 'react-icons/fi';
+import { FiEdit2, FiGlobe, FiShare2 } from 'react-icons/fi';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { PostTags } from '../common/PostTags';
 interface MissingPostProps {
   post: MissingPostQuery['missingPost']['missingPost'];
+  isOwner: boolean;
 }
-const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
+const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
   if (!post) return null;
   const { title, description, tags, id, user, createdAt, address, images } =
     post;
@@ -33,6 +34,9 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
         <Heading size='lg'>{title}</Heading>
         <HStack>
           <IconButton aria-label='contact-user' icon={<FiShare2 />} size='sm' />
+          {isOwner && (
+            <IconButton aria-label='edit-post' icon={<FiEdit2 />} size='sm' />
+          )}
           <Button size='sm' colorScheme={'teal'}>
             Contact {user.full_name.split(' ')[0]}
           </Button>
