@@ -24,10 +24,6 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
   const router = useRouter();
   const { missingPost, isOwner } = post;
 
-  const onVote = (vote: 1 | -1) => {
-    console.log('vote', vote);
-  };
-
   if (!missingPost)
     return (
       <NotFound
@@ -35,7 +31,7 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
         subtitle='We did not find your post, please try again later'
       />
     );
-  const { voteStatus, points, title, description, tags, id } = missingPost;
+  const { voteStatus, points, id } = missingPost;
   return (
     <Flex
       w='100%'
@@ -59,8 +55,7 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
           {...{
             points,
             voteStatus,
-            onUpvote: () => onVote(1),
-            onDownvote: () => onVote(-1),
+            postId: id,
             flexProps: { flexDir: 'column' } as FlexProps,
             buttonProps: { variant: 'ghost' } as IconButtonProps,
           }}

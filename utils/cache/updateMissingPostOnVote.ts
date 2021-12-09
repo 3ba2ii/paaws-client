@@ -8,8 +8,12 @@ export const updateMissingPostCacheOnVote = (
   postId: number,
   voteStatus?: number | null
 ) => {
+  console.log(`🚀 ~ file: updateMissingPostOnVote.ts ~ line 11 ~ data`, data);
+  //1. see if the user has already voted on this post
   const hasVoted = voteStatus !== null;
+
   if (!data?.vote?.success) return;
+  //2. get the existing post from cache
   const cachedPost = cache.readFragment({
     id: `MissingPost:${postId}`,
     fragment: gql`

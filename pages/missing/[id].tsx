@@ -21,6 +21,8 @@ const MissingPost: React.FC<MissingPostProps> = () => {
 
   const { data, loading } = useMissingPostQuery({
     variables: { missingPostId: parseInt(id as string) },
+    fetchPolicy: 'cache-first',
+    nextFetchPolicy: 'cache-and-network',
     onCompleted: (d) => {
       setPost(d.missingPost);
     },
