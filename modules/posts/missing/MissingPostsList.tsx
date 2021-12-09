@@ -3,7 +3,7 @@ import { Button } from '@chakra-ui/react';
 import NotFound from 'components/NotFound';
 import { MissingPostsQuery } from 'generated/graphql';
 import React, { useEffect, useRef } from 'react';
-import useOnScreen from 'utils/useOnScreen';
+import useOnScreen from 'hooks/useOnScreen';
 import { DummyPostsSkeleton } from '../../../components/skeltons/DummyPostSkelton';
 import { SinglePostCard } from './SinglePostCard';
 

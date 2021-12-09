@@ -15,15 +15,16 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({ images }) => {
       showThumbs
       className='carousel-container'
       renderThumbs={(children) =>
-        children.map((child) => (
+        children.map((child, index) => (
           <Box
+            key={index}
             css={{
               '& > *': {
                 borderRadius: '0',
                 border: '0 !important',
                 padding: '0 ',
                 margin: '0 ',
-                width: '80px',
+                width: '70px',
                 height: 'fit-content',
               },
             }}
@@ -38,7 +39,7 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({ images }) => {
           borderRadius={'6px'}
           boxShadow={'md'}
           overflow={'hidden'}
-          id={url + index}
+          key={url + index}
         >
           <ImageWithFallback
             props={{

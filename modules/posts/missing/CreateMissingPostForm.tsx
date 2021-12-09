@@ -36,7 +36,7 @@ import {
   SelectLocationOptions,
 } from 'utils/constants/enums';
 import { toErrorMap } from 'utils/toErrorMap';
-import { useIsAuth } from 'utils/useIsAuth';
+import { useIsAuth } from 'hooks/useIsAuth';
 import { CustomAlertDialog } from '../../../components/common/overlays/AlertDialog';
 import { NotAuthenticatedComponent } from '../../../components/NotAuthenticatedComponent';
 import { PostLocationFields } from './PostLocationFields';

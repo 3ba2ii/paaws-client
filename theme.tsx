@@ -83,6 +83,7 @@ const theme = extendTheme({
       color: 'gray.500',
       fontWeight: 'medium',
       fontSize: '1rem',
+      lineHeight: '1.6',
     },
     p2: {
       color: 'gray.500',

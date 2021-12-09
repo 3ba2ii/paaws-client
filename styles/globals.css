@@ -386,11 +386,13 @@ img {
 .carousel-container .carousel .thumbs-wrapper .control-arrow {
   display: none;
 }
+
 .thumbs-wrapper {
   width: fit-content;
   position: relative;
-  margin: 0;
+  margin: 0 1rem 0 0 !important;
 }
+
 .carousel-container .thumbs {
   display: flex;
   flex-direction: column;

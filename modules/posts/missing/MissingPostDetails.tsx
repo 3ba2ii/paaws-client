@@ -76,7 +76,7 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
           py: 1,
         }}
       />
-      <Text textStyle={'p1'} fontWeight='normal' maxW='75ch'>
+      <Text textStyle={'p1'} fontWeight='normal' maxW='80ch'>
         {description}
         Eiusmod cupidatat eiusmod excepteur fugiat elit aliquip eu dolor
         occaecat exercitation proident. Reprehenderit ea occaecat voluptate elit
