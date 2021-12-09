@@ -1,4 +1,3 @@
-import { ApolloCache, gql } from '@apollo/client';
 import { HStack } from '@chakra-ui/layout';
 import {
   Button,
@@ -8,7 +7,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { VoteComponent } from 'components/VoteComponent';
-import { MissingPost, usePostVoteMutation } from 'generated/graphql';
+import { usePostVoteMutation } from 'generated/graphql';
 import React from 'react';
 import { BiMessageRounded, BiShareAlt } from 'react-icons/bi';
 import { updateMissingPostCacheOnVote } from 'utils/cache/updateMissingPostOnVote';
@@ -19,8 +18,6 @@ export const PostActions: React.FC<{
   points: number;
   commentsCount: number;
 }> = ({ postId, voteStatus, points, commentsCount }) => {
-  const hasVoted = voteStatus != null;
-
   const toaster = useToast();
 
   const [vote] = usePostVoteMutation();
@@ -47,7 +44,6 @@ export const PostActions: React.FC<{
         },
         update: (cache, { data: returnedData, errors }) => {
           if (!returnedData || errors?.length) return;
-          //updateCache(cache, returnedData, votingValue);
           updateMissingPostCacheOnVote(
             cache,
             returnedData,

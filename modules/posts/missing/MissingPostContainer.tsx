@@ -1,8 +1,15 @@
-import { Flex, FlexProps, IconButtonProps } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  FlexProps,
+  Heading,
+  IconButtonProps,
+} from '@chakra-ui/react';
 import NotFound from 'components/NotFound';
 import { VoteComponent } from 'components/VoteComponent';
 import { MissingPostQuery } from 'generated/graphql';
 import React from 'react';
+import MissingPostDetails from './MissingPostDetails';
 
 interface MissingPostContainerProps {
   post: MissingPostQuery['missingPost'];
@@ -11,8 +18,11 @@ interface MissingPostContainerProps {
 const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
   post,
 }) => {
-  console.log(`🚀 ~ file: MissingPostContainer.tsx ~ line 9 ~ post`, post);
   const { missingPost, isOwner } = post;
+
+  const onVote = (vote: 1 | -1) => {
+    console.log('vote', vote);
+  };
 
   if (!missingPost)
     return (
@@ -23,18 +33,31 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
     );
   const { voteStatus, points, title, description, tags, id } = missingPost;
   return (
-    <Flex>
+    <Flex
+      w='100%'
+      h='80vh'
+      align={'flex-start'}
+      justifyContent={'space-between'}
+    >
       {/* First Column - Voting column */}
-      <VoteComponent
-        {...{
-          points,
-          voteStatus,
-          onDownvote: () => {},
-          onUpvote: () => {},
-          flexProps: { flexDir: 'column' } as FlexProps,
-          buttonProps: { variant: 'ghost' } as IconButtonProps,
-        }}
-      />
+      <Box flex='.1'>
+        <VoteComponent
+          {...{
+            points,
+            voteStatus,
+            onUpvote: () => onVote(1),
+            onDownvote: () => onVote(-1),
+            flexProps: { flexDir: 'column' } as FlexProps,
+            buttonProps: { variant: 'ghost' } as IconButtonProps,
+          }}
+        />
+      </Box>
+      <Box flex='.8'>
+        <MissingPostDetails post={missingPost} />
+      </Box>
+      <Box flex='.1'>
+        <Heading>{title}</Heading>
+      </Box>
     </Flex>
   );
 };

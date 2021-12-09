@@ -1,14 +1,15 @@
 import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout';
-import { Avatar, Tag, useColorModeValue } from '@chakra-ui/react';
+import { Tag, useColorModeValue } from '@chakra-ui/react';
 import ImageWithFallback from 'components/common/media/ImageWithFallback';
 import { formatDistance } from 'date-fns';
-import { MissingPostsQuery } from 'generated/graphql';
+import { MissingPostsQuery, User } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import { fallbackSrc } from 'utils/constants';
 import { rgbDataURL } from 'utils/rgbDataURL';
 import { PostTags } from '../common/PostTags';
 import { PostActions } from './PostActions';
+import { PostOwner } from '../../../components/PostOwner';
 
 interface SinglePostCardProps {
   post: MissingPostsQuery['missingPosts']['missingPosts'][0];
@@ -28,10 +29,8 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
     commentsCount,
   },
 }) => {
-  let isNear = false;
-  if (address?.distance) {
-    isNear = address.distance <= 100;
-  }
+  let isNear = address?.distance ? address.distance <= 100 : false;
+
   const router = useRouter();
 
   const thumbnailImage = thumbnail?.url || '';
@@ -45,7 +44,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
   const redirectToPost = () => {
     router.push(`/missing/${id}`);
   };
-  const ComponentTags = () => {
+  const TagsComponent = () => {
     return (
       <HStack>
         {tags && <PostTags tags={tags} />}
@@ -139,33 +138,14 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
                 {title}
               </Text>
               {/* Post Tags */}
-              <ComponentTags />
+              <TagsComponent />
             </HStack>
 
             <Text textStyle='p3' textAlign={'center'} whiteSpace={'nowrap'}>
               {createdAtDistance}
             </Text>
           </HStack>
-          <HStack>
-            <Avatar
-              size='xs'
-              name={displayName}
-              src={avatar?.url || ''}
-              cursor='default'
-            />
-            <Text fontSize='14px' fontWeight='normal' color='gray.500'>
-              Posted by{' '}
-              <Text
-                aria-label='name'
-                as='a'
-                href={`localhost:3000/user/${displayName}`}
-                color='blue.500'
-                fontWeight='medium'
-              >
-                {displayName}
-              </Text>
-            </Text>
-          </HStack>
+          <PostOwner {...{ displayName, id, avatarUrl: avatar?.url }} />
           <Text as='p' textStyle='p1' fontWeight='normal' noOfLines={2}>
             {descriptionSnippet}
           </Text>
