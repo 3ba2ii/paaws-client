@@ -29,7 +29,7 @@ const MissingPost: React.FC<MissingPostProps> = () => {
   const isFound = !loading && post && !data?.missingPost.errors?.length;
 
   return (
-    <Layout includeFooter={false}>
+    <Layout includeFooter={true}>
       {loading ? (
         <LoadingComponent />
       ) : !isFound ? (

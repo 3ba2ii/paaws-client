@@ -35,7 +35,7 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
   return (
     <Flex
       w='100%'
-      h='80vh'
+      h='100%'
       align={'flex-start'}
       justifyContent={'space-between'}
     >
