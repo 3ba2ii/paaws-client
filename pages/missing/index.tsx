@@ -30,7 +30,6 @@ const MissingPage = () => {
         filters: { date: null, location: null },
       },
       notifyOnNetworkStatusChange: true,
-
       onCompleted: () => {
         setHasLoaded(true);
       },
