@@ -1,4 +1,11 @@
-import { Box, useColorModeValue } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  List,
+  ListItem,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import React from 'react';
 import styles from '../styles/footer.module.css';
 
@@ -10,13 +17,20 @@ const Footer: React.FC = () => {
       borderColor={useColorModeValue('gray.200', 'gray.700')}
     >
       <p className={styles['copyright']}>&copy;2021 Paaws Platform.</p>
-      <ul className={styles['footer-list']}>
-        <li>Terms</li>
-        <li>Privacy</li>
-        <li>Security</li>
-        <li>Get In Touch</li>
-        <li>Report a bug</li>
-      </ul>
+      <ButtonGroup
+        display={'flex'}
+        sx={{ gap: '16px' }}
+        colorScheme='blue'
+        fontWeight={'normal'}
+        variant='link'
+        css={{ button: { fontSize: '14px' } }}
+      >
+        <Button>Terms</Button>
+        <Button>Privacy</Button>
+        <Button>Security</Button>
+        <Button>Get In Touch</Button>
+        <Button>Report a bug</Button>
+      </ButtonGroup>
     </Box>
   );
 };
