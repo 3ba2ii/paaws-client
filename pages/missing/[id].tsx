@@ -19,7 +19,7 @@ const MissingPost: React.FC<MissingPostProps> = () => {
     query: { id },
   } = useRouter();
 
-  const { data, loading } = useMissingPostQuery({
+  const { loading } = useMissingPostQuery({
     variables: { missingPostId: parseInt(id as string) },
     fetchPolicy: 'cache-first',
     nextFetchPolicy: 'cache-and-network',
@@ -28,13 +28,11 @@ const MissingPost: React.FC<MissingPostProps> = () => {
     },
   });
 
-  const isFound = !loading && post && !data?.missingPost.errors?.length;
-
   return (
     <Layout includeFooter={true}>
       {loading ? (
         <LoadingComponent />
-      ) : !isFound ? (
+      ) : !post ? (
         <VStack w='100%' justify={'flex-start'} h='60vh' spacing={5}>
           <NotFound
             title='📭 404 Not Found'
