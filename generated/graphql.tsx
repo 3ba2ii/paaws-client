@@ -108,6 +108,7 @@ export type Comment = {
   createdAt: Scalars['DateTime'];
   id: Scalars['Int'];
   isEdited: Scalars['Boolean'];
+  isReply: Scalars['Boolean'];
   parentId?: Maybe<Scalars['Int']>;
   points: Scalars['Int'];
   postId: Scalars['Int'];
@@ -894,6 +895,13 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
 
+export type MissingPostCommentsQueryVariables = Exact<{
+  options: MissingPostComments;
+}>;
+
+
+export type MissingPostCommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComments', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comments: Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, text: string, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string } }> } };
+
 export type MissingPostQueryVariables = Exact<{
   missingPostId: Scalars['Int'];
 }>;
@@ -1442,6 +1450,59 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const MissingPostCommentsDocument = gql`
+    query MissingPostComments($options: MissingPostComments!) {
+  comments(options: $options) {
+    errors {
+      field
+      message
+      code
+    }
+    hasMore
+    comments {
+      id
+      updatedAt
+      createdAt
+      postId
+      text
+      user {
+        id
+        displayName
+      }
+      isReply
+      isEdited
+    }
+  }
+}
+    `;
+
+/**
+ * __useMissingPostCommentsQuery__
+ *
+ * To run a query within a React component, call `useMissingPostCommentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMissingPostCommentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMissingPostCommentsQuery({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useMissingPostCommentsQuery(baseOptions: Apollo.QueryHookOptions<MissingPostCommentsQuery, MissingPostCommentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MissingPostCommentsQuery, MissingPostCommentsQueryVariables>(MissingPostCommentsDocument, options);
+      }
+export function useMissingPostCommentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MissingPostCommentsQuery, MissingPostCommentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MissingPostCommentsQuery, MissingPostCommentsQueryVariables>(MissingPostCommentsDocument, options);
+        }
+export type MissingPostCommentsQueryHookResult = ReturnType<typeof useMissingPostCommentsQuery>;
+export type MissingPostCommentsLazyQueryHookResult = ReturnType<typeof useMissingPostCommentsLazyQuery>;
+export type MissingPostCommentsQueryResult = Apollo.QueryResult<MissingPostCommentsQuery, MissingPostCommentsQueryVariables>;
 export const MissingPostDocument = gql`
     query MissingPost($missingPostId: Int!) {
   missingPost(id: $missingPostId) {

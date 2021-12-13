@@ -1,0 +1,23 @@
+query MissingPostComments($options: MissingPostComments!) {
+  comments(options: $options) {
+    errors {
+      field
+      message
+      code
+    }
+    hasMore
+    comments {
+      id
+      updatedAt
+      createdAt
+      postId
+      text
+      user {
+        id
+        displayName
+      }
+      isReply
+      isEdited
+    }
+  }
+}

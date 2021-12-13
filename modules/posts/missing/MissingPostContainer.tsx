@@ -4,6 +4,7 @@ import {
   Flex,
   FlexProps,
   HStack,
+  IconButton,
   IconButtonProps,
 } from '@chakra-ui/react';
 import NotFound from 'components/NotFound';
@@ -11,7 +12,7 @@ import { VoteComponent } from 'components/VoteComponent';
 import { MissingPostQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { FiArrowLeft } from 'react-icons/fi';
+import { FiArrowLeft, FiEdit2, FiShare2 } from 'react-icons/fi';
 import MissingPostDetails from './MissingPostDetails';
 
 interface MissingPostContainerProps {
@@ -61,8 +62,19 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
           }}
         />
       </HStack>
-      <Box flex='.8'>
+      <Box flex='.55'>
         <MissingPostDetails post={missingPost} isOwner={isOwner || false} />
+      </Box>
+      <Box flex='.15'>
+        <HStack>
+          <IconButton aria-label='contact-user' icon={<FiShare2 />} size='sm' />
+          {isOwner && (
+            <IconButton aria-label='edit-post' icon={<FiEdit2 />} size='sm' />
+          )}
+          <Button size='sm' colorScheme={'teal'}>
+            Contact {missingPost.user.displayName.split(' ')[0]}
+          </Button>
+        </HStack>
       </Box>
     </Flex>
   );
