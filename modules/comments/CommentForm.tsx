@@ -36,6 +36,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ postId }) => {
             onChange={onCommentTextChange}
             placeholder='What do you think?'
             borderRadius={'full'}
+            id='comment-input-field'
           />
           <ScaleFade in={commentText.length > 0}>
             <InputRightElement
