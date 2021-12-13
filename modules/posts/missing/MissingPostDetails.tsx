@@ -16,6 +16,7 @@ import React, { useEffect, useMemo } from 'react';
 import { BiMessageRounded, BiShareAlt, BiShieldAlt2 } from 'react-icons/bi';
 import { FiGlobe } from 'react-icons/fi';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+import { focusOnElement } from 'utils/focusOnElement';
 import { PostTags } from '../common/PostTags';
 interface MissingPostProps {
   post: MissingPostQuery['missingPost']['missingPost'];
@@ -100,7 +101,12 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
             py={1.5}
             justify={'space-evenly'}
           >
-            <Button px={6} variant='ghost' leftIcon={<BiMessageRounded />}>
+            <Button
+              px={6}
+              variant='ghost'
+              leftIcon={<BiMessageRounded />}
+              onClick={() => focusOnElement('comment-input-field')}
+            >
               Comment
             </Button>
             <Button px={6} variant='ghost' leftIcon={<BiShareAlt />}>

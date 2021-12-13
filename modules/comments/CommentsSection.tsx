@@ -1,4 +1,4 @@
-import { VStack } from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { useMissingPostCommentsQuery } from 'generated/graphql';
 import React from 'react';
@@ -28,7 +28,9 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
       <CommentForm postId={postId} />
 
       {loading ? (
-        <LoadingComponent progressProps={{ color: 'teal' }} />
+        <Box h='200px' display={'grid'} placeItems={'center'}>
+          <LoadingComponent progressProps={{ color: 'gray', size: '32px' }} />
+        </Box>
       ) : noComments ? (
         <NoComments />
       ) : (

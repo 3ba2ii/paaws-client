@@ -1,15 +1,10 @@
 import { VStack, Text, Heading, Button } from '@chakra-ui/react';
 import React from 'react';
+import { focusOnElement } from 'utils/focusOnElement';
 
 const NoComments: React.FC = () => {
-  const focusOnCommentInputField = () => {
-    const commentForm = document.getElementById('comment-input-field');
-    if (commentForm) {
-      commentForm.focus();
-    }
-  };
   return (
-    <VStack py={20}>
+    <VStack h='200px' justify={'center'}>
       <Heading fontSize={'28px'} mb={1}>
         No Comments
       </Heading>
@@ -19,7 +14,7 @@ const NoComments: React.FC = () => {
           size='sm'
           variant='link'
           colorScheme={'blue'}
-          onClick={focusOnCommentInputField}
+          onClick={() => focusOnElement('comment-input-field')}
         >
           Start the conversation now
         </Button>
