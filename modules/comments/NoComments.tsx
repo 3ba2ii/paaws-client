@@ -16,7 +16,7 @@ const NoComments: React.FC = () => {
           colorScheme={'blue'}
           onClick={() => focusOnElement('comment-input-field')}
         >
-          Start the conversation now
+          Start the conversation
         </Button>
       </Text>
     </VStack>
