@@ -16,8 +16,6 @@ const SingleDummySkeleton = (): JSX.Element => {
       flexDirection={['column', 'column', 'row']}
       boxShadow='base'
       p={'0px'}
-      borderWidth={'.5px'}
-      borderColor={useColorModeValue('gray.200', 'gray.700')}
       w='100%'
       borderRadius={'10px'}
       sx={{ gap: '10px' }}
