@@ -12,7 +12,7 @@ import { PostOwner } from 'components/PostOwner';
 import { formatDistance } from 'date-fns';
 import { MissingPostQuery } from 'generated/graphql';
 import CommentsSection from 'modules/comments/CommentsSection';
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { BiMessageRounded, BiShareAlt, BiShieldAlt2 } from 'react-icons/bi';
 import { FiGlobe } from 'react-icons/fi';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
@@ -31,9 +31,6 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
     [createdAt]
   );
 
-  useEffect(() => {
-    document.title = `${title} - Paaws Missing Post`;
-  }, [post]);
   return (
     <VStack w='100%' h='100%' align='flex-start' spacing={3}>
       <HStack w='100%' justify={'space-between'}>

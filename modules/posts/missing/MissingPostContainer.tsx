@@ -11,7 +11,7 @@ import NotFound from 'components/NotFound';
 import { VoteComponent } from 'components/VoteComponent';
 import { MissingPostQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FiArrowLeft, FiEdit2, FiShare2 } from 'react-icons/fi';
 import MissingPostDetails from './MissingPostDetails';
 
@@ -24,6 +24,10 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
 }) => {
   const router = useRouter();
   const { missingPost, isOwner } = post;
+
+  useEffect(() => {
+    document.title = `${missingPost?.title || 'Missing Post'} - Paaws`;
+  }, [post, missingPost]);
 
   if (!missingPost)
     return (

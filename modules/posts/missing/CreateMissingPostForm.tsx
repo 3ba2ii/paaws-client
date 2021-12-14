@@ -19,24 +19,23 @@ import { UserAvatar } from 'components/UserAvatar';
 import { Form, Formik } from 'formik';
 import {
   CreateMissingPostInput,
-  MissingPostsDocument,
-  MissingPostsQuery,
   MissingPostTypes,
   PrivacyType,
   Scalars,
   useCreateMissingPostMutation,
 } from 'generated/graphql';
+import { useIsAuth } from 'hooks/useIsAuth';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import React, { useRef, useState } from 'react';
 import { GoChevronDown } from 'react-icons/go';
 import { LocationType } from 'types';
+import { addNewMissingPostToCache } from 'utils/cache/addNewMissingPost';
 import { capitalizeString } from 'utils/capitalizeString';
 import {
   PrivacyTypeCustomized,
   SelectLocationOptions,
 } from 'utils/constants/enums';
 import { toErrorMap } from 'utils/toErrorMap';
-import { useIsAuth } from 'hooks/useIsAuth';
 import { CustomAlertDialog } from '../../../components/common/overlays/AlertDialog';
 import { NotAuthenticatedComponent } from '../../../components/NotAuthenticatedComponent';
 import { PostLocationFields } from './PostLocationFields';
@@ -123,35 +122,8 @@ export const NewMissingPostForm: React.FC<{
             },
 
             update: (cache, { data: result, errors }) => {
-              if (errors?.length || !result) return;
-
-              const newPost = result?.createMissingPost.post;
-              if (!newPost) return;
-              const cachedData = cache.readQuery<MissingPostsQuery>({
-                query: MissingPostsDocument,
-                variables: {
-                  input: { limit: 5, cursor: null },
-                  length: 120,
-                },
-              });
-
-              cache.writeQuery<MissingPostsQuery>({
-                query: MissingPostsDocument,
-                variables: {
-                  input: { limit: 6, cursor: null },
-                  length: 120,
-                },
-                data: {
-                  missingPosts: {
-                    ...cachedData!.missingPosts,
-                    missingPosts: [
-                      newPost,
-                      ...cachedData!.missingPosts.missingPosts,
-                    ],
-                  },
-                },
-                overwrite: true,
-              });
+              if (!result || errors?.length) return;
+              return addNewMissingPostToCache(cache, result);
             },
           });
 
