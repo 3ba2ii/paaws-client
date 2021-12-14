@@ -119,6 +119,7 @@ export type Comment = {
   updoots: Array<CommentUpdoot>;
   user: User;
   userId: Scalars['Int'];
+  voteStatus?: Maybe<Scalars['Int']>;
 };
 
 export type CommentResponse = {
@@ -811,7 +812,7 @@ export type WhereClause = {
   limit?: Maybe<Scalars['Int']>;
 };
 
-export type CommentFragmentFragment = { __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, text: string, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } };
+export type CommentFragmentFragment = { __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } };
 
 export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
 
@@ -822,7 +823,7 @@ export type AddMpCommentMutationVariables = Exact<{
 }>;
 
 
-export type AddMpCommentMutation = { __typename?: 'Mutation', addMPComment: { __typename?: 'CommentResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comment?: Maybe<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, text: string, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
+export type AddMpCommentMutation = { __typename?: 'Mutation', addMPComment: { __typename?: 'CommentResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comment?: Maybe<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
 
 export type CreateAdoptionPostMutationVariables = Exact<{
   petImages: Array<Scalars['Upload']> | Scalars['Upload'];
@@ -856,7 +857,7 @@ export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'Us
 
 export type PostVoteMutationVariables = Exact<{
   value: Scalars['Int'];
-  postId: Scalars['Int'];
+  id: Scalars['Int'];
 }>;
 
 
@@ -884,6 +885,14 @@ export type UpdateUserInfoMutationVariables = Exact<{
 
 export type UpdateUserInfoMutation = { __typename?: 'Mutation', updateUser: boolean };
 
+export type UpdootCommentMutationVariables = Exact<{
+  value: Scalars['Int'];
+  id: Scalars['Int'];
+}>;
+
+
+export type UpdootCommentMutation = { __typename?: 'Mutation', updootComment: { __typename?: 'CommentResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comment?: Maybe<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
+
 export type UploadAvatarMutationVariables = Exact<{
   uploadAvatarImage: Scalars['Upload'];
 }>;
@@ -909,7 +918,7 @@ export type MissingPostCommentsQueryVariables = Exact<{
 }>;
 
 
-export type MissingPostCommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComments', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comments: Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, text: string, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
+export type MissingPostCommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComments', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comments: Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
 
 export type MissingPostQueryVariables = Exact<{
   missingPostId: Scalars['Int'];
@@ -941,7 +950,10 @@ export const CommentFragmentFragmentDoc = gql`
   updatedAt
   createdAt
   postId
+  parentId
   text
+  points
+  voteStatus
   user {
     id
     displayName
@@ -1230,8 +1242,8 @@ export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const PostVoteDocument = gql`
-    mutation PostVote($value: Int!, $postId: Int!) {
-  vote(value: $value, postId: $postId) {
+    mutation PostVote($value: Int!, $id: Int!) {
+  vote(value: $value, postId: $id) {
     errors {
       field
       message
@@ -1257,7 +1269,7 @@ export type PostVoteMutationFn = Apollo.MutationFunction<PostVoteMutation, PostV
  * const [postVoteMutation, { data, loading, error }] = usePostVoteMutation({
  *   variables: {
  *      value: // value for 'value'
- *      postId: // value for 'postId'
+ *      id: // value for 'id'
  *   },
  * });
  */
@@ -1378,6 +1390,47 @@ export function useUpdateUserInfoMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateUserInfoMutationHookResult = ReturnType<typeof useUpdateUserInfoMutation>;
 export type UpdateUserInfoMutationResult = Apollo.MutationResult<UpdateUserInfoMutation>;
 export type UpdateUserInfoMutationOptions = Apollo.BaseMutationOptions<UpdateUserInfoMutation, UpdateUserInfoMutationVariables>;
+export const UpdootCommentDocument = gql`
+    mutation UpdootComment($value: Int!, $id: Int!) {
+  updootComment(value: $value, commentId: $id) {
+    errors {
+      field
+      message
+      code
+    }
+    comment {
+      ...CommentFragment
+    }
+  }
+}
+    ${CommentFragmentFragmentDoc}`;
+export type UpdootCommentMutationFn = Apollo.MutationFunction<UpdootCommentMutation, UpdootCommentMutationVariables>;
+
+/**
+ * __useUpdootCommentMutation__
+ *
+ * To run a mutation, you first call `useUpdootCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdootCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updootCommentMutation, { data, loading, error }] = useUpdootCommentMutation({
+ *   variables: {
+ *      value: // value for 'value'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUpdootCommentMutation(baseOptions?: Apollo.MutationHookOptions<UpdootCommentMutation, UpdootCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdootCommentMutation, UpdootCommentMutationVariables>(UpdootCommentDocument, options);
+      }
+export type UpdootCommentMutationHookResult = ReturnType<typeof useUpdootCommentMutation>;
+export type UpdootCommentMutationResult = Apollo.MutationResult<UpdootCommentMutation>;
+export type UpdootCommentMutationOptions = Apollo.BaseMutationOptions<UpdootCommentMutation, UpdootCommentMutationVariables>;
 export const UploadAvatarDocument = gql`
     mutation UploadAvatar($uploadAvatarImage: Upload!) {
   uploadAvatar(image: $uploadAvatarImage) {
