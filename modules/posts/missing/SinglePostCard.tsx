@@ -162,7 +162,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
           </Text>
         </VStack>
         {/* Actions */}
-        <PostActions {...{ postId: id, voteStatus, points, commentsCount }} />
+        <PostActions {...{ id, voteStatus, points, commentsCount }} />
       </VStack>
     </Flex>
   );

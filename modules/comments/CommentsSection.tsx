@@ -12,7 +12,7 @@ interface CommentsProps {
 
 const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
   const { data, loading } = useMissingPostCommentsQuery({
-    variables: { options: { postId, limit: 5, cursor: null } },
+    variables: { options: { postId, cursor: null, limit: 5 } },
     notifyOnNetworkStatusChange: true,
   });
 

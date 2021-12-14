@@ -5,11 +5,11 @@ import React from 'react';
 import { BiMessageRounded, BiShareAlt } from 'react-icons/bi';
 
 export const PostActions: React.FC<{
-  postId: number;
+  id: number;
   voteStatus?: number | null;
   points: number;
   commentsCount: number;
-}> = ({ postId, voteStatus, points, commentsCount }) => {
+}> = ({ id, voteStatus, points, commentsCount }) => {
   return (
     <HStack
       w='100%'
@@ -29,7 +29,7 @@ export const PostActions: React.FC<{
         {...{
           points,
           voteStatus,
-          postId,
+          id,
           buttonProps: {
             minW: 'auto',
             height: 'auto',

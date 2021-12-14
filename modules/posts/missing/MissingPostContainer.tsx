@@ -60,7 +60,7 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
           {...{
             points,
             voteStatus,
-            postId: id,
+            id,
             flexProps: { flexDir: 'column' } as FlexProps,
             buttonProps: { variant: 'ghost' } as IconButtonProps,
           }}
