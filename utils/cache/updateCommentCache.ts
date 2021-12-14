@@ -37,5 +37,4 @@ export const updateCommentsCache = (
     },
     overwrite: true,
   });
-  //2. check if post exists in cache
 };

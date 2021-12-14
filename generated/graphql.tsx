@@ -848,6 +848,14 @@ export type CreatePetMutationVariables = Exact<{
 
 export type CreatePetMutation = { __typename?: 'Mutation', createPet: { __typename?: 'PetResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, pet?: Maybe<{ __typename?: 'Pet', id: number, updatedAt: any, createdAt: any, name: string, type: PetType }> } };
 
+export type EditCommentMutationVariables = Exact<{
+  text: Scalars['String'];
+  commentId: Scalars['Int'];
+}>;
+
+
+export type EditCommentMutation = { __typename?: 'Mutation', editComment: { __typename?: 'CommentResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comment?: Maybe<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
+
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
 }>;
@@ -1198,6 +1206,47 @@ export function useCreatePetMutation(baseOptions?: Apollo.MutationHookOptions<Cr
 export type CreatePetMutationHookResult = ReturnType<typeof useCreatePetMutation>;
 export type CreatePetMutationResult = Apollo.MutationResult<CreatePetMutation>;
 export type CreatePetMutationOptions = Apollo.BaseMutationOptions<CreatePetMutation, CreatePetMutationVariables>;
+export const EditCommentDocument = gql`
+    mutation EditComment($text: String!, $commentId: Int!) {
+  editComment(text: $text, commentId: $commentId) {
+    errors {
+      field
+      message
+      code
+    }
+    comment {
+      ...CommentFragment
+    }
+  }
+}
+    ${CommentFragmentFragmentDoc}`;
+export type EditCommentMutationFn = Apollo.MutationFunction<EditCommentMutation, EditCommentMutationVariables>;
+
+/**
+ * __useEditCommentMutation__
+ *
+ * To run a mutation, you first call `useEditCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editCommentMutation, { data, loading, error }] = useEditCommentMutation({
+ *   variables: {
+ *      text: // value for 'text'
+ *      commentId: // value for 'commentId'
+ *   },
+ * });
+ */
+export function useEditCommentMutation(baseOptions?: Apollo.MutationHookOptions<EditCommentMutation, EditCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditCommentMutation, EditCommentMutationVariables>(EditCommentDocument, options);
+      }
+export type EditCommentMutationHookResult = ReturnType<typeof useEditCommentMutation>;
+export type EditCommentMutationResult = Apollo.MutationResult<EditCommentMutation>;
+export type EditCommentMutationOptions = Apollo.BaseMutationOptions<EditCommentMutation, EditCommentMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($loginOptions: LoginInput!) {
   login(options: $loginOptions) {
