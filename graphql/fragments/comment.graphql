@@ -7,6 +7,9 @@ fragment CommentFragment on Comment {
   user {
     id
     displayName
+    avatar {
+      url
+    }
   }
   isReply
   isEdited

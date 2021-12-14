@@ -32,7 +32,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         `❌ [GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       );
       if (message.includes('Not Authenticated')) {
-        if (path && path.toString() === 'vote')
+        if (path && ['vote'].includes(path.toString()))
           return handleLogoutWithoutHook();
       }
     });

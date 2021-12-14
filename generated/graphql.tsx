@@ -811,7 +811,7 @@ export type WhereClause = {
   limit?: Maybe<Scalars['Int']>;
 };
 
-export type CommentFragmentFragment = { __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, text: string, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string } };
+export type CommentFragmentFragment = { __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, text: string, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } };
 
 export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
 
@@ -822,7 +822,7 @@ export type AddMpCommentMutationVariables = Exact<{
 }>;
 
 
-export type AddMpCommentMutation = { __typename?: 'Mutation', addMPComment: { __typename?: 'CommentResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comment?: Maybe<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, text: string, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string } }> } };
+export type AddMpCommentMutation = { __typename?: 'Mutation', addMPComment: { __typename?: 'CommentResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comment?: Maybe<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, text: string, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
 
 export type CreateAdoptionPostMutationVariables = Exact<{
   petImages: Array<Scalars['Upload']> | Scalars['Upload'];
@@ -909,7 +909,7 @@ export type MissingPostCommentsQueryVariables = Exact<{
 }>;
 
 
-export type MissingPostCommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComments', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comments: Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, text: string, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string } }> } };
+export type MissingPostCommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComments', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comments: Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, text: string, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
 
 export type MissingPostQueryVariables = Exact<{
   missingPostId: Scalars['Int'];
@@ -945,6 +945,9 @@ export const CommentFragmentFragmentDoc = gql`
   user {
     id
     displayName
+    avatar {
+      url
+    }
   }
   isReply
   isEdited

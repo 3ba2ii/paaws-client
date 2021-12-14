@@ -1,7 +1,8 @@
-import { Box, Text, VStack } from '@chakra-ui/react';
+import { Box, Divider, Text, VStack } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { useMissingPostCommentsQuery } from 'generated/graphql';
 import React from 'react';
+import Comment from './Comment';
 import CommentForm from './CommentForm';
 import NoComments from './NoComments';
 
@@ -35,9 +36,9 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
       ) : noComments ? (
         <NoComments />
       ) : (
-        <VStack>
+        <VStack w='100%' divider={<Divider />} py={5}>
           {data?.comments.comments.map((comment) => (
-            <Text key={comment.id}>{comment.text}</Text>
+            <Comment key={comment.id} comment={comment} />
           ))}
         </VStack>
       )}
