@@ -3,7 +3,10 @@ fragment CommentFragment on Comment {
   updatedAt
   createdAt
   postId
+  parentId
   text
+  points
+  voteStatus
   user {
     id
     displayName

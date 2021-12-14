@@ -1,0 +1,12 @@
+mutation UpdootComment($value: Int!, $id: Int!) {
+  updootComment(value: $value, commentId: $id) {
+    errors {
+      field
+      message
+      code
+    }
+    comment {
+      ...CommentFragment
+    }
+  }
+}

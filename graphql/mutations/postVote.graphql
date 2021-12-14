@@ -1,5 +1,5 @@
-mutation PostVote($value: Int!, $postId: Int!) {
-  vote(value: $value, postId: $postId) {
+mutation PostVote($value: Int!, $id: Int!) {
+  vote(value: $value, postId: $id) {
     errors {
       field
       message
