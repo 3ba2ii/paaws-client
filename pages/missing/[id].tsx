@@ -5,34 +5,28 @@ import NotFound from 'components/NotFound';
 import { MissingPostQuery, useMissingPostQuery } from 'generated/graphql';
 import MissingPostContainer from 'modules/posts/missing/MissingPostContainer';
 import router, { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FiChevronRight } from 'react-icons/fi';
 import withApollo from 'utils/withApollo';
 
 interface MissingPostProps {}
 
 const MissingPost: React.FC<MissingPostProps> = () => {
-  const [post, setPost] = React.useState<
-    MissingPostQuery['missingPost'] | null
-  >(null);
   const {
     query: { id },
   } = useRouter();
 
-  const { loading } = useMissingPostQuery({
+  const { data, loading } = useMissingPostQuery({
     variables: { missingPostId: parseInt(id as string) },
     fetchPolicy: 'cache-first',
-    nextFetchPolicy: 'cache-and-network',
-    onCompleted: (d) => {
-      setPost(d.missingPost);
-    },
+    notifyOnNetworkStatusChange: true,
   });
 
   return (
     <Layout includeFooter={true}>
       {loading ? (
         <LoadingComponent />
-      ) : !post ? (
+      ) : !data?.missingPost ? (
         <VStack w='100%' justify={'flex-start'} h='60vh' spacing={5}>
           <NotFound
             title='📭 404 Not Found'
@@ -46,7 +40,7 @@ const MissingPost: React.FC<MissingPostProps> = () => {
           </Button>
         </VStack>
       ) : (
-        <MissingPostContainer post={post} />
+        <MissingPostContainer post={data?.missingPost} />
       )}
     </Layout>
   );

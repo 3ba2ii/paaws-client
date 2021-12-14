@@ -1,4 +1,4 @@
-import { Box, VStack } from '@chakra-ui/react';
+import { Box, Text, VStack } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { useMissingPostCommentsQuery } from 'generated/graphql';
 import React from 'react';
@@ -12,6 +12,7 @@ interface CommentsProps {
 const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
   const { data, loading } = useMissingPostCommentsQuery({
     variables: { options: { postId, limit: 5, cursor: null } },
+    notifyOnNetworkStatusChange: true,
   });
 
   const noComments = !loading && data?.comments.comments.length === 0;
@@ -25,7 +26,7 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
   */
   return (
     <VStack w='100%' py={4}>
-      <CommentForm postId={postId} />
+      <CommentForm postId={postId} parentId={null} />
 
       {loading ? (
         <Box h='200px' display={'grid'} placeItems={'center'}>
@@ -34,7 +35,11 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
       ) : noComments ? (
         <NoComments />
       ) : (
-        'Comments'
+        <VStack>
+          {data?.comments.comments.map((comment) => (
+            <Text key={comment.id}>{comment.text}</Text>
+          ))}
+        </VStack>
       )}
     </VStack>
   );

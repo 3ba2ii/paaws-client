@@ -1,0 +1,13 @@
+fragment CommentFragment on Comment {
+  id
+  updatedAt
+  createdAt
+  postId
+  text
+  user {
+    id
+    displayName
+  }
+  isReply
+  isEdited
+}

@@ -1,0 +1,12 @@
+mutation AddMPComment($input: CreateCommentInputType!) {
+  addMPComment(input: $input) {
+    errors {
+      field
+      message
+      code
+    }
+    comment {
+      ...CommentFragment
+    }
+  }
+}

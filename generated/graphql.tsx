@@ -811,9 +811,18 @@ export type WhereClause = {
   limit?: Maybe<Scalars['Int']>;
 };
 
+export type CommentFragmentFragment = { __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, text: string, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string } };
+
 export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
 
 export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
+
+export type AddMpCommentMutationVariables = Exact<{
+  input: CreateCommentInputType;
+}>;
+
+
+export type AddMpCommentMutation = { __typename?: 'Mutation', addMPComment: { __typename?: 'CommentResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comment?: Maybe<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, text: string, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string } }> } };
 
 export type CreateAdoptionPostMutationVariables = Exact<{
   petImages: Array<Scalars['Upload']> | Scalars['Upload'];
@@ -926,6 +935,21 @@ export type PaginatedUsersQueryVariables = Exact<{
 
 export type PaginatedUsersQuery = { __typename?: 'Query', users: { __typename?: 'PaginatedUsers', hasMore: boolean, users: Array<{ __typename?: 'User', id: number, email: string, phone: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
+export const CommentFragmentFragmentDoc = gql`
+    fragment CommentFragment on Comment {
+  id
+  updatedAt
+  createdAt
+  postId
+  text
+  user {
+    id
+    displayName
+  }
+  isReply
+  isEdited
+}
+    `;
 export const MissingPostFragmentFragmentDoc = gql`
     fragment MissingPostFragment on MissingPost {
   id
@@ -977,6 +1001,46 @@ export const RequiredUserInfoFragmentDoc = gql`
   }
 }
     `;
+export const AddMpCommentDocument = gql`
+    mutation AddMPComment($input: CreateCommentInputType!) {
+  addMPComment(input: $input) {
+    errors {
+      field
+      message
+      code
+    }
+    comment {
+      ...CommentFragment
+    }
+  }
+}
+    ${CommentFragmentFragmentDoc}`;
+export type AddMpCommentMutationFn = Apollo.MutationFunction<AddMpCommentMutation, AddMpCommentMutationVariables>;
+
+/**
+ * __useAddMpCommentMutation__
+ *
+ * To run a mutation, you first call `useAddMpCommentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddMpCommentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addMpCommentMutation, { data, loading, error }] = useAddMpCommentMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useAddMpCommentMutation(baseOptions?: Apollo.MutationHookOptions<AddMpCommentMutation, AddMpCommentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddMpCommentMutation, AddMpCommentMutationVariables>(AddMpCommentDocument, options);
+      }
+export type AddMpCommentMutationHookResult = ReturnType<typeof useAddMpCommentMutation>;
+export type AddMpCommentMutationResult = Apollo.MutationResult<AddMpCommentMutation>;
+export type AddMpCommentMutationOptions = Apollo.BaseMutationOptions<AddMpCommentMutation, AddMpCommentMutationVariables>;
 export const CreateAdoptionPostDocument = gql`
     mutation CreateAdoptionPost($petImages: [Upload!]!, $postInput: AdoptionPostInput!) {
   createAdoptionPost(images: $petImages, input: $postInput) {
@@ -1460,21 +1524,11 @@ export const MissingPostCommentsDocument = gql`
     }
     hasMore
     comments {
-      id
-      updatedAt
-      createdAt
-      postId
-      text
-      user {
-        id
-        displayName
-      }
-      isReply
-      isEdited
+      ...CommentFragment
     }
   }
 }
-    `;
+    ${CommentFragmentFragmentDoc}`;
 
 /**
  * __useMissingPostCommentsQuery__

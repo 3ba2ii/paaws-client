@@ -42,8 +42,4 @@ export const addNewMissingPostToCache = (
     },
     overwrite: true,
   });
-
-  return;
-
-  //2. check if post exists in cache
 };

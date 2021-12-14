@@ -7,17 +7,7 @@ query MissingPostComments($options: MissingPostComments!) {
     }
     hasMore
     comments {
-      id
-      updatedAt
-      createdAt
-      postId
-      text
-      user {
-        id
-        displayName
-      }
-      isReply
-      isEdited
+      ...CommentFragment
     }
   }
 }
