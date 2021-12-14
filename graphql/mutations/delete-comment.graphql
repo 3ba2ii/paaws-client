@@ -1,0 +1,10 @@
+mutation DeleteComment($commentId: Int!) {
+  deleteComment(commentId: $commentId) {
+    errors {
+      field
+      message
+      code
+    }
+    deleted
+  }
+}
