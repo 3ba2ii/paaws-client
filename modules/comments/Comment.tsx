@@ -1,22 +1,16 @@
 import {
   Avatar,
-  Box,
   Button,
   HStack,
   IconButtonProps,
   Text,
-  Textarea,
   VStack,
 } from '@chakra-ui/react';
 import { VoteComponent } from 'components/VoteComponent';
 import { formatDistance } from 'date-fns';
-import { Form, Formik } from 'formik';
-import {
-  CommentFragmentFragment,
-  useEditCommentMutation,
-  useMeQuery,
-} from 'generated/graphql';
+import { CommentFragmentFragment, useMeQuery } from 'generated/graphql';
 import React, { useState } from 'react';
+import { EditCommentForm } from './EditCommentForm';
 
 interface CommentProps {
   comment: CommentFragmentFragment;
@@ -39,51 +33,6 @@ const CommentOwnerHeader: React.FC<{ user: CommentFragmentFragment['user'] }> =
     );
   };
 
-const EditCommentForm: React.FC<{
-  commentId: number;
-  text: string;
-  toggleMode: VoidFunction;
-}> = ({ commentId, text, toggleMode }) => {
-  const [editComment] = useEditCommentMutation();
-
-  return (
-    <Box w='100%'>
-      <Formik
-        initialValues={{ text }}
-        onSubmit={async ({ text: editedText }) => {
-          await editComment({
-            variables: {
-              commentId,
-              text: editedText,
-            },
-          });
-
-          toggleMode();
-        }}
-      >
-        {({ values, handleChange, isSubmitting }) => (
-          <Form>
-            <Textarea
-              name='text'
-              value={values.text}
-              onChange={handleChange}
-              required
-              mb={4}
-            />
-            <HStack w='100%' justify='flex-end'>
-              <Button size='sm' variant='ghost' onClick={toggleMode}>
-                Cancel
-              </Button>
-              <Button size='sm' isLoading={isSubmitting} type='submit'>
-                Edit Comment
-              </Button>
-            </HStack>
-          </Form>
-        )}
-      </Formik>
-    </Box>
-  );
-};
 const Comment: React.FC<CommentProps> = ({ comment }) => {
   const [mode, setMode] = useState<'edit' | 'view'>('view');
   const { data } = useMeQuery({ fetchPolicy: 'cache-only' });
@@ -126,7 +75,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
         <Text textStyle={'p1'} maxW='65ch'>
           {text}{' '}
           {isEdited && (
-            <Text textStyle={'p3'} as='span'>
+            <Text textStyle={'p3'} as='span' opacity={'.75'}>
               (edited)
             </Text>
           )}
