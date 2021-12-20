@@ -15,6 +15,7 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
     variables: { options: { postId, cursor: null, limit: 5 } },
     notifyOnNetworkStatusChange: true,
   });
+  console.log(`🚀 ~ file: CommentsSection.tsx ~ line 15 ~ data`, data);
 
   const noComments = !loading && data?.comments.comments.length === 0;
 

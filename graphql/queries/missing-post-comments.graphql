@@ -8,6 +8,9 @@ query MissingPostComments($options: MissingPostComments!) {
     hasMore
     comments {
       ...CommentFragment
+      replies {
+        ...CommentFragment
+      }
     }
   }
 }

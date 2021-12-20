@@ -1,6 +1,8 @@
 import {
   Avatar,
+  Box,
   Button,
+  Divider,
   HStack,
   IconButtonProps,
   Popover,
@@ -11,27 +13,26 @@ import {
   PopoverFooter,
   PopoverHeader,
   PopoverTrigger,
+  ScaleFade,
   Text,
   VStack,
-  Input,
-  Box,
-  ScaleFade,
 } from '@chakra-ui/react';
 import { VoteComponent } from 'components/VoteComponent';
 import { formatDistance } from 'date-fns';
 import {
   CommentFragmentFragment,
+  MissingPostCommentsQuery,
   useDeleteCommentMutation,
   useMeQuery,
 } from 'generated/graphql';
 import React, { useState } from 'react';
-
 import { deleteCommentFromCache } from 'utils/cache/deleteCommentFromCache';
 import CommentForm from './CommentForm';
 import { EditCommentForm } from './EditCommentForm';
+import RepliesSection from './RepliesSection';
 
 interface CommentProps {
-  comment: CommentFragmentFragment;
+  comment: CommentFragmentFragment & { replies?: CommentFragmentFragment[] };
 }
 
 const CommentOwnerHeader: React.FC<{ user: CommentFragmentFragment['user'] }> =
@@ -131,6 +132,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     isEdited,
     isReply,
     parentId,
+    replies,
   } = comment;
   const createdAtDistance = formatDistance(new Date(createdAt), new Date(), {
     addSuffix: true,
@@ -207,13 +209,14 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
           <DeleteCommentPopover commentId={id} postId={postId} />
         )}
       </HStack>
+      {replies && <RepliesSection replies={replies} />}
       {replyVisible && (
         <Box w='100%' pt={2}>
           <ScaleFade in={replyVisible}>
             <CommentForm
               postId={postId}
               parentId={id}
-              avatarProps={{ w: '28px', h: '28px' }}
+              avatarProps={{ size: 'sm' }}
               inputGroupProps={{
                 size: 'sm',
                 placeholder: 'What do you think? ',
