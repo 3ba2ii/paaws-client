@@ -27,7 +27,11 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
   */
   return (
     <VStack w='100%' py={4}>
-      <CommentForm postId={postId} parentId={null} />
+      <CommentForm
+        postId={postId}
+        parentId={null}
+        avatarProps={{ w: '40px', h: '40px' }}
+      />
 
       {loading ? (
         <Box h='200px' display={'grid'} placeItems={'center'}>

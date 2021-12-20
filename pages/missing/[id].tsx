@@ -2,10 +2,10 @@ import { Button, VStack } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { Layout } from 'components/Layout';
 import NotFound from 'components/NotFound';
-import { MissingPostQuery, useMissingPostQuery } from 'generated/graphql';
+import { useMissingPostQuery } from 'generated/graphql';
 import MissingPostContainer from 'modules/posts/missing/MissingPostContainer';
 import router, { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { FiChevronRight } from 'react-icons/fi';
 import withApollo from 'utils/withApollo';
 

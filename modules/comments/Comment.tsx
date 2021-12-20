@@ -12,21 +12,22 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Text,
-  usePopover,
-  usePopoverContext,
   VStack,
+  Input,
+  Box,
+  ScaleFade,
 } from '@chakra-ui/react';
 import { VoteComponent } from 'components/VoteComponent';
 import { formatDistance } from 'date-fns';
 import {
   CommentFragmentFragment,
-  MissingPostCommentsDocument,
-  MissingPostCommentsQuery,
   useDeleteCommentMutation,
   useMeQuery,
 } from 'generated/graphql';
 import React, { useState } from 'react';
+
 import { deleteCommentFromCache } from 'utils/cache/deleteCommentFromCache';
+import CommentForm from './CommentForm';
 import { EditCommentForm } from './EditCommentForm';
 
 interface CommentProps {
@@ -50,7 +51,7 @@ const CommentOwnerHeader: React.FC<{ user: CommentFragmentFragment['user'] }> =
     );
   };
 
-const DeleteButtonPopOver: React.FC<{ commentId: number; postId: number }> = ({
+const DeleteCommentPopover: React.FC<{ commentId: number; postId: number }> = ({
   commentId,
   postId,
 }) => {
@@ -116,6 +117,7 @@ const DeleteButtonPopOver: React.FC<{ commentId: number; postId: number }> = ({
 
 const Comment: React.FC<CommentProps> = ({ comment }) => {
   const [mode, setMode] = useState<'edit' | 'view'>('view');
+  const [replyVisible, setReplyVisible] = useState(false);
   const { data } = useMeQuery({ fetchPolicy: 'cache-only' });
 
   const {
@@ -144,6 +146,10 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     } else {
       setMode('view');
     }
+  };
+
+  const toggleReplyMode = () => {
+    setReplyVisible(!replyVisible);
   };
   return (
     <VStack w='100%' align='flex-start' py={2}>
@@ -179,7 +185,12 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
             } as IconButtonProps,
           }}
         />
-        <Button variant={'link'} fontWeight={'medium'} size={'xs'}>
+        <Button
+          variant={'link'}
+          fontWeight={'medium'}
+          size={'xs'}
+          onClick={toggleReplyMode}
+        >
           Reply
         </Button>
         {isCommentAuthor && (
@@ -193,9 +204,24 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
           </Button>
         )}
         {(isPostAuthor || isCommentAuthor) && (
-          <DeleteButtonPopOver commentId={id} postId={postId} />
+          <DeleteCommentPopover commentId={id} postId={postId} />
         )}
       </HStack>
+      {replyVisible && (
+        <Box w='100%' pt={2}>
+          <ScaleFade in={replyVisible}>
+            <CommentForm
+              postId={postId}
+              parentId={id}
+              avatarProps={{ w: '28px', h: '28px' }}
+              inputGroupProps={{
+                size: 'sm',
+                placeholder: 'What do you think? ',
+              }}
+            />
+          </ScaleFade>
+        </Box>
+      )}
     </VStack>
   );
 };

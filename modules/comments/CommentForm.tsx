@@ -1,8 +1,10 @@
 import {
+  AvatarProps,
   HStack,
   IconButton,
   Input,
   InputGroup,
+  InputGroupProps,
   InputRightElement,
   ScaleFade,
   useToast,
@@ -17,9 +19,16 @@ import { updateCommentsCache } from 'utils/cache/updateCommentCache';
 interface CommentFormProps {
   postId: number;
   parentId: number | null;
+  avatarProps?: AvatarProps;
+  inputGroupProps?: InputGroupProps;
 }
 
-const CommentForm: React.FC<CommentFormProps> = ({ postId, parentId }) => {
+const CommentForm: React.FC<CommentFormProps> = ({
+  postId,
+  parentId,
+  avatarProps,
+  inputGroupProps,
+}) => {
   const [commentText, setCommentText] = React.useState('');
   const [addComment] = useAddMpCommentMutation();
   const router = useRouter();
@@ -71,7 +80,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ postId, parentId }) => {
   return (
     <form style={{ width: '100%' }} onSubmit={onCommentSubmit}>
       <HStack w='100%'>
-        <UserAvatar avatarProps={{ w: '40px', h: '40px' }} />
+        <UserAvatar avatarProps={avatarProps} />
         <InputGroup variant={'filled'} w='100%' overflow={'hidden'}>
           <Input
             value={commentText}
@@ -80,6 +89,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ postId, parentId }) => {
             borderRadius={'full'}
             id='comment-input-field'
             required
+            {...inputGroupProps}
           />
           <ScaleFade in={commentText.length > 0}>
             <InputRightElement
