@@ -1,9 +1,16 @@
-import {
-  MissingPostCommentsQuery,
-  MissingPostCommentsDocument,
-} from './../../generated/graphql';
 import { ApolloCache } from '@apollo/client';
-import { AddMpCommentMutation } from 'generated/graphql';
+import {
+  AddMpCommentMutation,
+  CommentFragmentFragment,
+} from 'generated/graphql';
+import {
+  MissingPostCommentsDocument,
+  MissingPostCommentsQuery,
+} from './../../generated/graphql';
+
+type CommentWithReplies = CommentFragmentFragment & {
+  replies: CommentFragmentFragment[];
+};
 
 export const updateCommentsCache = (
   cache: ApolloCache<any>,
@@ -25,6 +32,31 @@ export const updateCommentsCache = (
     variables: { options: { postId, limit: 5, cursor: null } },
   });
 
+  //two scenarios for a comment
+  //1. A regular comment (no parentId)
+  //2. A reply to a comment (parentId) - add it to the parent id
+
+  let newCommentsInCache = [];
+  if (newComment.isReply) {
+    const newComments =
+      cachedData?.comments.comments.map((comment) => {
+        if (comment.id === newComment.parentId) {
+          return {
+            ...comment,
+            replies: [newComment, ...comment.replies],
+          };
+        }
+        return comment;
+      }) || [];
+    newCommentsInCache = newComments;
+  } else {
+    newCommentsInCache = [newComment, ...cachedData!.comments.comments];
+  }
+  console.log(
+    `🚀 ~ file: updateCommentCache.ts ~ line 59 ~ newCommentsInCache`,
+    newCommentsInCache
+  );
+
   cache.writeQuery<MissingPostCommentsQuery>({
     query: MissingPostCommentsDocument,
     variables: { options: { postId, limit: 5, cursor: null } },
@@ -32,7 +64,7 @@ export const updateCommentsCache = (
     data: {
       comments: {
         ...(cachedData?.comments || []),
-        comments: [newComment, ...cachedData!.comments.comments],
+        comments: newCommentsInCache as CommentWithReplies[],
       },
     },
     overwrite: true,

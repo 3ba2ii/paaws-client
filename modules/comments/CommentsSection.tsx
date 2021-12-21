@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Divider, VStack } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { useMissingPostCommentsQuery } from 'generated/graphql';
 import React, { useState } from 'react';
@@ -29,16 +29,17 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
   const fetchMoreComments = async () => {
     if (!data?.comments) return;
     const { comments, hasMore } = data.comments;
+
     if (!hasMore) return;
+    setPaginationLoading(true);
+
     const { createdAt: cursor } = comments[comments.length - 1];
     const newVariables = {
       ...variables,
       options: { ...variables?.options, limit: 5, cursor },
     };
-    setPaginationLoading(true);
-    await fetchMore({ variables: newVariables }).finally(() =>
-      setPaginationLoading(false)
-    );
+    await fetchMore({ variables: newVariables });
+    setPaginationLoading(false);
   };
   return (
     <VStack w='100%' py={4}>

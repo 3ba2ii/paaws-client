@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   Button,
-  Divider,
   HStack,
   IconButtonProps,
   ScaleFade,
@@ -12,11 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { VoteComponent } from 'components/VoteComponent';
 import { formatDistance } from 'date-fns';
-import {
-  CommentFragmentFragment,
-  MissingPostCommentsQuery,
-  useMeQuery,
-} from 'generated/graphql';
+import { CommentFragmentFragment, useMeQuery } from 'generated/graphql';
 import React, { useState } from 'react';
 import CommentForm from './CommentForm';
 import { DeleteCommentPopover } from './DeleteCommentPopover';
@@ -59,7 +54,6 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     postId,
     isEdited,
     isReply,
-    parentId,
     replies,
   } = comment;
   const createdAtDistance = formatDistance(new Date(createdAt), new Date(), {
@@ -91,12 +85,13 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
         isReply
           ? {
               content: '""',
-              width: '1px',
-              height: '80%',
-              background: useColorModeValue('gray.300', 'gray.600'),
+              w: '2px',
+              h: '100%',
+              borderLeft: '1px solid',
+              borderColor: useColorModeValue('gray.300', 'gray.600'),
               position: 'absolute',
-              top: '50%',
               left: '-20px',
+              top: '50%',
               transform: 'translateY(-50%)',
             }
           : {}

@@ -49,11 +49,15 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
         </Text>
       </HStack>
       {address && address.formatted_address && (
-        <HStack color='gray.500'>
+        <HStack color='gray.500' align='center'>
           <FiGlobe color='inherit' />
           <Text textStyle={'p2'} color='inherit'>
             {address.formatted_address}
           </Text>
+          -{' '}
+          <Button variant='link' size='xs' colorScheme={'blue'}>
+            Location on Map
+          </Button>
         </HStack>
       )}
       <PostTags
