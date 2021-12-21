@@ -1,7 +1,7 @@
 import { Box, Button, Divider, Text, VStack } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { useMissingPostCommentsQuery } from 'generated/graphql';
-import React from 'react';
+import React, { useState } from 'react';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import Comment from './Comment';
 import CommentForm from './CommentForm';
@@ -12,11 +12,11 @@ interface CommentsProps {
 }
 
 const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
+  const [paginationLoading, setPaginationLoading] = useState(false);
   const { data, loading, variables, fetchMore } = useMissingPostCommentsQuery({
     variables: { options: { postId, cursor: null, limit: 5 } },
     notifyOnNetworkStatusChange: true,
   });
-  console.log(`🚀 ~ file: CommentsSection.tsx ~ line 16 ~ data`, data);
 
   const noComments = !loading && data?.comments.comments.length === 0;
 
@@ -35,7 +35,10 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
       ...variables,
       options: { ...variables?.options, limit: 5, cursor },
     };
-    await fetchMore({ variables: newVariables });
+    setPaginationLoading(true);
+    await fetchMore({ variables: newVariables }).finally(() =>
+      setPaginationLoading(false)
+    );
   };
   return (
     <VStack w='100%' py={4}>
@@ -45,7 +48,7 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
         avatarProps={{ w: '40px', h: '40px' }}
       />
 
-      {loading ? (
+      {loading && !paginationLoading ? (
         <Box h='200px' display={'grid'} placeItems={'center'}>
           <LoadingComponent progressProps={{ color: 'gray', size: '32px' }} />
         </Box>
@@ -61,9 +64,10 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
           {data?.comments.hasMore && (
             <Button
               size='sm'
-              px='1rem'
+              px='2rem'
               rightIcon={<FiMoreHorizontal />}
               onClick={fetchMoreComments}
+              isLoading={paginationLoading}
             >
               Load more
             </Button>
