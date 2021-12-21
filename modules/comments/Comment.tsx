@@ -154,7 +154,26 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     setReplyVisible(!replyVisible);
   };
   return (
-    <VStack w='100%' align='flex-start' py={2}>
+    <VStack
+      w='100%'
+      align='flex-start'
+      py={2}
+      pos='relative'
+      _before={
+        isReply
+          ? {
+              content: '""',
+              width: '1px',
+              height: '80%',
+              background: 'gray.600',
+              position: 'absolute',
+              top: '50%',
+              left: '-20px',
+              transform: 'translateY(-50%)',
+            }
+          : {}
+      }
+    >
       <HStack w='100%' align='flex-start' justify={'space-between'}>
         <CommentOwnerHeader user={user} />
         <Text textStyle={'p3'}>{createdAtDistance}</Text>
