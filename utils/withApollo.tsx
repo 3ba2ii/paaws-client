@@ -8,6 +8,7 @@ import { onError } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
 import {
   PaginatedAdoptionPosts,
+  PaginatedComments,
   PaginatedMissingPosts,
 } from 'generated/graphql';
 import nextWithApollo from 'next-with-apollo';
@@ -71,6 +72,20 @@ const cache = new InMemoryCache({
                 ...(existing?.missingPosts || []),
                 ...incoming.missingPosts,
               ],
+            };
+          },
+        },
+        comments: {
+          keyArgs: [],
+          merge(
+            existing: PaginatedComments | undefined,
+            incoming: PaginatedComments
+          ) {
+            if (!existing) return incoming;
+
+            return {
+              ...incoming,
+              comments: [...(existing?.comments || []), ...incoming.comments],
             };
           },
         },
