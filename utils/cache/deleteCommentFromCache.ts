@@ -24,11 +24,6 @@ export const deleteCommentFromCache = (
     variables: { options: { postId, limit: 5, cursor: null } },
   });
 
-  console.log(
-    `🚀 ~ file: deleteCommentFromCache.ts ~ line 26 ~ cachedData`,
-    cachedData
-  );
-
   if (!cachedData) {
     return;
   }

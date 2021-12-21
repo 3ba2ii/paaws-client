@@ -15,7 +15,6 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
     variables: { options: { postId, cursor: null, limit: 5 } },
     notifyOnNetworkStatusChange: true,
   });
-  console.log(`🚀 ~ file: CommentsSection.tsx ~ line 15 ~ data`, data);
 
   const noComments = !loading && data?.comments.comments.length === 0;
 
@@ -24,7 +23,6 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
     2. delete comment (if user is the owner of the comment, or the post owner)
     3. edit comment (in case of comment owner is the logged in user)
     4. reply to a comment
-  
   */
   return (
     <VStack w='100%' py={4}>
