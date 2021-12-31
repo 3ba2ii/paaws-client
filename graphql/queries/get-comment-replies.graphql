@@ -1,5 +1,5 @@
-query MissingPostComments($options: MissingPostComments!) {
-  comments(options: $options) {
+query GetCommentReplies($options: ParentCommentReplies!) {
+  getCommentReplies(options: $options) {
     errors {
       field
       message

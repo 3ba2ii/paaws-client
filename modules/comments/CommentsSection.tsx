@@ -1,6 +1,9 @@
 import { Box, Button, Divider, VStack } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
-import { useMissingPostCommentsQuery } from 'generated/graphql';
+import {
+  CommentFragmentFragment,
+  useMissingPostCommentsQuery,
+} from 'generated/graphql';
 import React, { useState } from 'react';
 import { FiMoreHorizontal } from 'react-icons/fi';
 import Comment from './Comment';
@@ -59,7 +62,10 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
         <VStack w='100%'>
           <VStack w='100%' divider={<Divider />} py={5}>
             {data?.comments.comments.map((comment) => (
-              <Comment key={comment.id} comment={comment} />
+              <Comment
+                key={comment.id}
+                comment={comment as CommentFragmentFragment}
+              />
             ))}
           </VStack>
           {data?.comments.hasMore && (

@@ -89,13 +89,42 @@ const cache = new InMemoryCache({
             };
           },
         },
+
+        getCommentReplies: {
+          keyArgs: [],
+          merge(
+            existing: PaginatedComments | undefined,
+            incoming: PaginatedComments
+          ) {
+            let uniqueIds: { [key: string]: boolean } = {};
+
+            const mergedReplies = [
+              ...incoming.comments,
+              ...(existing?.comments || []),
+            ];
+
+            const newComments = mergedReplies.filter((ref: any) => {
+              const id = ref?.__ref || null;
+              if (!id) return false;
+
+              if (uniqueIds[id]) return false;
+              uniqueIds[id] = true;
+              return true;
+            });
+
+            return {
+              ...incoming,
+              comments: newComments,
+            };
+          },
+        },
       },
     },
   },
 });
 
 const withApollo = nextWithApollo(
-  ({ initialState, headers }) => {
+  ({ headers }) => {
     const link = createUploadLink({
       uri: process.env.NEXT_PUBLIC_API_URL,
       credentials: 'include',

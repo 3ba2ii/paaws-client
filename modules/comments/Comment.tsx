@@ -54,7 +54,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     postId,
     isEdited,
     isReply,
-    replies,
+    repliesCount,
   } = comment;
   const createdAtDistance = formatDistance(new Date(createdAt), new Date(), {
     addSuffix: true,
@@ -99,7 +99,9 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
     >
       <HStack w='100%' align='flex-start' justify={'space-between'}>
         <CommentOwnerHeader user={user} />
-        <Text textStyle={'p3'}>{createdAtDistance}</Text>
+        <Text textStyle={'p3'}>
+          {createdAtDistance} - {id}
+        </Text>
       </HStack>
       {mode === 'view' ? (
         <Text textStyle={'p1'} maxW='65ch'>
@@ -151,7 +153,9 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
           <DeleteCommentPopover commentId={id} postId={postId} />
         )}
       </HStack>
-      {replies && <RepliesSection replies={replies} />}
+      {repliesCount && (
+        <RepliesSection repliesCount={repliesCount} parentId={id} />
+      )}
       {replyVisible && (
         <Box w='100%' pt={2}>
           <ScaleFade in={replyVisible}>

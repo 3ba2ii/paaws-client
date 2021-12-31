@@ -50,7 +50,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
         },
         update: (cache, { data: result, errors: resultErrors }) => {
           if (!result || !result?.addMPComment || resultErrors?.length) return;
-          updateCommentsCache(cache, result, postId, parentId);
+          updateCommentsCache(cache, result, postId);
         },
       });
 
