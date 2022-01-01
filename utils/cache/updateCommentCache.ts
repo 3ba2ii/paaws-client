@@ -1,16 +1,9 @@
 import { ApolloCache } from '@apollo/client';
-import {
-  AddMpCommentMutation,
-  CommentFragmentFragment,
-} from 'generated/graphql';
+import { AddMpCommentMutation } from 'generated/graphql';
 import {
   MissingPostCommentsDocument,
   MissingPostCommentsQuery,
 } from './../../generated/graphql';
-
-type CommentWithReplies = CommentFragmentFragment & {
-  replies: CommentFragmentFragment[];
-};
 
 export const updateCommentsCache = (
   cache: ApolloCache<any>,
@@ -23,7 +16,6 @@ export const updateCommentsCache = (
   }
 
   //2. read the cached comments
-
   const newComment = data.addMPComment.comment;
 
   const cachedData = cache.readQuery<MissingPostCommentsQuery>({

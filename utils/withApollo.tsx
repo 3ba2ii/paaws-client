@@ -12,7 +12,7 @@ import {
   PaginatedMissingPosts,
 } from 'generated/graphql';
 import nextWithApollo from 'next-with-apollo';
-import router from 'next/router';
+import router, { useRouter } from 'next/router';
 import { isServer } from './isServer';
 
 // Use this inside error-link
@@ -124,7 +124,7 @@ const cache = new InMemoryCache({
 });
 
 const withApollo = nextWithApollo(
-  ({ headers }) => {
+  ({ initialState, headers }) => {
     const link = createUploadLink({
       uri: process.env.NEXT_PUBLIC_API_URL,
       credentials: 'include',
@@ -136,14 +136,16 @@ const withApollo = nextWithApollo(
     return new ApolloClient({
       ssrMode: isServer(),
       link: from([errorLink, link]),
-      cache,
+      cache: cache.restore(initialState || {}),
     });
   },
   {
     render: ({ Page, props }) => {
+      const pageRouter = useRouter();
+
       return (
         <ApolloProvider client={props.apollo}>
-          <Page {...props} {...router} />
+          <Page {...props} {...pageRouter} />
         </ApolloProvider>
       );
     },

@@ -1,3 +1,4 @@
+import { getDataFromTree } from '@apollo/client/react/ssr';
 import {
   Box,
   Button,
@@ -13,6 +14,7 @@ import { MissingPostQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { FiArrowLeft, FiEdit2, FiShare2 } from 'react-icons/fi';
+import withApollo from 'utils/withApollo';
 import MissingPostDetails from './MissingPostDetails';
 
 interface MissingPostContainerProps {
@@ -67,7 +69,7 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
         />
       </HStack>
       <Box flex='.55'>
-        <MissingPostDetails post={missingPost} isOwner={isOwner || false} />
+        <MissingPostDetails post={missingPost} isOwner={isOwner ?? false} />
       </Box>
       <Box flex='.15'>
         <HStack>

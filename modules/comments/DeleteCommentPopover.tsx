@@ -39,7 +39,7 @@ export const DeleteCommentPopover: React.FC<{
     togglePopOver();
   };
   return (
-    <Popover isOpen={isOpen}>
+    <Popover isOpen={isOpen} closeOnBlur>
       <PopoverTrigger>
         <Button
           onClick={togglePopOver}
@@ -54,7 +54,7 @@ export const DeleteCommentPopover: React.FC<{
         <PopoverArrow />
         <PopoverCloseButton onClick={togglePopOver} />
         <PopoverHeader fontWeight={'semibold'}>🗑 Delete Comment?</PopoverHeader>
-        <PopoverBody color='gray.400' fontSize={'sm'} py={4}>
+        <PopoverBody color='gray.400' fontSize={'sm'}>
           Are you sure you want to delete this comment? Deleting this comment
           will also delete all of its <strong>replies</strong> as well.
         </PopoverBody>

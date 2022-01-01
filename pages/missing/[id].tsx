@@ -1,3 +1,4 @@
+import { getDataFromTree } from '@apollo/client/react/ssr';
 import { Button, VStack } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { Layout } from 'components/Layout';
@@ -9,9 +10,7 @@ import React from 'react';
 import { FiChevronRight } from 'react-icons/fi';
 import withApollo from 'utils/withApollo';
 
-interface MissingPostProps {}
-
-const MissingPost: React.FC<MissingPostProps> = () => {
+const MissingPost: React.FC = () => {
   const {
     query: { id },
   } = useRouter();
@@ -45,4 +44,4 @@ const MissingPost: React.FC<MissingPostProps> = () => {
     </Layout>
   );
 };
-export default withApollo(MissingPost);
+export default withApollo(MissingPost, { getDataFromTree });

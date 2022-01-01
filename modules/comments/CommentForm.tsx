@@ -63,7 +63,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
         });
       }
     } catch (e: any) {
-      if (e.message === 'Not Authenticated') {
+      if (e?.message === 'Not Authenticated') {
         toaster({
           variant: 'subtle',
           status: 'warning',
@@ -101,7 +101,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
                   icon={<FiSend />}
                   aria-label='add-comment'
                   variant='ghost'
-                  borderRadius={'full'}
+                  borderRadius='full'
                 />
               }
             />

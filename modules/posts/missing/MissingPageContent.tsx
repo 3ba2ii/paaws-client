@@ -39,6 +39,7 @@ const PostsLoadingSkeleton: React.FC = () => (
     <DummyPostsSkeleton noOfPosts={3} />
   </VStack>
 );
+
 export const MissingPageContent: React.FC<IMissingPageContent> = ({
   hasLoadedFirstTime = false,
   fetchMorePosts,
