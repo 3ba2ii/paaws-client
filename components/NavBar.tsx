@@ -9,7 +9,7 @@ import { Portal } from '@chakra-ui/portal';
 import { MeQuery, useMeQuery } from 'generated/graphql';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FaHeart } from 'react-icons/fa';
 import navbarStyles from 'styles/navbar.module.css';
 import { isServer } from 'utils/isServer';
@@ -44,6 +44,7 @@ function JoinUsNavbarItems(
           {isRegisterScreen ? 'Login' : isLoginScreen ? 'Register' : ''}
         </Button>
       </Link>
+
       <DarkModeSwitch />
     </Flex>
   );

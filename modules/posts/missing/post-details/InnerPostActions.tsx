@@ -1,15 +1,10 @@
 import {
   Button,
-  Heading,
   HStack,
   IconButton,
-  Input,
-  Text,
   Tooltip,
   useToast,
-  VStack,
 } from '@chakra-ui/react';
-import GenericModal from 'components/common/overlays/CustomModal';
 import {
   MissingPostQuery,
   useDeleteMissingPostMutation,
@@ -17,6 +12,7 @@ import {
 import router from 'next/router';
 import React from 'react';
 import { FiEdit2, FiShare2, FiTrash2 } from 'react-icons/fi';
+import { DeletePostModal } from './DeletePostModal';
 
 interface InnerPostActionsProps {
   isOwner: MissingPostQuery['missingPost']['isOwner'];
@@ -28,13 +24,8 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
   missingPost,
 }) => {
   const [openDeletePostModal, setOpenDeletePostModal] = React.useState(false);
-  const [deleteInputValue, setDeleteInputValue] = React.useState('');
   const [deleteMP, { loading }] = useDeleteMissingPostMutation();
   const toaster = useToast();
-
-  const handleChangeInputVal = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDeleteInputValue(e.target.value);
-  };
 
   const toggleDeletePostModal = () => {
     setOpenDeletePostModal(!openDeletePostModal);
@@ -51,11 +42,7 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
       status: 'success',
     });
   const handleDeletePost = async () => {
-    if (
-      !missingPost ||
-      !missingPost?.id ||
-      deleteInputValue !== 'Delete Post'
-    ) {
+    if (!missingPost || !missingPost?.id) {
       errorToaster();
       return setOpenDeletePostModal(false);
     }
@@ -104,56 +91,14 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
       <Button size='sm' colorScheme={'teal'}>
         Contact {missingPost?.user.displayName.split(' ')[0]}
       </Button>
-      {
-        <GenericModal
-          isOpen={openDeletePostModal}
-          onClose={() => setOpenDeletePostModal(false)}
-          title={
-            <VStack align='flex-start'>
-              <Heading size='md'>🗑 Delete Post</Heading>
-            </VStack>
-          }
-          body={
-            <VStack spacing={4}>
-              <Text textStyle='p1' fontSize='sm'>
-                Deleting this post will remove it, as well as its comments,
-                replies and votes from the site <strong>permanently</strong>.
-                Are you sure you want to delete it?
-              </Text>
-              <VStack>
-                <Text textStyle='p1' fontSize='sm'>
-                  If you want to delete it, Type{' '}
-                  <Text as='span' color='red.300'>
-                    Delete Post
-                  </Text>{' '}
-                  in the box below. and click delete.
-                </Text>
-                <Input
-                  size='sm'
-                  placeholder='Delete Post'
-                  borderRadius={'md'}
-                  value={deleteInputValue}
-                  onChange={handleChangeInputVal}
-                />
-              </VStack>
-            </VStack>
-          }
-          footer={
-            <HStack w='100%' mt='-3'>
-              <Button
-                w='100%'
-                size='sm'
-                colorScheme={'red'}
-                disabled={deleteInputValue !== 'Delete Post'}
-                isLoading={loading}
-                onClick={handleDeletePost}
-              >
-                I understand the consequences, Just delete it 🗑
-              </Button>
-            </HStack>
-          }
-        />
-      }
+      <DeletePostModal
+        {...{
+          loading,
+          handleDeletePost,
+          isOpen: openDeletePostModal,
+          onClose: toggleDeletePostModal,
+        }}
+      />
     </HStack>
   );
 };
