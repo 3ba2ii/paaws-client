@@ -14,6 +14,7 @@ import {
   MissingPostQuery,
   useDeleteMissingPostMutation,
 } from 'generated/graphql';
+import router from 'next/router';
 import React from 'react';
 import { FiEdit2, FiShare2, FiTrash2 } from 'react-icons/fi';
 
@@ -38,29 +39,47 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
   const toggleDeletePostModal = () => {
     setOpenDeletePostModal(!openDeletePostModal);
   };
-
+  const errorToaster = () =>
+    toaster({
+      title: 'Something went wrong',
+      status: 'error',
+      description: `We couldn't delete your post right now, please try again later`,
+    });
+  const successToast = () =>
+    toaster({
+      title: 'Your post has been deleted',
+      status: 'success',
+    });
   const handleDeletePost = async () => {
-    if (!missingPost || !missingPost?.id) return;
-    if (deleteInputValue === 'Delete Post') {
-      const { data } = await deleteMP({
-        variables: {
-          deleteMissingPostId: missingPost.id,
-        },
-      });
-
-      if (
-        !data?.deleteMissingPost?.deleted ||
-        data.deleteMissingPost.errors?.length !== 0
-      ) {
-        toaster({
-          title: 'Something went wrong',
-          status: 'error',
-          description: `We couldn't delete your post right now, please try again later`,
-        });
-      }
-      setOpenDeletePostModal(false);
+    if (
+      !missingPost ||
+      !missingPost?.id ||
+      deleteInputValue !== 'Delete Post'
+    ) {
+      errorToaster();
+      return setOpenDeletePostModal(false);
     }
+
+    const { data } = await deleteMP({
+      variables: {
+        deleteMissingPostId: missingPost.id,
+      },
+    });
+
+    if (
+      !data ||
+      !data.deleteMissingPost?.deleted ||
+      data.deleteMissingPost.errors?.length
+    ) {
+      errorToaster();
+    } else {
+      router.replace('/missing');
+      successToast();
+    }
+
+    setOpenDeletePostModal(false);
   };
+
   return (
     <HStack>
       <Tooltip label='Share Post'>

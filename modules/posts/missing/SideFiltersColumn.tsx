@@ -73,6 +73,7 @@ export const SideFiltersColumn: React.FC<{
           display={['none', 'none', 'none', 'none', 'block']}
         >
           <Button
+            as={Box}
             variant='ghost'
             w='100%'
             pos='absolute'
