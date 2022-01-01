@@ -345,7 +345,7 @@ export type MutationCreatePetArgs = {
 
 
 export type MutationDeleteAdoptionPostArgs = {
-  id: Scalars['Float'];
+  id: Scalars['Int'];
 };
 
 
@@ -355,17 +355,17 @@ export type MutationDeleteCommentArgs = {
 
 
 export type MutationDeleteMissingPostArgs = {
-  id: Scalars['Float'];
+  id: Scalars['Int'];
 };
 
 
 export type MutationDeletePetArgs = {
-  id: Scalars['Float'];
+  id: Scalars['Int'];
 };
 
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['Float'];
+  id: Scalars['Int'];
 };
 
 
@@ -855,6 +855,13 @@ export type DeleteCommentMutationVariables = Exact<{
 
 export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment: { __typename?: 'DeleteResponse', deleted: boolean, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
+export type DeleteMissingPostMutationVariables = Exact<{
+  deleteMissingPostId: Scalars['Int'];
+}>;
+
+
+export type DeleteMissingPostMutation = { __typename?: 'Mutation', deleteMissingPost: { __typename?: 'DeleteResponse', deleted: boolean, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+
 export type EditCommentMutationVariables = Exact<{
   text: Scalars['String'];
   commentId: Scalars['Int'];
@@ -940,7 +947,7 @@ export type MissingPostCommentsQueryVariables = Exact<{
 }>;
 
 
-export type MissingPostCommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComments', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comments: Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, replies?: Maybe<Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }>>, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
+export type MissingPostCommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComments', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comments: Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
 
 export type MissingPostQueryVariables = Exact<{
   missingPostId: Scalars['Int'];
@@ -1262,6 +1269,44 @@ export function useDeleteCommentMutation(baseOptions?: Apollo.MutationHookOption
 export type DeleteCommentMutationHookResult = ReturnType<typeof useDeleteCommentMutation>;
 export type DeleteCommentMutationResult = Apollo.MutationResult<DeleteCommentMutation>;
 export type DeleteCommentMutationOptions = Apollo.BaseMutationOptions<DeleteCommentMutation, DeleteCommentMutationVariables>;
+export const DeleteMissingPostDocument = gql`
+    mutation DeleteMissingPost($deleteMissingPostId: Int!) {
+  deleteMissingPost(id: $deleteMissingPostId) {
+    errors {
+      field
+      message
+      code
+    }
+    deleted
+  }
+}
+    `;
+export type DeleteMissingPostMutationFn = Apollo.MutationFunction<DeleteMissingPostMutation, DeleteMissingPostMutationVariables>;
+
+/**
+ * __useDeleteMissingPostMutation__
+ *
+ * To run a mutation, you first call `useDeleteMissingPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteMissingPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteMissingPostMutation, { data, loading, error }] = useDeleteMissingPostMutation({
+ *   variables: {
+ *      deleteMissingPostId: // value for 'deleteMissingPostId'
+ *   },
+ * });
+ */
+export function useDeleteMissingPostMutation(baseOptions?: Apollo.MutationHookOptions<DeleteMissingPostMutation, DeleteMissingPostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteMissingPostMutation, DeleteMissingPostMutationVariables>(DeleteMissingPostDocument, options);
+      }
+export type DeleteMissingPostMutationHookResult = ReturnType<typeof useDeleteMissingPostMutation>;
+export type DeleteMissingPostMutationResult = Apollo.MutationResult<DeleteMissingPostMutation>;
+export type DeleteMissingPostMutationOptions = Apollo.BaseMutationOptions<DeleteMissingPostMutation, DeleteMissingPostMutationVariables>;
 export const EditCommentDocument = gql`
     mutation EditComment($text: String!, $commentId: Int!) {
   editComment(text: $text, commentId: $commentId) {
@@ -1729,9 +1774,6 @@ export const MissingPostCommentsDocument = gql`
     hasMore
     comments {
       ...CommentFragment
-      replies {
-        ...CommentFragment
-      }
     }
   }
 }

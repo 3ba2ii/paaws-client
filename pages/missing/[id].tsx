@@ -26,18 +26,11 @@ const MissingPost: React.FC = () => {
       {loading ? (
         <LoadingComponent />
       ) : !data?.missingPost ? (
-        <VStack w='100%' justify={'flex-start'} h='60vh' spacing={5}>
-          <NotFound
-            title='📭 404 Not Found'
-            subtitle='We did not find your post, please ty again later'
-          />
-          <Button
-            rightIcon={<FiChevronRight />}
-            onClick={() => router.replace('/missing')}
-          >
-            Go Home
-          </Button>
-        </VStack>
+        <NotFound
+          title='📭 404 Not Found'
+          subtitle='We did not find your post, please ty again later'
+          backPath='/missing'
+        />
       ) : (
         <MissingPostContainer post={data?.missingPost} />
       )}

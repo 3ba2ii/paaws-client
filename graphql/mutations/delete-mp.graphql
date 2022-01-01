@@ -1,0 +1,10 @@
+mutation DeleteMissingPost($deleteMissingPostId: Int!) {
+  deleteMissingPost(id: $deleteMissingPostId) {
+    errors {
+      field
+      message
+      code
+    }
+    deleted
+  }
+}

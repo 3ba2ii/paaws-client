@@ -1,11 +1,10 @@
-import { getDataFromTree } from '@apollo/client/react/ssr';
 import {
   Box,
   Button,
+  Center,
   Flex,
   FlexProps,
   HStack,
-  IconButton,
   IconButtonProps,
 } from '@chakra-ui/react';
 import NotFound from 'components/NotFound';
@@ -13,8 +12,7 @@ import { VoteComponent } from 'components/VoteComponent';
 import { MissingPostQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import { FiArrowLeft, FiEdit2, FiShare2 } from 'react-icons/fi';
-import withApollo from 'utils/withApollo';
+import { FiArrowLeft } from 'react-icons/fi';
 import InnerPostActions from './InnerPostActions';
 import MissingPostDetails from './MissingPostDetails';
 
@@ -32,14 +30,6 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
     document.title = `${missingPost?.title || 'Missing Post'} - Paaws`;
   }, [post, missingPost]);
 
-  if (!missingPost)
-    return (
-      <NotFound
-        title='404 Not Found'
-        subtitle='We did not find your post, please try again later'
-      />
-    );
-  const { voteStatus, points, id } = missingPost;
   return (
     <Flex
       w='100%'
@@ -47,34 +37,43 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
       align={'flex-start'}
       justifyContent={'space-between'}
     >
-      {/* First Column - Voting column */}
-      <HStack flex='.15' align={'base-line'} justify={'space-between'}>
-        <Button
-          aria-label='back'
-          leftIcon={<FiArrowLeft />}
-          variant={'ghost'}
-          size='sm'
-          fontWeight={'normal'}
-          onClick={() => router.back()}
-        >
-          Back
-        </Button>
-        <VoteComponent
-          {...{
-            points,
-            voteStatus,
-            id,
-            flexProps: { flexDir: 'column' } as FlexProps,
-            buttonProps: { variant: 'ghost' } as IconButtonProps,
-          }}
-        />
-      </HStack>
-      <Box flex='.55'>
-        <MissingPostDetails post={missingPost} isOwner={isOwner ?? false} />
-      </Box>
-      <Box flex='.15'>
-        <InnerPostActions {...{ isOwner, missingPost }} />
-      </Box>
+      {!missingPost ? (
+        <HStack w='100%' h='100%'>
+          <NotFound
+            title='📭 404 Not Found'
+            subtitle='We did not find your post, Please make sure you typed the right URL or please ty again later'
+            backPath='/missing'
+          />
+        </HStack>
+      ) : (
+        <>
+          <HStack flex='.15' align={'base-line'} justify={'space-between'}>
+            <Button
+              aria-label='back'
+              leftIcon={<FiArrowLeft />}
+              variant={'ghost'}
+              size='sm'
+              fontWeight={'normal'}
+              onClick={() => router.back()}
+            >
+              Back
+            </Button>
+            <VoteComponent
+              {...{
+                ...missingPost,
+                flexProps: { flexDir: 'column' } as FlexProps,
+                buttonProps: { variant: 'ghost' } as IconButtonProps,
+              }}
+            />
+          </HStack>
+          <Box flex='.55'>
+            <MissingPostDetails post={missingPost} isOwner={isOwner ?? false} />
+          </Box>
+          <Box flex='.15'>
+            <InnerPostActions {...{ isOwner, missingPost }} />
+          </Box>
+        </>
+      )}
     </Flex>
   );
 };
