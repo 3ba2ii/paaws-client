@@ -51,6 +51,7 @@ export const DeletePostModal: React.FC<{
           <Button
             w='100%'
             size='sm'
+            h='38px'
             colorScheme={'red'}
             disabled={deleteInputValue !== 'Delete Post'}
             isLoading={loading}

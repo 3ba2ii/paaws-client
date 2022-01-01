@@ -5,6 +5,7 @@ import {
   Tooltip,
   useToast,
 } from '@chakra-ui/react';
+import ShareModal from 'components/ShareModal';
 import {
   MissingPostQuery,
   useDeleteMissingPostMutation,
@@ -99,6 +100,7 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
           onClose: toggleDeletePostModal,
         }}
       />
+      <ShareModal {...{ isOpen: true, onClose: () => {} }} />
     </HStack>
   );
 };
