@@ -4,7 +4,7 @@ import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { Layout } from 'components/Layout';
 import NotFound from 'components/NotFound';
 import { useMissingPostQuery } from 'generated/graphql';
-import MissingPostContainer from 'modules/posts/missing/MissingPostContainer';
+import MissingPostContainer from 'modules/posts/missing/post-details/MissingPostContainer';
 import router, { useRouter } from 'next/router';
 import React from 'react';
 import { FiChevronRight } from 'react-icons/fi';

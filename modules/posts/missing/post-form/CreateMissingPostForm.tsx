@@ -36,8 +36,8 @@ import {
   SelectLocationOptions,
 } from 'utils/constants/enums';
 import { toErrorMap } from 'utils/toErrorMap';
-import { CustomAlertDialog } from '../../../components/common/overlays/AlertDialog';
-import { NotAuthenticatedComponent } from '../../../components/NotAuthenticatedComponent';
+import { CustomAlertDialog } from '../../../../components/common/overlays/AlertDialog';
+import { NotAuthenticatedComponent } from '../../../../components/NotAuthenticatedComponent';
 import { PostLocationFields } from './PostLocationFields';
 
 export type PostInputType = CreateMissingPostInput & {

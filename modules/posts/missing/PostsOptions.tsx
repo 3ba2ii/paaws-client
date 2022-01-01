@@ -6,7 +6,7 @@ import { useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { GoPlus } from 'react-icons/go';
-import { NewMissingPostForm } from './CreateMissingPostForm';
+import { NewMissingPostForm } from './post-form/CreateMissingPostForm';
 import { FiltersComponent } from './FiltersComponent';
 
 export const PostsOptions: React.FC = () => {

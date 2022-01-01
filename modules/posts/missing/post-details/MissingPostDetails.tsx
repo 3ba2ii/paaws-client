@@ -17,7 +17,7 @@ import { BiMessageRounded, BiShareAlt, BiShieldAlt2 } from 'react-icons/bi';
 import { FiGlobe } from 'react-icons/fi';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { focusOnElement } from 'utils/focusOnElement';
-import { PostTags } from '../common/PostTags';
+import { PostTags } from '../../common/PostTags';
 interface MissingPostProps {
   post: MissingPostQuery['missingPost']['missingPost'];
   isOwner: boolean;
