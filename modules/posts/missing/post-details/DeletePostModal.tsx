@@ -1,4 +1,12 @@
-import { Button, Heading, HStack, Input, Text, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  Divider,
+  Heading,
+  HStack,
+  Input,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import GenericModal from 'components/common/overlays/CustomModal';
 import React from 'react';
 
@@ -17,8 +25,9 @@ export const DeletePostModal: React.FC<{
       isOpen={isOpen}
       onClose={onClose}
       title={
-        <VStack align='flex-start'>
+        <VStack align='flex-start' spacing={6}>
           <Heading size='md'>🗑 Delete Post</Heading>
+          <Divider />
         </VStack>
       }
       body={
@@ -31,7 +40,7 @@ export const DeletePostModal: React.FC<{
           <VStack>
             <Text textStyle='p1' fontSize='sm'>
               If you want to delete it, Type{' '}
-              <Text as='span' color='red.300'>
+              <Text as='span' color='red.300' fontWeight={'semibold'}>
                 Delete Post
               </Text>{' '}
               in the box below. and click delete.
@@ -57,7 +66,7 @@ export const DeletePostModal: React.FC<{
             isLoading={loading}
             onClick={handleDeletePost}
           >
-            I understand the consequences, Just delete it 🗑
+            I understand the consequences, just delete it 🗑
           </Button>
         </HStack>
       }

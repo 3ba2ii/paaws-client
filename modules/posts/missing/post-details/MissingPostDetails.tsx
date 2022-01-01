@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import CustomCarousel from 'components/common/media/CustomCarousel';
 import { PostOwner } from 'components/PostOwner';
+import ResponsiveButton from 'components/ResponsiveButton';
 import ShareModal from 'components/ShareModal';
 import { formatDistance } from 'date-fns';
 import { MissingPostQuery } from 'generated/graphql';
@@ -60,10 +61,6 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
           <Text textStyle={'p2'} color='inherit'>
             {address.formatted_address}
           </Text>
-          -{' '}
-          <Button variant='link' size='xs' colorScheme={'blue'}>
-            Location on Map
-          </Button>
         </HStack>
       )}
       <PostTags
@@ -98,37 +95,38 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
       </Box>
       {/* Missing Post Actions  */}
       <VStack w='100%' align='flex-start'>
-        <Box w='100%' display={'grid'} placeItems={'center'}>
-          <HStack
-            w='100%'
-            align='center'
-            borderTop={'1px solid'}
-            borderBottom={'1px solid'}
-            borderColor={useColorModeValue('gray.200', 'gray.700')}
-            py={1.5}
-            justify={'space-evenly'}
-          >
-            <Button
-              px={6}
-              variant='ghost'
-              leftIcon={<BiMessageRounded />}
-              onClick={() => focusOnElement('comment-input-field')}
-            >
-              Comment
-            </Button>
-            <Button
-              px={6}
-              variant='ghost'
-              leftIcon={<BiShareAlt />}
-              onClick={() => toggleShowModal('share')}
-            >
-              Share
-            </Button>
-            <Button px={6} variant='ghost' leftIcon={<BiShieldAlt2 />}>
-              Report
-            </Button>
-          </HStack>
-        </Box>
+        <HStack
+          w='100%'
+          align='center'
+          borderTop={'1px solid'}
+          borderBottom={'1px solid'}
+          borderColor={useColorModeValue('gray.200', 'gray.700')}
+          py={1.5}
+          justify={'space-evenly'}
+        >
+          <ResponsiveButton
+            {...{
+              icon: <BiMessageRounded />,
+              label: 'Comment',
+              onClick: () => focusOnElement('comment-input-field'),
+            }}
+          />
+
+          <ResponsiveButton
+            {...{
+              icon: <BiShareAlt />,
+              label: 'Share',
+              onClick: () => toggleShowModal('share'),
+            }}
+          />
+          <ResponsiveButton
+            {...{
+              icon: <BiShieldAlt2 />,
+              label: 'Report',
+              onClick: () => {},
+            }}
+          />
+        </HStack>
         <CommentsSection postId={id} />
       </VStack>
       <ShareModal

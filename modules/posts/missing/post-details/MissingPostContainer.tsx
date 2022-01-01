@@ -5,7 +5,11 @@ import {
   Flex,
   FlexProps,
   HStack,
+  IconButton,
   IconButtonProps,
+  Stack,
+  useBreakpointValue,
+  VStack,
 } from '@chakra-ui/react';
 import NotFound from 'components/NotFound';
 import { VoteComponent } from 'components/VoteComponent';
@@ -31,50 +35,51 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
   }, [post, missingPost]);
 
   return (
-    <Flex
-      w='100%'
-      h='100%'
-      align={'flex-start'}
-      justifyContent={'space-between'}
-    >
-      {!missingPost ? (
-        <HStack w='100%' h='100%'>
+    <VStack w='100%' h='100%' align={'flex-start'} spacing={8}>
+      <HStack w='100%' justify={'space-between'}>
+        <Button
+          aria-label='back'
+          leftIcon={<FiArrowLeft />}
+          icon={<FiArrowLeft />}
+          variant='ghost'
+          size='sm'
+          fontWeight={'normal'}
+          onClick={() => router.back()}
+        >
+          Back
+        </Button>
+
+        <InnerPostActions {...{ isOwner, missingPost }} />
+      </HStack>
+
+      <Flex w='100%' h='100%' align={'flex-start'} justifyContent={'center'}>
+        {!missingPost ? (
           <NotFound
             title='📭 404 Not Found'
             subtitle='We did not find your post, Please make sure you typed the right URL or please ty again later'
             backPath='/missing'
           />
-        </HStack>
-      ) : (
-        <>
-          <HStack flex='.15' align={'base-line'} justify={'space-between'}>
-            <Button
-              aria-label='back'
-              leftIcon={<FiArrowLeft />}
-              variant={'ghost'}
-              size='sm'
-              fontWeight={'normal'}
-              onClick={() => router.back()}
-            >
-              Back
-            </Button>
-            <VoteComponent
-              {...{
-                ...missingPost,
-                flexProps: { flexDir: 'column' } as FlexProps,
-                buttonProps: { variant: 'ghost' } as IconButtonProps,
-              }}
-            />
-          </HStack>
-          <Box flex='.55'>
-            <MissingPostDetails post={missingPost} isOwner={isOwner ?? false} />
-          </Box>
-          <Box flex='.15'>
-            <InnerPostActions {...{ isOwner, missingPost }} />
-          </Box>
-        </>
-      )}
-    </Flex>
+        ) : (
+          <>
+            <Box flex='auto' maxW='3xl'>
+              <HStack align='flex-start' spacing={4}>
+                <VoteComponent
+                  {...{
+                    ...missingPost,
+                    flexProps: { flexDir: 'column' } as FlexProps,
+                    buttonProps: { variant: 'ghost' } as IconButtonProps,
+                  }}
+                />
+                <MissingPostDetails
+                  post={missingPost}
+                  isOwner={isOwner ?? false}
+                />
+              </HStack>
+            </Box>
+          </>
+        )}
+      </Flex>
+    </VStack>
   );
 };
 export default MissingPostContainer;

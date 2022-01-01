@@ -3,6 +3,7 @@ import {
   HStack,
   IconButton,
   Tooltip,
+  useBreakpointValue,
   useToast,
 } from '@chakra-ui/react';
 import ShareModal from 'components/ShareModal';
@@ -12,7 +13,7 @@ import {
 } from 'generated/graphql';
 import router from 'next/router';
 import React from 'react';
-import { FiEdit2, FiShare2, FiTrash2 } from 'react-icons/fi';
+import { FiEdit2, FiPhoneCall, FiShare2, FiTrash2 } from 'react-icons/fi';
 import { DeletePostModal } from './DeletePostModal';
 
 interface InnerPostActionsProps {
@@ -29,8 +30,9 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
     share: false,
   });
 
-  const [deleteMP, { loading }] = useDeleteMissingPostMutation();
+  const contactButton = useBreakpointValue({ base: IconButton, md: Button });
   const toaster = useToast();
+  const [deleteMP, { loading }] = useDeleteMissingPostMutation();
 
   const toggleModals = (modal: 'delete' | 'share') => {
     setOpenModals({ ...openModals, [modal]: !openModals[modal] });
@@ -96,9 +98,15 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
         </HStack>
       )}
 
-      <Button size='sm' colorScheme={'teal'}>
+      <Button
+        as={contactButton}
+        icon={<FiPhoneCall />}
+        size='sm'
+        colorScheme={'teal'}
+      >
         Contact {missingPost?.user.displayName.split(' ')[0]}
       </Button>
+
       <DeletePostModal
         {...{
           loading,
