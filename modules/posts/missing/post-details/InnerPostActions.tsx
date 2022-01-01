@@ -24,12 +24,16 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
   isOwner,
   missingPost,
 }) => {
-  const [openDeletePostModal, setOpenDeletePostModal] = React.useState(false);
+  const [openModals, setOpenModals] = React.useState({
+    delete: false,
+    share: false,
+  });
+
   const [deleteMP, { loading }] = useDeleteMissingPostMutation();
   const toaster = useToast();
 
-  const toggleDeletePostModal = () => {
-    setOpenDeletePostModal(!openDeletePostModal);
+  const toggleModals = (modal: 'delete' | 'share') => {
+    setOpenModals({ ...openModals, [modal]: !openModals[modal] });
   };
   const errorToaster = () =>
     toaster({
@@ -45,9 +49,8 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
   const handleDeletePost = async () => {
     if (!missingPost || !missingPost?.id) {
       errorToaster();
-      return setOpenDeletePostModal(false);
+      return toggleModals('delete');
     }
-
     const { data } = await deleteMP({
       variables: {
         deleteMissingPostId: missingPost.id,
@@ -64,14 +67,18 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
       router.replace('/missing');
       successToast();
     }
-
-    setOpenDeletePostModal(false);
+    toggleModals('delete');
   };
 
   return (
     <HStack>
       <Tooltip label='Share Post'>
-        <IconButton aria-label='share-post' icon={<FiShare2 />} size='sm' />
+        <IconButton
+          aria-label='share-post'
+          icon={<FiShare2 />}
+          size='sm'
+          onClick={() => toggleModals('share')}
+        />
       </Tooltip>
       {isOwner && (
         <HStack>
@@ -80,7 +87,7 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
               aria-label='delete-post'
               icon={<FiTrash2 />}
               size='sm'
-              onClick={toggleDeletePostModal}
+              onClick={() => toggleModals('delete')}
             />
           </Tooltip>
           <Tooltip label='Edit Post'>
@@ -96,11 +103,16 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
         {...{
           loading,
           handleDeletePost,
-          isOpen: openDeletePostModal,
-          onClose: toggleDeletePostModal,
+          isOpen: openModals.delete,
+          onClose: () => toggleModals('delete'),
         }}
       />
-      <ShareModal {...{ isOpen: true, onClose: () => {} }} />
+      <ShareModal
+        {...{
+          isOpen: openModals.share,
+          onClose: () => toggleModals('share'),
+        }}
+      />
     </HStack>
   );
 };
