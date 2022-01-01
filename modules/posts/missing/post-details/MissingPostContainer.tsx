@@ -35,7 +35,14 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
   }, [post, missingPost]);
 
   return (
-    <VStack w='100%' h='100%' align={'flex-start'} spacing={8}>
+    <VStack
+      w='100%'
+      h='100%'
+      align={'flex-start'}
+      spacing={8}
+      px={['3%', '5%', '8%']}
+      maxW='8xl'
+    >
       <HStack w='100%' justify={'space-between'}>
         <Button
           aria-label='back'
