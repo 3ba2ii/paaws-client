@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import CustomCarousel from 'components/common/media/CustomCarousel';
 import { PostOwner } from 'components/PostOwner';
+import ShareModal from 'components/ShareModal';
 import { formatDistance } from 'date-fns';
 import { MissingPostQuery } from 'generated/graphql';
 import CommentsSection from 'modules/comments/CommentsSection';
@@ -23,6 +24,7 @@ interface MissingPostProps {
   isOwner: boolean;
 }
 const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
+  const [openModals, setOpenModals] = React.useState({ share: false });
   if (!post) return null;
   const { title, description, tags, id, user, createdAt, address, images } =
     post;
@@ -30,6 +32,10 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
     () => formatDistance(new Date(createdAt), new Date(), { addSuffix: true }),
     [createdAt]
   );
+
+  const toggleShowModal = (modal: 'share') => {
+    setOpenModals({ ...openModals, [modal]: !openModals[modal] });
+  };
 
   return (
     <VStack w='100%' h='100%' align='flex-start' spacing={3}>
@@ -110,7 +116,12 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
             >
               Comment
             </Button>
-            <Button px={6} variant='ghost' leftIcon={<BiShareAlt />}>
+            <Button
+              px={6}
+              variant='ghost'
+              leftIcon={<BiShareAlt />}
+              onClick={() => toggleShowModal('share')}
+            >
               Share
             </Button>
             <Button px={6} variant='ghost' leftIcon={<BiShieldAlt2 />}>
@@ -120,6 +131,10 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
         </Box>
         <CommentsSection postId={id} />
       </VStack>
+      <ShareModal
+        isOpen={openModals.share}
+        onClose={() => toggleShowModal('share')}
+      />
     </VStack>
   );
 };
