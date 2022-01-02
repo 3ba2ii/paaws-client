@@ -34,24 +34,8 @@ const InputField: React.FC<InputFieldProps> = ({
   const [field, { error, touched }] = useField(props);
 
   const Component = textarea ? Textarea : Input;
-  const handleChange = React.useCallback(field.onChange, [field]);
-  const handleBlur = React.useCallback(field.onBlur, [field]);
 
-  const MemoizedInputComponent = React.useMemo(() => {
-    return (
-      <Component
-        {...props}
-        {...field}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        borderWidth='1.5px'
-        placeholder={props.placeholder}
-        id={field.name}
-      />
-    );
-  }, [field.value, field.name]);
-
-  const MaxInputLengthAlert = React.useMemo(() => {
+  const MaxInputLengthAlert = () => {
     const fieldLength = field.value?.length;
     if (
       !showLength ||
@@ -65,7 +49,7 @@ const InputField: React.FC<InputFieldProps> = ({
         maxInputLength - field.value.length
       }`}</Text>
     );
-  }, [field.value, maxInputLength, showLength]);
+  };
 
   return (
     <FormControl
@@ -76,8 +60,15 @@ const InputField: React.FC<InputFieldProps> = ({
       <FormLabel fontSize='sm' htmlFor={field.name}>
         {label}
       </FormLabel>
-      {MaxInputLengthAlert}
-      {MemoizedInputComponent}
+      <MaxInputLengthAlert />
+      <Component
+        {...props}
+        {...field}
+        borderWidth='1.5px'
+        placeholder={props.placeholder}
+        id={field.name}
+      />
+
       {helperText ? (
         <FormHelperText maxW='45ch'>{helperText}</FormHelperText>
       ) : null}
