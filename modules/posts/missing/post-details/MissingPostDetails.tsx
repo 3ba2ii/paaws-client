@@ -41,7 +41,9 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
   return (
     <VStack w='100%' h='100%' align='flex-start' spacing={3}>
       <HStack w='100%' justify={'space-between'}>
-        <Heading size='lg'>{title}</Heading>
+        <Heading size='lg' maxW='50ch' wordBreak={'break-all'}>
+          {title}
+        </Heading>
       </HStack>
       <HStack>
         <PostOwner
@@ -75,7 +77,14 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
         }}
       />
 
-      <Text textStyle={'p1'} fontWeight='normal' lineHeight={'1.7'} maxW='80ch'>
+      <Text
+        w='100%'
+        textStyle={'p1'}
+        fontWeight='normal'
+        lineHeight={'1.7'}
+        maxW='70ch'
+        wordBreak={'break-all'}
+      >
         {description}
         Eiusmod cupidatat eiusmod excepteur fugiat elit aliquip eu dolor
         occaecat exercitation proident. Reprehenderit ea occaecat voluptate elit
@@ -88,7 +97,7 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
         consequat culpa sunt laborum sunt et. Cillum minim velit elit amet
         aliqua do ea veniam labore aliqua ea officia sunt.
       </Text>
-      <Box w='100%' h='100%' py={4} maxW='600px'>
+      <Box w='100%' h='100%' p={4} maxW='600px'>
         <CustomCarousel
           images={images.map((image) => image.photo.url?.toString() || '')}
         />

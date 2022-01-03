@@ -68,8 +68,8 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
           />
         ) : (
           <>
-            <Box flex='auto' maxW='3xl'>
-              <HStack align='flex-start' spacing={4}>
+            <Box flex='auto' w='100%' maxW='3xl'>
+              <HStack w='100%' align='flex-start' spacing={4}>
                 <VoteComponent
                   {...{
                     ...missingPost,

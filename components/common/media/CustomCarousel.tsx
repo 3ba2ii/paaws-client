@@ -36,6 +36,7 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({ images }) => {
     >
       {images.map((url, index) => (
         <Box
+          w='100%'
           borderRadius={'6px'}
           boxShadow={'md'}
           overflow={'hidden'}

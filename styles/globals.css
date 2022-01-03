@@ -378,6 +378,7 @@ img {
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
+  width: 100%;
 }
 .carousel-container .carousel {
   width: fit-content;
