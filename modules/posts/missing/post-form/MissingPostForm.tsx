@@ -1,9 +1,10 @@
 import { Box } from '@chakra-ui/layout';
 import { useToast } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
-import { Formik } from 'formik';
+import { Formik, FormikHelpers } from 'formik';
 import {
   CreateMissingPostInput,
+  MissingPostQuery,
   MissingPostTypes,
   PrivacyType,
   Scalars,
@@ -13,9 +14,10 @@ import { useIsAuth } from 'hooks/useIsAuth';
 import React, { useRef, useState } from 'react';
 import { addNewMissingPostToCache } from 'utils/cache/addNewMissingPost';
 import { toErrorMap } from 'utils/toErrorMap';
+import { CreateMPSchema } from 'utils/yupSchemas/CreateMPSchema';
 import { CustomAlertDialog } from '../../../../components/common/overlays/AlertDialog';
 import { NotAuthenticatedComponent } from '../../../../components/NotAuthenticatedComponent';
-import { CreateMPFormContent } from './MPFormContent';
+import MPFormContent from './MPFormContent';
 
 export type PostInputType = CreateMissingPostInput & {
   images: Array<Scalars['Upload']>;
@@ -30,16 +32,23 @@ const initialValues: PostInputType = {
   thumbnailIdx: 0,
   images: [],
 };
-export const MissingPostForm: React.FC<{
+interface MPFormProps {
   closeDrawer: VoidFunction;
-}> = ({ closeDrawer }) => {
+  missingPost?: MissingPostQuery['missingPost'];
+  editMode?: boolean;
+}
+
+export const MissingPostForm: React.FC<MPFormProps> = ({
+  closeDrawer,
+  missingPost,
+  editMode = false,
+}) => {
   const { user, loading } = useIsAuth();
 
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
   const formRef = useRef(null);
 
   const [createPost] = useCreateMissingPostMutation();
-
   const toast = useToast();
 
   const cancelOnClickOutside = ({
@@ -56,86 +65,77 @@ export const MissingPostForm: React.FC<{
     }
     return closeDrawer();
   };
+  const handleCreateMP = async (
+    { images, ...input }: PostInputType,
+    { setErrors, setFieldError }: FormikHelpers<PostInputType>
+  ) => {
+    if (!images || !images.length) {
+      return setFieldError(
+        'images',
+        'Please provide at least one image for the pet'
+      );
+    }
+    const { data } = await createPost({
+      variables: { input, images },
+      update: (cache, { data: result, errors }) => {
+        if (result && !errors?.length)
+          return addNewMissingPostToCache(cache, result);
+      },
+    });
+    if (data?.createMissingPost.errors?.length) {
+      setErrors(toErrorMap(data?.createMissingPost.errors));
+      toast({
+        title: 'Create Post Failed ❌',
+        description:
+          'An error occurred while trying to create your post, please try again',
+        status: 'error',
+      });
+    } else {
+      toast({
+        title: 'Post Created Successfully',
+        description: `Your post has been created successfully, 
+          and we've sent notifications to nearby users to help you in the searching process`,
+        status: 'success',
+      });
+    }
+    return closeDrawer();
+  };
 
   return (
     <Box my={2} ref={formRef}>
       {loading ? (
         <LoadingComponent />
-      ) : !user ? (
+      ) : !user || (editMode && !missingPost) ? (
         <NotAuthenticatedComponent
           title='Not Authenticated'
           subtitle='You must login to be able to create a new post'
         />
       ) : (
-        <>
-          <Formik
-            initialValues={initialValues}
-            onSubmit={async (
-              { images, ...input },
-              { setErrors, setFieldError }
-            ) => {
-              if (!images || !images.length) {
-                return setFieldError(
-                  'images',
-                  'Please provide at least one image for the pet'
-                );
-              }
-              const { data } = await createPost({
-                variables: {
-                  input,
-                  images,
-                },
-
-                update: (cache, { data: result, errors }) => {
-                  if (!result || errors?.length) return;
-                  return addNewMissingPostToCache(cache, result);
-                },
-              });
-
-              if (data?.createMissingPost.errors?.length) {
-                setErrors(toErrorMap(data?.createMissingPost.errors));
-                toast({
-                  title: 'Create Post Failed ❌',
-                  description:
-                    'An error occurred while trying to create your post, please try again',
-                  status: 'error',
-                  duration: 5000,
-                  isClosable: true,
-                });
-              } else {
-                closeDrawer();
-
-                toast({
-                  title: 'Post Created Successfully',
-                  description:
-                    "Your post has been created successfully, and we've sent notifications to nearby users to help you in the searching process",
-                  status: 'success',
-                  duration: 5000,
-                  isClosable: true,
-                });
-              }
-            }}
-          >
-            {(formProps) => {
-              return (
-                <CreateMPFormContent
-                  {...{ formProps, user, cancelOnClickOutside, formRef }}
-                />
-              );
-            }}
-          </Formik>
-
-          <CustomAlertDialog
-            header={'Close Form 👀'}
-            body='Are you sure? all the fields you filled will be cleared on closing and can not be restored again'
-            confirmText='Close anyway'
-            isOpen={openAlertDialog}
-            cancelText='Cancel'
-            handleCancel={() => setOpenAlertDialog(false)}
-            handleConfirm={() => closeDrawer()}
-          />
-        </>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={CreateMPSchema}
+          onSubmit={async (values, helpers) => {
+            if (!editMode) return handleCreateMP(values, helpers);
+          }}
+        >
+          {(formProps) => {
+            return (
+              <MPFormContent
+                {...{ formProps, user, cancelOnClickOutside, formRef }}
+              />
+            );
+          }}
+        </Formik>
       )}
+      <CustomAlertDialog
+        header={'Close Form 👀'}
+        body='Are you sure? all the fields you filled will be cleared on closing and cannot be restored again'
+        confirmText='Close anyway'
+        isOpen={openAlertDialog}
+        cancelText='Cancel'
+        handleCancel={() => setOpenAlertDialog(false)}
+        handleConfirm={() => closeDrawer()}
+      />
     </Box>
   );
 };

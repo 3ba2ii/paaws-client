@@ -3,22 +3,15 @@ import {
   FormHelperText,
   FormLabel,
 } from '@chakra-ui/form-control';
-import { CloseIcon } from '@chakra-ui/icons';
 import { Input, InputProps } from '@chakra-ui/input';
-import { Box, List, ListItem, Text, VStack } from '@chakra-ui/layout';
-import {
-  CloseButton,
-  IconButton,
-  Tooltip,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Box, Text, VStack } from '@chakra-ui/layout';
+import { useColorModeValue } from '@chakra-ui/react';
 import { useField, useFormikContext } from 'formik';
 import React, { useCallback, useMemo } from 'react';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { FaRegImages } from 'react-icons/fa';
-import s from 'styles/custom-dropzone.module.css';
-import Image from 'next/image';
-import ImageWithFallback from '../media/ImageWithFallback';
+import PreviewComponent from './PreviewComponent';
+
 const baseStyle = {
   flex: 1,
   display: 'flex',
@@ -60,7 +53,7 @@ interface CustomDropzoneProps {
   showThumbnail?: boolean;
 }
 
-export const MyDropzone: React.FC<CustomDropzoneProps> = ({
+const MyDropzone: React.FC<CustomDropzoneProps> = ({
   label,
   helperText,
   required = true,
@@ -68,6 +61,7 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
   ...props
 }) => {
   const [field, { error, touched }] = useField(props);
+
   const form = useFormikContext();
 
   const onDrop = useCallback(
@@ -185,82 +179,4 @@ export const MyDropzone: React.FC<CustomDropzoneProps> = ({
   );
 };
 
-const PreviewComponent: React.FC<{
-  values: [File];
-  thumbnailIdx: number;
-  handleThumbnailChange?: (idx: number) => void;
-  handleChange: (acceptedFiles: File[], rejectedFiles: FileRejection[]) => void;
-}> = ({ values, thumbnailIdx, handleThumbnailChange, handleChange }) => {
-  const clearAll = () => {
-    handleChange([], []);
-  };
-  const deleteImage = (idx: number) => {
-    const newImages = values.filter((_, index) => index !== idx);
-    handleChange(newImages, []);
-  };
-
-  return (
-    <List
-      as='ul'
-      className={s.preview_container}
-      bg={useColorModeValue('#fafafa', 'gray.700')}
-    >
-      <Tooltip label='Clear'>
-        <CloseButton
-          pos='absolute'
-          top='50%'
-          transform='translateY(-50%)'
-          right='10px'
-          color='whiteAlpha.500'
-          onClick={clearAll}
-        />
-      </Tooltip>
-      {values.map((file: File, idx: number) => {
-        const isThumbnail = idx === thumbnailIdx;
-        const src = URL.createObjectURL(file) || null;
-        return (
-          <ListItem
-            key={idx}
-            className={`${s.preview_item} ${isThumbnail ? s.selected : ''}`}
-            onClick={() => {
-              handleThumbnailChange && handleThumbnailChange(idx);
-            }}
-            pos='relative'
-          >
-            <Tooltip
-              hidden={!isThumbnail}
-              label='This image will be used as a thumbnail'
-              placement='top'
-              hasArrow
-              defaultIsOpen={isThumbnail}
-            >
-              {src ? (
-                <Box>
-                  <Image
-                    src={src}
-                    width={'100%'}
-                    height={'100%'}
-                    alt='Preview'
-                  />
-                </Box>
-              ) : null}
-            </Tooltip>
-            <IconButton
-              aria-label='Remove Media'
-              pos='absolute'
-              top='1px'
-              right='1px'
-              color='red.400'
-              size='xs'
-              fontSize={'8px'}
-              variant='ghost'
-              icon={<CloseIcon />}
-              onClick={() => deleteImage(idx)}
-              tabIndex={2}
-            />
-          </ListItem>
-        );
-      })}
-    </List>
-  );
-};
+export default React.memo(MyDropzone);

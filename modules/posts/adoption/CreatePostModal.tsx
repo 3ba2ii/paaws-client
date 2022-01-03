@@ -13,7 +13,7 @@ import { useCreateAdoptionPostMutation } from 'generated/graphql';
 import React, { useState } from 'react';
 import { FaChevronRight } from 'react-icons/fa';
 import s from 'styles/createPostForm.module.css';
-import { CreatePostSchema } from 'utils/constants/YupSchemas';
+import { CreatePostSchema } from 'utils/yupSchemas/CreatePostSchema';
 import { toErrorMap } from 'utils/toErrorMap';
 import { createPostProps } from '../../../pages/adoption/index';
 import {

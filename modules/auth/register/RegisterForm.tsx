@@ -8,7 +8,7 @@ import { Field, Form, Formik } from 'formik';
 import { useSendOtpMutation } from 'generated/graphql';
 import React, { useState } from 'react';
 import styles from 'styles/register.module.css';
-import { SignupSchema } from 'utils/constants/YupSchemas';
+import { SignupSchema } from 'utils/yupSchemas/SignupSchema';
 import { toErrorMap } from 'utils/toErrorMap';
 import { OTPModal } from './OTPModal';
 

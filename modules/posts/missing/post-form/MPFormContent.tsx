@@ -1,6 +1,6 @@
 import { Box, HStack, Text, VStack } from '@chakra-ui/layout';
 import { Button, Tooltip } from '@chakra-ui/react';
-import { MyDropzone } from 'components/common/input/CustomDropzone';
+import MyDropzone from 'components/common/input/CustomDropzone';
 import InputHOC from 'components/common/input/CustomInputComponent';
 import CustomSwitch from 'components/common/input/CustomSwitch';
 import { DropdownMenu } from 'components/common/input/DropdownMenu';
@@ -14,6 +14,7 @@ import React, { useState } from 'react';
 import { GoChevronDown } from 'react-icons/go';
 import { capitalizeString } from 'utils/capitalizeString';
 import {
+  MP_POST_TYPES,
   PrivacyTypeCustomized,
   SelectLocationOptions,
 } from 'utils/constants/enums';
@@ -21,14 +22,21 @@ import { PostLocationFields } from './PostLocationFields';
 import { PostInputType } from './MissingPostForm';
 import { LocationPickerModal } from './LocationPickerModal';
 
-export const CreateMPFormContent: React.FC<{
+interface MPFormContentProps {
   formProps: FormikProps<PostInputType>;
   user: MeQuery['me'];
   cancelOnClickOutside: (values: FormikProps<PostInputType>['values']) => void;
   formRef: React.MutableRefObject<null>;
   editMode?: boolean;
   missingPost?: MissingPostQuery['missingPost']['missingPost'];
-}> = ({ formProps, user, cancelOnClickOutside, formRef }) => {
+}
+
+const MPFormContent: React.FC<MPFormContentProps> = ({
+  formProps,
+  user,
+  cancelOnClickOutside,
+  formRef,
+}) => {
   const { values, setFieldValue, isSubmitting } = formProps;
   const [locationOption, setLocationOption] =
     useState<SelectLocationOptions | null>(null);
@@ -82,10 +90,7 @@ export const CreateMPFormContent: React.FC<{
         >
           <TwoOptionsSwitch
             handleChange={(value) => setFieldValue('type', value)}
-            options={[
-              { label: 'Missing', value: MissingPostTypes.Missing },
-              { label: 'Found', value: MissingPostTypes.Found },
-            ]}
+            options={MP_POST_TYPES}
             activeValue={values.type}
             variant='outline'
             py={5}
@@ -96,8 +101,8 @@ export const CreateMPFormContent: React.FC<{
           name='title'
           placeholder='I found a dog near manara street'
           label='Title'
-          maxLength={50}
-          maxInputLength={50}
+          maxLength={70}
+          maxInputLength={70}
           showLength
         />
         <InputField
@@ -105,8 +110,8 @@ export const CreateMPFormContent: React.FC<{
           placeholder='Tell us more about where you found this pet'
           helperText='Give us more information about the pet you missed or found'
           label='Description'
-          maxLength={255}
-          maxInputLength={255}
+          maxLength={500}
+          maxInputLength={500}
           showLength
           textarea
         />
@@ -166,3 +171,4 @@ export const CreateMPFormContent: React.FC<{
     </Form>
   );
 };
+export default React.memo(MPFormContent);
