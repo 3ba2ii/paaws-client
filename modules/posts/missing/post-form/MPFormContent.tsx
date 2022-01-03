@@ -8,7 +8,7 @@ import InputField from 'components/common/input/InputField';
 import TwoOptionsSwitch from 'components/common/input/TwoOptionsSwitch';
 import { UserAvatar } from 'components/UserAvatar';
 import { Form, FormikProps } from 'formik';
-import { MeQuery, MissingPostTypes } from 'generated/graphql';
+import { MeQuery, MissingPostQuery, MissingPostTypes } from 'generated/graphql';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import React, { useState } from 'react';
 import { GoChevronDown } from 'react-icons/go';
@@ -18,7 +18,7 @@ import {
   SelectLocationOptions,
 } from 'utils/constants/enums';
 import { PostLocationFields } from './PostLocationFields';
-import { PostInputType } from './CreateMissingPostForm';
+import { PostInputType } from './MissingPostForm';
 import { LocationPickerModal } from './LocationPickerModal';
 
 export const CreateMPFormContent: React.FC<{
@@ -26,6 +26,8 @@ export const CreateMPFormContent: React.FC<{
   user: MeQuery['me'];
   cancelOnClickOutside: (values: FormikProps<PostInputType>['values']) => void;
   formRef: React.MutableRefObject<null>;
+  editMode?: boolean;
+  missingPost?: MissingPostQuery['missingPost']['missingPost'];
 }> = ({ formProps, user, cancelOnClickOutside, formRef }) => {
   const { values, setFieldValue, isSubmitting } = formProps;
   const [locationOption, setLocationOption] =

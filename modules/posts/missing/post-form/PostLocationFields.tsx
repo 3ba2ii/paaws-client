@@ -5,7 +5,7 @@ import { DropdownMenu } from 'components/common/input/DropdownMenu';
 import React from 'react';
 import { GoChevronRight } from 'react-icons/go';
 import { SelectLocationObj } from 'utils/constants/enums';
-import { PostInputType } from './CreateMissingPostForm';
+import { PostInputType } from './MissingPostForm';
 
 export const PostLocationFields: React.FC<{
   values: PostInputType;

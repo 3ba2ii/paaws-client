@@ -15,7 +15,7 @@ import { addNewMissingPostToCache } from 'utils/cache/addNewMissingPost';
 import { toErrorMap } from 'utils/toErrorMap';
 import { CustomAlertDialog } from '../../../../components/common/overlays/AlertDialog';
 import { NotAuthenticatedComponent } from '../../../../components/NotAuthenticatedComponent';
-import { CreateMPFormContent } from './CreateMPFormContent';
+import { CreateMPFormContent } from './MPFormContent';
 
 export type PostInputType = CreateMissingPostInput & {
   images: Array<Scalars['Upload']>;
@@ -30,7 +30,7 @@ const initialValues: PostInputType = {
   thumbnailIdx: 0,
   images: [],
 };
-export const NewMissingPostForm: React.FC<{
+export const MissingPostForm: React.FC<{
   closeDrawer: VoidFunction;
 }> = ({ closeDrawer }) => {
   const { user, loading } = useIsAuth();
@@ -102,17 +102,18 @@ export const NewMissingPostForm: React.FC<{
                   duration: 5000,
                   isClosable: true,
                 });
-              }
-              closeDrawer();
+              } else {
+                closeDrawer();
 
-              toast({
-                title: 'Post Created Successfully',
-                description:
-                  "Your post has been created successfully, and we've sent notifications to nearby users to help you in the searching process",
-                status: 'success',
-                duration: 5000,
-                isClosable: true,
-              });
+                toast({
+                  title: 'Post Created Successfully',
+                  description:
+                    "Your post has been created successfully, and we've sent notifications to nearby users to help you in the searching process",
+                  status: 'success',
+                  duration: 5000,
+                  isClosable: true,
+                });
+              }
             }}
           >
             {(formProps) => {
