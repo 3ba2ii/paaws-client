@@ -10,7 +10,7 @@ import { useField, useFormikContext } from 'formik';
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { FaCalendar, FaCalendarAlt, FaRegCalendarAlt } from 'react-icons/fa';
+import { FaRegCalendarAlt } from 'react-icons/fa';
 
 interface CustomDatePickerProps {
   name: string;

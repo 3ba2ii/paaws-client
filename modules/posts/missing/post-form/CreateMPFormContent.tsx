@@ -1,7 +1,7 @@
 import { Box, HStack, Text, VStack } from '@chakra-ui/layout';
 import { Button, Tooltip } from '@chakra-ui/react';
 import { MyDropzone } from 'components/common/input/CustomDropzone';
-import GenericInputComponent from 'components/common/input/CustomInputComponent';
+import InputHOC from 'components/common/input/CustomInputComponent';
 import CustomSwitch from 'components/common/input/CustomSwitch';
 import { DropdownMenu } from 'components/common/input/DropdownMenu';
 import InputField from 'components/common/input/InputField';
@@ -73,7 +73,7 @@ export const CreateMPFormContent: React.FC<{
             />
           </VStack>
         </HStack>
-        <GenericInputComponent
+        <InputHOC
           helperText='Please specify whether you missed your pet or found one'
           label='Missing or Found'
           name='type'
@@ -89,7 +89,7 @@ export const CreateMPFormContent: React.FC<{
             py={5}
             w='100%'
           />
-        </GenericInputComponent>
+        </InputHOC>
         <InputField
           name='title'
           placeholder='I found a dog near manara street'

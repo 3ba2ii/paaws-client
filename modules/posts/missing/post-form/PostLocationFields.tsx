@@ -1,6 +1,6 @@
 import { Heading, HStack, VStack } from '@chakra-ui/layout';
 import { Button, MenuProps, SlideFade } from '@chakra-ui/react';
-import GenericInputComponent from 'components/common/input/CustomInputComponent';
+import InputHOC from 'components/common/input/CustomInputComponent';
 import { DropdownMenu } from 'components/common/input/DropdownMenu';
 import React from 'react';
 import { GoChevronRight } from 'react-icons/go';
@@ -16,7 +16,7 @@ export const PostLocationFields: React.FC<{
   return (
     <SlideFade in={isOpen}>
       <VStack>
-        <GenericInputComponent
+        <InputHOC
           label='Location'
           name='location'
           helperText='Select the location where you missed or found the pet,
