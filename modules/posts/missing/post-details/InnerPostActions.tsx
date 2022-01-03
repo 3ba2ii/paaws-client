@@ -1,11 +1,13 @@
 import {
   Button,
+  DrawerProps,
   HStack,
   IconButton,
   Tooltip,
   useBreakpointValue,
   useToast,
 } from '@chakra-ui/react';
+import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
 import ShareModal from 'components/ShareModal';
 import {
   MissingPostQuery,
@@ -14,6 +16,7 @@ import {
 import router from 'next/router';
 import React from 'react';
 import { FiEdit2, FiPhoneCall, FiShare2, FiTrash2 } from 'react-icons/fi';
+import { MissingPostForm } from '../post-form/MissingPostForm';
 import { DeletePostModal } from './DeletePostModal';
 
 interface InnerPostActionsProps {
@@ -28,13 +31,14 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
   const [openModals, setOpenModals] = React.useState({
     delete: false,
     share: false,
+    edit: false,
   });
 
   const contactButton = useBreakpointValue({ base: IconButton, md: Button });
   const toaster = useToast();
   const [deleteMP, { loading }] = useDeleteMissingPostMutation();
 
-  const toggleModals = (modal: 'delete' | 'share') => {
+  const toggleModals = (modal: 'delete' | 'share' | 'edit') => {
     setOpenModals({ ...openModals, [modal]: !openModals[modal] });
   };
   const errorToaster = () =>
@@ -93,7 +97,12 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
             />
           </Tooltip>
           <Tooltip label='Edit Post'>
-            <IconButton aria-label='edit-post' icon={<FiEdit2 />} size='sm' />
+            <IconButton
+              aria-label='edit-post'
+              icon={<FiEdit2 />}
+              size='sm'
+              onClick={() => toggleModals('edit')}
+            />
           </Tooltip>
         </HStack>
       )}
@@ -120,6 +129,19 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
           isOpen: openModals.share,
           onClose: () => toggleModals('share'),
         }}
+      />
+      <CustomDrawer
+        isOpen={openModals.edit}
+        onClose={() => toggleModals('edit')}
+        drawerHeader='Edit Post'
+        drawerBody={
+          <MissingPostForm
+            closeDrawer={() => toggleModals('edit')}
+            editMode
+            missingPost={missingPost}
+          />
+        }
+        drawerProps={{ closeOnOverlayClick: false } as DrawerProps}
       />
     </HStack>
   );

@@ -814,7 +814,7 @@ export type WhereClause = {
 
 export type CommentFragmentFragment = { __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } };
 
-export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
+export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
 
 export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
 
@@ -839,7 +839,7 @@ export type CreateMissingPostMutationVariables = Exact<{
 }>;
 
 
-export type CreateMissingPostMutation = { __typename?: 'Mutation', createMissingPost: { __typename?: 'CreateMissingPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, post?: Maybe<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type CreateMissingPostMutation = { __typename?: 'Mutation', createMissingPost: { __typename?: 'CreateMissingPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, post?: Maybe<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
 
 export type CreatePetMutationVariables = Exact<{
   createPetOptions: CreatePetOptions;
@@ -869,6 +869,14 @@ export type EditCommentMutationVariables = Exact<{
 
 
 export type EditCommentMutation = { __typename?: 'Mutation', editComment: { __typename?: 'CommentResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comment?: Maybe<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
+
+export type EditMissingPostMutationVariables = Exact<{
+  input: UpdateMissingPostInput;
+  id: Scalars['Int'];
+}>;
+
+
+export type EditMissingPostMutation = { __typename?: 'Mutation', editMissingPost: { __typename?: 'EditMissingPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPost?: Maybe<{ __typename?: 'MissingPost', id: number, title: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
 
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
@@ -964,7 +972,7 @@ export type MissingPostsQueryVariables = Exact<{
 }>;
 
 
-export type MissingPostsQuery = { __typename?: 'Query', missingPosts: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type MissingPostsQuery = { __typename?: 'Query', missingPosts: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
 
 export type PaginatedUsersQueryVariables = Exact<{
   usersWhere: WhereClause;
@@ -1000,6 +1008,8 @@ export const MissingPostFragmentFragmentDoc = gql`
   id
   title
   voteStatus
+  privacy
+  type
   user {
     id
     displayName
@@ -1348,6 +1358,47 @@ export function useEditCommentMutation(baseOptions?: Apollo.MutationHookOptions<
 export type EditCommentMutationHookResult = ReturnType<typeof useEditCommentMutation>;
 export type EditCommentMutationResult = Apollo.MutationResult<EditCommentMutation>;
 export type EditCommentMutationOptions = Apollo.BaseMutationOptions<EditCommentMutation, EditCommentMutationVariables>;
+export const EditMissingPostDocument = gql`
+    mutation EditMissingPost($input: UpdateMissingPostInput!, $id: Int!) {
+  editMissingPost(input: $input, id: $id) {
+    errors {
+      field
+      message
+      code
+    }
+    missingPost {
+      ...MissingPostFragment
+    }
+  }
+}
+    ${MissingPostFragmentFragmentDoc}`;
+export type EditMissingPostMutationFn = Apollo.MutationFunction<EditMissingPostMutation, EditMissingPostMutationVariables>;
+
+/**
+ * __useEditMissingPostMutation__
+ *
+ * To run a mutation, you first call `useEditMissingPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditMissingPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editMissingPostMutation, { data, loading, error }] = useEditMissingPostMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useEditMissingPostMutation(baseOptions?: Apollo.MutationHookOptions<EditMissingPostMutation, EditMissingPostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EditMissingPostMutation, EditMissingPostMutationVariables>(EditMissingPostDocument, options);
+      }
+export type EditMissingPostMutationHookResult = ReturnType<typeof useEditMissingPostMutation>;
+export type EditMissingPostMutationResult = Apollo.MutationResult<EditMissingPostMutation>;
+export type EditMissingPostMutationOptions = Apollo.BaseMutationOptions<EditMissingPostMutation, EditMissingPostMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($loginOptions: LoginInput!) {
   login(options: $loginOptions) {

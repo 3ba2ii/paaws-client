@@ -8,7 +8,7 @@ import InputField from 'components/common/input/InputField';
 import TwoOptionsSwitch from 'components/common/input/TwoOptionsSwitch';
 import { UserAvatar } from 'components/UserAvatar';
 import { Form, FormikProps } from 'formik';
-import { MeQuery, MissingPostQuery, MissingPostTypes } from 'generated/graphql';
+import { MeQuery, MissingPostQuery } from 'generated/graphql';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import React, { useState } from 'react';
 import { GoChevronDown } from 'react-icons/go';
@@ -18,9 +18,9 @@ import {
   PrivacyTypeCustomized,
   SelectLocationOptions,
 } from 'utils/constants/enums';
-import { PostLocationFields } from './PostLocationFields';
-import { PostInputType } from './MissingPostForm';
 import { LocationPickerModal } from './LocationPickerModal';
+import { PostInputType } from './MissingPostForm';
+import { PostLocationFields } from './PostLocationFields';
 
 interface MPFormContentProps {
   formProps: FormikProps<PostInputType>;
@@ -36,6 +36,8 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
   user,
   cancelOnClickOutside,
   formRef,
+  editMode,
+  missingPost,
 }) => {
   const { values, setFieldValue, isSubmitting } = formProps;
   const [locationOption, setLocationOption] =
@@ -51,6 +53,7 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
   const hideLocationPicker = () => {
     setLocationOption(null);
   };
+  const isEditModeOn = editMode && missingPost;
   return (
     <Form>
       <VStack spacing={5} mb={10}>
@@ -116,26 +119,30 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
           textarea
         />
 
-        <MyDropzone label='Pet Images' name='images' />
+        {!isEditModeOn && <MyDropzone label='Pet Images' name='images' />}
 
-        <Tooltip
-          label='We will send notifications to nearby users to help you finding the pet'
-          placement='bottom'
-        >
-          <Box width={'100%'}>
-            <CustomSwitch
-              label='Send notifications to nearby users?'
-              checked={showLocationOption}
-              handleChange={(checked) => setShowLocationOption(checked)}
+        {!isEditModeOn && (
+          <>
+            <Tooltip
+              label='We will send notifications to nearby users to help you finding the pet'
+              placement='bottom'
+            >
+              <Box width={'100%'}>
+                <CustomSwitch
+                  label='Send notifications to nearby users?'
+                  checked={showLocationOption}
+                  handleChange={(checked) => setShowLocationOption(checked)}
+                />
+              </Box>
+            </Tooltip>
+            <PostLocationFields
+              values={values}
+              setFieldValue={setFieldValue}
+              isOpen={showLocationOption}
+              setLocationOption={setLocationOption}
             />
-          </Box>
-        </Tooltip>
-        <PostLocationFields
-          values={values}
-          setFieldValue={setFieldValue}
-          isOpen={showLocationOption}
-          setLocationOption={setLocationOption}
-        />
+          </>
+        )}
       </VStack>
       <HStack mt={4} w='100%' align='center' justify='flex-end'>
         <Button
@@ -153,7 +160,7 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
           fontSize='.9rem'
           isLoading={isSubmitting}
         >
-          Post
+          {isEditModeOn && 'Edit'} Post
         </Button>
       </HStack>
       {/* Location modal */}

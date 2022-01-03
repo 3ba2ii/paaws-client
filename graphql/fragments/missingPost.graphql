@@ -2,6 +2,8 @@ fragment MissingPostFragment on MissingPost {
   id
   title
   voteStatus
+  privacy
+  type
   user {
     id
     displayName

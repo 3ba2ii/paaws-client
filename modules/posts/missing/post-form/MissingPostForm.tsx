@@ -1,6 +1,7 @@
 import { Box } from '@chakra-ui/layout';
 import { useToast } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
+import NotFound from 'components/NotFound';
 import { Formik, FormikHelpers } from 'formik';
 import {
   CreateMissingPostInput,
@@ -9,6 +10,7 @@ import {
   PrivacyType,
   Scalars,
   useCreateMissingPostMutation,
+  useEditMissingPostMutation,
 } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import React, { useRef, useState } from 'react';
@@ -34,7 +36,7 @@ const initialValues: PostInputType = {
 };
 interface MPFormProps {
   closeDrawer: VoidFunction;
-  missingPost?: MissingPostQuery['missingPost'];
+  missingPost?: MissingPostQuery['missingPost']['missingPost'];
   editMode?: boolean;
 }
 
@@ -49,6 +51,7 @@ export const MissingPostForm: React.FC<MPFormProps> = ({
   const formRef = useRef(null);
 
   const [createPost] = useCreateMissingPostMutation();
+  const [editPost] = useEditMissingPostMutation();
   const toast = useToast();
 
   const cancelOnClickOutside = ({
@@ -101,30 +104,83 @@ export const MissingPostForm: React.FC<MPFormProps> = ({
     return closeDrawer();
   };
 
+  const handleEditMP = async ({
+    title,
+    description,
+    privacy,
+    type,
+  }: Partial<PostInputType>) => {
+    if (!missingPost || !missingPost.id) return closeDrawer();
+    const { data } = await editPost({
+      variables: {
+        id: missingPost.id,
+        input: { title, description, privacy, type },
+      },
+    });
+    if (data?.editMissingPost.errors?.length) {
+      toast({
+        title: 'Edit Post Failed ❌',
+        description:
+          'An error occurred while trying to edit your post, please try again',
+        status: 'error',
+      });
+    } else {
+      toast({
+        title: 'Post Edited Successfully',
+        description: 'Your post has been edited successfully',
+        status: 'success',
+      });
+    }
+    return closeDrawer();
+  };
+
+  const isEditModeOn = editMode && !!missingPost;
+  if (editMode && !missingPost) {
+    return (
+      <NotFound
+        subtitle="We couldn't find the post, Please try again later"
+        title='😥 404 Not Found'
+      />
+    );
+  }
   return (
-    <Box my={2} ref={formRef}>
+    <Box w='100%' h='100%' my={2} ref={formRef}>
       {loading ? (
         <LoadingComponent />
-      ) : !user || (editMode && !missingPost) ? (
+      ) : !user ? (
         <NotAuthenticatedComponent
           title='Not Authenticated'
           subtitle='You must login to be able to create a new post'
         />
       ) : (
         <Formik
-          initialValues={initialValues}
+          initialValues={
+            isEditModeOn
+              ? ({
+                  ...initialValues,
+                  ...missingPost,
+                } as PostInputType)
+              : initialValues
+          }
           validationSchema={CreateMPSchema}
           onSubmit={async (values, helpers) => {
-            if (!editMode) return handleCreateMP(values, helpers);
+            editMode ? handleEditMP(values) : handleCreateMP(values, helpers);
           }}
         >
-          {(formProps) => {
-            return (
+          {(formProps) => (
+            <Box h='100%' w='100%'>
               <MPFormContent
-                {...{ formProps, user, cancelOnClickOutside, formRef }}
+                {...{
+                  formProps,
+                  user,
+                  cancelOnClickOutside,
+                  formRef,
+                  missingPost: missingPost,
+                  editMode: isEditModeOn,
+                }}
               />
-            );
-          }}
+            </Box>
+          )}
         </Formik>
       )}
       <CustomAlertDialog
