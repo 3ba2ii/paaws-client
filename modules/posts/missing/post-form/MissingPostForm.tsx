@@ -14,16 +14,13 @@ import {
 } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import React, { useRef, useState } from 'react';
+import { PostInputType } from 'types';
 import { addNewMissingPostToCache } from 'utils/cache/addNewMissingPost';
 import { toErrorMap } from 'utils/toErrorMap';
 import { CreateMPSchema } from 'utils/yupSchemas/CreateMPSchema';
 import { CustomAlertDialog } from '../../../../components/common/overlays/AlertDialog';
 import { NotAuthenticatedComponent } from '../../../../components/NotAuthenticatedComponent';
 import MPFormContent from './MPFormContent';
-
-export type PostInputType = CreateMissingPostInput & {
-  images: Array<Scalars['Upload']>;
-};
 
 const initialValues: PostInputType = {
   title: '',
@@ -52,6 +49,7 @@ export const MissingPostForm: React.FC<MPFormProps> = ({
 
   const [createPost] = useCreateMissingPostMutation();
   const [editPost] = useEditMissingPostMutation();
+  const isEditModeOn = editMode && !!missingPost;
   const toast = useToast();
 
   const cancelOnClickOutside = ({
@@ -134,7 +132,6 @@ export const MissingPostForm: React.FC<MPFormProps> = ({
     return closeDrawer();
   };
 
-  const isEditModeOn = editMode && !!missingPost;
   if (editMode && !missingPost) {
     return (
       <NotFound

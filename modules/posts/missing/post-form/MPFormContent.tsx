@@ -12,6 +12,7 @@ import { MeQuery, MissingPostQuery } from 'generated/graphql';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import React, { useState } from 'react';
 import { GoChevronDown } from 'react-icons/go';
+import { PostInputType } from 'types';
 import { capitalizeString } from 'utils/capitalizeString';
 import {
   MP_POST_TYPES,
@@ -19,7 +20,6 @@ import {
   SelectLocationOptions,
 } from 'utils/constants/enums';
 import { LocationPickerModal } from './LocationPickerModal';
-import { PostInputType } from './MissingPostForm';
 import { PostLocationFields } from './PostLocationFields';
 
 interface MPFormContentProps {

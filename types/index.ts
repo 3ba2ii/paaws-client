@@ -1,4 +1,10 @@
-import { DateFilters, LocationFilters, SortingOrder } from 'generated/graphql';
+import {
+  CreateMissingPostInput,
+  DateFilters,
+  LocationFilters,
+  Scalars,
+  SortingOrder,
+} from 'generated/graphql';
 
 export type LocationType = {
   lat: number;
@@ -19,4 +25,8 @@ export type TagsType = {
   date: DateFilters | null;
   location: LocationFilters | null;
   order: SortingOrder | null;
+};
+
+export type PostInputType = CreateMissingPostInput & {
+  images: Array<Scalars['Upload']>;
 };

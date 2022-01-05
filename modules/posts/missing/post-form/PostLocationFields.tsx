@@ -4,15 +4,22 @@ import InputHOC from 'components/common/input/CustomInputComponent';
 import { DropdownMenu } from 'components/common/input/DropdownMenu';
 import React from 'react';
 import { GoChevronRight } from 'react-icons/go';
+import { PostInputType } from 'types';
 import { SelectLocationObj } from 'utils/constants/enums';
-import { PostInputType } from './MissingPostForm';
 
-export const PostLocationFields: React.FC<{
+interface PostLocFieldProps {
   values: PostInputType;
   isOpen: boolean;
   setFieldValue: (name: string, value: any) => void;
   setLocationOption: (value: any) => void;
-}> = ({ values, setFieldValue, isOpen, setLocationOption }) => {
+}
+
+export const PostLocationFields: React.FC<PostLocFieldProps> = ({
+  values,
+  setFieldValue,
+  isOpen,
+  setLocationOption,
+}) => {
   return (
     <SlideFade in={isOpen}>
       <VStack>
