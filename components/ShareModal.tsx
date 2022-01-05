@@ -1,3 +1,4 @@
+import { getDataFromTree } from '@apollo/client/react/ssr';
 import {
   Box,
   Button,
@@ -18,6 +19,7 @@ import {
   TwitterShareButton,
   WhatsappShareButton,
 } from 'react-share';
+import withApollo from 'utils/withApollo';
 import GenericModal from './common/overlays/CustomModal';
 
 const shareSocialMediaList = [

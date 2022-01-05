@@ -16,8 +16,8 @@ import { PostInputType } from 'types';
 import { addNewMissingPostToCache } from 'utils/cache/addNewMissingPost';
 import { toErrorMap } from 'utils/toErrorMap';
 import { CreateMPSchema } from 'utils/yupSchemas/CreateMPSchema';
-import { CustomAlertDialog } from '../../../../components/common/overlays/AlertDialog';
-import { NotAuthenticatedComponent } from '../../../../components/NotAuthenticatedComponent';
+import { CustomAlertDialog } from 'components/common/overlays/AlertDialog';
+import { NotAuthenticatedComponent } from 'components/NotAuthenticatedComponent';
 import MPFormContent from './MPFormContent';
 
 const initialValues: PostInputType = {
