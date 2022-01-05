@@ -1,0 +1,13 @@
+query GetCommentReplies($options: ParentCommentReplies!) {
+  getCommentReplies(options: $options) {
+    errors {
+      field
+      message
+      code
+    }
+    hasMore
+    comments {
+      ...CommentFragment
+    }
+  }
+}

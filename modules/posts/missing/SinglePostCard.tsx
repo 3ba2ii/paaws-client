@@ -1,52 +1,36 @@
 import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout';
-import { Avatar, Tag, useColorModeValue } from '@chakra-ui/react';
+import { Tag, useColorModeValue } from '@chakra-ui/react';
 import ImageWithFallback from 'components/common/media/ImageWithFallback';
 import { formatDistance } from 'date-fns';
-import { Maybe, MissingPostTags, Photo } from 'generated/graphql';
+import { MissingPostsQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import { fallbackSrc } from 'utils/constants';
 import { rgbDataURL } from 'utils/rgbDataURL';
+import { PostOwner } from '../../../components/PostOwner';
 import { PostTags } from '../common/PostTags';
 import { PostActions } from './PostActions';
 
 interface SinglePostCardProps {
-  id: number;
-  title: string;
-  descriptionSnippet: string;
-  thumbnail?: Partial<Photo> | null;
-  points: number;
-  createdAt: string;
-  voteStatus?: number | null;
-  commentsCount: number;
-  user: {
-    id: number;
-    displayName: string;
-    avatar?: Maybe<{ __typename?: 'Photo'; url?: Maybe<string> }>;
-  };
-  tags?: MissingPostTags[];
-  address?: Maybe<{
-    __typename?: 'Address';
-    distance?: Maybe<number>;
-  }>;
+  post: MissingPostsQuery['missingPosts']['missingPosts'][0];
 }
 export const SinglePostCard: React.FC<SinglePostCardProps> = ({
-  id,
-  title,
-  thumbnail,
-  createdAt,
-  points,
-  user,
-  tags,
-  address,
-  voteStatus,
-  descriptionSnippet,
-  commentsCount,
+  post: {
+    id,
+    title,
+    thumbnail,
+    createdAt,
+    points,
+    user,
+    tags,
+    address,
+    voteStatus,
+    descriptionSnippet,
+    commentsCount,
+  },
 }) => {
-  let isNear = false;
-  if (address?.distance) {
-    isNear = address.distance <= 100;
-  }
+  let isNear = address?.distance ? address.distance <= 100 : false;
+
   const router = useRouter();
 
   const thumbnailImage = thumbnail?.url || '';
@@ -56,15 +40,25 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
     [createdAt]
   );
   const { displayName, avatar } = user;
-  const hasVoted = voteStatus != null;
 
   const redirectToPost = () => {
     router.push(`/missing/${id}`);
   };
-  const ComponentTags = () => {
+  const TagsComponent = () => {
     return (
       <HStack>
-        {tags && <PostTags tags={tags} />}
+        {tags && (
+          <PostTags
+            tags={tags}
+            tagProps={{
+              borderRadius: '3',
+              boxShadow: 'sm',
+              fontSize: '12px',
+              fontWeight: 'semibold',
+              size: 'sm',
+            }}
+          />
+        )}
         {isNear && (
           <Tag
             colorScheme='cyan'
@@ -87,19 +81,19 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
       flexDirection={['column', 'column', 'row']}
       p={'0px'}
       boxShadow='sm'
-      borderWidth={'0.5px'}
-      borderColor={useColorModeValue('gray.200', 'gray.700')}
       w='100%'
       h='100%'
       borderRadius={'6px'}
       overflow='hidden'
-      //bg={useColorModeValue('whiteAlpha.500', 'blackAlpha.200')}
       align={['unset', 'center']}
       sx={{ gap: ['10px', '0px'] }}
       cursor={'pointer'}
       transition={'all 0.2s ease-in-out'}
-      _hover={{ transform: 'scale(1.02)' }}
-      onClick={redirectToPost}
+      _hover={{ transform: 'scale(1.005)' }}
+      tabIndex={1}
+      //borderWidth={'0.5px'}
+      //borderColor={useColorModeValue('gray.200', 'gray.700')}
+      //bg={useColorModeValue('whiteAlpha.500', 'blackAlpha.200')}
     >
       <Box
         w={['clamp(150px, 100%, minmax(350px,100%))', '100%', '200px']}
@@ -108,6 +102,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         borderBottomLeftRadius={['0px', '0px', '4px']}
         overflow='hidden'
         boxShadow='base'
+        onClick={redirectToPost}
       >
         <ImageWithFallback
           fallbackSrc={fallbackSrc}
@@ -131,7 +126,13 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         p={['16px', '0 0 0 16px']}
         sx={{ gap: ['24px', '18px'] }}
       >
-        <VStack w='100%' pr={[1, 2, 4]} spacing='6px' align='flex-start'>
+        <VStack
+          w='100%'
+          pr={[1, 2, 4]}
+          spacing='6px'
+          align='flex-start'
+          onClick={redirectToPost}
+        >
           <HStack
             w='100%'
             h='inherit'
@@ -144,45 +145,26 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
                 as='h2'
                 textStyle='h5'
                 noOfLines={1}
+                maxW='30ch'
+                wordBreak={'break-all'}
               >
                 {title}
               </Text>
               {/* Post Tags */}
-              <ComponentTags />
+              <TagsComponent />
             </HStack>
 
             <Text textStyle='p3' textAlign={'center'} whiteSpace={'nowrap'}>
               {createdAtDistance}
             </Text>
           </HStack>
-          <HStack>
-            <Avatar
-              size='xs'
-              name={displayName}
-              src={avatar?.url || ''}
-              cursor='default'
-            />
-            <Text fontSize='14px' fontWeight='normal' color='gray.500'>
-              Posted by{' '}
-              <Text
-                aria-label='name'
-                as='a'
-                href={`localhost:3000/user/${displayName}`}
-                color='blue.500'
-                fontWeight='medium'
-              >
-                {displayName}
-              </Text>
-            </Text>
-          </HStack>
+          <PostOwner {...{ displayName, id, avatarUrl: avatar?.url }} />
           <Text as='p' textStyle='p1' fontWeight='normal' noOfLines={2}>
             {descriptionSnippet}
           </Text>
         </VStack>
         {/* Actions */}
-        <PostActions
-          {...{ postId: id, hasVoted, voteStatus, points, commentsCount }}
-        />
+        <PostActions {...{ id, voteStatus, points, commentsCount }} />
       </VStack>
     </Flex>
   );

@@ -3,6 +3,7 @@ import {
   DateFilters,
   LocationFilters,
   SortingOrder,
+  MissingPostTypes,
 } from './../../generated/graphql';
 
 export const PrivacyTypeCustomized = Object.entries(PrivacyType)
@@ -41,6 +42,10 @@ export const SortingOrderFilterObject = Object.entries(SortingOrder).map(
     value,
   })
 );
+export const MP_POST_TYPES = [
+  { label: 'Missing', value: MissingPostTypes.Missing },
+  { label: 'Found', value: MissingPostTypes.Found },
+];
 
 export enum Country {
   UnitedStates = 'US',

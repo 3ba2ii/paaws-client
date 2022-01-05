@@ -175,7 +175,7 @@ export const FiltersComponent: React.FC = () => {
                   LocationFiltersObject,
                   SortingOrderFilterObject,
                 ].map((options, index) => (
-                  <TabPanel>
+                  <TabPanel key={index}>
                     <CustomTabPanel
                       key={index}
                       options={options}

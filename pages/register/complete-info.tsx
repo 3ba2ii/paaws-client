@@ -15,7 +15,7 @@ import Router from 'next/router';
 import React, { useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import styles from 'styles/register.module.css';
-import { useIsAuth } from 'utils/useIsAuth';
+import { useIsAuth } from 'hooks/useIsAuth';
 import withApollo from 'utils/withApollo';
 
 interface ValuesData {

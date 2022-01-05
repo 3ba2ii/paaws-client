@@ -8,38 +8,6 @@ const breakpoints = createBreakpoints({
   xl: '80em',
 });
 
-/* const AppleButton = {
-  // style object for base or default style
-  baseStyle: (props: any) => ({
-    bg: props.colorMode === 'dark' ? 'red.300' : 'red.500',
-  }),
-  // styles for different sizes ("sm", "md", "lg")
-  sizes: {},
-  // styles for different visual variants ("outline", "solid")
-  variants: {},
-  // default values for `size` and `variant`
-  defaultProps: {
-    size: '',
-    variant: '',
-  },
-}; */
-const textStyles = {
-  h1: {
-    // you can also use responsive styles
-    fontSize: ['48px', '72px'],
-    fontWeight: 'bold',
-    lineHeight: '120%',
-    letterSpacing: '0%',
-    color: 'red',
-  },
-  h2: {
-    fontSize: ['36px', '48px'],
-    fontWeight: 'semibold',
-    lineHeight: '110%',
-    letterSpacing: '-1%',
-  },
-};
-
 const theme = extendTheme({
   colors: {
     black: '#16161D',
@@ -83,6 +51,7 @@ const theme = extendTheme({
       color: 'gray.500',
       fontWeight: 'medium',
       fontSize: '1rem',
+      lineHeight: '1.6',
     },
     p2: {
       color: 'gray.500',

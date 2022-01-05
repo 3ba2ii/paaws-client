@@ -1,0 +1,12 @@
+mutation EditComment($text: String!, $commentId: Int!) {
+  editComment(text: $text, commentId: $commentId) {
+    errors {
+      field
+      message
+      code
+    }
+    comment {
+      ...CommentFragment
+    }
+  }
+}

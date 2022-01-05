@@ -1,6 +1,6 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
 import CustomDatePicker from 'components/common/input/CustomDatePicker';
-import { MyDropzone } from 'components/common/input/CustomDropzone';
+import MyDropzone from 'components/common/input/CustomDropzone';
 import CustomCheckbox from 'components/common/input/CustomCheckbox';
 import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
 import InputField from 'components/common/input/InputField';

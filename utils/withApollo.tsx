@@ -8,10 +8,11 @@ import { onError } from '@apollo/client/link/error';
 import { createUploadLink } from 'apollo-upload-client';
 import {
   PaginatedAdoptionPosts,
+  PaginatedComments,
   PaginatedMissingPosts,
 } from 'generated/graphql';
 import nextWithApollo from 'next-with-apollo';
-import router from 'next/router';
+import router, { useRouter } from 'next/router';
 import { isServer } from './isServer';
 
 // Use this inside error-link
@@ -32,7 +33,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
         `❌ [GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       );
       if (message.includes('Not Authenticated')) {
-        if (path && path.toString() === 'vote')
+        if (path && ['vote'].includes(path.toString()))
           return handleLogoutWithoutHook();
       }
     });
@@ -74,6 +75,49 @@ const cache = new InMemoryCache({
             };
           },
         },
+        comments: {
+          keyArgs: [],
+          merge(
+            existing: PaginatedComments | undefined,
+            incoming: PaginatedComments
+          ) {
+            if (!existing) return incoming;
+
+            return {
+              ...incoming,
+              comments: [...(existing?.comments || []), ...incoming.comments],
+            };
+          },
+        },
+
+        getCommentReplies: {
+          keyArgs: [],
+          merge(
+            existing: PaginatedComments | undefined,
+            incoming: PaginatedComments
+          ) {
+            let uniqueIds: { [key: string]: boolean } = {};
+
+            const mergedReplies = [
+              ...incoming.comments,
+              ...(existing?.comments || []),
+            ];
+
+            const newComments = mergedReplies.filter((ref: any) => {
+              const id = ref?.__ref || null;
+              if (!id) return false;
+
+              if (uniqueIds[id]) return false;
+              uniqueIds[id] = true;
+              return true;
+            });
+
+            return {
+              ...incoming,
+              comments: newComments,
+            };
+          },
+        },
       },
     },
   },
@@ -92,14 +136,16 @@ const withApollo = nextWithApollo(
     return new ApolloClient({
       ssrMode: isServer(),
       link: from([errorLink, link]),
-      cache,
+      cache: cache.restore(initialState || {}),
     });
   },
   {
     render: ({ Page, props }) => {
+      const pageRouter = useRouter();
+
       return (
         <ApolloProvider client={props.apollo}>
-          <Page {...props} {...router} />
+          <Page {...props} {...pageRouter} />
         </ApolloProvider>
       );
     },

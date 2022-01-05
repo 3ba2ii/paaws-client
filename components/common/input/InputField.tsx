@@ -50,6 +50,7 @@ const InputField: React.FC<InputFieldProps> = ({
       }`}</Text>
     );
   };
+
   return (
     <FormControl
       isInvalid={!!error && touched}
@@ -64,9 +65,10 @@ const InputField: React.FC<InputFieldProps> = ({
         {...props}
         {...field}
         borderWidth='1.5px'
-        id={field.name}
         placeholder={props.placeholder}
+        id={field.name}
       />
+
       {helperText ? (
         <FormHelperText maxW='45ch'>{helperText}</FormHelperText>
       ) : null}
@@ -77,4 +79,5 @@ const InputField: React.FC<InputFieldProps> = ({
     </FormControl>
   );
 };
-export default InputField;
+
+export default React.memo(InputField);

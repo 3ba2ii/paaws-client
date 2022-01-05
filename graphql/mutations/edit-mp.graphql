@@ -1,0 +1,12 @@
+mutation EditMissingPost($input: UpdateMissingPostInput!, $id: Int!) {
+  editMissingPost(input: $input, id: $id) {
+    errors {
+      field
+      message
+      code
+    }
+    missingPost {
+      ...MissingPostFragment
+    }
+  }
+}

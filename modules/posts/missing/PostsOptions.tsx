@@ -6,7 +6,7 @@ import { useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { GoPlus } from 'react-icons/go';
-import { NewMissingPostForm } from './CreateMissingPostForm';
+import { MissingPostForm } from './post-form/MissingPostForm';
 import { FiltersComponent } from './FiltersComponent';
 
 export const PostsOptions: React.FC = () => {
@@ -55,7 +55,7 @@ export const PostsOptions: React.FC = () => {
         onClose={toggleDrawer}
         drawerHeader='Create New Post'
         drawerBody={
-          <NewMissingPostForm closeDrawer={() => setOpenDrawer(false)} />
+          <MissingPostForm closeDrawer={() => setOpenDrawer(false)} />
         }
         drawerProps={{ closeOnOverlayClick: false } as DrawerProps}
       />

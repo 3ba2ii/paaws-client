@@ -1,0 +1,20 @@
+fragment CommentFragment on Comment {
+  id
+  updatedAt
+  createdAt
+  postId
+  parentId
+  text
+  points
+  voteStatus
+  user {
+    id
+    displayName
+    avatar {
+      url
+    }
+  }
+  repliesCount
+  isReply
+  isEdited
+}

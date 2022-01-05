@@ -1,5 +1,4 @@
-import { useMeQuery } from '../generated/graphql';
-import { MeQuery } from './../generated/graphql';
+import { MeQuery, useMeQuery } from '../generated/graphql';
 
 export const useIsLoggedIn = (): MeQuery['me'] | undefined | null => {
   const { data, loading } = useMeQuery({

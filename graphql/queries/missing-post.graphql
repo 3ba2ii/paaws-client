@@ -1,0 +1,29 @@
+query MissingPost($missingPostId: Int!) {
+  missingPost(id: $missingPostId) {
+    missingPost {
+      ...MissingPostFragment
+      address {
+        id
+        street_name
+        street_number
+        formatted_address
+        city
+        state
+        zip
+        country
+      }
+      images {
+        photo {
+          id
+          url
+        }
+      }
+    }
+    isOwner
+    errors {
+      field
+      message
+      code
+    }
+  }
+}
