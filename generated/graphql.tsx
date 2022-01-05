@@ -147,6 +147,7 @@ export type CreateMissingPostInput = {
   address?: Maybe<AddressInput>;
   description: Scalars['String'];
   privacy: PrivacyType;
+  showContactInfo?: Maybe<Scalars['Boolean']>;
   thumbnailIdx?: Maybe<Scalars['Int']>;
   title: Scalars['String'];
   type: MissingPostTypes;
@@ -236,6 +237,7 @@ export type MissingPost = {
   images: Array<PostImages>;
   points: Scalars['Int'];
   privacy: PrivacyType;
+  showContactInfo?: Maybe<Scalars['Boolean']>;
   tags: Array<MissingPostTags>;
   thumbnail?: Maybe<Photo>;
   thumbnailId: Scalars['Int'];

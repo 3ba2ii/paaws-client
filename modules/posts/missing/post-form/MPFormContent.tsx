@@ -148,8 +148,8 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
         <Button
           fontSize='.875rem'
           height={'38px'}
-          type='submit'
           variant='ghost'
+          onClick={() => cancelOnClickOutside(values)}
         >
           Cancel
         </Button>

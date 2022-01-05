@@ -26,8 +26,8 @@ export const PostLocationFields: React.FC<PostLocFieldProps> = ({
         <InputHOC
           label='Location'
           name='location'
-          helperText='Select the location where you missed or found the pet,
-Locations are used to send notifications and alerts to nearby users'
+          helperText={`Select the location where you missed or found the pet,
+                       Locations are used to send notifications and alerts to nearby users`}
           required={false}
         />
 

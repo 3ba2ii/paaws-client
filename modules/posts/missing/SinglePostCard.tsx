@@ -145,6 +145,8 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
                 as='h2'
                 textStyle='h5'
                 noOfLines={1}
+                maxW='30ch'
+                wordBreak={'break-all'}
               >
                 {title}
               </Text>
