@@ -35,19 +35,10 @@ export const deleteCommentFromCache = (
       comments: {
         ...(cachedData?.comments || []),
         /* Filter comments by id or parentId */
-        comments: cachedData!.comments.comments
-          .filter(({ id, parentId, replies }) => {
-            //filter the comment in case of deleting a direct comment
-            return id !== commentId && parentId !== commentId;
-          })
-          .map((comment) => {
-            //map over again and filter the replies of the comment
-
-            return {
-              ...comment,
-              replies: comment.replies.filter(({ id }) => id !== commentId),
-            };
-          }),
+        comments: cachedData!.comments.comments.filter(({ id, parentId }) => {
+          //filter the comment in case of deleting a direct comment
+          return id !== commentId && parentId !== commentId;
+        }),
       },
     },
     overwrite: true,

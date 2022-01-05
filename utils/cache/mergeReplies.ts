@@ -31,15 +31,10 @@ export const mergeRepliesInCache = (
       if (parentId === comment.id) {
         return {
           ...comment,
-          replies: [...(comment?.replies || []), ...newReplies],
         };
       }
     }) || [];
 
-  console.log(
-    `🚀 ~ file: mergeReplies.ts ~ line 30 ~ updatedComments`,
-    updatedComments
-  );
   cache.writeQuery<MissingPostCommentsQuery>({
     query: MissingPostCommentsDocument,
 
