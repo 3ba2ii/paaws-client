@@ -4,11 +4,9 @@ import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import NotFound from 'components/NotFound';
 import { Formik, FormikHelpers } from 'formik';
 import {
-  CreateMissingPostInput,
   MissingPostQuery,
   MissingPostTypes,
   PrivacyType,
-  Scalars,
   useCreateMissingPostMutation,
   useEditMissingPostMutation,
 } from 'generated/graphql';
@@ -30,6 +28,7 @@ const initialValues: PostInputType = {
   address: null,
   thumbnailIdx: 0,
   images: [],
+  showContactInfo: true,
 };
 interface MPFormProps {
   closeDrawer: VoidFunction;
@@ -107,12 +106,13 @@ export const MissingPostForm: React.FC<MPFormProps> = ({
     description,
     privacy,
     type,
+    showContactInfo,
   }: Partial<PostInputType>) => {
     if (!missingPost || !missingPost.id) return closeDrawer();
     const { data } = await editPost({
       variables: {
         id: missingPost.id,
-        input: { title, description, privacy, type },
+        input: { title, description, privacy, type, showContactInfo },
       },
     });
     if (data?.editMissingPost.errors?.length) {
@@ -125,7 +125,8 @@ export const MissingPostForm: React.FC<MPFormProps> = ({
     } else {
       toast({
         title: 'Post Edited Successfully',
-        description: 'Your post has been edited successfully',
+        description:
+          'Your post has been edited, If you did not see any changes, please refresh the page',
         status: 'success',
       });
     }

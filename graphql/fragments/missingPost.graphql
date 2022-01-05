@@ -1,9 +1,16 @@
 fragment MissingPostFragment on MissingPost {
   id
   title
+  description
   voteStatus
   privacy
   type
+  showContactInfo
+  commentsCount
+  tags
+  points
+  createdAt
+  updatedAt
   user {
     id
     displayName
@@ -12,17 +19,12 @@ fragment MissingPostFragment on MissingPost {
       url
     }
   }
-  commentsCount
-  tags
-  address {
-    id
-    distance
-  }
-  points
   thumbnail {
     id
     url
   }
-  createdAt
-  updatedAt
+  address {
+    id
+    distance
+  }
 }

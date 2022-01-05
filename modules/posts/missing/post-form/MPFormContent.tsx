@@ -55,7 +55,7 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
   };
   const isEditModeOn = editMode && missingPost;
   return (
-    <Form>
+    <Form id='form-drawer'>
       <VStack spacing={5} mb={10}>
         {/* Avatar, name and  */}
         <HStack w='100%' align='center'>
@@ -121,6 +121,20 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
 
         {!isEditModeOn && <MyDropzone label='Pet Images' name='images' />}
 
+        <Tooltip
+          label='Showing your contact information will help us connect you with the person who lost/found their/your pet'
+          placement='top'
+        >
+          <Box width={'100%'}>
+            <CustomSwitch
+              label='Show your contact information'
+              checked={!!values.showContactInfo}
+              handleChange={(checked) =>
+                setFieldValue('showContactInfo', checked)
+              }
+            />
+          </Box>
+        </Tooltip>
         {!isEditModeOn && (
           <>
             <Tooltip
@@ -129,18 +143,23 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
             >
               <Box width={'100%'}>
                 <CustomSwitch
-                  label='Send notifications to nearby users?'
+                  label='Send alerts to nearby users?'
                   checked={showLocationOption}
-                  handleChange={(checked) => setShowLocationOption(checked)}
+                  handleChange={(checked) => {
+                    setShowLocationOption(checked);
+                    scrollToBottom('form-drawer');
+                  }}
                 />
               </Box>
             </Tooltip>
-            <PostLocationFields
-              values={values}
-              setFieldValue={setFieldValue}
-              isOpen={showLocationOption}
-              setLocationOption={setLocationOption}
-            />
+            {showLocationOption && (
+              <PostLocationFields
+                values={values}
+                setFieldValue={setFieldValue}
+                isOpen={showLocationOption}
+                setLocationOption={setLocationOption}
+              />
+            )}
           </>
         )}
       </VStack>
@@ -179,3 +198,12 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
   );
 };
 export default React.memo(MPFormContent);
+function scrollToBottom(id: string) {
+  const element = document.getElementById(id);
+
+  if (element)
+    element.scrollTo({
+      top: element.scrollHeight,
+      behavior: 'smooth',
+    });
+}

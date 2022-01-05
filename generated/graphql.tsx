@@ -715,6 +715,7 @@ export enum SortingOrder {
 export type UpdateMissingPostInput = {
   description?: Maybe<Scalars['String']>;
   privacy?: Maybe<PrivacyType>;
+  showContactInfo?: Maybe<Scalars['Boolean']>;
   title?: Maybe<Scalars['String']>;
   type?: Maybe<MissingPostTypes>;
 };
@@ -816,7 +817,7 @@ export type WhereClause = {
 
 export type CommentFragmentFragment = { __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } };
 
-export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
+export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showContactInfo?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> };
 
 export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
 
@@ -841,7 +842,7 @@ export type CreateMissingPostMutationVariables = Exact<{
 }>;
 
 
-export type CreateMissingPostMutation = { __typename?: 'Mutation', createMissingPost: { __typename?: 'CreateMissingPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, post?: Maybe<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type CreateMissingPostMutation = { __typename?: 'Mutation', createMissingPost: { __typename?: 'CreateMissingPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, post?: Maybe<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showContactInfo?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }> } };
 
 export type CreatePetMutationVariables = Exact<{
   createPetOptions: CreatePetOptions;
@@ -878,7 +879,7 @@ export type EditMissingPostMutationVariables = Exact<{
 }>;
 
 
-export type EditMissingPostMutation = { __typename?: 'Mutation', editMissingPost: { __typename?: 'EditMissingPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPost?: Maybe<{ __typename?: 'MissingPost', id: number, title: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type EditMissingPostMutation = { __typename?: 'Mutation', editMissingPost: { __typename?: 'EditMissingPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPost?: Maybe<{ __typename?: 'MissingPost', id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showContactInfo?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }> } };
 
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
@@ -964,7 +965,7 @@ export type MissingPostQueryVariables = Exact<{
 }>;
 
 
-export type MissingPostQuery = { __typename?: 'Query', missingPost: { __typename?: 'MissingPostResponse', isOwner?: Maybe<boolean>, missingPost?: Maybe<{ __typename?: 'MissingPost', id: number, addressId?: Maybe<number>, title: string, createdAt: any, description: string, type: MissingPostTypes, points: number, voteStatus?: Maybe<number>, commentsCount: number, tags: Array<MissingPostTags>, address?: Maybe<{ __typename?: 'Address', id: number, street_name?: Maybe<string>, street_number?: Maybe<number>, formatted_address?: Maybe<string>, city?: Maybe<string>, state?: Maybe<string>, zip?: Maybe<string>, country?: Maybe<string> }>, images: Array<{ __typename?: 'PostImages', photo: { __typename?: 'Photo', id: number, url?: Maybe<string> } }>, user: { __typename?: 'User', id: number, full_name: string, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+export type MissingPostQuery = { __typename?: 'Query', missingPost: { __typename?: 'MissingPostResponse', isOwner?: Maybe<boolean>, missingPost?: Maybe<{ __typename?: 'MissingPost', id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showContactInfo?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, address?: Maybe<{ __typename?: 'Address', id: number, street_name?: Maybe<string>, street_number?: Maybe<number>, formatted_address?: Maybe<string>, city?: Maybe<string>, state?: Maybe<string>, zip?: Maybe<string>, country?: Maybe<string>, distance?: Maybe<number> }>, images: Array<{ __typename?: 'PostImages', photo: { __typename?: 'Photo', id: number, url?: Maybe<string> } }>, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
 export type MissingPostsQueryVariables = Exact<{
   input: PaginationArgs;
@@ -974,7 +975,7 @@ export type MissingPostsQueryVariables = Exact<{
 }>;
 
 
-export type MissingPostsQuery = { __typename?: 'Query', missingPosts: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }>, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type MissingPostsQuery = { __typename?: 'Query', missingPosts: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showContactInfo?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }> } };
 
 export type PaginatedUsersQueryVariables = Exact<{
   usersWhere: WhereClause;
@@ -1009,9 +1010,16 @@ export const MissingPostFragmentFragmentDoc = gql`
     fragment MissingPostFragment on MissingPost {
   id
   title
+  description
   voteStatus
   privacy
   type
+  showContactInfo
+  commentsCount
+  tags
+  points
+  createdAt
+  updatedAt
   user {
     id
     displayName
@@ -1020,19 +1028,14 @@ export const MissingPostFragmentFragmentDoc = gql`
       url
     }
   }
-  commentsCount
-  tags
-  address {
-    id
-    distance
-  }
-  points
   thumbnail {
     id
     url
   }
-  createdAt
-  updatedAt
+  address {
+    id
+    distance
+  }
 }
     `;
 export const RequiredUserInfoFragmentDoc = gql`
@@ -1863,10 +1866,7 @@ export const MissingPostDocument = gql`
     query MissingPost($missingPostId: Int!) {
   missingPost(id: $missingPostId) {
     missingPost {
-      id
-      addressId
-      title
-      createdAt
+      ...MissingPostFragment
       address {
         id
         street_name
@@ -1883,20 +1883,6 @@ export const MissingPostDocument = gql`
           url
         }
       }
-      user {
-        id
-        full_name
-        displayName
-        avatar {
-          url
-        }
-      }
-      description
-      type
-      points
-      voteStatus
-      commentsCount
-      tags
     }
     isOwner
     errors {
@@ -1906,7 +1892,7 @@ export const MissingPostDocument = gql`
     }
   }
 }
-    `;
+    ${MissingPostFragmentFragmentDoc}`;
 
 /**
  * __useMissingPostQuery__

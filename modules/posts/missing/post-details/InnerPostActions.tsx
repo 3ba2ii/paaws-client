@@ -107,14 +107,16 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
         </HStack>
       )}
 
-      <Button
-        as={contactButton}
-        icon={<FiPhoneCall />}
-        size='sm'
-        colorScheme={'teal'}
-      >
-        Contact {missingPost?.user.displayName.split(' ')[0]}
-      </Button>
+      {missingPost?.showContactInfo && (
+        <Button
+          as={contactButton}
+          icon={<FiPhoneCall />}
+          size='sm'
+          colorScheme={'teal'}
+        >
+          Contact {missingPost?.user.displayName.split(' ')[0]}
+        </Button>
+      )}
 
       <DeletePostModal
         {...{
