@@ -1,14 +1,10 @@
 import {
   Box,
   Button,
-  Center,
   Flex,
   FlexProps,
   HStack,
-  IconButton,
   IconButtonProps,
-  Stack,
-  useBreakpointValue,
   VStack,
 } from '@chakra-ui/react';
 import NotFound from 'components/NotFound';
@@ -55,7 +51,6 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
         >
           Back
         </Button>
-
         <InnerPostActions {...{ isOwner, missingPost }} />
       </HStack>
 

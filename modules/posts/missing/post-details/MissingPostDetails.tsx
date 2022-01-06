@@ -24,17 +24,21 @@ interface MissingPostProps {
   post: MissingPostQuery['missingPost']['missingPost'];
   isOwner: boolean;
 }
-const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
-  const [openModals, setOpenModals] = React.useState({ share: false });
+const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
   if (!post) return null;
+
+  const [openModals, setOpenModals] = React.useState({
+    share: false,
+    location: false,
+  });
+
   const { title, description, tags, id, user, createdAt, address, images } =
     post;
-  const createdAtDistance = useMemo(
-    () => formatDistance(new Date(createdAt), new Date(), { addSuffix: true }),
-    [createdAt]
-  );
+  const createdAtDistance = formatDistance(new Date(createdAt), new Date(), {
+    addSuffix: true,
+  });
 
-  const toggleShowModal = (modal: 'share') => {
+  const toggleShowModal = (modal: 'share' | 'location') => {
     setOpenModals({ ...openModals, [modal]: !openModals[modal] });
   };
 
@@ -60,9 +64,15 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post, isOwner }) => {
       {address && address.formatted_address && (
         <HStack color='gray.500' align='center'>
           <FiGlobe color='inherit' />
-          <Text textStyle={'p2'} color='inherit'>
+          <Button
+            variant='link'
+            size={'xs'}
+            textStyle={'p2'}
+            fontSize={'.875rem'}
+            color='inherit'
+          >
             {address.formatted_address}
-          </Text>
+          </Button>
         </HStack>
       )}
       <PostTags

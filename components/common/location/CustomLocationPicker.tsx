@@ -1,7 +1,7 @@
-import { Box, HStack, Text } from '@chakra-ui/react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { Box, HStack } from '@chakra-ui/react';
+import { LoadScript, Marker } from '@react-google-maps/api';
+import GoogleMapComponent from 'components/GoogleMapComponent';
 import { Form, Formik } from 'formik';
-import { motion } from 'framer-motion';
 import { AddressInput } from 'generated/graphql';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Libraries, LocationType } from 'types';
@@ -10,6 +10,7 @@ import { isProduction } from 'utils/isProduction';
 import InputHOC from '../input/CustomInputComponent';
 import SelectComponent from '../input/SelectFieldComponent';
 import { CustomLocationAutocomplete } from './LocationAutoComplete';
+import { MapLoadingComponent } from './MapLoadingComponent';
 
 interface CustomLocationPickerProps {
   includeAutoComplete?: boolean;
@@ -17,46 +18,6 @@ interface CustomLocationPickerProps {
   includeMarker?: boolean;
   selectLocationType?: SelectLocationOptions;
 }
-
-const bounceTransition = {
-  y: {
-    duration: 0.4,
-    yoyo: Infinity,
-    ease: 'easeOut',
-  },
-  backgroundColor: {
-    duration: 0,
-    yoyo: Infinity,
-    ease: 'easeOut',
-    repeatDelay: 0.8,
-  },
-};
-const ballStyle = {
-  display: 'block',
-  background: 'transparent',
-  fontSize: '2.5rem',
-};
-const MapLoadingComponent: React.FC = () => (
-  <Box
-    display={'block'}
-    position={'absolute'}
-    top='50%'
-    left='50%'
-    transform={'translate(-50%, -50%)'}
-    textAlign='center'
-  >
-    <motion.span
-      style={ballStyle}
-      transition={bounceTransition}
-      animate={{
-        y: ['0%', '-100%'],
-      }}
-    >
-      🌍
-    </motion.span>
-    <Text>Loading Google Maps for you...</Text>
-  </Box>
-);
 export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
   handleLocationChange,
   includeMarker,
@@ -101,33 +62,36 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
     handleLocationChange && handleLocationChange(userLocation);
   }, [handleLocationChange, userLocation]);
 
-  const GoogleMapComponent = useMemo(
+  const MapComponent = useMemo(
     () => (
-      <GoogleMap
-        mapContainerStyle={{ width: '100%', height: '100%' }}
-        center={userLocation}
-        zoom={17}
-        onClick={({ latLng }) => {
-          onLocationChange(latLng);
+      <GoogleMapComponent
+        location={userLocation}
+        googleMapProps={{
+          onClick: ({ latLng }) => {
+            onLocationChange(latLng);
+          },
+          mapContainerStyle: { width: '100%', height: '100%' },
         }}
       >
         {/* Child components, such as markers, info windows, etc. */}
-        {includeMarker && (
-          <Marker
-            position={userLocation}
-            animation={loaded ? google.maps.Animation.DROP : undefined}
-            draggable={true}
-            onDragEnd={({ latLng }) => {
-              onLocationChange(latLng);
-            }}
-          />
-        )}
+        <>
+          {includeMarker && (
+            <Marker
+              position={userLocation}
+              animation={loaded ? google.maps.Animation.DROP : undefined}
+              draggable={true}
+              onDragEnd={({ latLng }) => {
+                onLocationChange(latLng);
+              }}
+            />
+          )}
 
-        {/* Auto Complete */}
-        {includeAutoComplete && (
-          <CustomLocationAutocomplete onLocationChange={onLocationChange} />
-        )}
-      </GoogleMap>
+          {/* Auto Complete */}
+          {includeAutoComplete && (
+            <CustomLocationAutocomplete onLocationChange={onLocationChange} />
+          )}
+        </>
+      </GoogleMapComponent>
     ),
     [
       userLocation,
@@ -138,6 +102,7 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
       onLocationChange,
     ]
   );
+
   const AddressFormComponent = () => {
     const [address] = useState<Partial<AddressInput>>({
       city: null,
@@ -220,7 +185,7 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
     >
       {/* todo: we need to add custom address selection form */}
       {selectLocationType === SelectLocationOptions.MAP ? (
-        GoogleMapComponent
+        MapComponent
       ) : (
         <AddressFormComponent />
       )}

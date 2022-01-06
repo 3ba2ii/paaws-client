@@ -4,7 +4,7 @@ import ImageWithFallback from 'components/common/media/ImageWithFallback';
 import { formatDistance } from 'date-fns';
 import { MissingPostsQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { fallbackSrc } from 'utils/constants';
 import { rgbDataURL } from 'utils/rgbDataURL';
 import { PostOwner } from '../../../components/PostOwner';
@@ -29,17 +29,12 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
     commentsCount,
   },
 }) => {
-  let isNear = address?.distance ? address.distance <= 100 : false;
-
   const router = useRouter();
-
-  const thumbnailImage = thumbnail?.url || '';
-
-  const createdAtDistance = useMemo(
-    () => formatDistance(new Date(createdAt), new Date(), { addSuffix: true }),
-    [createdAt]
-  );
   const { displayName, avatar } = user;
+  const isNear = address?.distance ? address.distance <= 100 : false;
+  const createdAtDistance = formatDistance(new Date(createdAt), new Date(), {
+    addSuffix: true,
+  });
 
   const redirectToPost = () => {
     router.push(`/missing/${id}`);
@@ -107,7 +102,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
         <ImageWithFallback
           fallbackSrc={fallbackSrc}
           props={{
-            src: thumbnailImage,
+            src: thumbnail?.url || '',
             alt: title,
             width: '100%',
             height: '100%',
@@ -117,7 +112,6 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
           }}
         />
       </Box>
-
       <VStack
         w='100%'
         align='flex-start'
