@@ -1,4 +1,12 @@
-import { Divider, Heading, HStack, ModalProps, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Divider,
+  Heading,
+  HStack,
+  ModalProps,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import {
   GoogleMapProps,
   LoadScript,
@@ -41,12 +49,17 @@ export const LocationModal: React.FC<LocationModalProps> = ({
         width: '100%',
       }}
       title={
-        <VStack>
+        <Box align={'flex-start'} justify={'flex-start'} textAlign={'start'}>
           <HStack w='100%' align={'flex-start'} pb={3}>
             <Heading size='md'>🗺 Location on Map</Heading>
           </HStack>
+          <Text textStyle='p1' fontSize='.825rem' maxW={'60ch'} mb={4}>
+            The pet was missed or found around the red marked location on the
+            map below, If you got any information that may help, Please contact
+            the owner of the pet.
+          </Text>
           <Divider />
-        </VStack>
+        </Box>
       }
       body={
         <LoadScript
