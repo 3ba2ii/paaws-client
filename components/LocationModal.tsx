@@ -1,5 +1,10 @@
-import { Divider, HStack, Text } from '@chakra-ui/react';
-import { LoadScript, Marker } from '@react-google-maps/api';
+import { Divider, Heading, HStack, ModalProps, VStack } from '@chakra-ui/react';
+import {
+  GoogleMapProps,
+  LoadScript,
+  Marker,
+  Circle,
+} from '@react-google-maps/api';
 import React, { useState } from 'react';
 import { Libraries, LocationType } from 'types';
 import { isProduction } from 'utils/isProduction';
@@ -10,13 +15,15 @@ import GoogleMapComponent from './GoogleMapComponent';
 interface LocationModalProps {
   isOpen: boolean;
   onClose: VoidFunction;
-  userLocation: LocationType;
+  location: LocationType;
+  googleMapProps?: GoogleMapProps;
 }
 
-const LocationModal: React.FC<LocationModalProps> = ({
+export const LocationModal: React.FC<LocationModalProps> = ({
   isOpen,
   onClose,
-  userLocation,
+  location,
+  googleMapProps,
 }) => {
   const [loaded, setLoaded] = useState(false);
   const [libraries] = useState<Libraries>(['places']);
@@ -25,13 +32,21 @@ const LocationModal: React.FC<LocationModalProps> = ({
     <GenericModal
       isOpen={isOpen}
       onClose={onClose}
+      modalProps={{ size: 'xl' } as ModalProps}
+      modalContentProps={{
+        width: '100%',
+        css: { aspectRatio: '4/5' },
+      }}
+      modalBodyProps={{
+        width: '100%',
+      }}
       title={
-        <>
+        <VStack>
           <HStack w='100%' align={'flex-start'} pb={3}>
-            <Text>Location on Map</Text>
+            <Heading size='md'>🗺 Location on Map</Heading>
           </HStack>
           <Divider />
-        </>
+        </VStack>
       }
       body={
         <LoadScript
@@ -41,17 +56,33 @@ const LocationModal: React.FC<LocationModalProps> = ({
           }
           onLoad={() => setLoaded(true)}
           loadingElement={<MapLoadingComponent />}
+          onUnmount={() => setLoaded(false)}
         >
-          <GoogleMapComponent location={userLocation}>
+          <GoogleMapComponent
+            location={location}
+            googleMapProps={{
+              ...googleMapProps,
+              mapContainerStyle: { width: '100%', height: '100%' },
+            }}
+          >
             <Marker
-              position={userLocation}
+              position={location}
               animation={loaded ? google.maps.Animation.DROP : undefined}
               draggable={false}
+            />
+            <Circle
+              center={location}
+              radius={50}
+              options={{
+                fillColor: 'red',
+                strokeColor: 'red',
+                strokeWeight: 1,
+              }}
             />
           </GoogleMapComponent>
         </LoadScript>
       }
+      footer={<div></div>}
     />
   );
 };
-export default LocationModal;

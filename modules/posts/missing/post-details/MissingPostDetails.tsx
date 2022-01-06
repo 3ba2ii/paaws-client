@@ -8,6 +8,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import CustomCarousel from 'components/common/media/CustomCarousel';
+import { LocationModal } from 'components/LocationModal';
 import { PostOwner } from 'components/PostOwner';
 import ResponsiveButton from 'components/ResponsiveButton';
 import ShareModal from 'components/ShareModal';
@@ -70,6 +71,7 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
             textStyle={'p2'}
             fontSize={'.875rem'}
             color='inherit'
+            onClick={() => toggleShowModal('location')}
           >
             {address.formatted_address}
           </Button>
@@ -152,6 +154,17 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
         isOpen={openModals.share}
         onClose={() => toggleShowModal('share')}
       />
+      {address?.lat && address?.lng && (
+        <LocationModal
+          isOpen={openModals.location}
+          onClose={() => toggleShowModal('location')}
+          location={{
+            lat: parseFloat(address.lat),
+            lng: parseFloat(address.lng),
+          }}
+          googleMapProps={{ zoom: 18 }}
+        />
+      )}
     </VStack>
   );
 };

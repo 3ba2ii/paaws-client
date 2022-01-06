@@ -10,6 +10,7 @@ import {
   ModalProps,
   ModalHeaderProps,
   ModalBodyProps,
+  ModalContentProps,
 } from '@chakra-ui/modal';
 import React from 'react';
 
@@ -23,6 +24,7 @@ type GenericModalProps = {
   confirmText?: string;
   cancelText?: string;
   modalProps?: ModalProps;
+  modalContentProps?: ModalContentProps;
   modalBodyProps?: ModalBodyProps;
   modalHeaderProps?: ModalHeaderProps;
 };
@@ -39,12 +41,13 @@ const GenericModal = ({
   modalProps,
   modalBodyProps,
   modalHeaderProps,
+  modalContentProps,
 }: GenericModalProps) => {
   return (
     <>
       <Modal {...modalProps} isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent {...modalContentProps}>
           {title && (
             <ModalHeader {...modalHeaderProps} textAlign='center'>
               {title}

@@ -11,6 +11,8 @@ query MissingPost($missingPostId: Int!) {
         state
         zip
         country
+        lat
+        lng
       }
       images {
         photo {

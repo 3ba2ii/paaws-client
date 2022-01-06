@@ -178,9 +178,8 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
       googleMapsApiKey={
         !isProduction ? process.env.NEXT_PUBLIC_GOOGLE_API_KEY : ''
       }
-      onLoad={() => {
-        setLoaded(true);
-      }}
+      onLoad={() => setLoaded(true)}
+      onUnmount={() => setLoaded(false)}
       loadingElement={<MapLoadingComponent />}
     >
       {/* todo: we need to add custom address selection form */}
