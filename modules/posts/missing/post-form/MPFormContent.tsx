@@ -1,4 +1,4 @@
-import { Heading, HStack, Text, VStack } from '@chakra-ui/layout';
+import { Heading, HStack, VStack } from '@chakra-ui/layout';
 import { Button, Tooltip } from '@chakra-ui/react';
 import MyDropzone from 'components/common/input/CustomDropzone';
 import InputHOC from 'components/common/input/CustomInputComponent';
@@ -56,7 +56,7 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
   const isEditModeOn = editMode && missingPost;
   return (
     <Form id='form-drawer'>
-      <VStack spacing={4} mb={5}>
+      <VStack spacing={5} mb={5}>
         {/* Avatar, name and  */}
         <HStack w='100%' align='center'>
           <UserAvatar
@@ -122,7 +122,6 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
           <InputField
             name='description'
             placeholder='Tell us more about where you found this pet'
-            helperText='Give us more information about the pet you missed or found'
             label='Description'
             maxLength={500}
             maxInputLength={500}

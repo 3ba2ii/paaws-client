@@ -1,0 +1,8 @@
+query UserContactInfo($userId: Int!) {
+  user(id: $userId) {
+    id
+    displayName
+    email
+    phone
+  }
+}

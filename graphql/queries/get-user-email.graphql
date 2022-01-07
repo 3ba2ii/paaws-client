@@ -1,0 +1,7 @@
+query GetUserPhone($userId: Int!) {
+  user(id: $userId) {
+    id
+    displayName
+    phone
+  }
+}

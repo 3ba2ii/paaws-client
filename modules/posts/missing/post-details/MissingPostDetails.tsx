@@ -15,7 +15,7 @@ import ShareModal from 'components/ShareModal';
 import { formatDistance } from 'date-fns';
 import { MissingPostQuery } from 'generated/graphql';
 import CommentsSection from 'modules/comments/CommentsSection';
-import React, { useMemo } from 'react';
+import React from 'react';
 import { BiMessageRounded, BiShareAlt, BiShieldAlt2 } from 'react-icons/bi';
 import { FiGlobe } from 'react-icons/fi';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader

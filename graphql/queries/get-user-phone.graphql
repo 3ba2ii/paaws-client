@@ -1,0 +1,7 @@
+query GetUserEmail($userId: Int!) {
+  user(id: $userId) {
+    id
+    displayName
+    email
+  }
+}

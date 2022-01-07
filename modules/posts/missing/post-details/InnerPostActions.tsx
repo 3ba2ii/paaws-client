@@ -8,6 +8,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
+import ContactInfoModal from 'components/ContactInfoModal';
 import ShareModal from 'components/ShareModal';
 import {
   MissingPostQuery,
@@ -32,13 +33,14 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
     delete: false,
     share: false,
     edit: false,
+    contact: false,
   });
 
   const contactButton = useBreakpointValue({ base: IconButton, md: Button });
   const toaster = useToast();
   const [deleteMP, { loading }] = useDeleteMissingPostMutation();
 
-  const toggleModals = (modal: 'delete' | 'share' | 'edit') => {
+  const toggleModals = (modal: 'delete' | 'share' | 'edit' | 'contact') => {
     setOpenModals({ ...openModals, [modal]: !openModals[modal] });
   };
   const errorToaster = () =>
@@ -113,6 +115,7 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
           icon={<FiPhoneCall />}
           size='sm'
           colorScheme={'teal'}
+          onClick={() => toggleModals('contact')}
         >
           Contact {missingPost?.user.displayName.split(' ')[0].slice(0, 15)}
         </Button>
@@ -144,6 +147,13 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
           />
         }
         drawerProps={{ closeOnOverlayClick: false } as DrawerProps}
+      />
+      <ContactInfoModal
+        {...{
+          isOpen: openModals.contact,
+          onClose: () => toggleModals('contact'),
+          missingPost,
+        }}
       />
     </HStack>
   );
