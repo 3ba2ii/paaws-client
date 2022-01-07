@@ -17,6 +17,7 @@ const MissingPost: React.FC = () => {
     variables: { missingPostId: parseInt(id as string) },
     fetchPolicy: 'cache-first',
     notifyOnNetworkStatusChange: true,
+    ssr: true,
   });
 
   return (

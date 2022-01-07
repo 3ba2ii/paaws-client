@@ -49,14 +49,19 @@ export const LocationModal: React.FC<LocationModalProps> = ({
         width: '100%',
       }}
       title={
-        <Box align={'flex-start'} justify={'flex-start'} textAlign={'start'}>
-          <HStack w='100%' align={'flex-start'} pb={3}>
+        <Box
+          align={'flex-start'}
+          justify={'flex-start'}
+          textAlign={'start'}
+          pt={4}
+        >
+          <HStack w='100%' align={'flex-start'} mb={2}>
             <Heading size='md'>🗺 Location on Map</Heading>
           </HStack>
-          <Text textStyle='p1' fontSize='.825rem' maxW={'60ch'} mb={4}>
+          <Text textStyle='p1' fontSize='.825rem' maxW={'60ch'} mb={3}>
             The pet was missed or found around the red marked location on the
-            map below, If you got any information that may help, Please contact
-            the owner of the pet.
+            map below, If you got any information that might help, Please
+            contact the owner of the pet.
           </Text>
           <Divider />
         </Box>
