@@ -107,14 +107,14 @@ const InnerPostActions: React.FC<InnerPostActionsProps> = ({
         </HStack>
       )}
 
-      {missingPost?.showContactInfo && (
+      {!missingPost?.showEmail && !missingPost?.showPhoneNumber ? null : (
         <Button
           as={contactButton}
           icon={<FiPhoneCall />}
           size='sm'
           colorScheme={'teal'}
         >
-          Contact {missingPost?.user.displayName.split(' ')[0]}
+          Contact {missingPost?.user.displayName.split(' ')[0].slice(0, 15)}
         </Button>
       )}
 
