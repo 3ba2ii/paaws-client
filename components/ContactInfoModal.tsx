@@ -1,18 +1,16 @@
 import { useQuery } from '@apollo/client';
 import {
-  Box,
   Divider,
   Heading,
-  HStack,
   ModalProps,
   Text,
+  useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
 import {
   MissingPostQuery,
   UserContactInfoQuery,
   UserContactInfoQueryVariables,
-  useUserContactInfoQuery,
 } from 'generated/graphql';
 import gql from 'graphql-tag';
 import React from 'react';
@@ -58,7 +56,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
             <Heading size='md'> Contact Information</Heading>
             <Text textAlign={'left'} fontWeight={'medium'} textStyle={'p2'}>
               If you got any information about this missing/found pet, please
-              contact the post author on of the following methods.
+              contact the post author using one of the following methods.
             </Text>
           </VStack>
           <Divider />
@@ -84,7 +82,10 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
                     as='a'
                     href={`tel:${data.user.phone}`}
                     textStyle={'p1'}
-                    color='whiteAlpha.800'
+                    color={useColorModeValue(
+                      'blackAlpha.800',
+                      'whiteAlpha.800'
+                    )}
                   >
                     📞 {data.user?.phone}
                   </Text>
@@ -99,7 +100,10 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
                     as='a'
                     href={`mailto:${data.user?.email}?subject= Paaws - Missing/Found Pet Report`}
                     textStyle={'p1'}
-                    color='whiteAlpha.800'
+                    color={useColorModeValue(
+                      'blackAlpha.800',
+                      'whiteAlpha.800'
+                    )}
                   >
                     📬 {data.user?.email}
                   </Text>

@@ -144,7 +144,7 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
             {...{
               icon: <BiShieldAlt2 />,
               label: 'Report',
-              onClick: () => {},
+              onClick: () => null,
             }}
           />
         </HStack>
