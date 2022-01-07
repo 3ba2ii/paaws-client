@@ -31,7 +31,9 @@ const InputHOC: React.FC<GenericInputComponentProps> = ({
       </FormLabel>
       {children}
       {helperText ? (
-        <FormHelperText maxW='60ch'>{helperText}</FormHelperText>
+        <FormHelperText maxW='60ch' lineHeight={'1.5'}>
+          {helperText}
+        </FormHelperText>
       ) : null}
 
       {error && touched ? (

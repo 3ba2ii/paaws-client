@@ -21,7 +21,7 @@ export const PostLocationFields: React.FC<PostLocFieldProps> = ({
   setLocationOption,
 }) => {
   return (
-    <SlideFade in={isOpen}>
+    <SlideFade in={isOpen} id='post-location-input-field'>
       <VStack>
         <InputHOC
           label='Location'

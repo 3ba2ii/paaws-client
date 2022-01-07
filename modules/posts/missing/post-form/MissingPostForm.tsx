@@ -28,7 +28,8 @@ const initialValues: PostInputType = {
   address: null,
   thumbnailIdx: 0,
   images: [],
-  showContactInfo: true,
+  showEmail: true,
+  showPhoneNumber: true,
 };
 interface MPFormProps {
   closeDrawer: VoidFunction;
@@ -106,13 +107,21 @@ export const MissingPostForm: React.FC<MPFormProps> = ({
     description,
     privacy,
     type,
-    showContactInfo,
+    showEmail,
+    showPhoneNumber,
   }: Partial<PostInputType>) => {
     if (!missingPost || !missingPost.id) return closeDrawer();
     const { data } = await editPost({
       variables: {
         id: missingPost.id,
-        input: { title, description, privacy, type, showContactInfo },
+        input: {
+          title,
+          description,
+          privacy,
+          type,
+          showEmail,
+          showPhoneNumber,
+        },
       },
     });
     if (data?.editMissingPost.errors?.length) {
@@ -173,7 +182,7 @@ export const MissingPostForm: React.FC<MPFormProps> = ({
                   user,
                   cancelOnClickOutside,
                   formRef,
-                  missingPost: missingPost,
+                  missingPost,
                   editMode: isEditModeOn,
                 }}
               />

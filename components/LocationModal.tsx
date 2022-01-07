@@ -5,13 +5,12 @@ import {
   HStack,
   ModalProps,
   Text,
-  VStack,
 } from '@chakra-ui/react';
 import {
+  Circle,
   GoogleMapProps,
   LoadScript,
   Marker,
-  Circle,
 } from '@react-google-maps/api';
 import React, { useState } from 'react';
 import { Libraries, LocationType } from 'types';

@@ -1,4 +1,4 @@
-import { Box, HStack, Text, VStack } from '@chakra-ui/layout';
+import { Heading, HStack, Text, VStack } from '@chakra-ui/layout';
 import { Button, Tooltip } from '@chakra-ui/react';
 import MyDropzone from 'components/common/input/CustomDropzone';
 import InputHOC from 'components/common/input/CustomInputComponent';
@@ -56,14 +56,16 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
   const isEditModeOn = editMode && missingPost;
   return (
     <Form id='form-drawer'>
-      <VStack spacing={5} mb={10}>
+      <VStack spacing={4} mb={5}>
         {/* Avatar, name and  */}
         <HStack w='100%' align='center'>
-          <UserAvatar avatarProps={{ size: 'md' }} />
+          <UserAvatar
+            avatarProps={{ w: '42px', h: '42px', fontSize: '.5rem' }}
+          />
           <VStack align={'flex-start'} spacing={0}>
-            <Text mb={1} fontSize={'lg'} fontWeight={'semibold'}>
+            <Heading mb={1} fontSize={'sm'} fontWeight={'semibold'}>
               {user?.displayName}
-            </Text>
+            </Heading>
             <DropdownMenu
               menuButtonText={capitalizeString(values.privacy)}
               options={PrivacyTypeCustomized}
@@ -80,78 +82,104 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
               menuOptionGroupProps={{
                 color: 'gray.500',
                 type: 'radio',
-                defaultValue: values.privacy,
                 title: 'Privacy',
+                defaultValue: values.privacy,
               }}
             />
           </VStack>
         </HStack>
-        <InputHOC
-          helperText='Please specify whether you missed your pet or found one'
-          label='Missing or Found'
-          name='type'
-        >
-          <TwoOptionsSwitch
-            handleChange={(value) => setFieldValue('type', value)}
-            options={MP_POST_TYPES}
-            activeValue={values.type}
-            variant='outline'
-            py={5}
-            w='100%'
-          />
-        </InputHOC>
-        <InputField
-          name='title'
-          placeholder='I found a dog near manara street'
-          label='Title'
-          maxLength={70}
-          maxInputLength={70}
-          showLength
-        />
-        <InputField
-          name='description'
-          placeholder='Tell us more about where you found this pet'
-          helperText='Give us more information about the pet you missed or found'
-          label='Description'
-          maxLength={500}
-          maxInputLength={500}
-          showLength
-          textarea
-        />
-
-        {!isEditModeOn && <MyDropzone label='Pet Images' name='images' />}
-
-        <Tooltip
-          label='Showing your contact information will help us connect you with the person who lost/found their/your pet'
-          placement='top'
-        >
-          <Box width={'100%'}>
-            <CustomSwitch
-              label='Show your contact information'
-              checked={!!values.showContactInfo}
-              handleChange={(checked) =>
-                setFieldValue('showContactInfo', checked)
-              }
+        <VStack w='100%' align='flex-start' spacing={3}>
+          <Tooltip
+            label='Let people know more information about your missing/found pet'
+            placement='top'
+          >
+            <Heading size='xs' opacity='0.6' fontWeight={'semibold'} mt={3}>
+              Pet General Info
+            </Heading>
+          </Tooltip>
+          <InputHOC
+            helperText='Please specify whether you missed your pet or found one'
+            label='Missing or Found'
+            name='type'
+          >
+            <TwoOptionsSwitch
+              handleChange={(value) => setFieldValue('type', value)}
+              options={MP_POST_TYPES}
+              activeValue={values.type}
+              variant='outline'
+              py={5}
+              w='100%'
             />
-          </Box>
-        </Tooltip>
+          </InputHOC>
+          <InputField
+            name='title'
+            placeholder='I found a dog near manara street'
+            label='Title'
+            maxLength={70}
+            maxInputLength={70}
+            showLength
+          />
+          <InputField
+            name='description'
+            placeholder='Tell us more about where you found this pet'
+            helperText='Give us more information about the pet you missed or found'
+            label='Description'
+            maxLength={500}
+            maxInputLength={500}
+            showLength
+            textarea
+          />
+
+          {!isEditModeOn && <MyDropzone label='Pet Images' name='images' />}
+        </VStack>
+
+        <VStack w='100%' align='flex-start' spacing={4}>
+          <Tooltip
+            label='Showing your contact information will help us connect you with the person who lost/found their/your pet'
+            placement='top'
+          >
+            <Heading size='xs' opacity='0.6' fontWeight={'semibold'} mt={3}>
+              Contact Information
+            </Heading>
+          </Tooltip>
+
+          <VStack width={'100%'} spacing={4}>
+            <CustomSwitch
+              label='📫 Show Email'
+              checked={!!values.showEmail}
+              handleChange={(checked) => setFieldValue('showEmail', checked)}
+              formControlProps={{ w: '100%', justifyContent: 'space-between' }}
+            />
+            <CustomSwitch
+              label='📞 Show Phone Number'
+              checked={!!values.showPhoneNumber}
+              handleChange={(checked) =>
+                setFieldValue('showPhoneNumber', checked)
+              }
+              formControlProps={{ w: '100%', justifyContent: 'space-between' }}
+            />
+          </VStack>
+        </VStack>
         {!isEditModeOn && (
-          <>
+          <VStack w='100%' align='flex-start' spacing={4}>
             <Tooltip
               label='We will send notifications to nearby users to help you finding the pet'
               placement='bottom'
             >
-              <Box width={'100%'}>
-                <CustomSwitch
-                  label='Send alerts to nearby users?'
-                  checked={showLocationOption}
-                  handleChange={(checked) => {
-                    setShowLocationOption(checked);
-                    scrollToBottom('form-drawer');
-                  }}
-                />
-              </Box>
+              <Heading size='xs' opacity='0.6' fontWeight={'semibold'} mt={3}>
+                Alerts & Location Preferences
+              </Heading>
             </Tooltip>
+
+            <CustomSwitch
+              label='🚨 Send alerts to nearby users?'
+              checked={showLocationOption}
+              handleChange={(checked) => setShowLocationOption(checked)}
+              formControlProps={{
+                w: '100%',
+                justifyContent: 'space-between',
+              }}
+            />
             {showLocationOption && (
               <PostLocationFields
                 values={values}
@@ -160,13 +188,13 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
                 setLocationOption={setLocationOption}
               />
             )}
-          </>
+          </VStack>
         )}
       </VStack>
       <HStack mt={4} w='100%' align='center' justify='flex-end'>
         <Button
-          fontSize='.875rem'
-          height={'38px'}
+          fontSize='.9rem'
+          height={'32px'}
           variant='ghost'
           onClick={() => cancelOnClickOutside(values)}
         >
@@ -177,6 +205,7 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
           colorScheme={'teal'}
           minW='110px'
           fontSize='.9rem'
+          h='32px'
           isLoading={isSubmitting}
         >
           {isEditModeOn && 'Edit'} Post
@@ -188,8 +217,8 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
         {...{
           isOpen: locationOption === SelectLocationOptions.MAP,
           onClose: hideLocationPicker,
-          onConfirm: (locLat) => {
-            setFieldValue('address', locLat);
+          onConfirm: (latlng) => {
+            setFieldValue('address', latlng);
             hideLocationPicker();
           },
         }}
@@ -198,12 +227,3 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
   );
 };
 export default React.memo(MPFormContent);
-function scrollToBottom(id: string) {
-  const element = document.getElementById(id);
-
-  if (element)
-    element.scrollTo({
-      top: element.scrollHeight,
-      behavior: 'smooth',
-    });
-}

@@ -5,7 +5,8 @@ fragment MissingPostFragment on MissingPost {
   voteStatus
   privacy
   type
-  showContactInfo
+  showEmail
+  showPhoneNumber
   commentsCount
   tags
   points
