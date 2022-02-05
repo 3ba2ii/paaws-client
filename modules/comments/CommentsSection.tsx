@@ -15,10 +15,18 @@ interface CommentsProps {
 }
 
 const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
+  const [commentsState, setComments] = useState<CommentFragmentFragment[]>([]);
+  console.log(
+    `🚀 ~ file: CommentsSection.tsx ~ line 19 ~ commentsState`,
+    commentsState
+  );
   const [paginationLoading, setPaginationLoading] = useState(false);
   const { data, loading, variables, fetchMore } = useMissingPostCommentsQuery({
     variables: { options: { postId, cursor: null, limit: 5 } },
     notifyOnNetworkStatusChange: true,
+    onCompleted: (data) => {
+      if (data.comments.comments) setComments(data.comments.comments);
+    },
   });
 
   const noComments = !loading && data?.comments.comments.length === 0;

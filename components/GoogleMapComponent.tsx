@@ -1,4 +1,4 @@
-import { GoogleMap, GoogleMapProps, MarkerProps } from '@react-google-maps/api';
+import { GoogleMap, GoogleMapProps } from '@react-google-maps/api';
 import React from 'react';
 import { LocationType } from 'types';
 

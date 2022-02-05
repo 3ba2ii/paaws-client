@@ -20,7 +20,7 @@ import {
 } from 'react-share';
 import GenericModal from './common/overlays/CustomModal';
 
-const shareSocialMediaList = [
+const ShareSocialMediaList = [
   {
     Wrapper: FacebookShareButton,
     Child: (
@@ -136,7 +136,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
               wrap={'wrap'}
               pt={2}
             >
-              {shareSocialMediaList.map(({ Wrapper, Child }, index) => (
+              {ShareSocialMediaList.map(({ Wrapper, Child }, index) => (
                 <Wrapper
                   key={index}
                   url={shareUrl}

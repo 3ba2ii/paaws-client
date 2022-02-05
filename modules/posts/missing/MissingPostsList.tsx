@@ -28,6 +28,8 @@ export const MissingPostsList: React.FC<{
         title='No Posts Found 📭'
         subtitle="Unfortunately, We didn't find posts with you selected category or filters, Try
           change them or add the first post yourself"
+        includeBackButton={false}
+        containerProps={{ h: '80%' }}
       />
     );
   return (
