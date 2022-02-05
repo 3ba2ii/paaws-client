@@ -1,6 +1,8 @@
 import { ApolloCache } from '@apollo/client';
 import {
   DeleteCommentMutation,
+  GetCommentRepliesDocument,
+  GetCommentRepliesQuery,
   MissingPostCommentsDocument,
   MissingPostCommentsQuery,
 } from './../../generated/graphql';
@@ -19,26 +21,51 @@ export const deleteCommentFromCache = (
     return;
   }
   //we need to remove the comment and also any comment that has parentId from the cache
-  const cachedData = cache.readQuery<MissingPostCommentsQuery>({
+  const cachedComments = cache.readQuery<MissingPostCommentsQuery>({
     query: MissingPostCommentsDocument,
     variables: { options: { postId, limit: 5, cursor: null } },
   });
+  const cachedReplies = cache.readQuery<GetCommentRepliesQuery>({
+    query: GetCommentRepliesDocument,
+  });
+  console.log(
+    `🚀 ~ file: deleteCommentFromCache.ts ~ line 31 ~ cachedReplies`,
+    cachedReplies
+  );
 
-  if (!cachedData) {
-    return;
-  }
+  if (!cachedComments) return;
+
   cache.writeQuery<MissingPostCommentsQuery>({
     query: MissingPostCommentsDocument,
     variables: { options: { postId, limit: 5, cursor: null } },
 
     data: {
       comments: {
-        ...(cachedData?.comments || []),
+        ...(cachedComments?.comments || []),
         /* Filter comments by id or parentId */
-        comments: cachedData!.comments.comments.filter(({ id, parentId }) => {
-          //filter the comment in case of deleting a direct comment
-          return id !== commentId && parentId !== commentId;
-        }),
+        comments: cachedComments.comments.comments.filter(
+          ({ id, parentId }) => {
+            //filter the comment in case of deleting a direct comment
+            return id !== commentId && parentId !== commentId;
+          }
+        ),
+      },
+    },
+    overwrite: true,
+  });
+
+  if (!cachedReplies) return;
+
+  cache.writeQuery<GetCommentRepliesQuery>({
+    query: GetCommentRepliesDocument,
+    data: {
+      ...cachedReplies,
+
+      getCommentReplies: {
+        ...cachedReplies.getCommentReplies,
+        comments: cachedReplies.getCommentReplies.comments.filter(
+          ({ id }) => id !== commentId
+        ),
       },
     },
     overwrite: true,

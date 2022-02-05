@@ -18,7 +18,6 @@ import {
 import { useRouter } from 'next/router';
 import React from 'react';
 import { FiSend } from 'react-icons/fi';
-import { updateCommentsCache } from 'utils/cache/updateCommentCache';
 
 interface CommentFormProps {
   postId: number;

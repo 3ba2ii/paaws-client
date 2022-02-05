@@ -14,7 +14,6 @@ const RepliesSection: React.FC<RepliesProps> = React.memo(
   ({ parentId, repliesCount }) => {
     const [fetchFirstReplies, { data, loading, fetchMore, called }] =
       useGetCommentRepliesLazyQuery({
-        fetchPolicy: 'no-cache',
         nextFetchPolicy: 'network-only',
       });
 
