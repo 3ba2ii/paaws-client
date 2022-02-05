@@ -10,7 +10,11 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { UserAvatar } from 'components/UserAvatar';
-import { useAddMpCommentMutation } from 'generated/graphql';
+import {
+  GetCommentRepliesDocument,
+  MissingPostCommentsDocument,
+  useAddMpCommentMutation,
+} from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { FiSend } from 'react-icons/fi';
@@ -48,10 +52,10 @@ const CommentForm: React.FC<CommentFormProps> = ({
             text: commentText,
           },
         },
-        update: (cache, { data: result, errors: resultErrors }) => {
-          if (!result || !result?.addMPComment || resultErrors?.length) return;
-          updateCommentsCache(cache, result, postId);
-        },
+        refetchQueries: [
+          GetCommentRepliesDocument,
+          MissingPostCommentsDocument,
+        ],
       });
 
       if (errors?.length || data?.addMPComment.errors?.length) {
@@ -74,7 +78,6 @@ const CommentForm: React.FC<CommentFormProps> = ({
         router.replace(`/login?next=/missing/${postId}`);
       }
     }
-
     setCommentText('');
   };
   return (
