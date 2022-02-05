@@ -25,13 +25,6 @@ export const deleteCommentFromCache = (
     query: MissingPostCommentsDocument,
     variables: { options: { postId, limit: 5, cursor: null } },
   });
-  const cachedReplies = cache.readQuery<GetCommentRepliesQuery>({
-    query: GetCommentRepliesDocument,
-  });
-  console.log(
-    `🚀 ~ file: deleteCommentFromCache.ts ~ line 31 ~ cachedReplies`,
-    cachedReplies
-  );
 
   if (!cachedComments) return;
 
@@ -52,6 +45,10 @@ export const deleteCommentFromCache = (
       },
     },
     overwrite: true,
+  });
+
+  const cachedReplies = cache.readQuery<GetCommentRepliesQuery>({
+    query: GetCommentRepliesDocument,
   });
 
   if (!cachedReplies) return;

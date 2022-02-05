@@ -28,23 +28,22 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
   onClose,
   missingPost,
 }) => {
-  if (!missingPost) return null;
-  const { user, showEmail, showPhoneNumber } = missingPost;
-  if (!showEmail && !showPhoneNumber) return null;
   const query = gql`
           query GetUserInfo($userId: Int!) {
             user(id: $userId) {
               id
               displayName
-              ${showEmail ? 'email' : ''}
-              ${showPhoneNumber ? 'phone' : ''}
+              ${missingPost?.showEmail ? 'email' : ''}
+              ${missingPost?.showPhoneNumber ? 'phone' : ''}
             }
           }
-`;
+        `;
   const { data, loading } = useQuery<
-    Partial<UserContactInfoQuery>,
+    UserContactInfoQuery,
     UserContactInfoQueryVariables
-  >(query, { variables: { userId: user.id } });
+  >(query, { variables: { userId: missingPost!.user.id } });
+
+  const textColor = useColorModeValue('blackAlpha.800', 'whiteAlpha.800');
 
   return (
     <GenericModal
@@ -73,7 +72,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
               spacing={4}
               divider={<Divider w='90%' />}
             >
-              {showPhoneNumber && data.user.phone && (
+              {missingPost?.showPhoneNumber && data.user.phone && (
                 <VStack align={'flex-start'}>
                   <Heading fontWeight={'medium'} size='xs' opacity={0.5}>
                     Phone Number
@@ -82,16 +81,13 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
                     as='a'
                     href={`tel:${data.user.phone}`}
                     textStyle={'p1'}
-                    color={useColorModeValue(
-                      'blackAlpha.800',
-                      'whiteAlpha.800'
-                    )}
+                    color={textColor}
                   >
                     📞 {data.user?.phone}
                   </Text>
                 </VStack>
               )}
-              {showEmail && (
+              {missingPost?.showEmail && (
                 <VStack w='100%' align='flex-start'>
                   <Heading fontWeight={'medium'} size='xs' opacity={0.5}>
                     Email Address
@@ -100,10 +96,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
                     as='a'
                     href={`mailto:${data.user?.email}?subject= Paaws - Missing/Found Pet Report`}
                     textStyle={'p1'}
-                    color={useColorModeValue(
-                      'blackAlpha.800',
-                      'whiteAlpha.800'
-                    )}
+                    color={textColor}
                   >
                     📬 {data.user?.email}
                   </Text>
@@ -113,7 +106,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           ) : null}
         </VStack>
       }
-      footer={<div></div>}
+      footer={<div />}
       modalProps={{ size: 'lg' } as ModalProps}
     />
   );
