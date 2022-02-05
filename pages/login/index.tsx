@@ -27,9 +27,7 @@ const LoginPage: React.FC = () => {
         >
           Continue with Google
         </Button>
-
         <p className='divider-with-centered-value'>or</p>
-
         <LoginForm />
       </div>
     </Layout>

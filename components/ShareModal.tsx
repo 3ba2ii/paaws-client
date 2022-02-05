@@ -115,7 +115,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
                 colorScheme={hasCopied ? 'teal' : 'gray'}
                 onClick={onCopy}
               >
-                {hasCopied ? '🥳 Voila' : 'Copy'}
+                {hasCopied ? '🥳 Copied' : 'Copy'}
               </Button>
             </HStack>
           </VStack>
