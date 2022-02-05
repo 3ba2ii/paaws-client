@@ -32,7 +32,6 @@ const LoginPage: React.FC = () => {
 
         <LoginForm />
       </div>
-      )
     </Layout>
   );
 };

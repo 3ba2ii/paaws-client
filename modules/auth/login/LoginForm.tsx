@@ -1,4 +1,4 @@
-import { Button, Checkbox } from '@chakra-ui/react';
+import { Button, Checkbox, Text } from '@chakra-ui/react';
 import InputField from 'components/common/input/InputField';
 import { Form, Formik } from 'formik';
 import { MeDocument, MeQuery, useLoginMutation, User } from 'generated/graphql';
@@ -53,6 +53,7 @@ export const LoginForm: React.FC = () => {
             placeholder='example@gmail.com'
             label='Email or Phone Number'
             autoFocus={true}
+            id='identifier'
           />
 
           <InputField
@@ -61,9 +62,13 @@ export const LoginForm: React.FC = () => {
             label='Password'
             type='password'
             autoComplete='new-password'
+            id='password'
           />
-          <Link href='/forgot-password'>Forgot Password?</Link>
-          <Checkbox name='remember'>Remember Me?</Checkbox>
+          <Link href='/forgot-password'>
+            <Button variant={'link'} fontSize='xs' w='fit-content' ml='auto'>
+              Forgot Password?
+            </Button>
+          </Link>
 
           <Button
             type='submit'
