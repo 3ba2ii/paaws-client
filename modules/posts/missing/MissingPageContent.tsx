@@ -1,8 +1,9 @@
 import { OperationVariables, QueryResult } from '@apollo/client';
-import { Box, GridItem, Heading, HStack, VStack } from '@chakra-ui/layout';
+import { Divider, GridItem, HStack, VStack } from '@chakra-ui/layout';
 import { Button, IconButton, Skeleton } from '@chakra-ui/react';
+import NotFound from 'components/NotFound';
 import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
-import { MissingPost, MissingPostsQuery } from 'generated/graphql';
+import { MissingPostsQuery } from 'generated/graphql';
 import React from 'react';
 import { MissingPostsList } from './MissingPostsList';
 import { PostsOptions } from './PostsOptions';
@@ -17,7 +18,7 @@ interface IMissingPageContent {
 
 const PostsLoadingSkeleton: React.FC = () => (
   <VStack w='100%'>
-    <Box w='100%'>
+    <VStack w='100%' align='flex-start' spacing={4}>
       <HStack
         w='100%'
         alignSelf={'flex-end'}
@@ -25,34 +26,39 @@ const PostsLoadingSkeleton: React.FC = () => (
         position='relative'
         wrap={['wrap', 'unset']}
       >
-        <Skeleton as={IconButton} borderRadius={4} />
+        <Skeleton as={IconButton} borderRadius={4} h='32px' />
 
-        <Skeleton as={Button} borderRadius={4}>
+        <Skeleton as={Button} borderRadius={4} h='32px'>
           New Post
         </Skeleton>
       </HStack>
-
+      <Divider />
       <Skeleton as={Button} w='90px' h='28px' borderRadius={4}>
         Add Filter
       </Skeleton>
-    </Box>
+    </VStack>
     <DummyPostsSkeleton noOfPosts={3} />
   </VStack>
 );
 
 export const MissingPageContent: React.FC<IMissingPageContent> = ({
-  hasLoadedFirstTime = false,
   fetchMorePosts,
   data,
   loading,
   paginationLoading,
+  hasLoadedFirstTime = false,
 }) => {
   if (!hasLoadedFirstTime) return <PostsLoadingSkeleton />;
 
   if (!data || !data.missingPosts || data.missingPosts.errors?.length) {
-    return <Heading size='md'>Error 404</Heading>;
+    return (
+      <NotFound
+        title='404 No Posts Found 📭'
+        subtitle='There were an error while trying to fetch the missing posts, Please try again later'
+        includeBackButton={false}
+      />
+    );
   }
-  const { missingPosts: posts, hasMore } = data.missingPosts;
 
   return (
     <VStack spacing={4} w='100%' h='100%' pos='relative'>
@@ -64,10 +70,10 @@ export const MissingPageContent: React.FC<IMissingPageContent> = ({
           <DummyPostsSkeleton noOfPosts={3} />
         ) : (
           <MissingPostsList
-            posts={posts as Array<MissingPost>}
             fetchMorePosts={fetchMorePosts}
-            hasMore={hasMore}
             loading={paginationLoading}
+            posts={data.missingPosts.missingPosts}
+            hasMore={data.missingPosts.hasMore}
           />
         )}
       </GridItem>

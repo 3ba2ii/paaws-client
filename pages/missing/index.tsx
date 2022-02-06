@@ -81,11 +81,13 @@ const MissingPage = () => {
           </Box>
           <Box w='100%' h='100%' maxW='800px' p={0} flex='.6'>
             <MissingPageContent
-              hasLoadedFirstTime={hasLoadedFirstTime}
-              fetchMorePosts={fetchMorePosts}
-              data={data}
-              loading={loading}
-              paginationLoading={paginationLoading}
+              {...{
+                hasLoadedFirstTime,
+                data,
+                loading,
+                paginationLoading,
+                fetchMorePosts,
+              }}
             />
           </Box>
           <Box display={['none', 'none', 'block']} flex='.225'>
