@@ -35,7 +35,6 @@ export const DeleteCommentPopover: React.FC<{
         deleteCommentFromCache(cache, data, postId, commentId);
       },
     });
-
     togglePopOver();
   };
   return (

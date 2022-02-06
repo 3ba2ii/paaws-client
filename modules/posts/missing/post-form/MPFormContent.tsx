@@ -1,4 +1,4 @@
-import { Heading, HStack, VStack } from '@chakra-ui/layout';
+import { Heading, HStack, VStack, Text } from '@chakra-ui/layout';
 import { Button, Tooltip } from '@chakra-ui/react';
 import MyDropzone from 'components/common/input/CustomDropzone';
 import InputHOC from 'components/common/input/CustomInputComponent';
@@ -6,9 +6,10 @@ import CustomSwitch from 'components/common/input/CustomSwitch';
 import { DropdownMenu } from 'components/common/input/DropdownMenu';
 import InputField from 'components/common/input/InputField';
 import TwoOptionsSwitch from 'components/common/input/TwoOptionsSwitch';
+import MyPopover from 'components/MyPopover';
 import { UserAvatar } from 'components/UserAvatar';
 import { Form, FormikProps } from 'formik';
-import { MeQuery, MissingPostQuery } from 'generated/graphql';
+import { MeQuery, MissingPostQuery, MissingPostTypes } from 'generated/graphql';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import React, { useState } from 'react';
 import { GoChevronDown } from 'react-icons/go';
@@ -44,15 +45,21 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
     useState<SelectLocationOptions | null>(null);
 
   const [showLocationOption, setShowLocationOption] = useState(false);
+  const [rescuePetPopover, setRescuePetPopover] = useState(false);
 
   useOnClickOutside(formRef, () => {
     if (locationOption) return;
     cancelOnClickOutside({ ...formProps.values });
   });
 
-  const hideLocationPicker = () => {
-    setLocationOption(null);
+  const hideLocationPicker = () => setLocationOption(null);
+  const toggleRescuePetPopover = () => setRescuePetPopover(!rescuePetPopover);
+
+  const onPetRescue = () => {
+    setFieldValue('type', MissingPostTypes.Rescued);
+    setRescuePetPopover(false);
   };
+
   const isEditModeOn = editMode && missingPost;
   return (
     <Form id='form-drawer'>
@@ -190,6 +197,58 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
           </VStack>
         )}
       </VStack>
+      {/* The pet is rescued section (the pet owner gets his pet back) */}
+      {isEditModeOn && (
+        <VStack align='flex-start' spacing={10} pos='relative'>
+          <Button
+            variant='link'
+            size='sm'
+            colorScheme={'gray'}
+            opacity='.75'
+            onClick={toggleRescuePetPopover}
+          >
+            {values.type === MissingPostTypes.Found
+              ? 'Did the owner get his pet back? '
+              : values.type === MissingPostTypes.Missing
+              ? 'Did you find your pet? '
+              : 'Marked as Rescued 🎉'}
+          </Button>
+          <MyPopover
+            title={
+              <Heading size='xs' opacity='0.6' fontWeight={'semibold'}>
+                Confirm Pet Rescue 🦮
+              </Heading>
+            }
+            body={
+              <Text fontSize='sm' py={2}>
+                {values.type === MissingPostTypes.Found
+                  ? 'If the pet owner got his pet back'
+                  : 'If you got your pet back'}
+                , please confirm that by clicking the confirm button below and
+                it will be marked as rescued
+              </Text>
+            }
+            isOpen={rescuePetPopover}
+            onClose={toggleRescuePetPopover}
+            footer={
+              <HStack justify='flex-end'>
+                <Button
+                  size='sm'
+                  variant='ghost'
+                  onClick={toggleRescuePetPopover}
+                >
+                  Cancel
+                </Button>
+                <Button size='sm' onClick={onPetRescue}>
+                  Pet is home 🥳
+                </Button>
+              </HStack>
+            }
+            popoverContentProps={{ w: '350px' }}
+          />
+        </VStack>
+      )}
+      {/* Footer */}
       <HStack mt={4} w='100%' align='center' justify='flex-end'>
         <Button
           fontSize='.9rem'

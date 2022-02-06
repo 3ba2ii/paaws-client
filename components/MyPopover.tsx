@@ -13,6 +13,7 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Portal,
+  ModalOverlay,
 } from '@chakra-ui/react';
 import React from 'react';
 
@@ -48,32 +49,32 @@ const MyPopover: React.FC<MyPopoverProps> = ({
   cancelText = 'Cancel',
 }) => {
   return (
-    <Popover {...popoverProps} isOpen={isOpen} onClose={onClose}>
-      <PopoverTrigger>
-        <Button>Trigger</Button>
-      </PopoverTrigger>
-      <Portal>
-        <PopoverContent {...popoverContentProps}>
-          <PopoverArrow />
-          <PopoverHeader {...popoverHeaderProps}>{title}</PopoverHeader>
-          <PopoverCloseButton />
-          <PopoverBody {...popoverBodyProps}>{body}</PopoverBody>
-          <PopoverFooter>
-            {footer ? (
-              footer
-            ) : (
-              <>
-                <Button mr={3} variant='ghost' onClick={onClose}>
-                  {cancelText}
-                </Button>
-                <Button w={'100%'} colorScheme='teal' onClick={handleSubmit}>
-                  {confirmText}
-                </Button>
-              </>
-            )}
-          </PopoverFooter>
-        </PopoverContent>
-      </Portal>
+    <Popover
+      {...popoverProps}
+      isOpen={isOpen}
+      onClose={onClose}
+      placement='right-start'
+    >
+      <PopoverContent {...popoverContentProps}>
+        <PopoverArrow />
+        <PopoverHeader {...popoverHeaderProps}>{title}</PopoverHeader>
+        <PopoverCloseButton />
+        <PopoverBody {...popoverBodyProps}>{body}</PopoverBody>
+        <PopoverFooter>
+          {footer ? (
+            footer
+          ) : (
+            <>
+              <Button mr={3} variant='ghost' onClick={onClose}>
+                {cancelText}
+              </Button>
+              <Button w={'100%'} colorScheme='teal' onClick={handleSubmit}>
+                {confirmText}
+              </Button>
+            </>
+          )}
+        </PopoverFooter>
+      </PopoverContent>
     </Popover>
   );
 };

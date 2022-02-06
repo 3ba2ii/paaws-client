@@ -19,7 +19,7 @@ export const MissingPostsList: React.FC<{
 
   // to check if the last pre last element is visible on screen or not
   useEffect(() => {
-    if (isVisible && hasMore) fetchMorePosts();
+    //if (isVisible && hasMore) fetchMorePosts();
   }, [isVisible]);
 
   if (!posts || !posts.length)

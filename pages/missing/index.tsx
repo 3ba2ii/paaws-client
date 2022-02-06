@@ -1,4 +1,3 @@
-import { getDataFromTree } from '@apollo/client/react/ssr';
 import { Box, Flex } from '@chakra-ui/layout';
 import { Layout } from 'components/Layout';
 import { SideFooter } from 'components/SideFooter';
@@ -16,6 +15,7 @@ import withApollo from 'utils/withApollo';
 export const MissingPageContext = React.createContext<{
   handleSelectFilters?: (filters: PostFilters) => void;
 }>({});
+
 const MissingPage = () => {
   const [hasLoadedFirstTime, setHasLoaded] = useState(false);
   const [selectedType, setSelectedType] = useState<MissingPostTypes>(
@@ -54,10 +54,12 @@ const MissingPage = () => {
     const { missingPosts, hasMore } = data.missingPosts;
     if (!hasMore) return;
     const { createdAt: cursor } = missingPosts[missingPosts.length - 1];
+
     const newVariables = {
       ...variables,
       input: { limit: 5, cursor },
     };
+
     setPaginationLoading(true);
     fetchMore({ variables: newVariables }).finally(() => {
       setPaginationLoading(false);
@@ -100,4 +102,4 @@ const MissingPage = () => {
     </Layout>
   );
 };
-export default withApollo(MissingPage, { getDataFromTree });
+export default withApollo(MissingPage);

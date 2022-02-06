@@ -10,6 +10,8 @@ const getColorProps = (tag: MissingPostTags) => {
       return { colorScheme: 'blue' };
     case 'Urgent':
       return { colorScheme: 'red' };
+    case 'Rescued':
+      return { colorScheme: 'pink' };
     default:
       return '';
   }
@@ -27,7 +29,7 @@ export const PostTags: React.FC<{
           {...getColorProps(tag)}
           {...tagProps}
         >
-          {tag}
+          {tag} {tag === 'Rescued' && '💖'}
         </Tag>
       ))}
     </>
