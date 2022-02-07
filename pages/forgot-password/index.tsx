@@ -1,11 +1,26 @@
 import { Heading, Text, Box, VStack, Input, Button } from '@chakra-ui/react';
 import Logo from 'components/Logo';
+import { useForgotPasswordMutation } from 'generated/graphql';
 import Image from 'next/image';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { isValidEmail } from 'utils/isValidEmail';
+import withApollo from 'utils/withApollo';
 
 interface ForgotPasswordPageProps {}
 
 const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
+  const [sendPasswordResetEmail, { loading }] = useForgotPasswordMutation();
+  const [email, setEmail] = React.useState('');
+
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setEmail(e.target.value);
+
+  const onSubmit = async () => {
+    sendPasswordResetEmail({ variables: { identifier: email } });
+  };
+  useEffect(() => {
+    document.title = 'Reset your password - Paaws';
+  }, []);
   return (
     <VStack w='100%' h='100%' align='center' justify={'flex-start'} py={5}>
       <Logo imageProps={{ maxW: '110px' }} />
@@ -33,12 +48,24 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
               Enter your account's email address and we will send you a password
               reset link.
             </Text>
-            <Input placeholder='johndoe123@gmail.com' />
-            <Button w='100%'>Send password reset email</Button>
+            <Input
+              placeholder='johndoe123@gmail.com'
+              value={email}
+              onChange={onChangeEmail}
+            />
+            <Button
+              onClick={onSubmit}
+              w='100%'
+              disabled={!isValidEmail(email)}
+              fontSize='sm'
+              isLoading={loading}
+            >
+              Send password reset email
+            </Button>
           </VStack>
         </VStack>
       </Box>
     </VStack>
   );
 };
-export default ForgotPasswordPage;
+export default withApollo(ForgotPasswordPage);
