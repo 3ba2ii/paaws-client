@@ -1,7 +1,5 @@
 import { Button } from '@chakra-ui/button';
-import { useColorModeValue } from '@chakra-ui/color-mode';
 import { ArrowForwardIcon, SearchIcon } from '@chakra-ui/icons';
-import { Image } from '@chakra-ui/image';
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
 import { Flex, Text } from '@chakra-ui/layout';
 import { Menu, MenuItem, MenuList } from '@chakra-ui/menu';
@@ -16,6 +14,7 @@ import { isServer } from 'utils/isServer';
 import withApollo from 'utils/withApollo';
 import { LoadingComponent } from './common/loading/LoadingSpinner';
 import { DarkModeSwitch } from './DarkModeSwitch';
+import Logo from './Logo';
 import { UserAvatar } from './UserAvatar';
 
 function JoinUsNavbarItems(
@@ -143,8 +142,6 @@ const NavBarItems = () => {
   return body;
 };
 const NavBar = () => {
-  const logo = useColorModeValue('light', 'dark');
-
   return (
     <nav
       id='navbar-container'
@@ -153,17 +150,7 @@ const NavBar = () => {
         background: 'inherit',
       }}
     >
-      <Link passHref href='/'>
-        <Image
-          tabIndex={0}
-          role='img'
-          className={navbarStyles['logo-container']}
-          cursor='pointer'
-          src={`/images/logo-${logo}.svg`}
-          alt='paaws'
-          maxW='90px'
-        />
-      </Link>
+      <Logo />
 
       <NavBarItems />
     </nav>
