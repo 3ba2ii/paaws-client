@@ -1,5 +1,4 @@
-import { ChevronLeftIcon } from '@chakra-ui/icons';
-import { Heading, Text, Box, VStack, Input, Button } from '@chakra-ui/react';
+import { Box, Button, Heading, Input, Text, VStack } from '@chakra-ui/react';
 import Logo from 'components/Logo';
 import { useForgotPasswordMutation } from 'generated/graphql';
 import Image from 'next/image';
@@ -57,7 +56,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
             <VStack w='100%' px={7} spacing={4}>
               <Text as='label' fontSize='md' fontWeight={'semibold'}>
                 Check your email and your spam folder for a link to reset your
-                password. If it doesn't appear within a few minutes,{' '}
+                password. If it doesn&apos;t appear within a few minutes,{' '}
                 <Button
                   variant='link'
                   colorScheme={'blue'}
@@ -75,7 +74,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
           ) : (
             <VStack w='100%' px={7} spacing={4}>
               <Text as='label' fontSize='md' fontWeight={'semibold'}>
-                Enter your account's email address and we will send you a
+                Enter your account&apos;s email address and we will send you a
                 password reset link.
               </Text>
               <Input
