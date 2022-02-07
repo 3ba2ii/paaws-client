@@ -3,7 +3,6 @@ import Footer from 'components/Footer';
 import Logo from 'components/Logo';
 import { useForgotPasswordMutation } from 'generated/graphql';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { isValidEmail } from 'utils/isValidEmail';
 import withApollo from 'utils/withApollo';
@@ -25,6 +24,12 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
     });
     setEmailSent(true);
   };
+  const resetAll = () => {
+    setEmailSent(false);
+    setEmail('');
+    setSendNewEmailInterval(60);
+  };
+
   useEffect(() => {
     document.title = 'Reset your password - Paaws';
   }, []);
@@ -89,7 +94,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
                 <Button
                   fontSize='sm'
                   w='100%'
-                  onClick={() => setEmailSent(false)}
+                  onClick={resetAll}
                   disabled={sendNewEmailInterval > 0}
                 >
                   Resend a new email
