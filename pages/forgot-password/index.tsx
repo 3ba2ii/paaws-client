@@ -11,7 +11,7 @@ interface ForgotPasswordPageProps {}
 
 const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
   const [sendPasswordResetEmail, { loading }] = useForgotPasswordMutation();
-  const [sendNewEmailInterval, setSendNewEmailInterval] = useState(60);
+  const [resendCounter, setTimerCounter] = useState(60);
   const [email, setEmail] = React.useState('');
   const [emailSent, setEmailSent] = useState(false);
 
@@ -27,7 +27,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
   const resetAll = () => {
     setEmailSent(false);
     setEmail('');
-    setSendNewEmailInterval(60);
+    setTimerCounter(60);
   };
 
   useEffect(() => {
@@ -38,8 +38,8 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
     let timeInterval: NodeJS.Timer | null = null;
     if (emailSent) {
       timeInterval = setInterval(() => {
-        setSendNewEmailInterval(Math.max(sendNewEmailInterval - 1, 0));
-        if (sendNewEmailInterval === 0 && timeInterval) {
+        setTimerCounter(Math.max(resendCounter - 1, 0));
+        if (resendCounter === 0 && timeInterval) {
           clearInterval(timeInterval);
         }
       }, 1000);
@@ -47,7 +47,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
     return () => {
       timeInterval && clearInterval(timeInterval);
     };
-  }, [emailSent, sendNewEmailInterval]);
+  }, [emailSent, resendCounter]);
 
   return (
     <VStack w='100%' h='100vh' justify={'space-between'} px='8rem'>
@@ -95,11 +95,10 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
                   fontSize='sm'
                   w='100%'
                   onClick={resetAll}
-                  disabled={sendNewEmailInterval > 0}
+                  disabled={resendCounter > 0}
                 >
                   Resend a new email
-                  {sendNewEmailInterval > 0 &&
-                    `, within ${sendNewEmailInterval} seconds`}
+                  {resendCounter > 0 && `, within ${resendCounter} seconds`}
                 </Button>
               </VStack>
             ) : (
