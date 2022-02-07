@@ -1,8 +1,11 @@
-import { Image, Link, useColorModeValue } from '@chakra-ui/react';
+import { Image, ImageProps, Link, useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
 import navbarStyles from 'styles/navbar.module.css';
 
-const Logo: React.FC = () => {
+interface LogoProps {
+  imageProps?: ImageProps;
+}
+const Logo: React.FC<LogoProps> = ({ imageProps }) => {
   const logo = useColorModeValue('light', 'dark');
 
   return (
@@ -15,6 +18,7 @@ const Logo: React.FC = () => {
         src={`/images/logo-${logo}.svg`}
         alt='paaws'
         maxW='90px'
+        {...imageProps}
       />
     </Link>
   );
