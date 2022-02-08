@@ -5,7 +5,7 @@ import NotFound from 'components/NotFound';
 import { Form, Formik } from 'formik';
 import { useChangePasswordMutation } from 'generated/graphql';
 import router, { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import withApollo from 'utils/withApollo';
 import { ChangePasswordSchema } from 'utils/yupSchemas/ChangePasswordSchema';
 
@@ -16,6 +16,9 @@ const ChangePasswordPage: React.FC = ({}) => {
   const toaster = useToast();
   const [changePassword] = useChangePasswordMutation();
 
+  useEffect(() => {
+    document.title = 'Change your Password - Paaws';
+  }, []);
   return (
     <VStack w='100%' h='100%' py={10}>
       <VStack
@@ -27,7 +30,7 @@ const ChangePasswordPage: React.FC = ({}) => {
         borderRadius={6}
         boxShadow='lg'
         border={'1px solid '}
-        borderColor='blackAlpha.400'
+        borderColor='blackAlpha.200'
         spacing={10}
       >
         <Logo imageProps={{ maxW: '110px' }} />
@@ -70,7 +73,7 @@ const ChangePasswordPage: React.FC = ({}) => {
                     return toaster({
                       title: 'Password Reset Failed 🤔',
                       description:
-                        'There were an error resetting your password, please try again later ',
+                        'There were an error resetting your password, please try again later or send a new password reset email ',
                       status: 'error',
                       variant: 'subtle',
                       isClosable: true,
@@ -79,7 +82,8 @@ const ChangePasswordPage: React.FC = ({}) => {
                   //success case
                   return toaster({
                     title: 'Password Changed Successfully 🎉',
-                    description: 'You can now login with your new password',
+                    description:
+                      'You can now login with your new password, You will be redirected to the home page in a few seconds',
                     status: 'success',
                     variant: 'subtle',
                     isClosable: true,
