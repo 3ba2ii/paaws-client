@@ -59,17 +59,18 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
         py={8}
         spacing={5}
       >
-        <Logo imageProps={{ maxW: '110px' }} />
         <Box
           boxShadow={'base'}
           borderRadius={8}
-          maxW='520px'
+          maxW='500px'
           border='1px solid'
-          borderColor={'gray.700'}
+          borderColor={'blackAlpha.200'}
           px={5}
           py={8}
         >
-          <VStack align='flex-start' justify={'center'} spacing={5}>
+          <VStack align='center' justify={'center'} spacing={5}>
+            <Logo imageProps={{ maxW: '110px' }} />
+
             <Heading fontSize='xl' mb={4}>
               Reset your password
             </Heading>
@@ -81,12 +82,12 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
                   : '/illustrations/robot-fail.svg'
               }
               width='500px'
-              height={'350px'}
+              height={'250px'}
               alt='forgot-your-password'
             />
             {emailSent ? (
               <VStack w='100%' px={7} spacing={4}>
-                <Text as='label' fontSize='md' fontWeight={'semibold'}>
+                <Text as='label' fontSize='sm' fontWeight={'semibold'}>
                   Check your email and your spam folder for a link to reset your
                   password. If it doesn&apos;t appear within a few minutes,{' '}
                   Click the button below to send a new email
@@ -103,7 +104,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
               </VStack>
             ) : (
               <VStack w='100%' px={7} spacing={4}>
-                <Text as='label' fontSize='md' fontWeight={'semibold'}>
+                <Text as='label' fontSize='sm' fontWeight={'semibold'}>
                   Enter your account&apos;s email address and we will send you a
                   password reset link.
                 </Text>

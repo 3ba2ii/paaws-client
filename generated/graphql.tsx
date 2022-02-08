@@ -831,6 +831,13 @@ export type AddMpCommentMutationVariables = Exact<{
 
 export type AddMpCommentMutation = { __typename?: 'Mutation', addMPComment: { __typename?: 'CommentResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comment?: Maybe<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, replies?: Maybe<Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }>>, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
 
+export type ChangePasswordMutationVariables = Exact<{
+  options: ChangePasswordInput;
+}>;
+
+
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'ChangePasswordResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+
 export type CreateAdoptionPostMutationVariables = Exact<{
   petImages: Array<Scalars['Upload']> | Scalars['Upload'];
   postInput: AdoptionPostInput;
@@ -1136,6 +1143,44 @@ export function useAddMpCommentMutation(baseOptions?: Apollo.MutationHookOptions
 export type AddMpCommentMutationHookResult = ReturnType<typeof useAddMpCommentMutation>;
 export type AddMpCommentMutationResult = Apollo.MutationResult<AddMpCommentMutation>;
 export type AddMpCommentMutationOptions = Apollo.BaseMutationOptions<AddMpCommentMutation, AddMpCommentMutationVariables>;
+export const ChangePasswordDocument = gql`
+    mutation ChangePassword($options: ChangePasswordInput!) {
+  changePassword(options: $options) {
+    errors {
+      field
+      message
+      code
+    }
+    success
+  }
+}
+    `;
+export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
+
+/**
+ * __useChangePasswordMutation__
+ *
+ * To run a mutation, you first call `useChangePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangePasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changePasswordMutation, { data, loading, error }] = useChangePasswordMutation({
+ *   variables: {
+ *      options: // value for 'options'
+ *   },
+ * });
+ */
+export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, options);
+      }
+export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
+export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
+export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export const CreateAdoptionPostDocument = gql`
     mutation CreateAdoptionPost($petImages: [Upload!]!, $postInput: AdoptionPostInput!) {
   createAdoptionPost(images: $petImages, input: $postInput) {
