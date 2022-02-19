@@ -6,6 +6,7 @@ import React, { useEffect, useRef } from 'react';
 import useOnScreen from 'hooks/useOnScreen';
 import { DummyPostsSkeleton } from '../../../components/skeltons/DummyPostSkelton';
 import { SinglePostCard } from './SinglePostCard';
+import { BsThreeDots } from 'react-icons/bs';
 
 /* Missing Posts Grid Container */
 export const MissingPostsList: React.FC<{
@@ -33,7 +34,7 @@ export const MissingPostsList: React.FC<{
       />
     );
   return (
-    <VStack spacing={4} w='100%' divider={<Divider />}>
+    <VStack spacing={4} w='100%' pb={5} divider={<Divider />}>
       {posts.map((post) => {
         return <SinglePostCard key={post.id} post={post} />;
       })}
@@ -45,8 +46,10 @@ export const MissingPostsList: React.FC<{
           isLoading={loading}
           ref={loadMorButtonRef}
           onClick={fetchMorePosts}
+          rightIcon={<BsThreeDots />}
+          px={6}
         >
-          Load More
+          Load More Posts
         </Button>
       ) : null}
     </VStack>

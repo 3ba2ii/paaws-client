@@ -84,7 +84,6 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
       sx={{ gap: ['10px', '0px'] }}
       cursor={'pointer'}
       transition={'all 0.2s ease-in-out'}
-      _hover={{ transform: 'scale(1.005)' }}
       tabIndex={1}
       //borderWidth={'0.5px'}
       //borderColor={useColorModeValue('gray.200', 'gray.700')}

@@ -31,7 +31,6 @@ function JoinUsNavbarItems(
           : ''}
       </Text>
       <Link
-        passHref
         href={isRegisterScreen ? '/login' : isLoginScreen ? '/register' : '/'}
       >
         <Button
@@ -109,26 +108,18 @@ const NavBarItems = () => {
         </InputGroup>
       </div>
       <nav className={navbarStyles['nav-items']}>
-        <Link passHref={true} href='/explore'>
-          Explore
-        </Link>
-        <Link passHref href='/missing'>
-          Missing Pets
-        </Link>
-        <Link passHref={true} href='/adoption'>
-          Adoption
-        </Link>
+        <Link href='/explore'>Explore</Link>
+        <Link href='/missing'>Missing Pets</Link>
+        <Link href='/adoption'>Adoption</Link>
         {loading ? (
           <LoadingComponent />
         ) : data?.me?.id ? (
           <>
-            <Link passHref={true} href='/favorites'>
-              My Favorites
-            </Link>
+            <Link href='/favorites'>My Favorites</Link>
             <UserDropdownMenu userInfo={data} />
           </>
         ) : (
-          <Link passHref={true} href='/register'>
+          <Link href='/register'>
             <Button leftIcon={<FaHeart color='red' />} size='sm'>
               Join us
             </Button>

@@ -9,7 +9,7 @@ const Logo: React.FC<LogoProps> = ({ imageProps }) => {
   const logo = useColorModeValue('light', 'dark');
 
   return (
-    <Link passHref href='/'>
+    <Link href='/'>
       <Image
         tabIndex={0}
         role='img'
