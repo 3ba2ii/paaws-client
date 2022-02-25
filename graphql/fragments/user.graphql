@@ -13,7 +13,8 @@ fragment RequiredUserInfo on User {
   createdAt
   updatedAt
   provider
-  provider_id
+  providerId
+  phoneVerified
   avatar {
     id
     url

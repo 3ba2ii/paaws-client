@@ -2,21 +2,23 @@ import { Heading } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import React from 'react';
-import { GoogleLogin, GoogleLoginResponse } from 'react-google-login';
+import {
+  GoogleLogin,
+  GoogleLoginResponse,
+  GoogleLoginResponseOffline,
+} from 'react-google-login';
 import { FcGoogle } from 'react-icons/fc';
 import styles from 'styles/login.module.css';
 import withApollo from 'utils/withApollo';
 import { LoginForm } from '../../modules/auth/login/LoginForm';
 
 const LoginPage: React.FC = () => {
-  const onSuccess = (response: GoogleLoginResponse) => {
-    console.log(
-      `🚀 ~ file: index.tsx ~ line 13 ~ onSuccess ~ response`,
-      response.getAuthResponse().id_token
-    );
+  const onSuccess = (
+    response: GoogleLoginResponse | GoogleLoginResponseOffline
+  ) => {
+    console.log(`🚀 ~ file: index.tsx ~ line 19 ~ response`, response);
     //save the response to the context api
     //If the user is already signed up then redirect to the home page
-
     //If the user is not signed up then redirect to the register page to continue the sign up process
   };
   const onFailure = (response: any) => {};

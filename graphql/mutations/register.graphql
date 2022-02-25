@@ -1,5 +1,5 @@
-mutation Register($registerRegisterOptions: RegisterOptions!) {
-  register(registerOptions: $registerRegisterOptions) {
+mutation Register($registerOptions: BaseRegisterInput!) {
+  register(registerOptions: $registerOptions) {
     errors {
       field
       message

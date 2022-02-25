@@ -5,31 +5,14 @@ import { Heading, Text, WrapItem } from '@chakra-ui/layout';
 import { Tooltip } from '@chakra-ui/tooltip';
 import InputField from 'components/common/input/InputField';
 import { Field, Form, Formik } from 'formik';
-import { useSendOtpMutation } from 'generated/graphql';
-import React, { useState } from 'react';
 import styles from 'styles/register.module.css';
 import { SignupSchema } from 'utils/yupSchemas/SignupSchema';
-import { toErrorMap } from 'utils/toErrorMap';
-import { OTPModal } from './OTPModal';
 
 export const RegisterForm = () => {
-  const [openOTPModal, setOpenOTPModal] = useState(false);
-  const [sendOTPMutation] = useSendOtpMutation();
-
-  const closeModal = () => {
-    setOpenOTPModal(false);
-  };
+  /* Step 1 in registration - (in case of using username and password) */
 
   return (
     <section>
-      <Heading fit='cover'>
-        Sign up now and join <br />
-        <Text as='span' color='teal.400'>
-          pet lovers
-        </Text>{' '}
-        around the world
-      </Heading>
-
       <Formik
         initialValues={{
           full_name: '',
@@ -37,33 +20,9 @@ export const RegisterForm = () => {
           confirmPassword: '',
           email: '',
           agree: false,
-          phone: '',
-          otp: null,
         }}
         validationSchema={SignupSchema}
-        onSubmit={async ({ phone, agree, email }, { setErrors }) => {
-          //Check for agree
-          if (!agree)
-            return setErrors({
-              agree: 'You must agree to the terms and conditions',
-            });
-          //Send an OTP and open a modal that asks for their OTP
-          const { data } = await sendOTPMutation({
-            variables: {
-              sendOtpPhone: phone,
-              email,
-            },
-          });
-
-          //Check if the phone number is already in use
-          if (data?.sendOTP?.errors) {
-            const errorsMap = toErrorMap(data?.sendOTP?.errors);
-            return setErrors(errorsMap);
-          }
-
-          //Open up a modal that asks for their OTP
-          setOpenOTPModal(true);
-        }}
+        onSubmit={async ({ agree, email }, { setErrors }) => {}}
       >
         {({ submitForm, values, setErrors, errors, touched, isSubmitting }) => (
           <Form className={styles['register-form']}>
@@ -93,14 +52,7 @@ export const RegisterForm = () => {
               type='password'
               autoComplete='confirm-password'
             />
-            <InputField
-              name='phone'
-              label='Phone Number'
-              type='tel'
-              autoComplete='tel'
-              placeholder='+20123456789'
-              helperText='This phone number will be verified on registering'
-            />
+
             <WrapItem>
               <Field position='relative' as={Checkbox} name='agree' id='agree'>
                 <Tooltip
@@ -132,16 +84,6 @@ export const RegisterForm = () => {
             >
               Create Account
             </Button>
-            {openOTPModal && (
-              <OTPModal
-                isOpen={openOTPModal}
-                onClose={closeModal}
-                handleResendOTP={submitForm}
-                userInfo={values}
-                setErrors={setErrors}
-                isSubmitting={isSubmitting}
-              />
-            )}
           </Form>
         )}
       </Formik>
