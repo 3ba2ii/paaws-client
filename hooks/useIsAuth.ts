@@ -4,7 +4,7 @@ import { useMeQuery } from '../generated/graphql';
 
 export const useIsAuth = () => {
   const { data, loading } = useMeQuery({
-    fetchPolicy: 'cache-only',
+    fetchPolicy: 'cache-first',
   });
   const router = useRouter();
 
