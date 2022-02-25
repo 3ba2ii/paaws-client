@@ -20,6 +20,7 @@ import {
   useVerifyPhoneNumberMutation,
 } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
+import SendOTPComponent from 'modules/profile/complete-info/SendOTP';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { GoVerified } from 'react-icons/go';
@@ -56,7 +57,6 @@ const VerifyPhoneNumberPage: React.FC<PhoneNumberProps> = () => {
   const [step, setStep] = useState<'send-otp' | 'verify-otp'>('send-otp');
   const [phone, setPhone] = useState<string | null>(null);
 
-  const [sendOTP] = useSendOtpMutation();
   const [verifyPhoneNumber] = useVerifyPhoneNumberMutation();
 
   const userHasPhoneNumber: boolean = !!(
@@ -64,55 +64,6 @@ const VerifyPhoneNumberPage: React.FC<PhoneNumberProps> = () => {
     user.phone &&
     user.phoneVerified
   );
-
-  const SendOTPComponent = () => {
-    return (
-      <VStack flex='.75' w='100%'>
-        <Formik
-          initialValues={{ phone: '' }}
-          onSubmit={async ({ phone }, { setErrors }) => {
-            if (!phone || !user) return;
-            const { data } = await sendOTP({
-              variables: {
-                email: user.email,
-                sendOtpPhone: phone.toString(),
-              },
-            });
-            /* map the error */
-            if (data?.sendOTP.errors?.length) {
-              const mappedErrors = toErrorMap(data?.sendOTP?.errors);
-              return setErrors(mappedErrors);
-            }
-            setPhone(phone);
-            setStep('verify-otp');
-          }}
-        >
-          {({ isSubmitting }) => (
-            <Form>
-              <VStack align='flex-start' spacing={5}>
-                <InputField
-                  label='Phone Number'
-                  name='phone'
-                  placeholder='+201029111763'
-                  helperText='Your phone number will be visible just for you and you can use it to login anytime after verification'
-                  required
-                />
-                <Button
-                  isLoading={isSubmitting}
-                  colorScheme={'teal'}
-                  type='submit'
-                  px={4}
-                  fontSize='sm'
-                >
-                  Send OTP
-                </Button>
-              </VStack>
-            </Form>
-          )}
-        </Formik>
-      </VStack>
-    );
-  };
 
   const VerifyOTPComponent = () => {
     return (
@@ -208,9 +159,14 @@ const VerifyPhoneNumberPage: React.FC<PhoneNumberProps> = () => {
       </HStack>
       <HStack position={'absolute'} w='100%' h='100vh'>
         <CompleteInfoLeftCol />
-        {!userHasPhoneNumber ? (
+        {userHasPhoneNumber ? (
           step === 'send-otp' ? (
-            <SendOTPComponent />
+            <SendOTPComponent
+              onSuccess={(p) => {
+                setPhone(p);
+                setStep('verify-otp');
+              }}
+            />
           ) : (
             <VerifyOTPComponent />
           )
