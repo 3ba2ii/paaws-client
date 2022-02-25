@@ -1002,6 +1002,14 @@ export type UploadAvatarMutationVariables = Exact<{
 
 export type UploadAvatarMutation = { __typename?: 'Mutation', uploadAvatar: { __typename?: 'UploadImageResponse', url?: Maybe<string>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
+export type VerifyPhoneNumberMutationVariables = Exact<{
+  otp: Scalars['String'];
+  phone: Scalars['String'];
+}>;
+
+
+export type VerifyPhoneNumberMutation = { __typename?: 'Mutation', verifyPhoneNumber: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+
 export type AdoptionPostsQueryVariables = Exact<{
   cursor?: Maybe<Scalars['String']>;
   limit?: Maybe<Scalars['Int']>;
@@ -1877,6 +1885,45 @@ export function useUploadAvatarMutation(baseOptions?: Apollo.MutationHookOptions
 export type UploadAvatarMutationHookResult = ReturnType<typeof useUploadAvatarMutation>;
 export type UploadAvatarMutationResult = Apollo.MutationResult<UploadAvatarMutation>;
 export type UploadAvatarMutationOptions = Apollo.BaseMutationOptions<UploadAvatarMutation, UploadAvatarMutationVariables>;
+export const VerifyPhoneNumberDocument = gql`
+    mutation VerifyPhoneNumber($otp: String!, $phone: String!) {
+  verifyPhoneNumber(otp: $otp, phone: $phone) {
+    errors {
+      field
+      message
+      code
+    }
+    success
+  }
+}
+    `;
+export type VerifyPhoneNumberMutationFn = Apollo.MutationFunction<VerifyPhoneNumberMutation, VerifyPhoneNumberMutationVariables>;
+
+/**
+ * __useVerifyPhoneNumberMutation__
+ *
+ * To run a mutation, you first call `useVerifyPhoneNumberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVerifyPhoneNumberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [verifyPhoneNumberMutation, { data, loading, error }] = useVerifyPhoneNumberMutation({
+ *   variables: {
+ *      otp: // value for 'otp'
+ *      phone: // value for 'phone'
+ *   },
+ * });
+ */
+export function useVerifyPhoneNumberMutation(baseOptions?: Apollo.MutationHookOptions<VerifyPhoneNumberMutation, VerifyPhoneNumberMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VerifyPhoneNumberMutation, VerifyPhoneNumberMutationVariables>(VerifyPhoneNumberDocument, options);
+      }
+export type VerifyPhoneNumberMutationHookResult = ReturnType<typeof useVerifyPhoneNumberMutation>;
+export type VerifyPhoneNumberMutationResult = Apollo.MutationResult<VerifyPhoneNumberMutation>;
+export type VerifyPhoneNumberMutationOptions = Apollo.BaseMutationOptions<VerifyPhoneNumberMutation, VerifyPhoneNumberMutationVariables>;
 export const AdoptionPostsDocument = gql`
     query AdoptionPosts($cursor: String, $limit: Int) {
   adoptionPosts(cursor: $cursor, limit: $limit) {
