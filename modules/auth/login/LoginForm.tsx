@@ -65,7 +65,14 @@ export const LoginForm: React.FC = () => {
             id='password'
           />
           <Link href='/forgot-password'>
-            <Button variant={'link'} fontSize='xs' w='fit-content' ml='auto'>
+            <Button
+              colorScheme={'blue'}
+              variant={'link'}
+              fontSize='xs'
+              w='fit-content'
+              ml='auto'
+              fontWeight={'medium'}
+            >
               Forgot Password?
             </Button>
           </Link>

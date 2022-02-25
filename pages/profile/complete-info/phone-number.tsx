@@ -22,10 +22,11 @@ import {
 import { useIsAuth } from 'hooks/useIsAuth';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import { GoVerified } from 'react-icons/go';
 import { toErrorMap } from 'utils/toErrorMap';
 import withApollo from 'utils/withApollo';
 
-const CompleteInfoSideComponent = () => {
+const CompleteInfoLeftCol = () => {
   return (
     <VStack
       w='100%'
@@ -36,7 +37,7 @@ const CompleteInfoSideComponent = () => {
       px='65px'
       bg='#F2F5F8'
     >
-      <Heading color='gray.700' size='lg' fontWeight='bold'>
+      <Heading color='gray.700' size='lg' fontWeight='semibold'>
         Welcome to Paaws 🐶
       </Heading>
       <Text fontSize={'md'} color='gray.500'>
@@ -47,7 +48,7 @@ const CompleteInfoSideComponent = () => {
 };
 interface PhoneNumberProps {}
 
-const VerifyPhoneNumberPage: React.FC<PhoneNumberProps> = ({}) => {
+const VerifyPhoneNumberPage: React.FC<PhoneNumberProps> = () => {
   const { user } = useIsAuth();
   const toaster = useToast();
   const router = useRouter();
@@ -58,6 +59,134 @@ const VerifyPhoneNumberPage: React.FC<PhoneNumberProps> = ({}) => {
   const [sendOTP] = useSendOtpMutation();
   const [verifyPhoneNumber] = useVerifyPhoneNumberMutation();
 
+  const userHasPhoneNumber: boolean = !!(
+    user &&
+    user.phone &&
+    user.phoneVerified
+  );
+
+  const SendOTPComponent = () => {
+    return (
+      <VStack flex='.75' w='100%'>
+        <Formik
+          initialValues={{ phone: '' }}
+          onSubmit={async ({ phone }, { setErrors }) => {
+            if (!phone || !user) return;
+            const { data } = await sendOTP({
+              variables: {
+                email: user.email,
+                sendOtpPhone: phone.toString(),
+              },
+            });
+            /* map the error */
+            if (data?.sendOTP.errors?.length) {
+              const mappedErrors = toErrorMap(data?.sendOTP?.errors);
+              return setErrors(mappedErrors);
+            }
+            setPhone(phone);
+            setStep('verify-otp');
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <VStack align='flex-start' spacing={5}>
+                <InputField
+                  label='Phone Number'
+                  name='phone'
+                  placeholder='+201029111763'
+                  helperText='Your phone number will be visible just for you and you can use it to login anytime after verification'
+                  required
+                />
+                <Button
+                  isLoading={isSubmitting}
+                  colorScheme={'teal'}
+                  type='submit'
+                  px={4}
+                  fontSize='sm'
+                >
+                  Send OTP
+                </Button>
+              </VStack>
+            </Form>
+          )}
+        </Formik>
+      </VStack>
+    );
+  };
+
+  const VerifyOTPComponent = () => {
+    return (
+      <VStack w='100%' flex='.75'>
+        <Formik
+          initialValues={{ otp: '' }}
+          onSubmit={async ({ otp }, { setErrors }) => {
+            if (!otp || !otp.length || !phone) return;
+
+            /* send verification request */
+            const { data } = await verifyPhoneNumber({
+              variables: { otp, phone },
+            });
+
+            /* map the error */
+            if (data?.verifyPhoneNumber.errors?.length) {
+              const mappedErrors = toErrorMap(data?.verifyPhoneNumber?.errors);
+              return setErrors(mappedErrors);
+            }
+            /* show a toaster */
+            toaster({
+              status: 'success',
+              title: 'Phone Number Verified',
+              description: 'You rock! 🤘',
+              position: 'top-right',
+              variant: 'subtle',
+              isClosable: true,
+            });
+            /* redirect to the location page in case the user has no previous location*/
+            if (!user?.lat || !user?.lng) {
+              return router.push('/profile/complete-info/location');
+            }
+          }}
+        >
+          {({ isSubmitting, setFieldValue }) => (
+            <Form>
+              <VStack align='flex-start' spacing={5} maxW='450px'>
+                <InputHOC
+                  label={`A 4-digit number has been sent to this phone number${
+                    phone ? ' xxxxxxxx' + phone?.slice(-3) : ''
+                  }, Please type it in the box below `}
+                  name='otp'
+                  helperText='In case you didn’t receive an OTP, Click Resend OTP'
+                  required
+                >
+                  <HStack>
+                    <PinInput
+                      otp
+                      placeholder='😻'
+                      onChange={(val) => setFieldValue('otp', val.toString())}
+                    >
+                      <PinInputField />
+                      <PinInputField />
+                      <PinInputField />
+                      <PinInputField />
+                    </PinInput>
+                  </HStack>
+                </InputHOC>
+                <Button
+                  isLoading={isSubmitting}
+                  colorScheme={'teal'}
+                  type='submit'
+                  px={4}
+                  fontSize='sm'
+                >
+                  Verify Phone Number
+                </Button>
+              </VStack>
+            </Form>
+          )}
+        </Formik>
+      </VStack>
+    );
+  };
   return (
     <Layout
       title='Verify Phone Number'
@@ -77,146 +206,40 @@ const VerifyPhoneNumberPage: React.FC<PhoneNumberProps> = ({}) => {
         <Logo imageProps={{ maxW: '90px' }} />
         <UserAvatar avatarProps={{ size: 'sm' }} />
       </HStack>
-
-      {/* */}
       <HStack position={'absolute'} w='100%' h='100vh'>
-        <CompleteInfoSideComponent />
-        {step === 'send-otp' ? (
-          <VStack flex='.75' w='100%'>
-            <Formik
-              initialValues={{ phone: '' }}
-              onSubmit={async ({ phone }, { setErrors }) => {
-                if (!phone || !user) return;
-                const { data } = await sendOTP({
-                  variables: {
-                    email: user.email,
-                    sendOtpPhone: phone.toString(),
-                  },
-                });
-                /* map the error */
-                if (data?.sendOTP.errors?.length) {
-                  const mappedErrors = toErrorMap(data?.sendOTP?.errors);
-                  return setErrors(mappedErrors);
-                }
-                setPhone(phone);
-                setStep('verify-otp');
-              }}
-            >
-              {({ isSubmitting }) => (
-                <Form>
-                  <VStack align='flex-start' spacing={5}>
-                    <InputField
-                      label='Phone Number'
-                      name='phone'
-                      placeholder='+201029111763'
-                      helperText='Your phone number will be visible just for you and you can use it to login anytime after verification'
-                      required
-                    />
-                    <Button
-                      isLoading={isSubmitting}
-                      colorScheme={'teal'}
-                      type='submit'
-                      px={4}
-                      fontSize='sm'
-                    >
-                      Send OTP
-                    </Button>
-                  </VStack>
-                </Form>
-              )}
-            </Formik>
-          </VStack>
-        ) : (
-          step === 'verify-otp' && (
-            <VStack w='100%' flex='.75'>
-              <Formik
-                initialValues={{ otp: '' }}
-                onSubmit={async ({ otp }, { setErrors }) => {
-                  if (!otp || !otp.length || !phone) return;
-
-                  /* send verification request */
-                  const { data } = await verifyPhoneNumber({
-                    variables: { otp, phone },
-                  });
-                  console.log(
-                    `🚀 ~ file: phone-number.tsx ~ line 140 ~ onSubmit={ ~ data`,
-                    data
-                  );
-                  /* map the error */
-                  if (data?.verifyPhoneNumber.errors?.length) {
-                    const mappedErrors = toErrorMap(
-                      data?.verifyPhoneNumber?.errors
-                    );
-                    return setErrors(mappedErrors);
-                  }
-                  /* show a toaster */
-                  toaster({
-                    status: 'success',
-                    title: 'Phone Number Verified',
-                    description: 'You rock! 🤘',
-                    position: 'top-right',
-                    variant: 'subtle',
-                    isClosable: true,
-                  });
-                  /* redirect to the location page in case the user has no previous location*/
-                  if (!user?.lat || !user?.lng) {
-                    return router.push('/profile/complete-info/location');
-                  }
-                }}
-              >
-                {({ isSubmitting, setFieldValue }) => (
-                  <Form>
-                    <VStack align='flex-start' spacing={5} maxW='450px'>
-                      <InputHOC
-                        label={`A 4-digit number has been sent to this phone number${
-                          phone ? ' xxxxxxxx' + phone?.slice(-3) : ''
-                        }, Please type it in the box below `}
-                        name='otp'
-                        helperText='In case you didn’t receive an OTP, Click Resend OTP'
-                        required
-                      >
-                        <HStack>
-                          <PinInput
-                            otp
-                            placeholder='😻'
-                            onChange={(val) =>
-                              setFieldValue('otp', val.toString())
-                            }
-                          >
-                            <PinInputField />
-                            <PinInputField />
-                            <PinInputField />
-                            <PinInputField />
-                          </PinInput>
-                        </HStack>
-                      </InputHOC>
-                      <Button
-                        isLoading={isSubmitting}
-                        colorScheme={'teal'}
-                        type='submit'
-                        px={4}
-                        fontSize='sm'
-                      >
-                        Verify Phone Number
-                      </Button>
-                    </VStack>
-                  </Form>
-                )}
-              </Formik>
-            </VStack>
+        <CompleteInfoLeftCol />
+        {!userHasPhoneNumber ? (
+          step === 'send-otp' ? (
+            <SendOTPComponent />
+          ) : (
+            <VerifyOTPComponent />
           )
+        ) : (
+          <VStack flex='.75' spacing={5}>
+            <GoVerified color='green' size={'42px'} />
+            <Heading
+              size='sm'
+              textAlign={'center'}
+              maxW='50ch'
+              lineHeight={'1.5'}
+            >
+              You already have a verified phone number, If you want to change
+              it, Please head to the settings page and delete your phone number.
+            </Heading>
+          </VStack>
         )}
-
-        <Button
-          pos={'absolute'}
-          bottom='32px'
-          right='65px'
-          variant='ghost'
-          opacity='.6'
-          fontWeight={'medium'}
-        >
-          Complete Later
-        </Button>
+        {!userHasPhoneNumber && (
+          <Button
+            pos={'absolute'}
+            bottom='32px'
+            right='65px'
+            variant='ghost'
+            opacity='.6'
+            fontWeight={'medium'}
+          >
+            Complete Later
+          </Button>
+        )}
       </HStack>
     </Layout>
   );
