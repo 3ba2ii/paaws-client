@@ -1,5 +1,6 @@
 import {
   Box,
+  BoxProps,
   Flex,
   FlexProps,
   useColorMode,
@@ -17,6 +18,7 @@ interface ContainerProps {
   includeFooter?: boolean;
   includeNavbar?: boolean;
   layoutProps?: FlexProps;
+  childrenProps?: BoxProps;
 }
 //Container will be the main container of each page in the app
 
@@ -25,6 +27,7 @@ export const Layout = ({
   className,
   title = 'Paaws',
   layoutProps,
+  childrenProps,
   includeFooter = true,
   includeNavbar = true,
 }: ContainerProps) => {
@@ -66,7 +69,13 @@ export const Layout = ({
             <NavBar />
           </Box>
         )}
-        <Box className={styles.main} mt={'6rem'} w='100%' maxW='1500px'>
+        <Box
+          className={styles.main}
+          mt={'6rem'}
+          w='100%'
+          maxW='1500px'
+          {...childrenProps}
+        >
           {children}
         </Box>
         {includeFooter && (
