@@ -39,7 +39,7 @@ const CompleteInfoSideComponent = () => {
       <Heading color='gray.700' size='lg' fontWeight='bold'>
         Welcome to Paaws 🐶
       </Heading>
-      <Text fontSize={'md'} fontW='semibold' color='gray.500'>
+      <Text fontSize={'md'} color='gray.500'>
         Help us complete your profile and make it more attractive to users
       </Text>
     </VStack>
