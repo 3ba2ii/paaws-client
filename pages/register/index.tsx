@@ -59,10 +59,6 @@ const RegisterPage: React.FC = () => {
   };
 
   const onGoogleLogin = async (response: GoogleLoginResponse) => {
-    console.log(
-      `🚀 ~ file: index.tsx ~ line 64 ~ onGoogleLogin ~ response`,
-      response
-    );
     //send a registration request to the server with the google token
     const { tokenId } = response;
 
@@ -103,6 +99,8 @@ const RegisterPage: React.FC = () => {
     if (!lat || !lng) {
       return router.push('/profile/complete-info/location');
     }
+
+    return router.push('/');
   };
 
   return (

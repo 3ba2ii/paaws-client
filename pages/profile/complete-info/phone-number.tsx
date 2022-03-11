@@ -11,7 +11,6 @@ import withApollo from 'utils/withApollo';
 
 interface PhoneNumberProps {}
 
-
 const CompleteInfoLeftCol = () => {
   return (
     <VStack
@@ -22,6 +21,7 @@ const CompleteInfoLeftCol = () => {
       justify='center'
       px='65px'
       bg='#F2F5F8'
+      display={['none', 'flex', 'flex', 'flex']}
     >
       <Heading color='gray.700' size='lg' fontWeight='semibold'>
         Welcome to Paaws 🐶
@@ -35,7 +35,7 @@ const CompleteInfoLeftCol = () => {
 
 const AlreadyVerifiedComponent = () => {
   return (
-    <VStack flex='.75' spacing={5}>
+    <VStack flex={['1', '.75', '.75', '.75']} spacing={5}>
       <GoVerified color='green' size={'42px'} />
       <Heading size='sm' textAlign={'center'} maxW='50ch' lineHeight={'1.5'}>
         You already have a verified phone number, If you want to change it,

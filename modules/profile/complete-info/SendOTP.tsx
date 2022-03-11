@@ -15,7 +15,7 @@ const SendOTPComponent: React.FC<SendOTPProps> = ({ onSuccess }) => {
   const [sendOTP] = useSendOtpMutation();
 
   return (
-    <VStack flex='.75' w='100%'>
+    <VStack flex={['1', '.75', '.75', '.75']} w='100%'>
       <Formik
         initialValues={{ phone: '' }}
         onSubmit={async ({ phone }, { setErrors }) => {

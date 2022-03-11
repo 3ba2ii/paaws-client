@@ -23,7 +23,7 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
   const toaster = useToast();
 
   return (
-    <VStack w='100%' flex='.75'>
+    <VStack w='100%' flex={['1', '.75', '.75', '.75']}>
       <Formik
         initialValues={{ otp: '' }}
         onSubmit={async ({ otp }, { setErrors }) => {
