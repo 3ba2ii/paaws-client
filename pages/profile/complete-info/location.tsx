@@ -1,19 +1,13 @@
-import { Layout } from 'components/Layout';
+import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import React from 'react';
 
 interface SelectILocationPageProps {}
 
 const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
   return (
-    <Layout
-      title='Select Location - Paaws'
-      includeFooter={false}
-      includeNavbar={false}
-      childrenProps={{ mt: '0' }}
-      layoutProps={{ mt: '0', p: '0' }}
-    >
-      <div>hello</div>
-    </Layout>
+    <CompleteInfoLayout pageTitle='Select your Location - Paaws'>
+      <h1>Heeyyy</h1>
+    </CompleteInfoLayout>
   );
 };
 export default SelectLocationPage;

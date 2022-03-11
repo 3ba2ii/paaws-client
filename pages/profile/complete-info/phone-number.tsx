@@ -1,37 +1,12 @@
-import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import { Button, Heading, VStack } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
-import Logo from 'components/Logo';
-import { UserAvatar } from 'components/UserAvatar';
 import { useIsAuth } from 'hooks/useIsAuth';
+import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import SendOTPComponent from 'modules/profile/complete-info/SendOTP';
 import VerifyOTPComponent from 'modules/profile/complete-info/VerifyPhoneNumber';
 import React, { useState } from 'react';
 import { GoVerified } from 'react-icons/go';
 import withApollo from 'utils/withApollo';
-
-interface PhoneNumberProps {}
-
-const CompleteInfoLeftCol = () => {
-  return (
-    <VStack
-      w='100%'
-      h='100%'
-      flex='.4'
-      align={'flex-start'}
-      justify='center'
-      px='65px'
-      bg='#F2F5F8'
-      display={['none', 'flex', 'flex', 'flex']}
-    >
-      <Heading color='gray.700' size='lg' fontWeight='semibold'>
-        Welcome to Paaws 🐶
-      </Heading>
-      <Text fontSize={'md'} color='gray.500'>
-        Help us complete your profile and make it more attractive to users
-      </Text>
-    </VStack>
-  );
-};
 
 const AlreadyVerifiedComponent = () => {
   return (
@@ -45,7 +20,7 @@ const AlreadyVerifiedComponent = () => {
   );
 };
 
-const VerifyPhoneNumberPage: React.FC<PhoneNumberProps> = () => {
+const VerifyPhoneNumberPage: React.FC = () => {
   const { user } = useIsAuth();
 
   const [step, setStep] = useState<'send-otp' | 'verify-otp'>('send-otp');
@@ -58,26 +33,8 @@ const VerifyPhoneNumberPage: React.FC<PhoneNumberProps> = () => {
   );
 
   return (
-    <Layout
-      title='Verify Phone Number'
-      includeFooter={false}
-      includeNavbar={false}
-      childrenProps={{ mt: '0' }}
-      layoutProps={{ mt: '0', p: '0' }}
-    >
-      <HStack
-        pos='absolute'
-        px={'65px'}
-        top='65px'
-        w='100%'
-        justify={'space-between'}
-        zIndex={2}
-      >
-        <Logo imageProps={{ maxW: '90px' }} />
-        <UserAvatar avatarProps={{ size: 'sm' }} />
-      </HStack>
-      <HStack position={'absolute'} w='100%' h='100vh'>
-        <CompleteInfoLeftCol />
+    <CompleteInfoLayout pageTitle='Verify Phone Number - Paaws'>
+      <>
         {!hasVerifiedPhone ? (
           step === 'send-otp' ? (
             <SendOTPComponent
@@ -104,8 +61,8 @@ const VerifyPhoneNumberPage: React.FC<PhoneNumberProps> = () => {
             Complete Later
           </Button>
         )}
-      </HStack>
-    </Layout>
+      </>
+    </CompleteInfoLayout>
   );
 };
 export default withApollo(VerifyPhoneNumberPage);

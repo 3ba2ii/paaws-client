@@ -1,3 +1,4 @@
+import { getDataFromTree } from '@apollo/client/react/ssr';
 import { Avatar, AvatarProps } from '@chakra-ui/react';
 import { useMeQuery } from 'generated/graphql';
 import withApollo from 'utils/withApollo';
@@ -11,4 +12,4 @@ export const UserAvatar: React.FC<{ avatarProps?: AvatarProps }> = ({
   return <Avatar name={displayName} src={avatar?.url || ''} {...avatarProps} />;
 };
 
-export default withApollo(UserAvatar);
+export default withApollo(UserAvatar, { getDataFromTree });
