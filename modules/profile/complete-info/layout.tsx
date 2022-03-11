@@ -1,7 +1,15 @@
-import { Heading, HStack, VStack, Text, Box, Center } from '@chakra-ui/react';
+import {
+  Button,
+  Center,
+  Heading,
+  HStack,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import Logo from 'components/Logo';
 import UserAvatar from 'components/UserAvatar';
+import router from 'next/router';
 import React from 'react';
 
 interface CompleteInfoProps {
@@ -56,8 +64,21 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
       </HStack>
       <HStack position={'absolute'} w='100%' h='100vh'>
         <CompleteInfoStaticComponent />
-        <Center w='100%' h='100%' flex='.8'>
+        <Center pos='relative' w='100%' h='100%' flex='.8'>
           {children}
+          <Button
+            pos={'absolute'}
+            bottom='32px'
+            right='65px'
+            variant='ghost'
+            opacity='.6'
+            fontWeight={'medium'}
+            onClick={() => {
+              router.push('/');
+            }}
+          >
+            Complete Later
+          </Button>
         </Center>
       </HStack>
     </Layout>

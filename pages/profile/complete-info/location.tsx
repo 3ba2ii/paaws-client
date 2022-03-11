@@ -1,17 +1,9 @@
-import {
-  Box,
-  Button,
-  Center,
-  Heading,
-  Text,
-  useToast,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Button, Heading, Text, useToast, VStack } from '@chakra-ui/react';
 import { useUpdateUserInfoMutation } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import { UserLocationStep } from 'modules/auth/register/UserLocationStep';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
-import { Router, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { LocationType } from 'types';
 import withApollo from 'utils/withApollo';
@@ -80,19 +72,10 @@ const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
           colorScheme={'teal'}
           onClick={handleSubmitLocation}
           isLoading={loading}
+          px={4}
+          fontSize='sm'
         >
           Save Location
-        </Button>
-
-        <Button
-          pos={'absolute'}
-          bottom='32px'
-          right='65px'
-          variant='ghost'
-          opacity='.6'
-          fontWeight={'medium'}
-        >
-          Complete Later
         </Button>
       </VStack>
     </CompleteInfoLayout>

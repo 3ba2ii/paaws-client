@@ -1,4 +1,4 @@
-import { Button, Heading, VStack } from '@chakra-ui/react';
+import { Heading, VStack } from '@chakra-ui/react';
 import { useIsAuth } from 'hooks/useIsAuth';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import SendOTPComponent from 'modules/profile/complete-info/SendOTP';
@@ -47,18 +47,6 @@ const VerifyPhoneNumberPage: React.FC = () => {
           )
         ) : (
           <AlreadyVerifiedComponent />
-        )}
-        {!hasVerifiedPhone && (
-          <Button
-            pos={'absolute'}
-            bottom='32px'
-            right='65px'
-            variant='ghost'
-            opacity='.6'
-            fontWeight={'medium'}
-          >
-            Complete Later
-          </Button>
         )}
       </>
     </CompleteInfoLayout>
