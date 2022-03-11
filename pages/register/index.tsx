@@ -5,24 +5,17 @@ import {
   MeDocument,
   MeQuery,
   ProviderTypes,
-  RegisterMutationVariables,
   User,
-  useRegisterMutation,
   useRegisterWithProviderMutation,
 } from 'generated/graphql';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React, { createContext, useState } from 'react';
+import React from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import { FcGoogle } from 'react-icons/fc';
 import withApollo from 'utils/withApollo';
 import { Layout } from '../../components/Layout';
 import styles from '../../styles/register.module.css';
-
-const RegisterContext = createContext<{
-  onChange?: (data: Partial<RegisterMutationVariables>) => void;
-  onSubmit?: (step: number) => void;
-}>({});
 
 const RegisterPage: React.FC = () => {
   /* we need to refactor this to have a context api 
@@ -31,32 +24,10 @@ const RegisterPage: React.FC = () => {
     2. Step 2 -> Send otp and Verify phone number 
     3. Step 3 -> Set the location (FIXED) -> update user info
   */
-  const [userData, setUserData] =
-    useState<Partial<RegisterMutationVariables>>();
 
-  const [externalRegister, { loading }] = useRegisterWithProviderMutation();
+  const [externalRegister] = useRegisterWithProviderMutation();
   const toaster = useToast();
   const router = useRouter();
-
-  const onChange = (data: Partial<RegisterMutationVariables>) => {
-    setUserData({ ...userData, ...data });
-  };
-  const onSubmit = (step: number) => {};
-
-  const onSelectProviderType = async (provider: ProviderTypes) => {
-    //set the provider type
-    setUserData({ ...userData });
-
-    //if the user selected local then we need to redirect to the register form page
-    if (provider === ProviderTypes.Local) {
-      return router.push('/register/email');
-    }
-
-    //validate it on the server by sending a register request to the server
-
-    //set the user info and go to the next step -> Step 2 (OTP)
-    //router.push(`/register/verify-phone-number`);
-  };
 
   const onGoogleLogin = async (response: GoogleLoginResponse) => {
     //send a registration request to the server with the google token
@@ -105,58 +76,55 @@ const RegisterPage: React.FC = () => {
 
   return (
     <Layout title={'Create Account and Join Paaws'}>
-      <RegisterContext.Provider value={{ onChange, onSubmit }}>
-        <main className={styles['main-page-content-wrapper']}>
-          <Heading size='xl'>Sign up now</Heading>
-          <div className={styles['signup-options']}>
-            <GoogleLogin
-              clientId={process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID}
-              render={(renderProps) => (
-                <Button
-                  borderRadius='lg'
-                  leftIcon={<FcGoogle size='20px' />}
-                  w={'100%'}
-                  variant='outline'
-                  boxShadow='sm'
-                  size='lg'
-                  {...renderProps}
-                >
-                  Sing up with Google
-                </Button>
-              )}
-              cookiePolicy={'single_host_origin'}
-              onSuccess={(response) => {
-                onGoogleLogin(response as GoogleLoginResponse);
-              }}
-              onFailure={() => {
-                toaster({
-                  position: 'top-right',
-                  status: 'error',
-                  variant: 'subtle',
-                  isClosable: true,
-                  title: 'Sorry we could not register you right now',
-                  description:
-                    'An error occurred while trying to sign you up, please try again',
-                });
-              }}
-            />
-
-            <p className='divider-with-centered-value'>or</p>
-            <Link href='/register/email'>
+      <main className={styles['main-page-content-wrapper']}>
+        <Heading size='xl'>Sign up now</Heading>
+        <div className={styles['signup-options']}>
+          <GoogleLogin
+            clientId={process.env.NEXT_PUBLIC_GOOGLE_AUTH_CLIENT_ID}
+            render={(renderProps) => (
               <Button
                 borderRadius='lg'
-                boxShadow='sm'
-                className={styles['apple-button']}
+                leftIcon={<FcGoogle size='20px' />}
                 w={'100%'}
-                variant='solid'
-                onClick={() => onSelectProviderType(ProviderTypes.Local)}
+                variant='outline'
+                boxShadow='sm'
+                size='lg'
+                {...renderProps}
               >
-                💖 Sign up with email
+                Sing up with Google
               </Button>
-            </Link>
-          </div>
-        </main>
-      </RegisterContext.Provider>
+            )}
+            cookiePolicy={'single_host_origin'}
+            onSuccess={(response) => {
+              onGoogleLogin(response as GoogleLoginResponse);
+            }}
+            onFailure={() => {
+              toaster({
+                position: 'top-right',
+                status: 'error',
+                variant: 'subtle',
+                isClosable: true,
+                title: 'Sorry we could not register you right now',
+                description:
+                  'An error occurred while trying to sign you up, please try again',
+              });
+            }}
+          />
+
+          <p className='divider-with-centered-value'>or</p>
+          <Link href='/register/email'>
+            <Button
+              borderRadius='lg'
+              boxShadow='sm'
+              className={styles['apple-button']}
+              w={'100%'}
+              variant='solid'
+            >
+              💖 Sign up with email
+            </Button>
+          </Link>
+        </div>
+      </main>
     </Layout>
   );
 };
