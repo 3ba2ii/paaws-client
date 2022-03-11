@@ -1,27 +1,18 @@
 import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
-import { MeQuery } from 'generated/graphql';
-import { LocationType } from 'types';
 import React from 'react';
-import styles from 'styles/register.module.css';
+import { LocationType } from 'types';
 
 interface Step2Props {
-  handleChange: (e: any, field: string) => void;
-  userInfo: MeQuery | undefined;
+  handleChange: (coords: LocationType) => void;
 }
 
-export const UserLocationStep: React.FC<Step2Props> = ({
-  handleChange,
-  userInfo,
-}) => {
+export const UserLocationStep: React.FC<Step2Props> = ({ handleChange }) => {
   const handleLocationChange = (coords: LocationType) => {
-    handleChange(coords, 'location');
+    handleChange(coords);
   };
 
   return (
-    <section
-      className={styles['step-container'] + ' ' + styles['location-step']}
-      style={{ height: '100%', width: '100%' }}
-    >
+    <section style={{ height: '100%', width: '100%' }}>
       <CustomLocationPicker
         handleLocationChange={handleLocationChange}
         includeAutoComplete

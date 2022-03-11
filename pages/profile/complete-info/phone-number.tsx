@@ -1,5 +1,4 @@
 import { Button, Heading, VStack } from '@chakra-ui/react';
-import { Layout } from 'components/Layout';
 import { useIsAuth } from 'hooks/useIsAuth';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import SendOTPComponent from 'modules/profile/complete-info/SendOTP';

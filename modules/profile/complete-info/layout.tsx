@@ -1,4 +1,4 @@
-import { Heading, HStack, VStack, Text } from '@chakra-ui/react';
+import { Heading, HStack, VStack, Text, Box, Center } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import Logo from 'components/Logo';
 import UserAvatar from 'components/UserAvatar';
@@ -56,7 +56,9 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
       </HStack>
       <HStack position={'absolute'} w='100%' h='100vh'>
         <CompleteInfoStaticComponent />
-        {children}
+        <Center w='100%' h='100%' flex='.8'>
+          {children}
+        </Center>
       </HStack>
     </Layout>
   );
