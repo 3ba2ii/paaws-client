@@ -4,6 +4,7 @@ import {
   Heading,
   HStack,
   Text,
+  useColorMode,
   VStack,
 } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
@@ -42,6 +43,11 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
   pageTitle,
   children,
 }) => {
+  const { setColorMode } = useColorMode();
+
+  React.useEffect(() => {
+    setColorMode('light');
+  }, []);
   return (
     <Layout
       title={pageTitle}
