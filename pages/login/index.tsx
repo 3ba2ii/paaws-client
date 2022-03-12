@@ -1,29 +1,73 @@
 import { Heading } from '@chakra-ui/layout';
-import { Button } from '@chakra-ui/react';
+import { Button, useToast } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
-import React from 'react';
 import {
-  GoogleLogin,
-  GoogleLoginResponse,
-  GoogleLoginResponseOffline,
-} from 'react-google-login';
+  MeDocument,
+  MeQuery,
+  ProviderTypes,
+  useLoginWithAuthProviderMutation,
+  User,
+} from 'generated/graphql';
+import router from 'next/router';
+import React from 'react';
+import { GoogleLogin, GoogleLoginResponse } from 'react-google-login';
 import { FcGoogle } from 'react-icons/fc';
 import styles from 'styles/login.module.css';
 import withApollo from 'utils/withApollo';
 import { LoginForm } from '../../modules/auth/login/LoginForm';
 
 const LoginPage: React.FC = () => {
-  const onSuccess = (
-    response: GoogleLoginResponse | GoogleLoginResponseOffline
-  ) => {
-    console.log(`🚀 ~ file: index.tsx ~ line 19 ~ response`, response);
-    //save the response to the context api
-    //If the user is already signed up then redirect to the home page
-    //If the user is not signed up then redirect to the register page to continue the sign up process
+  const toaster = useToast();
+  const [externalLogin] = useLoginWithAuthProviderMutation();
+
+  const onSuccess = async (response: GoogleLoginResponse) => {
+    const { tokenId } = response;
+
+    const { data } = await externalLogin({
+      variables: { provider: ProviderTypes.Google, providerId: tokenId },
+      update: (cache, { data: returnedData }) => {
+        if (!returnedData) return;
+
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            me: returnedData?.loginWithAuthProvider?.user as User | null,
+          },
+        });
+      },
+    });
+
+    if (
+      !data ||
+      data.loginWithAuthProvider.errors?.length ||
+      !data.loginWithAuthProvider.user
+    ) {
+      return onFailure();
+    }
+    //check if the user verified his phone number or not
+    const { phone, phoneVerified, lat, lng } = data.loginWithAuthProvider.user;
+    if (!phoneVerified && !phone) {
+      //if the user did not verify his phone number then redirect to the verify phone number page
+      return router.push('/profile/complete-info/phone-number');
+    }
+    //redirect the user to the next step
+    if (!lat || !lng) {
+      return router.push('/profile/complete-info/location');
+    }
+
+    return router.push('/');
   };
-  const onFailure = (response: any) => {};
+
+  const onFailure = () =>
+    toaster({
+      variant: 'subtle',
+      status: 'error',
+      title: 'Error',
+      description: 'Something went wrong, Please try again later',
+    });
+
   return (
-    <Layout title='Welcome Back'>
+    <Layout title='Welcome Back - Paaws'>
       <div className={styles['login-page-container']}>
         <Heading size='xl'>
           Welcome Back{' '}
@@ -47,7 +91,7 @@ const LoginPage: React.FC = () => {
             </Button>
           )}
           buttonText='Login'
-          onSuccess={onSuccess}
+          onSuccess={(response) => onSuccess(response as GoogleLoginResponse)}
           onFailure={onFailure}
           cookiePolicy={'single_host_origin'}
         />

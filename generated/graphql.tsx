@@ -949,6 +949,14 @@ export type LoginMutationVariables = Exact<{
 
 export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', code: number, field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
 
+export type LoginWithAuthProviderMutationVariables = Exact<{
+  providerId: Scalars['String'];
+  provider: ProviderTypes;
+}>;
+
+
+export type LoginWithAuthProviderMutation = { __typename?: 'Mutation', loginWithAuthProvider: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
+
 export type PostVoteMutationVariables = Exact<{
   value: Scalars['Int'];
   id: Scalars['Int'];
@@ -1616,6 +1624,50 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const LoginWithAuthProviderDocument = gql`
+    mutation LoginWithAuthProvider($providerId: String!, $provider: ProviderTypes!) {
+  loginWithAuthProvider(providerId: $providerId, provider: $provider) {
+    errors {
+      field
+      message
+      code
+    }
+    user {
+      ...RequiredUserInfo
+      avatar {
+        url
+      }
+    }
+  }
+}
+    ${RequiredUserInfoFragmentDoc}`;
+export type LoginWithAuthProviderMutationFn = Apollo.MutationFunction<LoginWithAuthProviderMutation, LoginWithAuthProviderMutationVariables>;
+
+/**
+ * __useLoginWithAuthProviderMutation__
+ *
+ * To run a mutation, you first call `useLoginWithAuthProviderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginWithAuthProviderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginWithAuthProviderMutation, { data, loading, error }] = useLoginWithAuthProviderMutation({
+ *   variables: {
+ *      providerId: // value for 'providerId'
+ *      provider: // value for 'provider'
+ *   },
+ * });
+ */
+export function useLoginWithAuthProviderMutation(baseOptions?: Apollo.MutationHookOptions<LoginWithAuthProviderMutation, LoginWithAuthProviderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginWithAuthProviderMutation, LoginWithAuthProviderMutationVariables>(LoginWithAuthProviderDocument, options);
+      }
+export type LoginWithAuthProviderMutationHookResult = ReturnType<typeof useLoginWithAuthProviderMutation>;
+export type LoginWithAuthProviderMutationResult = Apollo.MutationResult<LoginWithAuthProviderMutation>;
+export type LoginWithAuthProviderMutationOptions = Apollo.BaseMutationOptions<LoginWithAuthProviderMutation, LoginWithAuthProviderMutationVariables>;
 export const PostVoteDocument = gql`
     mutation PostVote($value: Int!, $id: Int!) {
   vote(value: $value, postId: $id) {
