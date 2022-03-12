@@ -1,0 +1,12 @@
+mutation RegisterWithProvider($providerId: String!, $provider: ProviderTypes!) {
+  registerWithAuthProvider(providerId: $providerId, provider: $provider) {
+    errors {
+      field
+      message
+      code
+    }
+    user {
+      ...RequiredUserInfo
+    }
+  }
+}

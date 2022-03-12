@@ -85,6 +85,13 @@ export type AdoptionPostUpdateInput = {
   vaccinated?: Maybe<Scalars['Boolean']>;
 };
 
+export type BaseRegisterInput = {
+  confirmPassword: Scalars['String'];
+  email: Scalars['String'];
+  full_name: Scalars['String'];
+  password: Scalars['String'];
+};
+
 /** Basic Pet Breeds */
 export enum Breeds {
   Bulldog = 'BULLDOG',
@@ -206,6 +213,13 @@ export type FindNearestUsersInput = {
   radius: Scalars['Float'];
 };
 
+export type FindUserByTokenIdResponse = {
+  __typename?: 'FindUserByTokenIdResponse';
+  errors?: Maybe<Array<FieldError>>;
+  found?: Maybe<Scalars['Boolean']>;
+  user?: Maybe<User>;
+};
+
 export type LocationFilterComponents = {
   lat?: Maybe<Scalars['Float']>;
   lng?: Maybe<Scalars['Float']>;
@@ -304,14 +318,18 @@ export type Mutation = {
   editComment: CommentResponse;
   editMissingPost: EditMissingPostResponse;
   forgotPassword: Scalars['Boolean'];
+  isUserRegistered: FindUserByTokenIdResponse;
   login: UserResponse;
+  loginWithAuthProvider: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
+  registerWithAuthProvider: UserResponse;
   sendOTP: RegularResponse;
   updateAdoptionPost: AdoptionPostResponse;
   updateUser: Scalars['Boolean'];
   updootComment: CommentResponse;
   uploadAvatar: UploadImageResponse;
+  verifyPhoneNumber: RegularResponse;
   vote: VotingResponse;
 };
 
@@ -390,13 +408,31 @@ export type MutationForgotPasswordArgs = {
 };
 
 
+export type MutationIsUserRegisteredArgs = {
+  idToken: Scalars['String'];
+  provider: Scalars['String'];
+};
+
+
 export type MutationLoginArgs = {
   options: LoginInput;
 };
 
 
+export type MutationLoginWithAuthProviderArgs = {
+  provider: ProviderTypes;
+  providerId: Scalars['String'];
+};
+
+
 export type MutationRegisterArgs = {
-  registerOptions: RegisterOptions;
+  registerOptions: BaseRegisterInput;
+};
+
+
+export type MutationRegisterWithAuthProviderArgs = {
+  provider: ProviderTypes;
+  providerId: Scalars['String'];
 };
 
 
@@ -425,6 +461,12 @@ export type MutationUpdootCommentArgs = {
 
 export type MutationUploadAvatarArgs = {
   image: Scalars['Upload'];
+};
+
+
+export type MutationVerifyPhoneNumberArgs = {
+  otp: Scalars['String'];
+  phone: Scalars['String'];
 };
 
 
@@ -616,6 +658,15 @@ export enum PrivacyType {
   Public = 'PUBLIC'
 }
 
+/** Auth Provider Types */
+export enum ProviderTypes {
+  Apple = 'APPLE',
+  Facebook = 'FACEBOOK',
+  Google = 'GOOGLE',
+  Local = 'LOCAL',
+  Twitter = 'TWITTER'
+}
+
 export type Query = {
   __typename?: 'Query';
   adoptionPost?: Maybe<AdoptionPost>;
@@ -694,14 +745,6 @@ export type QueryUsersArgs = {
   where: WhereClause;
 };
 
-export type RegisterOptions = {
-  email: Scalars['String'];
-  full_name: Scalars['String'];
-  otp: Scalars['Int'];
-  password: Scalars['String'];
-  phone: Scalars['String'];
-};
-
 export type RegularResponse = {
   __typename?: 'RegularResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -760,10 +803,11 @@ export type User = {
   missingPosts?: Maybe<Array<MissingPost>>;
   notifications: Array<Notification>;
   pets?: Maybe<Array<Pet>>;
-  phone: Scalars['String'];
+  phone?: Maybe<Scalars['String']>;
+  phoneVerified: Scalars['Boolean'];
   photos?: Maybe<Array<Photo>>;
   provider: Scalars['String'];
-  provider_id?: Maybe<Scalars['Int']>;
+  providerId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<UserTag>>;
   updatedAt: Scalars['DateTime'];
   updoots: Array<PostUpdoot>;
@@ -822,7 +866,7 @@ export type CommentFragmentFragment = { __typename?: 'Comment', id: number, upda
 
 export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> };
 
-export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
+export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
 
 export type AddMpCommentMutationVariables = Exact<{
   input: CreateCommentInputType;
@@ -903,7 +947,15 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', code: number, field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', code: number, field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
+
+export type LoginWithAuthProviderMutationVariables = Exact<{
+  providerId: Scalars['String'];
+  provider: ProviderTypes;
+}>;
+
+
+export type LoginWithAuthProviderMutation = { __typename?: 'Mutation', loginWithAuthProvider: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
 
 export type PostVoteMutationVariables = Exact<{
   value: Scalars['Int'];
@@ -914,11 +966,19 @@ export type PostVoteMutationVariables = Exact<{
 export type PostVoteMutation = { __typename?: 'Mutation', vote: { __typename?: 'VotingResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
 export type RegisterMutationVariables = Exact<{
-  registerRegisterOptions: RegisterOptions;
+  registerOptions: BaseRegisterInput;
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+
+export type RegisterWithProviderMutationVariables = Exact<{
+  providerId: Scalars['String'];
+  provider: ProviderTypes;
+}>;
+
+
+export type RegisterWithProviderMutation = { __typename?: 'Mutation', registerWithAuthProvider: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
 
 export type SendOtpMutationVariables = Exact<{
   sendOtpPhone: Scalars['String'];
@@ -950,6 +1010,14 @@ export type UploadAvatarMutationVariables = Exact<{
 
 export type UploadAvatarMutation = { __typename?: 'Mutation', uploadAvatar: { __typename?: 'UploadImageResponse', url?: Maybe<string>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
+export type VerifyPhoneNumberMutationVariables = Exact<{
+  otp: Scalars['String'];
+  phone: Scalars['String'];
+}>;
+
+
+export type VerifyPhoneNumberMutation = { __typename?: 'Mutation', verifyPhoneNumber: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+
 export type AdoptionPostsQueryVariables = Exact<{
   cursor?: Maybe<Scalars['String']>;
   limit?: Maybe<Scalars['Int']>;
@@ -970,7 +1038,7 @@ export type GetUserPhoneQueryVariables = Exact<{
 }>;
 
 
-export type GetUserPhoneQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, displayName: string, phone: string }> };
+export type GetUserPhoneQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, displayName: string, phone?: Maybe<string> }> };
 
 export type GetUserEmailQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -982,7 +1050,7 @@ export type GetUserEmailQuery = { __typename?: 'Query', user?: Maybe<{ __typenam
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone: string, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, provider_id?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
 
 export type MissingPostCommentsQueryVariables = Exact<{
   options: MissingPostComments;
@@ -1013,14 +1081,14 @@ export type UserContactInfoQueryVariables = Exact<{
 }>;
 
 
-export type UserContactInfoQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, displayName: string, email: string, phone: string }> };
+export type UserContactInfoQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, displayName: string, email: string, phone?: Maybe<string> }> };
 
 export type PaginatedUsersQueryVariables = Exact<{
   usersWhere: WhereClause;
 }>;
 
 
-export type PaginatedUsersQuery = { __typename?: 'Query', users: { __typename?: 'PaginatedUsers', hasMore: boolean, users: Array<{ __typename?: 'User', id: number, email: string, phone: string }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+export type PaginatedUsersQuery = { __typename?: 'Query', users: { __typename?: 'PaginatedUsers', hasMore: boolean, users: Array<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
 export const CommentFragmentFragmentDoc = gql`
     fragment CommentFragment on Comment {
@@ -1093,7 +1161,8 @@ export const RequiredUserInfoFragmentDoc = gql`
   createdAt
   updatedAt
   provider
-  provider_id
+  providerId
+  phoneVerified
   avatar {
     id
     url
@@ -1555,6 +1624,50 @@ export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginM
 export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const LoginWithAuthProviderDocument = gql`
+    mutation LoginWithAuthProvider($providerId: String!, $provider: ProviderTypes!) {
+  loginWithAuthProvider(providerId: $providerId, provider: $provider) {
+    errors {
+      field
+      message
+      code
+    }
+    user {
+      ...RequiredUserInfo
+      avatar {
+        url
+      }
+    }
+  }
+}
+    ${RequiredUserInfoFragmentDoc}`;
+export type LoginWithAuthProviderMutationFn = Apollo.MutationFunction<LoginWithAuthProviderMutation, LoginWithAuthProviderMutationVariables>;
+
+/**
+ * __useLoginWithAuthProviderMutation__
+ *
+ * To run a mutation, you first call `useLoginWithAuthProviderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginWithAuthProviderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginWithAuthProviderMutation, { data, loading, error }] = useLoginWithAuthProviderMutation({
+ *   variables: {
+ *      providerId: // value for 'providerId'
+ *      provider: // value for 'provider'
+ *   },
+ * });
+ */
+export function useLoginWithAuthProviderMutation(baseOptions?: Apollo.MutationHookOptions<LoginWithAuthProviderMutation, LoginWithAuthProviderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginWithAuthProviderMutation, LoginWithAuthProviderMutationVariables>(LoginWithAuthProviderDocument, options);
+      }
+export type LoginWithAuthProviderMutationHookResult = ReturnType<typeof useLoginWithAuthProviderMutation>;
+export type LoginWithAuthProviderMutationResult = Apollo.MutationResult<LoginWithAuthProviderMutation>;
+export type LoginWithAuthProviderMutationOptions = Apollo.BaseMutationOptions<LoginWithAuthProviderMutation, LoginWithAuthProviderMutationVariables>;
 export const PostVoteDocument = gql`
     mutation PostVote($value: Int!, $id: Int!) {
   vote(value: $value, postId: $id) {
@@ -1595,8 +1708,8 @@ export type PostVoteMutationHookResult = ReturnType<typeof usePostVoteMutation>;
 export type PostVoteMutationResult = Apollo.MutationResult<PostVoteMutation>;
 export type PostVoteMutationOptions = Apollo.BaseMutationOptions<PostVoteMutation, PostVoteMutationVariables>;
 export const RegisterDocument = gql`
-    mutation Register($registerRegisterOptions: RegisterOptions!) {
-  register(registerOptions: $registerRegisterOptions) {
+    mutation Register($registerOptions: BaseRegisterInput!) {
+  register(registerOptions: $registerOptions) {
     errors {
       field
       message
@@ -1623,7 +1736,7 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  * @example
  * const [registerMutation, { data, loading, error }] = useRegisterMutation({
  *   variables: {
- *      registerRegisterOptions: // value for 'registerRegisterOptions'
+ *      registerOptions: // value for 'registerOptions'
  *   },
  * });
  */
@@ -1634,6 +1747,47 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const RegisterWithProviderDocument = gql`
+    mutation RegisterWithProvider($providerId: String!, $provider: ProviderTypes!) {
+  registerWithAuthProvider(providerId: $providerId, provider: $provider) {
+    errors {
+      field
+      message
+      code
+    }
+    user {
+      ...RequiredUserInfo
+    }
+  }
+}
+    ${RequiredUserInfoFragmentDoc}`;
+export type RegisterWithProviderMutationFn = Apollo.MutationFunction<RegisterWithProviderMutation, RegisterWithProviderMutationVariables>;
+
+/**
+ * __useRegisterWithProviderMutation__
+ *
+ * To run a mutation, you first call `useRegisterWithProviderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterWithProviderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerWithProviderMutation, { data, loading, error }] = useRegisterWithProviderMutation({
+ *   variables: {
+ *      providerId: // value for 'providerId'
+ *      provider: // value for 'provider'
+ *   },
+ * });
+ */
+export function useRegisterWithProviderMutation(baseOptions?: Apollo.MutationHookOptions<RegisterWithProviderMutation, RegisterWithProviderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegisterWithProviderMutation, RegisterWithProviderMutationVariables>(RegisterWithProviderDocument, options);
+      }
+export type RegisterWithProviderMutationHookResult = ReturnType<typeof useRegisterWithProviderMutation>;
+export type RegisterWithProviderMutationResult = Apollo.MutationResult<RegisterWithProviderMutation>;
+export type RegisterWithProviderMutationOptions = Apollo.BaseMutationOptions<RegisterWithProviderMutation, RegisterWithProviderMutationVariables>;
 export const SendOtpDocument = gql`
     mutation SendOTP($sendOtpPhone: String!, $email: String!) {
   sendOTP(phone: $sendOtpPhone, email: $email) {
@@ -1783,6 +1937,45 @@ export function useUploadAvatarMutation(baseOptions?: Apollo.MutationHookOptions
 export type UploadAvatarMutationHookResult = ReturnType<typeof useUploadAvatarMutation>;
 export type UploadAvatarMutationResult = Apollo.MutationResult<UploadAvatarMutation>;
 export type UploadAvatarMutationOptions = Apollo.BaseMutationOptions<UploadAvatarMutation, UploadAvatarMutationVariables>;
+export const VerifyPhoneNumberDocument = gql`
+    mutation VerifyPhoneNumber($otp: String!, $phone: String!) {
+  verifyPhoneNumber(otp: $otp, phone: $phone) {
+    errors {
+      field
+      message
+      code
+    }
+    success
+  }
+}
+    `;
+export type VerifyPhoneNumberMutationFn = Apollo.MutationFunction<VerifyPhoneNumberMutation, VerifyPhoneNumberMutationVariables>;
+
+/**
+ * __useVerifyPhoneNumberMutation__
+ *
+ * To run a mutation, you first call `useVerifyPhoneNumberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVerifyPhoneNumberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [verifyPhoneNumberMutation, { data, loading, error }] = useVerifyPhoneNumberMutation({
+ *   variables: {
+ *      otp: // value for 'otp'
+ *      phone: // value for 'phone'
+ *   },
+ * });
+ */
+export function useVerifyPhoneNumberMutation(baseOptions?: Apollo.MutationHookOptions<VerifyPhoneNumberMutation, VerifyPhoneNumberMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VerifyPhoneNumberMutation, VerifyPhoneNumberMutationVariables>(VerifyPhoneNumberDocument, options);
+      }
+export type VerifyPhoneNumberMutationHookResult = ReturnType<typeof useVerifyPhoneNumberMutation>;
+export type VerifyPhoneNumberMutationResult = Apollo.MutationResult<VerifyPhoneNumberMutation>;
+export type VerifyPhoneNumberMutationOptions = Apollo.BaseMutationOptions<VerifyPhoneNumberMutation, VerifyPhoneNumberMutationVariables>;
 export const AdoptionPostsDocument = gql`
     query AdoptionPosts($cursor: String, $limit: Int) {
   adoptionPosts(cursor: $cursor, limit: $limit) {

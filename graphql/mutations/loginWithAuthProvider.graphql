@@ -1,0 +1,18 @@
+mutation LoginWithAuthProvider(
+  $providerId: String!
+  $provider: ProviderTypes!
+) {
+  loginWithAuthProvider(providerId: $providerId, provider: $provider) {
+    errors {
+      field
+      message
+      code
+    }
+    user {
+      ...RequiredUserInfo
+      avatar {
+        url
+      }
+    }
+  }
+}
