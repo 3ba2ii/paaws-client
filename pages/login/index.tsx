@@ -84,7 +84,7 @@ const LoginPage: React.FC = () => {
               w={'100%'}
               variant='outline'
               boxShadow='sm'
-              size='lg'
+              size='md'
               {...renderProps}
             >
               Continue with Google
