@@ -1,5 +1,5 @@
-import { Box, Flex, Text } from '@chakra-ui/layout';
-import { Button, ButtonGroup, useColorModeValue } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/layout';
+import { Button, useColorModeValue } from '@chakra-ui/react';
 import { MissingPostTypes } from 'generated/graphql';
 import React, { useEffect, useState } from 'react';
 

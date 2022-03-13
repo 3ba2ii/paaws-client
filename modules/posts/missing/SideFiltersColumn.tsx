@@ -1,9 +1,9 @@
 import { Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
-import { Button, IconButton, Image } from '@chakra-ui/react';
+import { Button, Image } from '@chakra-ui/react';
 import { UserAvatar } from 'components/UserAvatar';
 import { MissingPostTypes, useMeQuery } from 'generated/graphql';
+import router from 'next/router';
 import React from 'react';
-import { BsThreeDots } from 'react-icons/bs';
 import { MissingPageTaps } from './MissingPageTaps';
 
 export const RecommendAdoptionCard = () => {
@@ -71,6 +71,7 @@ export const SideFiltersColumn: React.FC<{
           w='100%'
           pos='relative'
           display={['none', 'none', 'none', 'none', 'block']}
+          textAlign='left'
         >
           <Button
             as={Box}
@@ -80,9 +81,15 @@ export const SideFiltersColumn: React.FC<{
             bottom='1rem'
             rounded={'full'}
             h='64px'
+            cursor='pointer'
+            onClick={() => router.push('/profile')}
           >
             <HStack w='100%' justify={'space-evenly'}>
-              <UserAvatar avatarProps={{ size: 'sm' }} />
+              <UserAvatar
+                avatarProps={{ size: 'sm' }}
+                name={user.displayName}
+                avatarURL={user.avatar?.url}
+              />
               <VStack
                 align='flex-start'
                 spacing={1}
@@ -96,18 +103,16 @@ export const SideFiltersColumn: React.FC<{
                 >
                   {user.displayName}
                 </Text>
-                <Text fontSize={'xs'} color='gray.500' isTruncated maxW='12ch'>
+                <Text
+                  fontSize={'xs'}
+                  color='gray.500'
+                  isTruncated
+                  noOfLines={1}
+                  maxW='20ch'
+                >
                   {user.email}
                 </Text>
               </VStack>
-              <IconButton
-                aria-label='three-dots'
-                variant='unstyled'
-                display={['none', 'none', 'none', 'block']}
-                icon={<BsThreeDots />}
-                _focus={{ border: 'none' }}
-                size='sm'
-              />
             </HStack>
           </Button>
         </Box>
