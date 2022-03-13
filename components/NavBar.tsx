@@ -13,6 +13,7 @@ import navbarStyles from 'styles/navbar.module.css';
 import { isServer } from 'utils/isServer';
 import withApollo from 'utils/withApollo';
 import { LoadingComponent } from './common/loading/LoadingSpinner';
+import ProfileMenu from './common/overlays/ProfileMenu';
 import { DarkModeSwitch } from './DarkModeSwitch';
 import Logo from './Logo';
 import { UserAvatar } from './UserAvatar';
@@ -51,21 +52,7 @@ function JoinUsNavbarItems(
 interface UserDropdownProps {
   userInfo: MeQuery | undefined;
 }
-const UserDropdownMenu: React.FC<UserDropdownProps> = ({ userInfo }) => {
-  return (
-    <Menu>
-      <UserAvatar avatarProps={{ size: 'sm' }} />
-      <Portal>
-        <MenuList>
-          <MenuItem>My Profile</MenuItem>
-          <MenuItem>New Window</MenuItem>
-          <MenuItem>Open Closed Tab</MenuItem>
-          <MenuItem>Logout</MenuItem>
-        </MenuList>
-      </Portal>
-    </Menu>
-  );
-};
+
 const NavBarItems = () => {
   const { data, loading } = useMeQuery({
     skip: isServer(),
@@ -116,7 +103,7 @@ const NavBarItems = () => {
         ) : data?.me?.id ? (
           <>
             <Link href='/favorites'>My Favorites</Link>
-            <UserDropdownMenu userInfo={data} />
+            <ProfileMenu />
           </>
         ) : (
           <Link href='/register'>
