@@ -324,6 +324,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   register: UserResponse;
   registerWithAuthProvider: UserResponse;
+  sendEmailVerification: RegularResponse;
   sendOTP: RegularResponse;
   updateAdoptionPost: AdoptionPostResponse;
   updateUser: Scalars['Boolean'];
@@ -433,6 +434,11 @@ export type MutationRegisterArgs = {
 export type MutationRegisterWithAuthProviderArgs = {
   provider: ProviderTypes;
   providerId: Scalars['String'];
+};
+
+
+export type MutationSendEmailVerificationArgs = {
+  email: Scalars['String'];
 };
 
 

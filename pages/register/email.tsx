@@ -17,7 +17,6 @@ const RegisterViaEmail = () => {
         </Heading>
         <RegisterForm />
         {/* Left Section that includes the form */}
-        <section></section> {/* Right section includes the  illustration*/}
       </main>
     </Layout>
   );

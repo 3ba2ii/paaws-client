@@ -5,7 +5,6 @@ export const SignupSchema = Yup.object().shape({
     .min(6, 'Name must be at least 6 characters')
     .max(50, 'Name should not exceed 50 characters')
     .matches(/^[a-zA-Z\s]*$/, 'Name should contain only english characters')
-
     .required('Required!'),
 
   email: Yup.string().email('Invalid email address').required('Required'),
@@ -20,12 +19,7 @@ export const SignupSchema = Yup.object().shape({
     [Yup.ref('password'), null],
     'Passwords must match'
   ),
-  phone: Yup.string()
-    .matches(
-      /^[+]?[(]?[0-9]{3}[)]?[-s.]?[0-9]{3}[-s.]?[0-9]{4,6}$/,
-      'Please provide a valid phone number '
-    )
-    .required('Required'),
+
   agree: Yup.boolean()
     .oneOf([true], 'Must Accept Terms and Conditions')
     .required('You must agree to the terms and conditions'),

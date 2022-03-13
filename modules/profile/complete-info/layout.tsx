@@ -26,15 +26,12 @@ const CompleteInfoStaticComponent = () => {
       align={'flex-start'}
       justify='center'
       px='65px'
-      bg='#F2F5F8'
+      bg='rgb(241, 243, 247)'
       display={['none', 'flex', 'flex', 'flex']}
     >
-      <Heading color='gray.700' size='lg' fontWeight='semibold'>
-        Welcome to Paaws 🐶
+      <Heading color='gray.700' size='xl' fontWeight='medium'>
+        Let's make your account <br /> attractive 😉
       </Heading>
-      <Text fontSize={'md'} color='gray.500'>
-        Help us complete your profile and make it more attractive to users
-      </Text>
     </VStack>
   );
 };
