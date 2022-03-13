@@ -1,16 +1,18 @@
-import { Button } from '@chakra-ui/button';
+import { Button, IconButton } from '@chakra-ui/button';
 import { ArrowForwardIcon, SearchIcon } from '@chakra-ui/icons';
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
 import { Flex, Text } from '@chakra-ui/layout';
 import { MeQuery, useMeQuery } from 'generated/graphql';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { BiBell, BiNotification, BiNotificationOff } from 'react-icons/bi';
 import { FaHeart } from 'react-icons/fa';
 import navbarStyles from 'styles/navbar.module.css';
 import { isServer } from 'utils/isServer';
 import withApollo from 'utils/withApollo';
 import { LoadingComponent } from './common/loading/LoadingSpinner';
 import ProfileMenu from './common/overlays/ProfileMenu';
+import { DarkModeSwitch } from './DarkModeSwitch';
 import Logo from './Logo';
 
 function JoinUsNavbarItems(
@@ -58,6 +60,8 @@ const NavBarItems = () => {
   const isLoginScreen = pathname.includes('/login');
   const isRegisterScreen = pathname.includes('/register');
 
+  const isLoggedIn: boolean = !!data?.me?.id;
+
   let body;
   if (isLoginScreen || isRegisterScreen) {
     //set body to Register or Login
@@ -90,20 +94,27 @@ const NavBarItems = () => {
       <nav className={navbarStyles['nav-items']}>
         <Link href='/explore'>Explore</Link>
         <Link href='/missing'>Missing Pets</Link>
-        <Link href='/adoption'>Adoption</Link>
+        <Link href='/adoption'>Adoption Pets</Link>
         {loading ? (
           <LoadingComponent />
-        ) : data?.me?.id ? (
+        ) : isLoggedIn ? (
           <>
-            <Link href='/favorites'>My Favorites</Link>
+            <IconButton
+              aria-label='Notifications'
+              icon={<BiBell size='18px' />}
+              variant='flushed'
+            />
             <ProfileMenu />
           </>
         ) : (
-          <Link href='/register'>
-            <Button leftIcon={<FaHeart color='red' />} size='sm'>
-              Join us
-            </Button>
-          </Link>
+          <>
+            <Link href='/register'>
+              <Button leftIcon={<FaHeart color='red' />} size='sm'>
+                Join us
+              </Button>
+            </Link>
+            <DarkModeSwitch />
+          </>
         )}
       </nav>
     </section>
