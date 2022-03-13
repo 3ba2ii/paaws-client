@@ -2,10 +2,12 @@ import { Avatar, AvatarProps } from '@chakra-ui/react';
 
 export const UserAvatar: React.FC<{
   avatarProps?: AvatarProps;
-  name: string;
-  avatarURL?: string;
+  name?: string | null;
+  avatarURL?: string | null;
 }> = ({ avatarProps, avatarURL, name }) => {
-  return <Avatar name={name} src={avatarURL} {...avatarProps} />;
+  if (!name) return null;
+
+  return <Avatar name={name} src={avatarURL || ''} {...avatarProps} />;
 };
 
 export default UserAvatar;

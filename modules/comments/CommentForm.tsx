@@ -15,6 +15,7 @@ import {
   MissingPostCommentsDocument,
   useAddMpCommentMutation,
 } from 'generated/graphql';
+import { useIsAuth } from 'hooks/useIsAuth';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { FiSend } from 'react-icons/fi';
@@ -32,6 +33,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
   avatarProps,
   inputGroupProps,
 }) => {
+  const { user, loading } = useIsAuth();
   const [commentText, setCommentText] = React.useState('');
   const [addComment] = useAddMpCommentMutation();
   const router = useRouter();
@@ -79,10 +81,18 @@ const CommentForm: React.FC<CommentFormProps> = ({
     }
     setCommentText('');
   };
+
+  if (!loading && !user) return null;
   return (
     <form style={{ width: '100%' }} onSubmit={onCommentSubmit}>
       <HStack w='100%'>
-        <UserAvatar avatarProps={avatarProps} />
+        {user && (
+          <UserAvatar
+            avatarProps={avatarProps}
+            name={user?.displayName}
+            avatarURL={user?.avatar?.url || undefined}
+          />
+        )}
         <InputGroup variant={'filled'} w='100%' overflow={'hidden'}>
           <Input
             value={commentText}

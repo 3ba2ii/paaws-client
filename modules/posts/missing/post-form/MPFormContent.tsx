@@ -67,6 +67,8 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
         {/* Avatar, name and  */}
         <HStack w='100%' align='center'>
           <UserAvatar
+            name={user?.displayName}
+            avatarURL={user?.avatar?.url}
             avatarProps={{ w: '42px', h: '42px', fontSize: '.5rem' }}
           />
           <VStack align={'flex-start'} spacing={0}>
