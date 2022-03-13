@@ -2,12 +2,9 @@ import { Button } from '@chakra-ui/button';
 import { ArrowForwardIcon, SearchIcon } from '@chakra-ui/icons';
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
 import { Flex, Text } from '@chakra-ui/layout';
-import { Menu, MenuItem, MenuList } from '@chakra-ui/menu';
-import { Portal } from '@chakra-ui/portal';
 import { MeQuery, useMeQuery } from 'generated/graphql';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import React from 'react';
 import { FaHeart } from 'react-icons/fa';
 import navbarStyles from 'styles/navbar.module.css';
 import { isServer } from 'utils/isServer';
@@ -16,7 +13,6 @@ import { LoadingComponent } from './common/loading/LoadingSpinner';
 import ProfileMenu from './common/overlays/ProfileMenu';
 import { DarkModeSwitch } from './DarkModeSwitch';
 import Logo from './Logo';
-import { UserAvatar } from './UserAvatar';
 
 function JoinUsNavbarItems(
   isRegisterScreen: boolean,
@@ -43,8 +39,6 @@ function JoinUsNavbarItems(
           {isRegisterScreen ? 'Login' : isLoginScreen ? 'Register' : ''}
         </Button>
       </Link>
-
-      <DarkModeSwitch />
     </Flex>
   );
 }
@@ -112,7 +106,6 @@ const NavBarItems = () => {
             </Button>
           </Link>
         )}
-        <DarkModeSwitch />
       </nav>
     </section>
   );
