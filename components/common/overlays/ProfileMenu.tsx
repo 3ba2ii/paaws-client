@@ -9,12 +9,12 @@ import {
   Switch,
   Text,
   useColorMode,
+  useToast,
 } from '@chakra-ui/react';
 import UserAvatar from 'components/UserAvatar';
 import { useLogoutMutation } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import router from 'next/router';
-import React from 'react';
 import {
   BiChevronDown,
   BiCreditCard,
@@ -25,26 +25,32 @@ import {
 } from 'react-icons/bi';
 import { LoadingComponent } from '../loading/LoadingSpinner';
 
-interface ProfileMenuProps {}
-
-const ProfileMenu: React.FC<ProfileMenuProps> = ({}) => {
+const ProfileMenu = () => {
   const { user, loading } = useIsAuth();
+  const toaster = useToast();
   const { colorMode, toggleColorMode } = useColorMode();
+
   const [logout] = useLogoutMutation();
 
   const onLogout = async () => {
     try {
-      const success = await logout({
+      await logout({
         update: (cache, { data: res }) => {
           if (!res) return;
           cache.evict({});
+          router.push('/');
         },
       });
-
-      if (success) {
-        router.push('/');
-      }
-    } catch {}
+    } catch {
+      toaster({
+        title: 'We could not log you out right now',
+        description:
+          'An error occurred while logging you out, Please try again',
+        status: 'error',
+        position: 'top-right',
+        isClosable: true,
+      });
+    }
   };
   return (
     <Menu placement='bottom-end'>
