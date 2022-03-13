@@ -16,6 +16,7 @@ import { useIsAuth } from 'hooks/useIsAuth';
 import router from 'next/router';
 import React from 'react';
 import {
+  BiChevronDown,
   BiCreditCard,
   BiHeart,
   BiLogOut,
@@ -49,11 +50,14 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({}) => {
     <Menu placement='bottom-end'>
       <MenuButton w='fit-content' px={0}>
         {user ? (
-          <UserAvatar
-            name={user.displayName}
-            avatarURL={user.avatar?.url || undefined}
-            avatarProps={{ size: 'sm' }}
-          />
+          <HStack spacing={1}>
+            <UserAvatar
+              name={user.displayName}
+              avatarURL={user.avatar?.url || undefined}
+              avatarProps={{ size: 'sm' }}
+            />
+            <BiChevronDown />
+          </HStack>
         ) : loading ? (
           <LoadingComponent />
         ) : null}

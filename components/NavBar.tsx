@@ -11,7 +11,6 @@ import { isServer } from 'utils/isServer';
 import withApollo from 'utils/withApollo';
 import { LoadingComponent } from './common/loading/LoadingSpinner';
 import ProfileMenu from './common/overlays/ProfileMenu';
-import { DarkModeSwitch } from './DarkModeSwitch';
 import Logo from './Logo';
 
 function JoinUsNavbarItems(
