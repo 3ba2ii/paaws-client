@@ -49,9 +49,7 @@ const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
         spacing={5}
       >
         <VStack align='flex-start' w='100%'>
-          <Heading size='md' color='gray.600'>
-            Set your location
-          </Heading>
+          <Heading size='md'>Set your location</Heading>
           <Text color='gray.500' fontSize='sm' maxW='65ch'>
             We will be using your location to send you notifications if a pet
             was lost or found near you, And you can turn off these notifications
