@@ -38,7 +38,6 @@ const ProfileMenu = () => {
         update: (cache, { data: res }) => {
           if (!res) return;
           cache.evict({});
-          router.push('/');
         },
       });
     } catch {

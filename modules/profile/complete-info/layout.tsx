@@ -3,14 +3,14 @@ import {
   Center,
   Heading,
   HStack,
-  Text,
   useColorMode,
+  useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
+import ProfileMenu from 'components/common/overlays/ProfileMenu';
 import { Layout } from 'components/Layout';
 import Logo from 'components/Logo';
-import UserAvatar from 'components/UserAvatar';
-import router from 'next/router';
+import router, { useRouter } from 'next/router';
 import React from 'react';
 
 interface CompleteInfoProps {
@@ -18,6 +18,7 @@ interface CompleteInfoProps {
 }
 
 const CompleteInfoStaticComponent = () => {
+  const bgColor = useColorModeValue('rgb(241, 243, 247)', 'gray.900');
   return (
     <VStack
       w='100%'
@@ -26,10 +27,10 @@ const CompleteInfoStaticComponent = () => {
       align={'flex-start'}
       justify='center'
       px='65px'
-      bg='rgb(241, 243, 247)'
+      bg={bgColor}
       display={['none', 'flex', 'flex', 'flex']}
     >
-      <Heading color='gray.700' size='xl' fontWeight='medium'>
+      <Heading color='inherit' size='xl' fontWeight='medium'>
         Let's make your account <br /> attractive 😉
       </Heading>
     </VStack>
@@ -41,6 +42,8 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
   children,
 }) => {
   const { setColorMode } = useColorMode();
+  const { pathname } = useRouter();
+  const isPhoneNumberStep = pathname.includes('phone');
 
   React.useEffect(() => {
     setColorMode('light');
@@ -62,8 +65,7 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
         zIndex={2}
       >
         <Logo imageProps={{ maxW: '90px' }} />
-        {/* @ts-ignore */}
-        <UserAvatar avatarProps={{ size: 'sm' }} />
+        <ProfileMenu />
       </HStack>
       <HStack position={'absolute'} w='100%' h='100vh'>
         <CompleteInfoStaticComponent />
@@ -76,9 +78,11 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
             variant='ghost'
             opacity='.6'
             fontWeight={'medium'}
-            onClick={() => {
-              router.push('/');
-            }}
+            onClick={() =>
+              router.push(
+                isPhoneNumberStep ? '/profile/complete-info/location' : '/'
+              )
+            }
           >
             Complete Later
           </Button>
