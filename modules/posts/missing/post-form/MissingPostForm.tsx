@@ -191,8 +191,8 @@ export const MissingPostForm: React.FC<MPFormProps> = ({
         </Formik>
       )}
       <CustomAlertDialog
-        header={'Close Form 👀'}
-        body='Are you sure? all the fields you filled will be cleared on closing and cannot be restored again'
+        header={'Are you sure about this?'}
+        body='All the fields you filled will be cleared on closing and cannot be restored again'
         confirmText='Close anyway'
         isOpen={openAlertDialog}
         cancelText='Cancel'
