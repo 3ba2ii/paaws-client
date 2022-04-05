@@ -1,4 +1,12 @@
-import { Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Heading,
+  HStack,
+  Tag,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import UserAvatar from 'components/UserAvatar';
 import { useUserProfilePageQuery } from 'generated/graphql';
@@ -21,11 +29,13 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
       justify={['flex-start', 'center', 'center', 'center']}
       css={{ gap: '16px' }}
     >
-      <UserAvatar
-        name={displayName}
-        avatarURL={avatar?.url}
-        avatarProps={{ size: '2xl' }}
-      />
+      <Box h='100%'>
+        <UserAvatar
+          name={displayName}
+          avatarURL={avatar?.url}
+          avatarProps={{ size: '2xl' }}
+        />
+      </Box>
       <VStack h='100%' w='100%' align='flex-start' justify='flex-start'>
         <Heading size='lg'>{full_name}</Heading>
         <Text txtStyle='p1' maxW={'60ch'} fontWeight='medium' color='gray.500'>
@@ -60,6 +70,13 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
             </Text>{' '}
             Owned Pets
           </Text>
+        </HStack>
+
+        {/* Tags */}
+        <HStack py={2}>
+          <Tag>#cat-person</Tag>
+          <Tag>#dog-person</Tag>
+          <Tag>#pet-lover</Tag>
         </HStack>
       </VStack>
     </Flex>
