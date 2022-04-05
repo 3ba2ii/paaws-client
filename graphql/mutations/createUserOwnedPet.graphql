@@ -1,0 +1,23 @@
+mutation CreateUserOwnedPet($images: [Upload!]!, $petInfo: CreatePetInput!) {
+  createUserOwnedPet(images: $images, petInfo: $petInfo) {
+    errors {
+      field
+      message
+      code
+    }
+    ownedPet {
+      updatedAt
+      createdAt
+      pet {
+        id
+        name
+        type
+        gender
+        size
+        birthDate
+      }
+      userId
+      about
+    }
+  }
+}

@@ -62,29 +62,6 @@ export type AdoptionPost = {
   userId: Scalars['Int'];
 };
 
-export type AdoptionPostInput = {
-  address?: Maybe<AddressInput>;
-  petInfo: CreatePetOptions;
-};
-
-export type AdoptionPostResponse = {
-  __typename?: 'AdoptionPostResponse';
-  adoptionPost?: Maybe<AdoptionPost>;
-  errors?: Maybe<Array<FieldError>>;
-};
-
-export type AdoptionPostUpdateInput = {
-  about?: Maybe<Scalars['String']>;
-  birthDate?: Maybe<Scalars['DateTime']>;
-  breeds?: Maybe<Array<Breeds>>;
-  gender?: Maybe<PetGender>;
-  name?: Maybe<Scalars['String']>;
-  size?: Maybe<PetSize>;
-  spayedOrNeutered?: Maybe<Scalars['Boolean']>;
-  type?: Maybe<PetType>;
-  vaccinated?: Maybe<Scalars['Boolean']>;
-};
-
 export type BaseRegisterInput = {
   confirmPassword: Scalars['String'];
   email: Scalars['String'];
@@ -167,17 +144,22 @@ export type CreateMissingPostResponse = {
   post?: Maybe<MissingPost>;
 };
 
-export type CreatePetOptions = {
+export type CreatePetInput = {
   about: Scalars['String'];
   birthDate: Scalars['DateTime'];
   breeds: Array<Breeds>;
+  colors: Array<PetColors>;
   gender: PetGender;
   name: Scalars['String'];
   size: PetSize;
-  spayedOrNeutered?: Maybe<Scalars['Boolean']>;
   thumbnailIdx: Scalars['Int'];
   type: PetType;
-  vaccinated?: Maybe<Scalars['Boolean']>;
+};
+
+export type CreateUserOwnedPetResponse = {
+  __typename?: 'CreateUserOwnedPetResponse';
+  errors?: Maybe<Array<FieldError>>;
+  ownedPet?: Maybe<OwnedPet>;
 };
 
 /** Date Filters */
@@ -307,14 +289,13 @@ export type Mutation = {
   addMPComment: CommentResponse;
   addUserTag: Scalars['Boolean'];
   changePassword: ChangePasswordResponse;
-  createAdoptionPost: AdoptionPostResponse;
   createMissingPost: CreateMissingPostResponse;
-  createPet: PetResponse;
+  createUserOwnedPet: CreateUserOwnedPetResponse;
   deleteAdoptionPost: DeleteResponse;
   deleteComment: DeleteResponse;
   deleteMissingPost: DeleteResponse;
-  deletePet: DeleteResponse;
   deleteUser: DeleteResponse;
+  deleteUserOwnedPet: Scalars['Boolean'];
   editComment: CommentResponse;
   editMissingPost: EditMissingPostResponse;
   forgotPassword: Scalars['Boolean'];
@@ -326,7 +307,6 @@ export type Mutation = {
   registerWithAuthProvider: UserResponse;
   sendEmailVerification: RegularResponse;
   sendOTP: RegularResponse;
-  updateAdoptionPost: AdoptionPostResponse;
   updateUser: Scalars['Boolean'];
   updootComment: CommentResponse;
   uploadAvatar: UploadImageResponse;
@@ -350,20 +330,15 @@ export type MutationChangePasswordArgs = {
 };
 
 
-export type MutationCreateAdoptionPostArgs = {
-  images: Array<Scalars['Upload']>;
-  input: AdoptionPostInput;
-};
-
-
 export type MutationCreateMissingPostArgs = {
   images: Array<Scalars['Upload']>;
   input: CreateMissingPostInput;
 };
 
 
-export type MutationCreatePetArgs = {
-  createPetOptions: CreatePetOptions;
+export type MutationCreateUserOwnedPetArgs = {
+  images: Array<Scalars['Upload']>;
+  petInfo: CreatePetInput;
 };
 
 
@@ -382,13 +357,13 @@ export type MutationDeleteMissingPostArgs = {
 };
 
 
-export type MutationDeletePetArgs = {
+export type MutationDeleteUserArgs = {
   id: Scalars['Int'];
 };
 
 
-export type MutationDeleteUserArgs = {
-  id: Scalars['Int'];
+export type MutationDeleteUserOwnedPetArgs = {
+  petId: Scalars['Float'];
 };
 
 
@@ -445,12 +420,6 @@ export type MutationSendEmailVerificationArgs = {
 export type MutationSendOtpArgs = {
   email: Scalars['String'];
   phone: Scalars['String'];
-};
-
-
-export type MutationUpdateAdoptionPostArgs = {
-  id: Scalars['Int'];
-  newPetInfo: AdoptionPostUpdateInput;
 };
 
 
@@ -513,6 +482,17 @@ export enum NotificationType {
   Upvote = 'UPVOTE'
 }
 
+export type OwnedPet = {
+  __typename?: 'OwnedPet';
+  about: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  pet: Pet;
+  petId: Scalars['Int'];
+  updatedAt: Scalars['DateTime'];
+  user: User;
+  userId: Scalars['Float'];
+};
+
 export type PaginatedAdoptionPosts = {
   __typename?: 'PaginatedAdoptionPosts';
   errors?: Maybe<Array<FieldError>>;
@@ -556,7 +536,6 @@ export type ParentCommentReplies = {
 
 export type Pet = {
   __typename?: 'Pet';
-  about: Scalars['String'];
   birthDate: Scalars['DateTime'];
   breeds: Array<PetBreed>;
   colors: Array<PetColor>;
@@ -566,13 +545,9 @@ export type Pet = {
   images?: Maybe<Array<PetImages>>;
   name: Scalars['String'];
   size: PetSize;
-  spayedOrNeutered?: Maybe<Scalars['Boolean']>;
   thumbnail?: Maybe<Photo>;
   type: PetType;
   updatedAt: Scalars['DateTime'];
-  user: User;
-  userId: Scalars['Int'];
-  vaccinated?: Maybe<Scalars['Boolean']>;
 };
 
 export type PetBreed = {
@@ -584,10 +559,17 @@ export type PetBreed = {
 
 export type PetColor = {
   __typename?: 'PetColor';
-  color: Breeds;
+  color: PetColors;
   pet: Pet;
   petId: Scalars['Float'];
 };
+
+/** Basic Pet Colors */
+export enum PetColors {
+  Blue = 'BLUE',
+  Green = 'GREEN',
+  Red = 'RED'
+}
 
 /** Basic Pet Gender */
 export enum PetGender {
@@ -602,12 +584,6 @@ export type PetImages = {
   petId: Scalars['Int'];
   photo: Photo;
   photoId: Scalars['Int'];
-};
-
-export type PetResponse = {
-  __typename?: 'PetResponse';
-  errors?: Maybe<Array<FieldError>>;
-  pet?: Maybe<Pet>;
 };
 
 /** Basic Pet Size */
@@ -808,7 +784,9 @@ export type User = {
   lng?: Maybe<Scalars['String']>;
   missingPosts?: Maybe<Array<MissingPost>>;
   notifications: Array<Notification>;
-  pets?: Maybe<Array<Pet>>;
+  ownedPets?: Maybe<Array<OwnedPet>>;
+  pets: Array<Pet>;
+  petsCount?: Maybe<Scalars['Int']>;
   phone?: Maybe<Scalars['String']>;
   phoneVerified: Scalars['Boolean'];
   photos?: Maybe<Array<Photo>>;
@@ -817,7 +795,7 @@ export type User = {
   tags?: Maybe<Array<UserTag>>;
   updatedAt: Scalars['DateTime'];
   updoots: Array<PostUpdoot>;
-  userPets?: Maybe<Array<UserPet>>;
+  userPets?: Maybe<Array<OwnedPet>>;
 };
 
 export type UserFavorites = {
@@ -825,13 +803,6 @@ export type UserFavorites = {
   petId: Scalars['Float'];
   user: User;
   userId: Scalars['Float'];
-};
-
-export type UserPet = {
-  __typename?: 'UserPet';
-  petId: Scalars['String'];
-  user: User;
-  userId: Scalars['String'];
 };
 
 export type UserResponse = {
@@ -888,14 +859,6 @@ export type ChangePasswordMutationVariables = Exact<{
 
 export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword: { __typename?: 'ChangePasswordResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
-export type CreateAdoptionPostMutationVariables = Exact<{
-  petImages: Array<Scalars['Upload']> | Scalars['Upload'];
-  postInput: AdoptionPostInput;
-}>;
-
-
-export type CreateAdoptionPostMutation = { __typename?: 'Mutation', createAdoptionPost: { __typename?: 'AdoptionPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, adoptionPost?: Maybe<{ __typename?: 'AdoptionPost', id: number, userId: number, petId: number, createdAt: any, updatedAt: any, pet: { __typename?: 'Pet', id: number, name: string }, user: { __typename?: 'User', id: number, email: string }, address?: Maybe<{ __typename?: 'Address', distance?: Maybe<number> }> }> } };
-
 export type CreateMissingPostMutationVariables = Exact<{
   input: CreateMissingPostInput;
   images: Array<Scalars['Upload']> | Scalars['Upload'];
@@ -904,12 +867,13 @@ export type CreateMissingPostMutationVariables = Exact<{
 
 export type CreateMissingPostMutation = { __typename?: 'Mutation', createMissingPost: { __typename?: 'CreateMissingPostResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, post?: Maybe<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }> } };
 
-export type CreatePetMutationVariables = Exact<{
-  createPetOptions: CreatePetOptions;
+export type CreateUserOwnedPetMutationVariables = Exact<{
+  images: Array<Scalars['Upload']> | Scalars['Upload'];
+  petInfo: CreatePetInput;
 }>;
 
 
-export type CreatePetMutation = { __typename?: 'Mutation', createPet: { __typename?: 'PetResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, pet?: Maybe<{ __typename?: 'Pet', id: number, updatedAt: any, createdAt: any, name: string, type: PetType }> } };
+export type CreateUserOwnedPetMutation = { __typename?: 'Mutation', createUserOwnedPet: { __typename?: 'CreateUserOwnedPetResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, ownedPet?: Maybe<{ __typename?: 'OwnedPet', updatedAt: any, createdAt: any, userId: number, about: string, pet: { __typename?: 'Pet', id: number, name: string, type: PetType, gender: PetGender, size: PetSize, birthDate: any } }> } };
 
 export type DeleteCommentMutationVariables = Exact<{
   commentId: Scalars['Int'];
@@ -924,6 +888,13 @@ export type DeleteMissingPostMutationVariables = Exact<{
 
 
 export type DeleteMissingPostMutation = { __typename?: 'Mutation', deleteMissingPost: { __typename?: 'DeleteResponse', deleted: boolean, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+
+export type DeleteUserOwnedPetMutationVariables = Exact<{
+  petId: Scalars['Float'];
+}>;
+
+
+export type DeleteUserOwnedPetMutation = { __typename?: 'Mutation', deleteUserOwnedPet: boolean };
 
 export type EditCommentMutationVariables = Exact<{
   text: Scalars['String'];
@@ -1261,62 +1232,6 @@ export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
 export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
 export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
-export const CreateAdoptionPostDocument = gql`
-    mutation CreateAdoptionPost($petImages: [Upload!]!, $postInput: AdoptionPostInput!) {
-  createAdoptionPost(images: $petImages, input: $postInput) {
-    errors {
-      field
-      message
-      code
-    }
-    adoptionPost {
-      id
-      userId
-      petId
-      pet {
-        id
-        name
-      }
-      user {
-        id
-        email
-      }
-      address {
-        distance
-      }
-      createdAt
-      updatedAt
-    }
-  }
-}
-    `;
-export type CreateAdoptionPostMutationFn = Apollo.MutationFunction<CreateAdoptionPostMutation, CreateAdoptionPostMutationVariables>;
-
-/**
- * __useCreateAdoptionPostMutation__
- *
- * To run a mutation, you first call `useCreateAdoptionPostMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateAdoptionPostMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createAdoptionPostMutation, { data, loading, error }] = useCreateAdoptionPostMutation({
- *   variables: {
- *      petImages: // value for 'petImages'
- *      postInput: // value for 'postInput'
- *   },
- * });
- */
-export function useCreateAdoptionPostMutation(baseOptions?: Apollo.MutationHookOptions<CreateAdoptionPostMutation, CreateAdoptionPostMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateAdoptionPostMutation, CreateAdoptionPostMutationVariables>(CreateAdoptionPostDocument, options);
-      }
-export type CreateAdoptionPostMutationHookResult = ReturnType<typeof useCreateAdoptionPostMutation>;
-export type CreateAdoptionPostMutationResult = Apollo.MutationResult<CreateAdoptionPostMutation>;
-export type CreateAdoptionPostMutationOptions = Apollo.BaseMutationOptions<CreateAdoptionPostMutation, CreateAdoptionPostMutationVariables>;
 export const CreateMissingPostDocument = gql`
     mutation CreateMissingPost($input: CreateMissingPostInput!, $images: [Upload!]!) {
   createMissingPost(input: $input, images: $images) {
@@ -1359,50 +1274,58 @@ export function useCreateMissingPostMutation(baseOptions?: Apollo.MutationHookOp
 export type CreateMissingPostMutationHookResult = ReturnType<typeof useCreateMissingPostMutation>;
 export type CreateMissingPostMutationResult = Apollo.MutationResult<CreateMissingPostMutation>;
 export type CreateMissingPostMutationOptions = Apollo.BaseMutationOptions<CreateMissingPostMutation, CreateMissingPostMutationVariables>;
-export const CreatePetDocument = gql`
-    mutation CreatePet($createPetOptions: CreatePetOptions!) {
-  createPet(createPetOptions: $createPetOptions) {
+export const CreateUserOwnedPetDocument = gql`
+    mutation CreateUserOwnedPet($images: [Upload!]!, $petInfo: CreatePetInput!) {
+  createUserOwnedPet(images: $images, petInfo: $petInfo) {
     errors {
       field
       message
       code
     }
-    pet {
-      id
+    ownedPet {
       updatedAt
       createdAt
-      name
-      type
+      pet {
+        id
+        name
+        type
+        gender
+        size
+        birthDate
+      }
+      userId
+      about
     }
   }
 }
     `;
-export type CreatePetMutationFn = Apollo.MutationFunction<CreatePetMutation, CreatePetMutationVariables>;
+export type CreateUserOwnedPetMutationFn = Apollo.MutationFunction<CreateUserOwnedPetMutation, CreateUserOwnedPetMutationVariables>;
 
 /**
- * __useCreatePetMutation__
+ * __useCreateUserOwnedPetMutation__
  *
- * To run a mutation, you first call `useCreatePetMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreatePetMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useCreateUserOwnedPetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateUserOwnedPetMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createPetMutation, { data, loading, error }] = useCreatePetMutation({
+ * const [createUserOwnedPetMutation, { data, loading, error }] = useCreateUserOwnedPetMutation({
  *   variables: {
- *      createPetOptions: // value for 'createPetOptions'
+ *      images: // value for 'images'
+ *      petInfo: // value for 'petInfo'
  *   },
  * });
  */
-export function useCreatePetMutation(baseOptions?: Apollo.MutationHookOptions<CreatePetMutation, CreatePetMutationVariables>) {
+export function useCreateUserOwnedPetMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserOwnedPetMutation, CreateUserOwnedPetMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePetMutation, CreatePetMutationVariables>(CreatePetDocument, options);
+        return Apollo.useMutation<CreateUserOwnedPetMutation, CreateUserOwnedPetMutationVariables>(CreateUserOwnedPetDocument, options);
       }
-export type CreatePetMutationHookResult = ReturnType<typeof useCreatePetMutation>;
-export type CreatePetMutationResult = Apollo.MutationResult<CreatePetMutation>;
-export type CreatePetMutationOptions = Apollo.BaseMutationOptions<CreatePetMutation, CreatePetMutationVariables>;
+export type CreateUserOwnedPetMutationHookResult = ReturnType<typeof useCreateUserOwnedPetMutation>;
+export type CreateUserOwnedPetMutationResult = Apollo.MutationResult<CreateUserOwnedPetMutation>;
+export type CreateUserOwnedPetMutationOptions = Apollo.BaseMutationOptions<CreateUserOwnedPetMutation, CreateUserOwnedPetMutationVariables>;
 export const DeleteCommentDocument = gql`
     mutation DeleteComment($commentId: Int!) {
   deleteComment(commentId: $commentId) {
@@ -1479,6 +1402,37 @@ export function useDeleteMissingPostMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteMissingPostMutationHookResult = ReturnType<typeof useDeleteMissingPostMutation>;
 export type DeleteMissingPostMutationResult = Apollo.MutationResult<DeleteMissingPostMutation>;
 export type DeleteMissingPostMutationOptions = Apollo.BaseMutationOptions<DeleteMissingPostMutation, DeleteMissingPostMutationVariables>;
+export const DeleteUserOwnedPetDocument = gql`
+    mutation DeleteUserOwnedPet($petId: Float!) {
+  deleteUserOwnedPet(petId: $petId)
+}
+    `;
+export type DeleteUserOwnedPetMutationFn = Apollo.MutationFunction<DeleteUserOwnedPetMutation, DeleteUserOwnedPetMutationVariables>;
+
+/**
+ * __useDeleteUserOwnedPetMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserOwnedPetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserOwnedPetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserOwnedPetMutation, { data, loading, error }] = useDeleteUserOwnedPetMutation({
+ *   variables: {
+ *      petId: // value for 'petId'
+ *   },
+ * });
+ */
+export function useDeleteUserOwnedPetMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserOwnedPetMutation, DeleteUserOwnedPetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteUserOwnedPetMutation, DeleteUserOwnedPetMutationVariables>(DeleteUserOwnedPetDocument, options);
+      }
+export type DeleteUserOwnedPetMutationHookResult = ReturnType<typeof useDeleteUserOwnedPetMutation>;
+export type DeleteUserOwnedPetMutationResult = Apollo.MutationResult<DeleteUserOwnedPetMutation>;
+export type DeleteUserOwnedPetMutationOptions = Apollo.BaseMutationOptions<DeleteUserOwnedPetMutation, DeleteUserOwnedPetMutationVariables>;
 export const EditCommentDocument = gql`
     mutation EditComment($text: String!, $commentId: Int!) {
   editComment(text: $text, commentId: $commentId) {

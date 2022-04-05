@@ -1,0 +1,3 @@
+mutation DeleteUserOwnedPet($petId: Float!) {
+  deleteUserOwnedPet(petId: $petId)
+}
