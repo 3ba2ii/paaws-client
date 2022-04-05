@@ -486,6 +486,7 @@ export type OwnedPet = {
   __typename?: 'OwnedPet';
   about: Scalars['String'];
   createdAt: Scalars['DateTime'];
+  images?: Maybe<Array<PetImages>>;
   pet: Pet;
   petId: Scalars['Int'];
   updatedAt: Scalars['DateTime'];
@@ -512,6 +513,13 @@ export type PaginatedMissingPosts = {
   errors?: Maybe<Array<FieldError>>;
   hasMore?: Maybe<Scalars['Boolean']>;
   missingPosts: Array<MissingPost>;
+};
+
+export type PaginatedUserOwnedPetsResponse = {
+  __typename?: 'PaginatedUserOwnedPetsResponse';
+  errors?: Maybe<Array<FieldError>>;
+  hasMore?: Maybe<Scalars['Boolean']>;
+  ownedPets?: Maybe<Array<OwnedPet>>;
 };
 
 export type PaginatedUsers = {
@@ -661,9 +669,8 @@ export type Query = {
   missingPost: MissingPostResponse;
   missingPosts: PaginatedMissingPosts;
   notifications: Array<Notification>;
-  pet?: Maybe<Pet>;
-  pets: Array<Pet>;
   user?: Maybe<User>;
+  userOwnedPets: PaginatedUserOwnedPetsResponse;
   users: PaginatedUsers;
   usersCount: Scalars['Int'];
 };
@@ -713,13 +720,14 @@ export type QueryMissingPostsArgs = {
 };
 
 
-export type QueryPetArgs = {
-  petId: Scalars['Int'];
+export type QueryUserArgs = {
+  id: Scalars['Int'];
 };
 
 
-export type QueryUserArgs = {
-  id: Scalars['Int'];
+export type QueryUserOwnedPetsArgs = {
+  paginationArgs: PaginationArgs;
+  userId: Scalars['Float'];
 };
 
 
@@ -1064,6 +1072,13 @@ export type UserContactInfoQueryVariables = Exact<{
 
 
 export type UserContactInfoQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, displayName: string, email: string, phone?: Maybe<string> }> };
+
+export type UserProfilePageQueryVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
+
+
+export type UserProfilePageQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, full_name: string, displayName: string, createdAt: any, bio?: Maybe<string>, petsCount?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
 
 export type PaginatedUsersQueryVariables = Exact<{
   usersWhere: WhereClause;
@@ -2378,6 +2393,50 @@ export function useUserContactInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type UserContactInfoQueryHookResult = ReturnType<typeof useUserContactInfoQuery>;
 export type UserContactInfoLazyQueryHookResult = ReturnType<typeof useUserContactInfoLazyQuery>;
 export type UserContactInfoQueryResult = Apollo.QueryResult<UserContactInfoQuery, UserContactInfoQueryVariables>;
+export const UserProfilePageDocument = gql`
+    query UserProfilePage($userId: Int!) {
+  user(id: $userId) {
+    id
+    full_name
+    displayName
+    createdAt
+    avatar {
+      url
+      id
+    }
+    bio
+    petsCount
+  }
+}
+    `;
+
+/**
+ * __useUserProfilePageQuery__
+ *
+ * To run a query within a React component, call `useUserProfilePageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserProfilePageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserProfilePageQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useUserProfilePageQuery(baseOptions: Apollo.QueryHookOptions<UserProfilePageQuery, UserProfilePageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserProfilePageQuery, UserProfilePageQueryVariables>(UserProfilePageDocument, options);
+      }
+export function useUserProfilePageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserProfilePageQuery, UserProfilePageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserProfilePageQuery, UserProfilePageQueryVariables>(UserProfilePageDocument, options);
+        }
+export type UserProfilePageQueryHookResult = ReturnType<typeof useUserProfilePageQuery>;
+export type UserProfilePageLazyQueryHookResult = ReturnType<typeof useUserProfilePageLazyQuery>;
+export type UserProfilePageQueryResult = Apollo.QueryResult<UserProfilePageQuery, UserProfilePageQueryVariables>;
 export const PaginatedUsersDocument = gql`
     query PaginatedUsers($usersWhere: WhereClause!) {
   users(where: $usersWhere) {

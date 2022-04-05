@@ -1,7 +1,9 @@
-import { Box, HStack, VStack } from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
 import { useRouter } from 'next/router';
 import React from 'react';
+import withApollo from 'utils/withApollo';
+import { UserProfileHeader } from '../../modules/profile/user/UserProfileHeader';
 
 interface UserProfileProps {}
 
@@ -15,11 +17,9 @@ const UserProfilePage: React.FC<UserProfileProps> = () => {
 
   return (
     <Layout title='Profile Page'>
-      <Box bg='red' w='100%' h='100vh' display={'flex'} justifyContent='center'>
-        <VStack bg='blue' flex='.7'>
-          <HStack w='100%'>
-            Sunt ullamco id elit anim deserunt. HEADER HEADER
-          </HStack>
+      <Box w='100%' h='100vh' display={'flex'} justifyContent='center'>
+        <VStack flex={['auto', '.8', '.6']}>
+          <UserProfileHeader userId={parseInt(userId as string)} />
 
           <Box>Tabs</Box>
         </VStack>
@@ -27,4 +27,4 @@ const UserProfilePage: React.FC<UserProfileProps> = () => {
     </Layout>
   );
 };
-export default UserProfilePage;
+export default withApollo(UserProfilePage);

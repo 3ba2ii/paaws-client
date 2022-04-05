@@ -1,0 +1,14 @@
+query UserProfilePage($userId: Int!) {
+  user(id: $userId) {
+    id
+    full_name
+    displayName
+    createdAt
+    avatar {
+      url
+      id
+    }
+    bio
+    petsCount
+  }
+}
