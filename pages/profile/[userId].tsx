@@ -1,5 +1,6 @@
-import { Box, VStack } from '@chakra-ui/react';
+import { Box, Divider, VStack } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
+import UserProfileTabs from 'modules/profile/user/UserProfileTabs';
 import { useRouter } from 'next/router';
 import React from 'react';
 import withApollo from 'utils/withApollo';
@@ -18,10 +19,11 @@ const UserProfilePage: React.FC<UserProfileProps> = () => {
   return (
     <Layout title='Profile Page'>
       <Box w='100%' h='100vh' display={'flex'} justifyContent='center'>
-        <VStack flex={['auto', '.8', '.6']}>
+        <VStack flex={['auto', '.8', '.6']} spacing={'30px'}>
           <UserProfileHeader userId={parseInt(userId as string)} />
-
-          <Box>Tabs</Box>
+          <Box w='100%'>
+            <UserProfileTabs userId={parseInt(userId as string)} />
+          </Box>
         </VStack>
       </Box>
     </Layout>

@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Flex,
   Heading,
   HStack,
@@ -37,7 +38,13 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
         />
       </Box>
       <VStack h='100%' w='100%' align='flex-start' justify='flex-start'>
-        <Heading size='lg'>{full_name}</Heading>
+        <HStack w='100%' align='center' justify={'space-between'}>
+          <Heading size='lg'>{full_name}</Heading>
+
+          <Button variant='outline' size='sm'>
+            Edit Profile
+          </Button>
+        </HStack>
         <Text txtStyle='p1' maxW={'60ch'} fontWeight='medium' color='gray.500'>
           {bio} I love investing and making wellness and healing for everyone at
           WellnessOfficial.com. Come do breathwork with me there to calm down.
