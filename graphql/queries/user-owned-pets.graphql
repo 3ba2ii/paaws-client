@@ -1,0 +1,26 @@
+query UserOwnedPets($userId: Float!, $paginationArgs: PaginationArgs!) {
+  userOwnedPets(userId: $userId, paginationArgs: $paginationArgs) {
+    errors {
+      field
+      message
+      code
+    }
+    hasMore
+    ownedPets {
+      userId
+      petId
+      createdAt
+      pet {
+        id
+        updatedAt
+        createdAt
+        name
+        type
+        birthDate
+        thumbnail {
+          url
+        }
+      }
+    }
+  }
+}

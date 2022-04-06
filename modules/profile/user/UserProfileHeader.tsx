@@ -45,7 +45,7 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
             Edit Profile
           </Button>
         </HStack>
-        <Text txtStyle='p1' maxW={'60ch'} fontWeight='medium' color='gray.500'>
+        <Text maxW={'60ch'} fontWeight='medium' color='gray.500'>
           {bio} I love investing and making wellness and healing for everyone at
           WellnessOfficial.com. Come do breathwork with me there to calm down.
           #cryptocurious #mindful

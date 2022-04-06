@@ -519,7 +519,7 @@ export type PaginatedUserOwnedPetsResponse = {
   __typename?: 'PaginatedUserOwnedPetsResponse';
   errors?: Maybe<Array<FieldError>>;
   hasMore?: Maybe<Scalars['Boolean']>;
-  ownedPets?: Maybe<Array<OwnedPet>>;
+  ownedPets: Array<OwnedPet>;
 };
 
 export type PaginatedUsers = {
@@ -1072,6 +1072,14 @@ export type UserContactInfoQueryVariables = Exact<{
 
 
 export type UserContactInfoQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, displayName: string, email: string, phone?: Maybe<string> }> };
+
+export type UserOwnedPetsQueryVariables = Exact<{
+  userId: Scalars['Float'];
+  paginationArgs: PaginationArgs;
+}>;
+
+
+export type UserOwnedPetsQuery = { __typename?: 'Query', userOwnedPets: { __typename?: 'PaginatedUserOwnedPetsResponse', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, ownedPets: Array<{ __typename?: 'OwnedPet', userId: number, petId: number, createdAt: any, pet: { __typename?: 'Pet', id: number, updatedAt: any, createdAt: any, name: string, type: PetType, birthDate: any, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
 
 export type UserProfilePageQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -2393,6 +2401,63 @@ export function useUserContactInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type UserContactInfoQueryHookResult = ReturnType<typeof useUserContactInfoQuery>;
 export type UserContactInfoLazyQueryHookResult = ReturnType<typeof useUserContactInfoLazyQuery>;
 export type UserContactInfoQueryResult = Apollo.QueryResult<UserContactInfoQuery, UserContactInfoQueryVariables>;
+export const UserOwnedPetsDocument = gql`
+    query UserOwnedPets($userId: Float!, $paginationArgs: PaginationArgs!) {
+  userOwnedPets(userId: $userId, paginationArgs: $paginationArgs) {
+    errors {
+      field
+      message
+      code
+    }
+    hasMore
+    ownedPets {
+      userId
+      petId
+      createdAt
+      pet {
+        id
+        updatedAt
+        createdAt
+        name
+        type
+        birthDate
+        thumbnail {
+          url
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserOwnedPetsQuery__
+ *
+ * To run a query within a React component, call `useUserOwnedPetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserOwnedPetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserOwnedPetsQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      paginationArgs: // value for 'paginationArgs'
+ *   },
+ * });
+ */
+export function useUserOwnedPetsQuery(baseOptions: Apollo.QueryHookOptions<UserOwnedPetsQuery, UserOwnedPetsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserOwnedPetsQuery, UserOwnedPetsQueryVariables>(UserOwnedPetsDocument, options);
+      }
+export function useUserOwnedPetsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserOwnedPetsQuery, UserOwnedPetsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserOwnedPetsQuery, UserOwnedPetsQueryVariables>(UserOwnedPetsDocument, options);
+        }
+export type UserOwnedPetsQueryHookResult = ReturnType<typeof useUserOwnedPetsQuery>;
+export type UserOwnedPetsLazyQueryHookResult = ReturnType<typeof useUserOwnedPetsLazyQuery>;
+export type UserOwnedPetsQueryResult = Apollo.QueryResult<UserOwnedPetsQuery, UserOwnedPetsQueryVariables>;
 export const UserProfilePageDocument = gql`
     query UserProfilePage($userId: Int!) {
   user(id: $userId) {

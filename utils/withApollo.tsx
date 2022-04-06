@@ -10,6 +10,7 @@ import {
   PaginatedAdoptionPosts,
   PaginatedComments,
   PaginatedMissingPosts,
+  PaginatedUserOwnedPetsResponse,
 } from 'generated/graphql';
 import nextWithApollo from 'next-with-apollo';
 import router, { useRouter } from 'next/router';
@@ -71,6 +72,23 @@ const cache = new InMemoryCache({
               missingPosts: [
                 ...(existing?.missingPosts || []),
                 ...incoming.missingPosts,
+              ],
+            };
+          },
+        },
+        userOwnedPets: {
+          keyArgs: [],
+          merge(
+            existing: PaginatedUserOwnedPetsResponse | undefined,
+            incoming: PaginatedUserOwnedPetsResponse
+          ) {
+            if (!existing) return incoming;
+
+            return {
+              ...incoming,
+              ownedPets: [
+                ...(existing?.ownedPets || []),
+                ...incoming.ownedPets,
               ],
             };
           },

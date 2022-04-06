@@ -1,64 +1,34 @@
-import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@chakra-ui/react';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
+import OwnedPetsGrid from 'modules/pet/OwnedPetsGrid';
 import React from 'react';
 
 interface UserProfileTabsProps {
   userId: number;
 }
-
+const ProfileTabs: { tabName: string }[] = [
+  { tabName: 'Adoption Posts' },
+  { tabName: 'Missing Posts' },
+  { tabName: 'Owned Pets' },
+  { tabName: 'My Favorites' },
+  { tabName: 'Votes' },
+];
 const UserProfileTabs: React.FC<UserProfileTabsProps> = ({ userId }) => {
   return (
     <Tabs isFitted size='md' variant='line'>
       <TabList color='gray.500'>
-        <Tab
-          _selected={{
-            fontWeight: 'semibold',
-            borderBottom: '2px solid',
-            borderColor: 'blue.600',
-            color: 'blue.600',
-          }}
-        >
-          Adoption Posts
-        </Tab>
-        <Tab
-          _selected={{
-            fontWeight: 'semibold',
-            borderBottom: '2px solid',
-            borderColor: 'blue.600',
-            color: 'blue.600',
-          }}
-        >
-          Missing Posts
-        </Tab>
-        <Tab
-          _selected={{
-            fontWeight: 'semibold',
-            borderBottom: '2px solid',
-            borderColor: 'blue.600',
-            color: 'blue.600',
-          }}
-        >
-          Owned Pets
-        </Tab>
-        <Tab
-          _selected={{
-            fontWeight: 'semibold',
-            borderBottom: '2px solid',
-            borderColor: 'blue.600',
-            color: 'blue.600',
-          }}
-        >
-          My Favorites
-        </Tab>
-        <Tab
-          _selected={{
-            fontWeight: 'semibold',
-            borderBottom: '2px solid',
-            borderColor: 'blue.600',
-            color: 'blue.600',
-          }}
-        >
-          Votes
-        </Tab>
+        {ProfileTabs.map(({ tabName }, index) => (
+          <Tab
+            key={tabName + index}
+            _selected={{
+              fontWeight: 'semibold',
+              borderBottom: '2px solid',
+              borderColor: 'blue.600',
+              color: 'blue.600',
+            }}
+          >
+            {tabName}
+          </Tab>
+        ))}
       </TabList>
       <TabPanels>
         <TabPanel>
@@ -68,7 +38,7 @@ const UserProfileTabs: React.FC<UserProfileTabsProps> = ({ userId }) => {
           <p>Missing Posts!</p>
         </TabPanel>
         <TabPanel>
-          <p>Owned Pets!</p>
+          <OwnedPetsGrid userId={userId} />
         </TabPanel>
         <TabPanel>
           <p>Favorites</p>
