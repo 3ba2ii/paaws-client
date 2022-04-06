@@ -11,7 +11,9 @@ export const OwnedPetCard: React.FC<IOwnedPetCardProps> = ({ pet }) => {
       w='100%'
       h='100%'
       background={`url(${pet.thumbnail?.url}), #C4C4C4;`}
-      backgroundSize='contain'
+      backgroundSize='cover'
+      backgroundRepeat={'no-repeat'}
+      backgroundPosition='center'
       css={{ boxShadow: 'inset 0px -50px 30px -11px rgba(0, 0, 0, 0.75);' }}
       p={4}
       display='flex'
