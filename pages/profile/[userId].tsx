@@ -17,11 +17,14 @@ const UserProfilePage: React.FC<UserProfileProps> = () => {
   }
 
   return (
-    <Layout title='Profile Page'>
-      <Box w='100%' h='100vh' display={'flex'} justifyContent='center'>
-        <VStack flex={['auto', '.8', '.6']} spacing={'30px'}>
+    <Layout
+      title='Profile Page'
+      childrenProps={{ h: '100%', justifyContent: 'flex-start' }}
+    >
+      <Box w='100%' h='100%' display={'flex'} justifyContent='center'>
+        <VStack w='100%' h='100%' flex={['auto', '.8', '.6']} spacing={'30px'}>
           <UserProfileHeader userId={parseInt(userId as string)} />
-          <Box w='100%'>
+          <Box w='100%' h='100%'>
             <UserProfileTabs userId={parseInt(userId as string)} />
           </Box>
         </VStack>
