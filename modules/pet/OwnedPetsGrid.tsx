@@ -1,6 +1,20 @@
-import { Button, GridItem, SimpleGrid, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  GridItem,
+  Heading,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  SimpleGrid,
+  VStack,
+} from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { useUserOwnedPetsQuery } from 'generated/graphql';
+import { useContextualRouting } from 'next-use-contextual-routing';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import { OwnedPetCard } from './OwnedPetCard';
@@ -10,6 +24,10 @@ interface OwnedPetsGridProps {
 }
 
 const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
+  const router = useRouter();
+  console.log(`🚀 ~ file: OwnedPetsGrid.tsx ~ line 28 ~ router`, router.query);
+  const { makeContextualHref, returnHref } = useContextualRouting();
+
   const { data, fetchMore, loading, variables } = useUserOwnedPetsQuery({
     variables: { userId, paginationArgs: { cursor: null, limit: 6 } },
     notifyOnNetworkStatusChange: true,
@@ -40,27 +58,45 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
         {loading ? (
           <LoadingComponent />
         ) : data && data.userOwnedPets ? (
-          data.userOwnedPets.ownedPets?.map(({ pet, petId }) => (
-            <GridItem
-              w='100%'
-              h='100%'
-              css={{ aspectRatio: '1' }}
-              key={petId + userId}
+          data.userOwnedPets.ownedPets?.map(({ pet, id }) => (
+            <Link
+              href={makeContextualHref({ userId, petId: id })}
+              as={`/pet/${id}`}
+              key={id}
+              shallow={true}
             >
-              <OwnedPetCard pet={pet} />
-            </GridItem>
+              <GridItem w='100%' h='100%' css={{ aspectRatio: '1' }}>
+                <OwnedPetCard pet={pet} />
+              </GridItem>
+            </Link>
           ))
         ) : null}
       </SimpleGrid>
       {data?.userOwnedPets.hasMore && (
         <Button
-          leftIcon={<BsThreeDots />}
+          rightIcon={<BsThreeDots />}
           w='fit-content'
           onClick={fetchMorePets}
         >
           Load More
         </Button>
       )}
+      <Modal
+        isOpen={!!router.query.petId}
+        onClose={() =>
+          router.push(returnHref, `/profile/${userId}`, { shallow: true })
+        }
+        isCentered
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>
+            <Heading>{router.query.petId}</Heading>
+          </ModalHeader>
+
+          <ModalCloseButton />
+        </ModalContent>
+      </Modal>
     </VStack>
   );
 };

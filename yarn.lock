@@ -5184,6 +5184,13 @@ natural-compare@^1.4.0:
   resolved "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
+next-use-contextual-routing@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/next-use-contextual-routing/-/next-use-contextual-routing-2.3.0.tgz#0d626b4b18ab45fa4483b955753cd36741be9176"
+  integrity sha512-JTZ+cUjHfelG58wSOBhmEhwpcNJhSSpQHt9FodV0pOH8NsqF3uL5YSBohXUtN4q3VZriudzIbTGHe2WbJHoesg==
+  dependencies:
+    qs-stringify "^1.2.1"
+
 next-with-apollo@^5.2.1:
   version "5.2.1"
   resolved "https://registry.npmjs.org/next-with-apollo/-/next-with-apollo-5.2.1.tgz"
@@ -5780,6 +5787,11 @@ punycode@^2.1.0:
   version "2.1.1"
   resolved "https://registry.npmjs.org/punycode/-/punycode-2.1.1.tgz"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
+
+qs-stringify@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/qs-stringify/-/qs-stringify-1.2.1.tgz#9b39ef6b816bd83309628fc9dad435fc0eccc28b"
+  integrity sha512-2N5xGLGZUxpgAYq1fD1LmBSCbxQVsXYt5JU0nU3FuPWO8PlCnKNFQwXkZgyB6mrTdg7IbexX4wxIR403dJw9pw==
 
 querystring-es3@0.2.1:
   version "0.2.1"
