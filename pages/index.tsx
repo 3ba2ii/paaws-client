@@ -4,7 +4,8 @@ import Confetti from 'react-confetti';
 import { Layout } from '../components/Layout';
 
 const Home: NextPage = () => {
-  const { ref } = useRouter().query;
+  const router = useRouter();
+  const { ref } = router.query;
 
   const isFireworks =
     ref === '/register/complete-info?success=true' &&
