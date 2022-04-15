@@ -7,6 +7,7 @@ query UserOwnedPets($userId: Float!, $paginationArgs: PaginationArgs!) {
     }
     hasMore
     ownedPets {
+      id
       userId
       petId
       createdAt

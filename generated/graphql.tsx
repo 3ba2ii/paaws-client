@@ -486,7 +486,7 @@ export type OwnedPet = {
   __typename?: 'OwnedPet';
   about: Scalars['String'];
   createdAt: Scalars['DateTime'];
-  images?: Maybe<Array<PetImages>>;
+  id: Scalars['Int'];
   pet: Pet;
   petId: Scalars['Int'];
   updatedAt: Scalars['DateTime'];
@@ -670,6 +670,7 @@ export type Query = {
   missingPosts: PaginatedMissingPosts;
   notifications: Array<Notification>;
   user?: Maybe<User>;
+  userOwnedPet?: Maybe<OwnedPet>;
   userOwnedPets: PaginatedUserOwnedPetsResponse;
   users: PaginatedUsers;
   usersCount: Scalars['Int'];
@@ -721,6 +722,11 @@ export type QueryMissingPostsArgs = {
 
 
 export type QueryUserArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryUserOwnedPetArgs = {
   id: Scalars['Int'];
 };
 
@@ -1079,7 +1085,7 @@ export type UserOwnedPetsQueryVariables = Exact<{
 }>;
 
 
-export type UserOwnedPetsQuery = { __typename?: 'Query', userOwnedPets: { __typename?: 'PaginatedUserOwnedPetsResponse', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, ownedPets: Array<{ __typename?: 'OwnedPet', userId: number, petId: number, createdAt: any, pet: { __typename?: 'Pet', id: number, updatedAt: any, createdAt: any, name: string, type: PetType, birthDate: any, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
+export type UserOwnedPetsQuery = { __typename?: 'Query', userOwnedPets: { __typename?: 'PaginatedUserOwnedPetsResponse', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, ownedPets: Array<{ __typename?: 'OwnedPet', id: number, userId: number, petId: number, createdAt: any, pet: { __typename?: 'Pet', id: number, updatedAt: any, createdAt: any, name: string, type: PetType, birthDate: any, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
 
 export type UserProfilePageQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -2411,6 +2417,7 @@ export const UserOwnedPetsDocument = gql`
     }
     hasMore
     ownedPets {
+      id
       userId
       petId
       createdAt
