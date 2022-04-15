@@ -1,14 +1,12 @@
-import { Box, Divider, VStack } from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
+import { UserProfileHeader } from 'modules/profile/user/UserProfileHeader';
 import UserProfileTabs from 'modules/profile/user/UserProfileTabs';
+import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import React from 'react';
 import withApollo from 'utils/withApollo';
-import { UserProfileHeader } from '../../modules/profile/user/UserProfileHeader';
 
-interface UserProfileProps {}
-
-const UserProfilePage: React.FC<UserProfileProps> = () => {
+const UserProfilePage: NextPage = () => {
   const router = useRouter();
   const { userId } = router.query;
 
