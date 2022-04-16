@@ -19,6 +19,9 @@ query UserOwnedPet($userOwnedPetId: Int!) {
       gender
       size
       birthDate
+      breeds {
+        breed
+      }
       colors {
         color
       }

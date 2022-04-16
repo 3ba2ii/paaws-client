@@ -4,7 +4,7 @@ export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -1084,7 +1084,7 @@ export type UserOwnedPetQueryVariables = Exact<{
 }>;
 
 
-export type UserOwnedPetQuery = { __typename?: 'Query', userOwnedPet?: Maybe<{ __typename?: 'OwnedPet', updatedAt: any, createdAt: any, about: string, petId: number, userId: number, user: { __typename?: 'User', id: number, updatedAt: any, createdAt: any, email: string }, pet: { __typename?: 'Pet', id: number, name: string, type: PetType, gender: PetGender, size: PetSize, birthDate: any, colors: Array<{ __typename?: 'PetColor', color: PetColors }>, images?: Maybe<Array<{ __typename?: 'PetImages', photo: { __typename?: 'Photo', url?: Maybe<string> } }>> } }> };
+export type UserOwnedPetQuery = { __typename?: 'Query', userOwnedPet?: Maybe<{ __typename?: 'OwnedPet', updatedAt: any, createdAt: any, about: string, petId: number, userId: number, user: { __typename?: 'User', id: number, updatedAt: any, createdAt: any, email: string }, pet: { __typename?: 'Pet', id: number, name: string, type: PetType, gender: PetGender, size: PetSize, birthDate: any, breeds: Array<{ __typename?: 'PetBreed', breed: Breeds }>, colors: Array<{ __typename?: 'PetColor', color: PetColors }>, images?: Maybe<Array<{ __typename?: 'PetImages', photo: { __typename?: 'Photo', url?: Maybe<string> } }>> } }> };
 
 export type UserOwnedPetsQueryVariables = Exact<{
   userId: Scalars['Float'];
@@ -2435,6 +2435,9 @@ export const UserOwnedPetDocument = gql`
       gender
       size
       birthDate
+      breeds {
+        breed
+      }
       colors {
         color
       }

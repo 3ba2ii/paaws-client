@@ -1,11 +1,10 @@
 import { Box, BoxProps, IconButton } from '@chakra-ui/react';
 import React, { JSXElementConstructor, ReactElement } from 'react';
+import { BiChevronLeft, BiChevronRight } from 'react-icons/bi';
 import { Carousel, CarouselProps } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { fallbackSrc } from 'utils/constants';
 import ImageWithFallback from './ImageWithFallback';
-import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
-import { BiChevronLeft, BiChevronRight, BiRightArrow } from 'react-icons/bi';
-import { IconType } from 'react-icons/lib';
 
 interface ICarouselArrows {
   icon: ReactElement<any, string | JSXElementConstructor<any>>;
