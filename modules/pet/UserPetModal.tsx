@@ -34,21 +34,27 @@ const UserPetModal: React.FC<UserPetModalProps> = ({ petId }) => {
       pos='relative'
       overflow={'hidden'}
     >
-      <Box w='100%' h='100%' flex='.75' bg='blue' position={'relative'}>
-        <VStack w='100%' h='100%' align='center' justify={'center'} bg='#000'>
-          {pet.images && (
-            <CustomCarousel
-              carouselProps={
-                {
-                  showThumbs: false,
-                  useKeyboardArrows: true,
-                } as CarouselProps
-              }
-              images={pet.images.map((p) => p.photo?.url || '')}
-              boxProps={{ borderRadius: 0 }}
-            />
-          )}
-        </VStack>
+      <Box
+        w='100%'
+        h='100%'
+        flex='.75'
+        position={'relative'}
+        display='grid'
+        placeItems={'center'}
+        bg='#000'
+      >
+        {pet.images?.length && (
+          <CustomCarousel
+            carouselProps={
+              {
+                showThumbs: false,
+                useKeyboardArrows: true,
+              } as CarouselProps
+            }
+            images={pet.images.map((p) => p.photo?.url || '')}
+            boxProps={{ borderRadius: 0 }}
+          />
+        )}
       </Box>
       <VStack>
         <Heading>{pet.name}</Heading>

@@ -1,10 +1,44 @@
-import { Box, BoxProps } from '@chakra-ui/react';
-import React from 'react';
+import { Box, BoxProps, IconButton } from '@chakra-ui/react';
+import React, { JSXElementConstructor, ReactElement } from 'react';
 import { Carousel, CarouselProps } from 'react-responsive-carousel';
 import { fallbackSrc } from 'utils/constants';
 import ImageWithFallback from './ImageWithFallback';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
+import { BiChevronLeft, BiChevronRight, BiRightArrow } from 'react-icons/bi';
+import { IconType } from 'react-icons/lib';
 
+interface ICarouselArrows {
+  icon: ReactElement<any, string | JSXElementConstructor<any>>;
+  label: 'next' | 'previous';
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+const CarouselArrows: React.FC<ICarouselArrows> = ({
+  icon,
+  label,
+  onClick,
+}: ICarouselArrows) => {
+  return (
+    <IconButton
+      variant={'outline'}
+      aria-label={label}
+      icon={icon}
+      onClick={onClick}
+      borderRadius={'full'}
+      pos='absolute'
+      top='50%'
+      left={label === 'previous' ? '16px' : 'unset'}
+      right={label === 'next' ? '16px' : 'unset'}
+      colorScheme='blackAlpha'
+      size='sm'
+      bg='whiteAlpha.600'
+      border='none'
+      boxShadow={'md'}
+      zIndex={1}
+      _hover={{ filter: 'brightness(80%)' }}
+    />
+  );
+};
 interface CustomCarouselProps {
   images: string[];
   renderThumbs?: boolean;
@@ -17,7 +51,6 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({
   boxProps,
   carouselProps,
 }) => {
-  console.log(`🚀 ~ file: CustomCarousel.tsx ~ line 16 ~ images`, images);
   return (
     <Carousel
       showArrows
@@ -41,6 +74,24 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({
             {child}
           </Box>
         ))
+      }
+      renderArrowNext={(onClick, hasNext, label) =>
+        hasNext && (
+          <CarouselArrows
+            icon={<BiChevronRight size='24px' />}
+            label={'next'}
+            onClick={onClick}
+          />
+        )
+      }
+      renderArrowPrev={(onClick, hasPrev, label) =>
+        hasPrev && (
+          <CarouselArrows
+            icon={<BiChevronLeft size='24px' />}
+            label={'previous'}
+            onClick={onClick}
+          />
+        )
       }
       {...carouselProps}
     >
