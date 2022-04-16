@@ -5,7 +5,7 @@ import {
   PetSize,
   PetType,
   useCreateUserOwnedPetMutation,
-  useDeleteUserOwnedPetMutation
+  useDeleteUserOwnedPetMutation,
 } from 'generated/graphql';
 import React, { useState } from 'react';
 import withApollo from 'utils/withApollo';
@@ -46,6 +46,7 @@ const CreateUserPet: React.FC<CreateUserPetProps> = ({}) => {
           setImages(e.target.files);
         }}
         type='file'
+        multiple
       />
       <button type='submit'>Submit</button>
       <button onClick={handleDelete}>Delete</button>

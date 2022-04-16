@@ -1,14 +1,23 @@
-import { Box } from '@chakra-ui/react';
+import { Box, BoxProps } from '@chakra-ui/react';
 import React from 'react';
-import { Carousel } from 'react-responsive-carousel';
+import { Carousel, CarouselProps } from 'react-responsive-carousel';
 import { fallbackSrc } from 'utils/constants';
 import ImageWithFallback from './ImageWithFallback';
+import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 
 interface CustomCarouselProps {
   images: string[];
+  renderThumbs?: boolean;
+  boxProps?: BoxProps;
+  carouselProps?: CarouselProps;
 }
 
-const CustomCarousel: React.FC<CustomCarouselProps> = ({ images }) => {
+const CustomCarousel: React.FC<CustomCarouselProps> = ({
+  images,
+  boxProps,
+  carouselProps,
+}) => {
+  console.log(`🚀 ~ file: CustomCarousel.tsx ~ line 16 ~ images`, images);
   return (
     <Carousel
       showArrows
@@ -33,6 +42,7 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({ images }) => {
           </Box>
         ))
       }
+      {...carouselProps}
     >
       {images.map((url, index) => (
         <Box
@@ -41,6 +51,7 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({ images }) => {
           boxShadow={'md'}
           overflow={'hidden'}
           key={url + index}
+          {...boxProps}
         >
           <ImageWithFallback
             props={{

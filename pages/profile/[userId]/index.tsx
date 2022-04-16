@@ -4,6 +4,7 @@ import { UserProfileHeader } from 'modules/profile/user/UserProfileHeader';
 import UserProfileTabs from 'modules/profile/user/UserProfileTabs';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import withApollo from 'utils/withApollo';
 
 const UserProfilePage: NextPage = () => {

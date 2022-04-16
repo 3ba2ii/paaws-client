@@ -18,6 +18,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import { OwnedPetCard } from './OwnedPetCard';
+import UserPetModal from './UserPetModal';
 
 interface OwnedPetsGridProps {
   userId: number;
@@ -26,7 +27,7 @@ interface OwnedPetsGridProps {
 const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
   const router = useRouter();
   console.log(`🚀 ~ file: OwnedPetsGrid.tsx ~ line 28 ~ router`, router.query);
-  const { makeContextualHref, returnHref } = useContextualRouting();
+  const { makeContextualHref } = useContextualRouting();
 
   const { data, fetchMore, loading, variables } = useUserOwnedPetsQuery({
     variables: { userId, paginationArgs: { cursor: null, limit: 6 } },
@@ -48,6 +49,7 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
       },
     });
   };
+
   return (
     <VStack w='100%'>
       <SimpleGrid
@@ -60,10 +62,11 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
         ) : data && data.userOwnedPets ? (
           data.userOwnedPets.ownedPets?.map(({ pet, id }) => (
             <Link
-              href={makeContextualHref({ userId, petId: id })}
+              href={makeContextualHref({ petId: id })}
               as={`/pet/${id}`}
               key={id}
               shallow={true}
+              scroll={false}
             >
               <GridItem w='100%' h='100%' css={{ aspectRatio: '1' }}>
                 <OwnedPetCard pet={pet} />
@@ -82,17 +85,18 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
         </Button>
       )}
       <Modal
-        isOpen={!!router.query.petId}
+        isOpen={!!router.query.petId || true}
         onClose={() =>
-          router.push(returnHref, `/profile/${userId}`, { shallow: true })
+          router.push(`/profile/${userId}`, `/profile/${userId}`, {
+            shallow: true,
+          })
         }
+        size='6xl'
         isCentered
       >
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>
-            <Heading>{router.query.petId}</Heading>
-          </ModalHeader>
+        <ModalContent css={{ aspectRatio: '16/13' }}>
+          {router.query.petId || (true && <UserPetModal petId={9} />)}
 
           <ModalCloseButton />
         </ModalContent>
