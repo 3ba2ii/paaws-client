@@ -85,7 +85,7 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
         </Button>
       )}
       <Modal
-        isOpen={!!router.query.petId || true}
+        isOpen={!!router.query.petId}
         onClose={() =>
           router.push(`/profile/${userId}`, `/profile/${userId}`, {
             shallow: true,
@@ -97,7 +97,9 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
       >
         <ModalOverlay />
         <ModalContent css={{ aspectRatio: '16/13' }}>
-          {router.query.petId || (true && <UserPetModal petId={9} />)}
+          {router.query.petId && (
+            <UserPetModal petId={parseInt(router.query.petId as string)} />
+          )}
 
           <ModalCloseButton />
         </ModalContent>
