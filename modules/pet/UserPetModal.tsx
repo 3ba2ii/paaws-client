@@ -1,23 +1,10 @@
-import {
-  Box,
-  Center,
-  GridItem,
-  Heading,
-  HStack,
-  Link,
-  SimpleGrid,
-  Tag,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Center, GridItem, SimpleGrid } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import CustomCarousel from 'components/common/media/CustomCarousel';
 import NotFound from 'components/NotFound';
 import { useUserOwnedPetQuery } from 'generated/graphql';
 import React from 'react';
 import { CarouselProps } from 'react-responsive-carousel';
-import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
-import { PetInfoCardsRow } from './PetInfoCardsRow';
 import UserPetInfoColumn from './UserPetInfoColumn';
 
 interface UserPetModalProps {
@@ -30,19 +17,22 @@ const UserPetModal: React.FC<UserPetModalProps> = ({ petId }) => {
   });
   if (loading)
     return (
-      <Center w='100%' h='100%'>
+      <Center minW='300px' minH='500px' w='100%' h='100%'>
         <LoadingComponent />
       </Center>
     );
   if (!data || !data.userOwnedPet)
     return (
-      <NotFound
-        title='404 Not Found'
-        subtitle='We could not find a pet with this URL, Please try again later or try changing the url.'
-      />
+      <Center minW='300px' minH='500px' w='100%' h='100%'>
+        <NotFound
+          title='404 Not Found'
+          subtitle='We could not find a pet with this URL, Please try again later or try changing the url.'
+          includeBackButton={false}
+        />
+      </Center>
     );
 
-  const { about, pet } = data.userOwnedPet;
+  const { pet } = data.userOwnedPet;
   return (
     <SimpleGrid
       gridTemplateColumns={['auto-fit 1.5fr', '2.5fr 1.5fr']}
