@@ -1,5 +1,4 @@
 import {
-  Box,
   GridItem,
   Heading,
   HStack,
@@ -12,58 +11,12 @@ import {
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import CustomCarousel from 'components/common/media/CustomCarousel';
 import NotFound from 'components/NotFound';
-import { format, formatDistanceToNow } from 'date-fns';
 import el from 'date-fns/esm/locale/el/index.js';
-import { UserOwnedPetQuery, useUserOwnedPetQuery } from 'generated/graphql';
-import React, { useEffect } from 'react';
+import { useUserOwnedPetQuery } from 'generated/graphql';
+import React from 'react';
 import { CarouselProps } from 'react-responsive-carousel';
 import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
-import PetInfoCard from './PetInfoCard';
-
-const PetInfoCardsRow: React.FC<{
-  userPet: UserOwnedPetQuery['userOwnedPet'];
-}> = ({ userPet }) => {
-  const [cardsInfo, setCardsInfo] =
-    React.useState<{ label: string; value: string }[]>();
-  const [isAgeShown, setIsAgeShown] = React.useState(false);
-
-  const toggleShowAge = () => {
-    setIsAgeShown(!isAgeShown);
-  };
-
-  useEffect(() => {
-    if (!userPet?.pet) return;
-    const { gender, birthDate, size, colors } = userPet.pet;
-    setCardsInfo([
-      { label: 'Gender', value: gender },
-      {
-        label: isAgeShown ? 'Age' : 'Birthdate',
-        value: isAgeShown
-          ? formatDistanceToNow(new Date(birthDate))
-          : format(new Date(birthDate), 'dd.MM.yy'),
-      },
-      { label: 'Size', value: size },
-      { label: 'Colors', value: colors.map((c) => c.color).join(', ') },
-    ]);
-  }, [isAgeShown]);
-
-  return (
-    <HStack h='88px' w='100%' overflow='auto'>
-      {cardsInfo?.map((ci, index) => (
-        <Box
-          key={index}
-          w='100%'
-          h='100%'
-          onClick={() =>
-            ['Age', 'Birthdate'].includes(ci.label) && toggleShowAge()
-          }
-        >
-          <PetInfoCard {...ci} />
-        </Box>
-      ))}
-    </HStack>
-  );
-};
+import { PetInfoCardsRow } from './PetInfoCardsRow';
 
 interface UserPetModalProps {
   petId: number;
