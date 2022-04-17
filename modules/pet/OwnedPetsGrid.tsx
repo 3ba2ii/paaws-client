@@ -91,12 +91,11 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
             shallow: true,
           })
         }
-        size='6xl'
-        isCentered
-        scrollBehavior='inside'
+        size={'6xl'}
+        closeOnEsc
       >
         <ModalOverlay />
-        <ModalContent css={{ aspectRatio: '16/13' }}>
+        <ModalContent>
           {router.query.petId && (
             <UserPetModal petId={parseInt(router.query.petId as string)} />
           )}

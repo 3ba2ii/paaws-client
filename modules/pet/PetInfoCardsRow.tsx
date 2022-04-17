@@ -32,7 +32,13 @@ export const PetInfoCardsRow: React.FC<{
   }, [isAgeShown]);
 
   return (
-    <HStack h='88px' w='100%' overflow='auto'>
+    <HStack
+      h='88px'
+      w='100%'
+      justify={'flex-start'}
+      align='flex-start'
+      overflow='auto'
+    >
       {cardsInfo?.map((ci, index) => (
         <Box
           key={index}

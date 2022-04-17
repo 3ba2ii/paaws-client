@@ -1,4 +1,5 @@
 import {
+  Center,
   GridItem,
   Heading,
   HStack,
@@ -25,8 +26,12 @@ const UserPetModal: React.FC<UserPetModalProps> = ({ petId }) => {
   const { data, loading } = useUserOwnedPetQuery({
     variables: { userOwnedPetId: petId },
   });
-  console.log(`🚀 ~ file: UserPetModal.tsx ~ line 10 ~ data`, data);
-  if (loading) return <LoadingComponent />;
+  if (loading)
+    return (
+      <Center w='100%' h='100%'>
+        <LoadingComponent />
+      </Center>
+    );
   if (!data || !data.userOwnedPet)
     return (
       <NotFound
@@ -38,7 +43,7 @@ const UserPetModal: React.FC<UserPetModalProps> = ({ petId }) => {
   const { about, pet } = data.userOwnedPet;
   return (
     <SimpleGrid
-      gridTemplateColumns={['2.5fr 1.5fr']}
+      gridTemplateColumns={['auto-fit 1.5fr', '2.5fr 1.5fr']}
       w='100%'
       h='100%'
       padding={0}
