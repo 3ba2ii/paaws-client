@@ -7,11 +7,11 @@ import React from 'react';
 import { CarouselProps } from 'react-responsive-carousel';
 import UserPetInfoColumn from './UserPetInfoColumn';
 
-interface UserPetModalProps {
+interface UserPetContainerProps {
   petId: number;
 }
 
-const UserPetModal: React.FC<UserPetModalProps> = ({ petId }) => {
+const UserPetContainer: React.FC<UserPetContainerProps> = ({ petId }) => {
   const { data, loading } = useUserOwnedPetQuery({
     variables: { userOwnedPetId: petId },
   });
@@ -69,4 +69,4 @@ const UserPetModal: React.FC<UserPetModalProps> = ({ petId }) => {
     </SimpleGrid>
   );
 };
-export default UserPetModal;
+export default UserPetContainer;

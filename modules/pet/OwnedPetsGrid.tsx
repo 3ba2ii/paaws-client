@@ -18,7 +18,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import { OwnedPetCard } from './OwnedPetCard';
-import UserPetModal from './UserPetModal';
+import UserPetContainer from './UserPetContainer';
 
 interface OwnedPetsGridProps {
   userId: number;
@@ -97,7 +97,7 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
         <ModalOverlay />
         <ModalContent>
           {router.query.petId && (
-            <UserPetModal petId={parseInt(router.query.petId as string)} />
+            <UserPetContainer petId={parseInt(router.query.petId as string)} />
           )}
 
           <ModalCloseButton />
