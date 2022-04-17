@@ -11,7 +11,6 @@ import {
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import CustomCarousel from 'components/common/media/CustomCarousel';
 import NotFound from 'components/NotFound';
-import el from 'date-fns/esm/locale/el/index.js';
 import { useUserOwnedPetQuery } from 'generated/graphql';
 import React from 'react';
 import { CarouselProps } from 'react-responsive-carousel';
@@ -36,10 +35,10 @@ const UserPetModal: React.FC<UserPetModalProps> = ({ petId }) => {
       />
     );
 
-  const { about, pet, user } = data.userOwnedPet;
+  const { about, pet } = data.userOwnedPet;
   return (
     <SimpleGrid
-      gridTemplateColumns={'3fr 1fr'}
+      gridTemplateColumns={['2.5fr 1.5fr']}
       w='100%'
       h='100%'
       padding={0}
@@ -78,6 +77,7 @@ const UserPetModal: React.FC<UserPetModalProps> = ({ petId }) => {
         p={4}
         py={10}
         css={{ gap: '40px' }}
+        overflowY='scroll'
       >
         <VStack w='100%' align='flex-start'>
           <Heading size='lg' color='gray.700'>

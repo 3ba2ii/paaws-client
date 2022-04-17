@@ -93,6 +93,7 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
         }
         size='6xl'
         isCentered
+        scrollBehavior='inside'
       >
         <ModalOverlay />
         <ModalContent css={{ aspectRatio: '16/13' }}>
