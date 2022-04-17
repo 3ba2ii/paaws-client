@@ -1,8 +1,10 @@
 import {
   Box,
+  GridItem,
   Heading,
   HStack,
   Link,
+  SimpleGrid,
   Tag,
   Text,
   VStack,
@@ -10,10 +12,58 @@ import {
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import CustomCarousel from 'components/common/media/CustomCarousel';
 import NotFound from 'components/NotFound';
-import { useUserOwnedPetQuery } from 'generated/graphql';
-import React from 'react';
+import { format, formatDistanceToNow } from 'date-fns';
+import el from 'date-fns/esm/locale/el/index.js';
+import { UserOwnedPetQuery, useUserOwnedPetQuery } from 'generated/graphql';
+import React, { useEffect } from 'react';
 import { CarouselProps } from 'react-responsive-carousel';
 import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
+import PetInfoCard from './PetInfoCard';
+
+const PetInfoCardsRow: React.FC<{
+  userPet: UserOwnedPetQuery['userOwnedPet'];
+}> = ({ userPet }) => {
+  const [cardsInfo, setCardsInfo] =
+    React.useState<{ label: string; value: string }[]>();
+  const [isAgeShown, setIsAgeShown] = React.useState(false);
+
+  const toggleShowAge = () => {
+    setIsAgeShown(!isAgeShown);
+  };
+
+  useEffect(() => {
+    if (!userPet?.pet) return;
+    const { gender, birthDate, size, colors } = userPet.pet;
+    setCardsInfo([
+      { label: 'Gender', value: gender },
+      {
+        label: isAgeShown ? 'Age' : 'Birthdate',
+        value: isAgeShown
+          ? formatDistanceToNow(new Date(birthDate))
+          : format(new Date(birthDate), 'dd.MM.yy'),
+      },
+      { label: 'Size', value: size },
+      { label: 'Colors', value: colors.map((c) => c.color).join(', ') },
+    ]);
+  }, [isAgeShown]);
+
+  return (
+    <HStack h='88px' w='100%' overflow='auto'>
+      {cardsInfo?.map((ci, index) => (
+        <Box
+          key={index}
+          w='100%'
+          h='100%'
+          onClick={() =>
+            ['Age', 'Birthdate'].includes(ci.label) && toggleShowAge()
+          }
+        >
+          <PetInfoCard {...ci} />
+        </Box>
+      ))}
+    </HStack>
+  );
+};
 
 interface UserPetModalProps {
   petId: number;
@@ -35,8 +85,16 @@ const UserPetModal: React.FC<UserPetModalProps> = ({ petId }) => {
 
   const { about, pet, user } = data.userOwnedPet;
   return (
-    <HStack w='100%' h='100%' padding={0} pos='relative' overflow={'hidden'}>
-      <Box
+    <SimpleGrid
+      gridTemplateColumns={'3fr 1fr'}
+      w='100%'
+      h='100%'
+      padding={0}
+      pos='relative'
+      overflow={'hidden'}
+      css={{ gap: '12px' }}
+    >
+      <GridItem
         w='100%'
         h='100%'
         flex='.65'
@@ -57,15 +115,16 @@ const UserPetModal: React.FC<UserPetModalProps> = ({ petId }) => {
             boxProps={{ borderRadius: 0 }}
           />
         )}
-      </Box>
-      <VStack
-        flex='.35'
+      </GridItem>
+      <GridItem
+        display={'flex'}
+        flexDir='column'
         w='100%'
         h='100%'
         align='flex-start'
         p={4}
         py={10}
-        spacing={10}
+        css={{ gap: '40px' }}
       >
         <VStack w='100%' align='flex-start'>
           <Heading size='lg' color='gray.700'>
@@ -89,99 +148,22 @@ const UserPetModal: React.FC<UserPetModalProps> = ({ petId }) => {
             ))}
           </HStack>
           <HStack>
-            <Tag variant='subtle' colorScheme='blue'>
+            <Tag size='sm' variant='subtle' colorScheme='blue'>
               Playful
             </Tag>
-            <Tag variant='subtle' colorScheme='pink'>
+            <Tag size='sm' variant='subtle' colorScheme='pink'>
               Cheerful
             </Tag>
-            <Tag variant='subtle' colorScheme='purple'>
+            <Tag size='sm' variant='subtle' colorScheme='purple'>
               Ball-Catcher
             </Tag>
           </HStack>
         </VStack>
-        <VStack w='100%' align='flex-start'>
+        <VStack w='100%' align='flex-start' spacing={4}>
           <Heading size='md' color='gray.700'>
             Pet Information
           </Heading>
-          <HStack h='88px' w='100%' overflow='auto'>
-            <VStack
-              align='flex-start'
-              border='1px solid'
-              borderColor='gray.300'
-              borderRadius={'14px'}
-              minW='95px'
-              h='100%'
-              justify={'center'}
-              spacing={0}
-              pl={2}
-              css={{ aspectRatio: '1' }}
-            >
-              <Text fontSize='90%' color='gray.500' fontWeight={'medium'}>
-                Gender
-              </Text>
-              <Heading fontSize={'100%'} color='gray.700'>
-                Female
-              </Heading>
-            </VStack>
-            <VStack
-              align='flex-start'
-              border='1px solid'
-              borderColor='gray.300'
-              borderRadius={'14px'}
-              minW='95px'
-              h='100%'
-              justify={'center'}
-              spacing={0}
-              pl={2}
-              css={{ aspectRatio: '1' }}
-            >
-              <Text fontSize={'90%'} color='gray.500' fontWeight={'medium'}>
-                Birthdate
-              </Text>
-              <Heading fontSize={'100%'} color='gray.700'>
-                12. Aug 2022
-              </Heading>
-            </VStack>
-            <VStack
-              align='flex-start'
-              border='1px solid'
-              borderColor='gray.300'
-              borderRadius={'14px'}
-              minW='95px'
-              h='100%'
-              justify={'center'}
-              spacing={0}
-              pl={2}
-              css={{ aspectRatio: '1' }}
-            >
-              <Text fontSize={'90%'} color='gray.500' fontWeight={'medium'}>
-                Size
-              </Text>
-              <Heading fontSize={'100%'} color='gray.700'>
-                Large
-              </Heading>
-            </VStack>
-            <VStack
-              align='flex-start'
-              border='1px solid'
-              borderColor='gray.300'
-              borderRadius={'14px'}
-              minW='95px'
-              h='100%'
-              justify={'center'}
-              spacing={0}
-              pl={2}
-              css={{ aspectRatio: '1' }}
-            >
-              <Text fontSize={'90%'} color='gray.500' fontWeight={'medium'}>
-                Colors
-              </Text>
-              <Heading fontSize={'100%'} color='gray.700'>
-                Yellow
-              </Heading>
-            </VStack>
-          </HStack>
+          <PetInfoCardsRow userPet={data.userOwnedPet} />
         </VStack>
 
         <VStack align='flex-start'>
@@ -189,18 +171,19 @@ const UserPetModal: React.FC<UserPetModalProps> = ({ petId }) => {
             About {pet.name}
           </Heading>
           <Text textStyle={'p1'}>
-            Quis anim exercitation est in id. Quis id consequat do qui. Proident
-            quis nulla eu ex ea velit consequat amet consectetur proident
-            fugiat. Reprehenderit aliquip pariatur sint qui proident sint ea. Ea
-            culpa laboris cillum minim veniam voluptate amet nostrud deserunt.
-            Quis anim exercitation est in id. Quis id consequat do qui. Proident
-            quis nulla eu ex ea velit consequat amet consectetur proident
-            fugiat. Reprehenderit aliquip pariatur sint qui proident sint ea. Ea
-            culpa laboris cillum minim veniam voluptate amet nostrud deserunt.
+            {about}Quis anim exercitation est in id. Quis id consequat do qui.
+            Proident quis nulla eu ex ea velit consequat amet consectetur
+            proident fugiat. Reprehenderit aliquip pariatur sint qui proident
+            sint ea. Ea culpa laboris cillum minim veniam voluptate amet nostrud
+            deserunt. Quis anim exercitation est in id. Quis id consequat do
+            qui. Proident quis nulla eu ex ea velit consequat amet consectetur
+            proident fugiat. Reprehenderit aliquip pariatur sint qui proident
+            sint ea. Ea culpa laboris cillum minim veniam voluptate amet nostrud
+            deserunt.
           </Text>
         </VStack>
-      </VStack>
-    </HStack>
+      </GridItem>
+    </SimpleGrid>
   );
 };
 export default UserPetModal;
