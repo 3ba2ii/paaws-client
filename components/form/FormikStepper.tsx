@@ -1,19 +1,49 @@
+import { Button } from '@chakra-ui/react';
 import { Form, Formik, FormikConfig, FormikValues } from 'formik';
-import React, { useState } from 'react';
+import React from 'react';
+import { FormikStepProps } from './FormikStep';
+interface FormikStepperProps {
+  step: number;
+  setStep: (step: number) => void;
+  formikProps: FormikConfig<FormikValues>;
+}
 
-interface FormikStepperProps {}
-
-const FormikStepper: React.FC<FormikConfig<FormikValues>> = ({
+const FormikStepper: React.FC<FormikStepperProps> = ({
   children,
-  ...props
+  step,
+  setStep,
+  formikProps,
 }) => {
-  const [step, setStep] = useState(0);
-  const childrenArray = React.Children.toArray(children);
+  const childrenArray = React.Children.toArray(
+    children
+  ) as React.ReactElement<FormikStepProps>[];
+
   const currentChildren = childrenArray[step];
 
+  const isLastStep = () => step === childrenArray.length - 1;
+
   return (
-    <Formik {...props}>
-      <Form>{currentChildren}</Form>
+    <Formik
+      {...formikProps}
+      onSubmit={async (values, helpers) => {
+        if (isLastStep()) {
+          await formikProps.onSubmit(values, helpers);
+        } else {
+          setStep(step + 1);
+        }
+      }}
+      validationSchema={currentChildren?.props?.validationSchema}
+    >
+      <Form>
+        {currentChildren}
+        <Button
+          onClick={() => {
+            setStep(Math.max(step + 1, childrenArray.length - 1));
+          }}
+        >
+          {isLastStep() ? 'Finish' : 'Next'}
+        </Button>
+      </Form>
     </Formik>
   );
 };
