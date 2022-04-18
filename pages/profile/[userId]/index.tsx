@@ -1,10 +1,17 @@
-import { Box, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  VStack,
+} from '@chakra-ui/react';
 import { Layout } from 'components/Layout';
+import AddUserOwnedPetForm from 'modules/pet/AddUserPetForm';
 import { UserProfileHeader } from 'modules/profile/user/UserProfileHeader';
 import UserProfileTabs from 'modules/profile/user/UserProfileTabs';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import withApollo from 'utils/withApollo';
 
 const UserProfilePage: NextPage = () => {
@@ -27,6 +34,13 @@ const UserProfilePage: NextPage = () => {
             <UserProfileTabs userId={parseInt(userId as string)} />
           </Box>
         </VStack>
+        <Modal isOpen={true} onClose={() => {}} size={'6xl'} closeOnEsc>
+          <ModalOverlay />
+          <ModalContent>
+            <AddUserOwnedPetForm />
+            <ModalCloseButton />
+          </ModalContent>
+        </Modal>
       </Box>
     </Layout>
   );

@@ -27,7 +27,7 @@ const TwoOptionsSwitch: React.FC<TwoOptionsSwitchProps> = ({
 
   return (
     <HStack>
-      {options.map(({ label, value }, index) => {
+      {options.map(({ label, value }, _index) => {
         const isActive = value === activeValue;
         return (
           <Button

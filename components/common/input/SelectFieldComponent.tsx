@@ -1,4 +1,5 @@
 import { Box, useColorModePreference } from '@chakra-ui/react';
+import { useFormikContext } from 'formik';
 import React from 'react';
 import Select, { GroupBase, Props, StylesConfig } from 'react-select';
 type MyOptionType = {
@@ -10,17 +11,21 @@ interface SelectComponentProps {
   isMulti?: boolean;
   options: MyOptionType[];
   placeholder?: string;
-  handleChange: (value: any) => void;
+  handleChange?: (value: any) => void;
+  maxLimit?: number;
   selectProps?: Props;
 }
+type IsMulti = false;
 
 const SelectComponent: React.FC<SelectComponentProps> = ({
   isMulti,
   options,
   handleChange,
+  maxLimit,
   selectProps,
 }) => {
-  type IsMulti = false;
+  const { setFieldValue } = useFormikContext();
+
   const colorMode = useColorModePreference();
 
   const customSelectFieldStyles: StylesConfig<MyOptionType, IsMulti> = {
@@ -68,6 +73,11 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
     }),
   };
 
+  const onChange = handleChange
+    ? handleChange
+    : (newValue: any) => {
+        selectProps?.name && setFieldValue(selectProps.name, newValue);
+      };
   return (
     <Box>
       <Select
@@ -79,7 +89,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
             GroupBase<unknown>
           >
         }
-        onChange={handleChange}
+        onChange={onChange}
         isMulti={isMulti}
         options={options}
       />

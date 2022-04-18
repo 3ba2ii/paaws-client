@@ -1,13 +1,13 @@
 import {
   Box,
-  Text,
-  VStack,
   Heading,
   HStack,
   Link,
   Tag,
+  Text,
+  VStack,
 } from '@chakra-ui/react';
-import { UserOwnedPetQuery, UserOwnedPetsQuery } from 'generated/graphql';
+import { UserOwnedPetQuery } from 'generated/graphql';
 import React from 'react';
 import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
 import { PetInfoCardsRow } from './PetInfoCardsRow';
