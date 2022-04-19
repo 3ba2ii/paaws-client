@@ -3,7 +3,7 @@ import {
   Button,
   ButtonProps,
   HStack,
-  useColorModePreference,
+  StackProps,
   useColorModeValue,
 } from '@chakra-ui/react';
 import React from 'react';
@@ -15,18 +15,20 @@ type TwoOptionsSwitchProps = ButtonProps & {
   }[];
   handleChange: (value: any) => void;
   activeValue?: any;
+  stackProps?: StackProps;
 };
 
 const TwoOptionsSwitch: React.FC<TwoOptionsSwitchProps> = ({
   handleChange,
   options,
   activeValue = '',
+  stackProps,
   ...props
 }) => {
-  const bgActiveColor = useColorModeValue('teal.50', 'teal.900');
+  const bgActiveColor = useColorModeValue('teal.500', 'teal.900');
 
   return (
-    <HStack>
+    <HStack h='100%' {...stackProps}>
       {options.map(({ label, value }, _index) => {
         const isActive = value === activeValue;
         return (

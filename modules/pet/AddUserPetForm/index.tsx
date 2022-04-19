@@ -1,4 +1,11 @@
-import { Box, Grid, Text, useColorModeValue, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Divider,
+  Grid,
+  Text,
+  useColorModeValue,
+  VStack,
+} from '@chakra-ui/react';
 import CustomDropzone from 'components/common/input/CustomDropzone';
 import FormikStep from 'components/form/FormikStep';
 import FormikStepper from 'components/form/FormikStepper';
@@ -37,32 +44,34 @@ const FormStepsContent: {
 const AddUserOwnedPetForm: React.FC = ({}) => {
   const [createUserPet] = useCreateUserOwnedPetMutation();
   const [step, setStep] = React.useState(0);
-  const bgColor = useColorModeValue('rgb(241, 243, 247)', 'gray.900');
+  const bgColor = useColorModeValue('#ddd2', 'gray.900');
 
   return (
     <Grid w='100%' h='100%' gridTemplateColumns={'minmax(400px, 1fr) 3fr'}>
       <VStack
         py='32px'
         bg={bgColor}
-        boxShadow='md'
+        boxShadow='base'
         borderRight={'1px solid'}
-        borderColor='gray.100'
+        borderColor='gray.50'
         w='100%'
+        h='100%'
         gridColumn={'1 / 2'}
         position='relative'
-        spacing={'40px'}
       >
-        {FormStepsContent.map((sc, index) => (
-          <StepIndicator
-            key={index}
-            icon={sc.icon}
-            step={index}
-            isActive={index === step}
-            title={sc.title}
-            subtitle={sc.subtitle}
-            onClick={() => setStep(index)}
-          />
-        ))}
+        <VStack h='fit-content' pos='relative' spacing={'40px'}>
+          {FormStepsContent.map((sc, index) => (
+            <StepIndicator
+              key={index}
+              icon={sc.icon}
+              step={index}
+              isActive={index === step}
+              title={sc.title}
+              subtitle={sc.subtitle}
+              onClick={() => setStep(index)}
+            />
+          ))}
+        </VStack>
       </VStack>
       <Box w='100%' h='100%' gridColumn={'2 / 3'}>
         <Formik

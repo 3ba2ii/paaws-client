@@ -1,4 +1,4 @@
-import { Box, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import { Box, Divider, Heading, HStack, Text, VStack } from '@chakra-ui/react';
 import InputHOC from 'components/common/input/CustomInputComponent';
 import InputField from 'components/common/input/InputField';
 import SelectComponent, {
@@ -85,20 +85,32 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
           })}
           handleChange={(value) => formik.setFieldValue('gender', value)}
           activeValue={formik.values.gender}
+          stackProps={{
+            divider: <Divider w='1px' h='20px' bg='gray.300' />,
+            bg: 'gray.100',
+            borderRadius: '6px',
+            w: 'fit-content',
+            boxShadow: 'md',
+            spacing: '10px',
+            border: '1px solid',
+            borderColor: 'gray.100',
+          }}
         />
       </InputHOC>
 
-      <InputField label='Birthdate' name='birthDate' type={'date'} />
-      <InputHOC label='Size' name='size'>
-        <SelectComponent
-          options={Object.entries(PetSize).map(([label, value]) => {
-            return { label, value };
-          })}
-          handleChange={(value: MyOptionType) =>
-            formik.setFieldValue('size', value.value)
-          }
-        />
-      </InputHOC>
+      <HStack w='100%'>
+        <InputField label='Birthdate' name='birthDate' type={'date'} />
+        <InputHOC label='Size' name='size'>
+          <SelectComponent
+            options={Object.entries(PetSize).map(([label, value]) => {
+              return { label, value };
+            })}
+            handleChange={(value: MyOptionType) =>
+              formik.setFieldValue('size', value.value)
+            }
+          />
+        </InputHOC>
+      </HStack>
     </VStack>
   );
 };

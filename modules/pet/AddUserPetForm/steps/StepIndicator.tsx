@@ -15,11 +15,11 @@ export const StepIndicator: React.FC<{
       background={
         isActive
           ? 'linear-gradient(269.54deg, #37A29C 0.4%, #EB78FE 99.68%)'
-          : 'gray.200'
+          : 'gray.100'
       }
       borderRadius={'8px'}
       overflow='hidden'
-      p={'2.5px'}
+      p={'2px'}
       boxShadow='sm'
       maxW='320px'
     >
