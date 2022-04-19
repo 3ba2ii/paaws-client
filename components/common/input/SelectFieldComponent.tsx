@@ -50,6 +50,8 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
     singleValue: (provided, _state) => ({
       ...provided,
       color: 'inherit',
+      fontSize: '1rem',
+      fontWeight: 500,
     }),
 
     menu: (provided, _state) => ({
@@ -70,6 +72,8 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
       borderRadius: '6px',
       paddingInlineStart: '6px',
       backgroundColor: colorMode === 'light' ? '#E2E8F0' : '#718096',
+      fontSize: '1rem',
+      fontWeight: 500,
     }),
     multiValueLabel: (provided, _state) => ({
       ...provided,
