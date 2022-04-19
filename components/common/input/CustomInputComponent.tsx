@@ -15,7 +15,7 @@ interface GenericInputComponentProps {
   placeholder?: string;
 }
 
-const InputHOC: React.FC<GenericInputComponentProps> = ({
+const InputFieldWrapper: React.FC<GenericInputComponentProps> = ({
   label,
   required = true,
   helperText,
@@ -42,4 +42,4 @@ const InputHOC: React.FC<GenericInputComponentProps> = ({
     </FormControl>
   );
 };
-export default InputHOC;
+export default InputFieldWrapper;

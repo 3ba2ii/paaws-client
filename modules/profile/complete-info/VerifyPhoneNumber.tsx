@@ -6,7 +6,7 @@ import {
   Button,
   useToast,
 } from '@chakra-ui/react';
-import InputHOC from 'components/common/input/CustomInputComponent';
+import InputFieldWrapper from 'components/common/input/CustomInputComponent';
 import { Formik, Form } from 'formik';
 import { MeQuery, useVerifyPhoneNumberMutation } from 'generated/graphql';
 import router from 'next/router';
@@ -57,7 +57,7 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
         {({ isSubmitting, setFieldValue }) => (
           <Form>
             <VStack align='flex-start' spacing={5} maxW='450px'>
-              <InputHOC
+              <InputFieldWrapper
                 label={`A 4-digit number has been sent to this phone number${
                   phone ? ' xxxxxxxx' + phone?.slice(-3) : ''
                 }, Please type it in the box below `}
@@ -77,7 +77,7 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
                     <PinInputField />
                   </PinInput>
                 </HStack>
-              </InputHOC>
+              </InputFieldWrapper>
               <Button
                 isLoading={isSubmitting}
                 colorScheme={'teal'}

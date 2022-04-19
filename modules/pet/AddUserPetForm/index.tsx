@@ -2,7 +2,12 @@ import { Box, Grid, useColorModeValue, VStack } from '@chakra-ui/react';
 import FormikStep from 'components/form/FormikStep';
 import FormikStepper from 'components/form/FormikStepper';
 import { Formik } from 'formik';
-import { Breeds, useCreateUserOwnedPetMutation } from 'generated/graphql';
+import {
+  PetGender,
+  PetSize,
+  PetType,
+  useCreateUserOwnedPetMutation,
+} from 'generated/graphql';
 import React, { ReactElement } from 'react';
 import { BiHash, BiUpload } from 'react-icons/bi';
 import { MdContentPaste } from 'react-icons/md';
@@ -19,16 +24,34 @@ export const Step1ValidationSchema = Yup.object().shape({
     .max(50, 'Name should not exceed 50 characters')
     .required('Please provide a name for your pet.'),
 
-  type: Yup.string().required('Required!'),
-  breeds: Yup.array().required('Required!'),
+  type: Yup.mixed()
+    .oneOf(Object.values(PetType), 'Invalid pet type!')
+    .required('Please provide a valid pet type.'),
+
+  breeds: Yup.array()
+    .min(1, 'Please provide at least one breed')
+    .max(4, 'Pet breeds can not be more than 4')
+    .required('Required!'),
+  colors: Yup.array()
+    .min(1, 'Please provide at least one color for your pet')
+    .max(4, 'Pet colors can not be more than 4')
+    .required('Required!'),
+
+  gender: Yup.mixed()
+    .oneOf(Object.values(PetGender), 'Invalid pet gender!')
+    .required('Required!'),
+  size: Yup.mixed()
+    .oneOf(Object.values(PetSize), 'Invalid pet size!')
+    .required('Required!'),
 });
 export const Step2ValidationSchema = Yup.object().shape({
   about: Yup.string()
-    .min(100, 'About should not exceed 50 characters')
+    .min(100, 'About should be at least 100 characters')
     .required('Please add a description of your pet.'),
 
-  birthDate: Yup.string().required('Required!'),
+  birthDate: Yup.date().required('Required!'),
 });
+
 export const Step3ValidationSchema = Yup.object().shape({
   images: Yup.array().required('Required!'),
 });

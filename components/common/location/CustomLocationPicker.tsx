@@ -7,7 +7,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Libraries, LocationType } from 'types';
 import { Country, SelectLocationOptions } from 'utils/constants/enums';
 import { isProduction } from 'utils/isProduction';
-import InputHOC from '../input/CustomInputComponent';
+import InputFieldWrapper from '../input/CustomInputComponent';
 import SelectComponent from '../input/SelectFieldComponent';
 import { CustomLocationAutocomplete } from './LocationAutoComplete';
 import { MapLoadingComponent } from './MapLoadingComponent';
@@ -131,7 +131,7 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
         {({ setFieldValue }) => (
           <Form>
             <HStack w='100%'>
-              <InputHOC label='Country' name='country'>
+              <InputFieldWrapper label='Country' name='country'>
                 <Box w='100%'>
                   <SelectComponent
                     selectProps={{
@@ -147,8 +147,8 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
                     }}
                   />
                 </Box>
-              </InputHOC>
-              <InputHOC label='State' name='state'>
+              </InputFieldWrapper>
+              <InputFieldWrapper label='State' name='state'>
                 <Box w='100%'>
                   <SelectComponent
                     selectProps={{
@@ -164,7 +164,7 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
                     }}
                   />
                 </Box>
-              </InputHOC>
+              </InputFieldWrapper>
             </HStack>
           </Form>
         )}

@@ -1,5 +1,5 @@
 import { Box, Divider, Heading, HStack, Text, VStack } from '@chakra-ui/react';
-import InputHOC from 'components/common/input/CustomInputComponent';
+import InputFieldWrapper from 'components/common/input/CustomInputComponent';
 import InputField from 'components/common/input/InputField';
 import SelectComponent, {
   MyOptionType,
@@ -45,7 +45,7 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
             bottom: '-24px',
           }}
         />
-        <InputHOC label='Pet Type' name='type'>
+        <InputFieldWrapper label='Pet Type' name='type'>
           <SelectComponent
             options={PetTypeObj}
             selectProps={{
@@ -58,10 +58,10 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
               formik.setFieldValue('type', value.value);
             }}
           />
-        </InputHOC>
+        </InputFieldWrapper>
       </HStack>
       <HStack w='100%' spacing={'24px'}>
-        <InputHOC label='Breeds' name='breeds'>
+        <InputFieldWrapper label='Breeds' name='breeds'>
           <SelectComponent
             options={PetBreedsObj}
             selectProps={{
@@ -79,8 +79,8 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
             }}
             isMulti
           />
-        </InputHOC>
-        <InputHOC label='Colors' name='colors'>
+        </InputFieldWrapper>
+        <InputFieldWrapper label='Colors' name='colors'>
           <SelectComponent
             options={PetColorObj}
             selectProps={{
@@ -98,10 +98,10 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
             }}
             isMulti
           />
-        </InputHOC>
+        </InputFieldWrapper>
       </HStack>
       <Box w='calc(50% - 12px)'>
-        <InputHOC label='Size' name='size'>
+        <InputFieldWrapper label='Size' name='size'>
           <SelectComponent
             options={PetSizeObj}
             handleChange={(value: MyOptionType) =>
@@ -114,9 +114,9 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
               value: PetSizeObj.find((x) => x.value === formik.values.size),
             }}
           />
-        </InputHOC>
+        </InputFieldWrapper>
       </Box>
-      <InputHOC label='Gender' name='gender'>
+      <InputFieldWrapper label='Gender' name='gender'>
         <TwoOptionsSwitch
           options={PetGenderObj}
           handleChange={(value) => formik.setFieldValue('gender', value)}
@@ -132,7 +132,7 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
             borderColor: 'gray.100',
           }}
         />
-      </InputHOC>
+      </InputFieldWrapper>
     </VStack>
   );
 };

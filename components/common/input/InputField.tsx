@@ -25,7 +25,7 @@ type InputFieldProps = InputHTMLAttributes<
 };
 const InputField: React.FC<InputFieldProps> = ({
   label,
-  size,
+  size: _size,
   textarea,
   helperText,
   required = true,
