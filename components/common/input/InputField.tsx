@@ -1,6 +1,7 @@
 import {
   FormControl,
   FormErrorMessage,
+  FormErrorMessageProps,
   FormHelperText,
   FormLabel,
 } from '@chakra-ui/form-control';
@@ -20,6 +21,7 @@ type InputFieldProps = InputHTMLAttributes<
   required?: boolean;
   showLength?: boolean;
   maxInputLength?: number;
+  formErrorMessageProps?: FormErrorMessageProps;
 };
 const InputField: React.FC<InputFieldProps> = ({
   label,
@@ -29,6 +31,7 @@ const InputField: React.FC<InputFieldProps> = ({
   required = true,
   showLength,
   maxInputLength,
+  formErrorMessageProps,
   ...props
 }) => {
   const [field, { error, touched }] = useField(props);
@@ -74,7 +77,13 @@ const InputField: React.FC<InputFieldProps> = ({
       ) : null}
 
       {error && touched ? (
-        <FormErrorMessage maxW='45ch'>{error}</FormErrorMessage>
+        <FormErrorMessage
+          fontSize='13px'
+          maxW='45ch'
+          {...formErrorMessageProps}
+        >
+          {error}
+        </FormErrorMessage>
       ) : null}
     </FormControl>
   );

@@ -2,7 +2,7 @@ import { Box, Grid, useColorModeValue, VStack } from '@chakra-ui/react';
 import FormikStep from 'components/form/FormikStep';
 import FormikStepper from 'components/form/FormikStepper';
 import { Formik } from 'formik';
-import { useCreateUserOwnedPetMutation } from 'generated/graphql';
+import { Breeds, useCreateUserOwnedPetMutation } from 'generated/graphql';
 import React, { ReactElement } from 'react';
 import { BiHash, BiUpload } from 'react-icons/bi';
 import { MdContentPaste } from 'react-icons/md';
@@ -16,10 +16,21 @@ import * as Yup from 'yup';
 
 export const Step1ValidationSchema = Yup.object().shape({
   name: Yup.string()
-    .min(6, 'Name must be at least 6 characters')
     .max(50, 'Name should not exceed 50 characters')
-    .matches(/^[a-zA-Z\s]*$/, 'Name should contain only english characters')
-    .required('Required!'),
+    .required('Please provide a name for your pet.'),
+
+  type: Yup.string().required('Required!'),
+  breeds: Yup.array().required('Required!'),
+});
+export const Step2ValidationSchema = Yup.object().shape({
+  about: Yup.string()
+    .min(100, 'About should not exceed 50 characters')
+    .required('Please add a description of your pet.'),
+
+  birthDate: Yup.string().required('Required!'),
+});
+export const Step3ValidationSchema = Yup.object().shape({
+  images: Yup.array().required('Required!'),
 });
 
 const FormStepsContent: {
@@ -49,6 +60,22 @@ const AddUserOwnedPetForm: React.FC = ({}) => {
   const [step, setStep] = React.useState(0);
   const bgColor = useColorModeValue('#ddd2', 'gray.900');
 
+  const buildValidationSchema = () => {
+    switch (step) {
+      case 0:
+        return Step1ValidationSchema;
+      case 1:
+        return Step1ValidationSchema.concat(Step2ValidationSchema);
+
+      case 2:
+        return Step1ValidationSchema.concat(Step2ValidationSchema).concat(
+          Step3ValidationSchema
+        );
+
+      default:
+        return Yup.object().shape({});
+    }
+  };
   return (
     <Grid
       w='100%'
@@ -89,10 +116,8 @@ const AddUserOwnedPetForm: React.FC = ({}) => {
               Object.values({ images, ...petInfo }).some(
                 (x) => x == null || x == undefined
               )
-            ) {
-              return;
-            }
-
+            )
+              return alert('Please fill all the fields');
             await createUserPet({
               variables: {
                 images,
@@ -103,8 +128,8 @@ const AddUserOwnedPetForm: React.FC = ({}) => {
               },
             });
           }}
-          validateOnBlur
-          validationSchema={Step1ValidationSchema}
+          isInitialValid={false}
+          validationSchema={buildValidationSchema()}
         >
           {(formik) => (
             <FormikStepper formikProps={formik} step={step} setStep={setStep}>

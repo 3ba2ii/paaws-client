@@ -6,15 +6,15 @@ import SelectComponent, {
 } from 'components/common/input/SelectFieldComponent';
 import TwoOptionsSwitch from 'components/common/input/TwoOptionsSwitch';
 import { FormikProps } from 'formik';
-import {
-  Breeds,
-  PetColors,
-  PetGender,
-  PetSize,
-  PetType,
-} from 'generated/graphql';
 import React from 'react';
 import { CreatePetInputType } from 'types';
+import {
+  PetBreedsObj,
+  PetColorObj,
+  PetGenderObj,
+  PetSizeObj,
+  PetTypeObj,
+} from 'utils/constants/enums';
 
 export interface StepProps {
   formik: FormikProps<CreatePetInputType>;
@@ -22,7 +22,7 @@ export interface StepProps {
 
 const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
   return (
-    <VStack align={'flex-start'} w='100%' p='32px' spacing={'24px'}>
+    <VStack align={'flex-start'} w='100%' p='32px' spacing={'32px'}>
       <Box>
         <Heading fontSize={'24px'} size='lg' color='gray.700'>
           Tell us more about your pet
@@ -33,18 +33,28 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
         </Text>
       </Box>
       <HStack w='100%' spacing={'24px'}>
-        <InputField label='Pet Name' name='name' placeholder='Kitty Cat' />
+        <InputField
+          id='pet-name'
+          value={formik.values.name}
+          label='Pet Name'
+          name='name'
+          autoFocus
+          placeholder='Kitty Cat'
+          formErrorMessageProps={{
+            pos: 'absolute',
+            bottom: '-24px',
+          }}
+        />
         <InputHOC label='Pet Type' name='type'>
           <SelectComponent
-            options={Object.entries(PetType).map(([label, value]) => {
-              return { label, value };
-            })}
+            options={PetTypeObj}
             selectProps={{
               name: 'type',
               placeholder: 'Dog',
               hideSelectedOptions: true,
+              value: PetTypeObj.find((x) => x.value === formik.values.type),
             }}
-            handleChange={(value) => {
+            handleChange={(value: MyOptionType) => {
               formik.setFieldValue('type', value.value);
             }}
           />
@@ -53,10 +63,14 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
       <HStack w='100%' spacing={'24px'}>
         <InputHOC label='Breeds' name='breeds'>
           <SelectComponent
-            options={Object.entries(Breeds).map(([label, value]) => {
-              return { label, value };
-            })}
-            selectProps={{ name: 'breeds', placeholder: 'Bulldog, Huskey' }}
+            options={PetBreedsObj}
+            selectProps={{
+              name: 'breeds',
+              placeholder: 'Bulldog, Huskey',
+              value: formik.values.breeds?.map((x) => {
+                return PetBreedsObj.find((y) => y.value === x);
+              }),
+            }}
             handleChange={(values) => {
               formik.setFieldValue(
                 'breeds',
@@ -68,10 +82,14 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
         </InputHOC>
         <InputHOC label='Colors' name='colors'>
           <SelectComponent
-            options={Object.entries(PetColors).map(([label, value]) => {
-              return { label, value };
-            })}
-            selectProps={{ name: 'colors', placeholder: 'Black, White' }}
+            options={PetColorObj}
+            selectProps={{
+              name: 'colors',
+              placeholder: 'Black, White',
+              value: formik.values.colors?.map((x) => {
+                return PetColorObj.find((y) => y.value === x);
+              }),
+            }}
             handleChange={(values) => {
               formik.setFieldValue(
                 'colors',
@@ -85,9 +103,7 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
       <Box w='calc(50% - 12px)'>
         <InputHOC label='Size' name='size'>
           <SelectComponent
-            options={Object.entries(PetSize).map(([label, value]) => {
-              return { label, value };
-            })}
+            options={PetSizeObj}
             handleChange={(value: MyOptionType) =>
               formik.setFieldValue('size', value.value)
             }
@@ -95,17 +111,14 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
               name: 'size',
               hideSelectedOptions: true,
               placeholder: 'Large',
+              value: PetSizeObj.find((x) => x.value === formik.values.size),
             }}
           />
         </InputHOC>
       </Box>
       <InputHOC label='Gender' name='gender'>
         <TwoOptionsSwitch
-          options={Object.entries(PetGender)
-            .reverse()
-            .map(([label, value]) => {
-              return { label, value };
-            })}
+          options={PetGenderObj}
           handleChange={(value) => formik.setFieldValue('gender', value)}
           activeValue={formik.values.gender}
           stackProps={{

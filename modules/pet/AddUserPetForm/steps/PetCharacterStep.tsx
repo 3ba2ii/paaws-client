@@ -22,6 +22,7 @@ const PetCharacterStep: React.FC<StepProps> = ({ formik }) => {
       />
       <Box w='calc(50% - 12px)'>
         <InputField
+          id='birthdate'
           label='Birthdate'
           name='birthDate'
           type={'date'}

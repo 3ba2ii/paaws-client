@@ -16,19 +16,20 @@ const FormikStepper: React.FC<FormikStepperProps> = ({
   setStep,
   formikProps,
 }) => {
-  console.log(
-    `🚀 ~ file: FormikStepper.tsx ~ line 18 ~ formikProps`,
-    formikProps?.errors
-  );
   const childrenArray = React.Children.toArray(
     children
   ) as React.ReactElement<FormikStepProps>[];
 
   const currentChild = childrenArray[step];
+  console.log(
+    `🚀 ~ file: FormikStepper.tsx ~ line 27 ~ isValidStep ~ formikProps?.errors`,
+    formikProps?.errors
+  );
 
   const isValidStep = () => {
     const obj = formikProps?.errors;
     return (
+      formikProps?.isValid &&
       obj && // 👈 null and undefined check
       Object.keys(obj).length === 0 &&
       Object.getPrototypeOf(obj) === Object.prototype
