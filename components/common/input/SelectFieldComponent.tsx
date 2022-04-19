@@ -1,4 +1,8 @@
-import { Box, useColorModePreference } from '@chakra-ui/react';
+import {
+  Box,
+  useColorModePreference,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import { useFormikContext } from 'formik';
 import React from 'react';
 import Select, { GroupBase, Props, StylesConfig } from 'react-select';
@@ -26,20 +30,22 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
 }) => {
   const colorMode = useColorModePreference();
 
+  const colors = {
+    controlBorderColor: useColorModeValue('gray.200', 'gray.500'),
+    placeholder: 'gray.500',
+    menuBG: useColorModeValue('white', 'gray.900'),
+  };
+
   const customSelectFieldStyles: StylesConfig<MyOptionType, IsMulti> = {
     control: (provided, state) => ({
       ...provided,
       cursor: 'pointer',
       backgroundColor: 'inherit',
-      borderColor: state.isFocused
-        ? 'blue.500'
-        : colorMode === 'light'
-        ? 'gray.200'
-        : 'gray.500',
+      borderColor: state.isFocused ? 'blue.500' : colors.controlBorderColor,
     }),
     placeholder: (provided, _state) => ({
       ...provided,
-      color: 'inherit',
+      color: '#718096',
     }),
     singleValue: (provided, _state) => ({
       ...provided,
@@ -48,22 +54,22 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
 
     menu: (provided, _state) => ({
       ...provided,
-
       cursor: 'pointer',
-      backgroundColor: 'inherit',
+      backgroundColor: colors.menuBG,
     }),
     option: (provided, _state) => ({
       ...provided,
       cursor: 'pointer',
       backgroundColor: 'inherit',
       '&:hover': {
-        backdropFilter: 'brightness(115%)',
+        backdropFilter: 'brightness(95%)',
       },
     }),
     multiValue: (provided, _state) => ({
       ...provided,
-      borderRadius: '4px',
-      backgroundColor: colorMode === 'light' ? '#E2E8F0' : '718096',
+      borderRadius: '6px',
+      paddingInlineStart: '6px',
+      backgroundColor: colorMode === 'light' ? '#E2E8F0' : '#718096',
     }),
     multiValueLabel: (provided, _state) => ({
       ...provided,

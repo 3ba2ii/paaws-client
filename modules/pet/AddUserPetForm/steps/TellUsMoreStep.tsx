@@ -52,7 +52,7 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
             options={Object.entries(Breeds).map(([label, value]) => {
               return { label, value };
             })}
-            selectProps={{ name: 'breeds' }}
+            selectProps={{ name: 'breeds', placeholder: 'Bulldog, Huskey' }}
             handleChange={(values) => {
               formik.setFieldValue(
                 'breeds',
@@ -80,9 +80,11 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
       </HStack>
       <InputHOC label='Gender' name='gender'>
         <TwoOptionsSwitch
-          options={Object.entries(PetGender).map(([label, value]) => {
-            return { label, value };
-          })}
+          options={Object.entries(PetGender)
+            .reverse()
+            .map(([label, value]) => {
+              return { label, value };
+            })}
           handleChange={(value) => formik.setFieldValue('gender', value)}
           activeValue={formik.values.gender}
           stackProps={{
