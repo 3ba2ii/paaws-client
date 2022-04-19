@@ -77,7 +77,7 @@ const UserPetInfoColumn: React.FC<UserPetInfoColumnProps> = ({
         <Heading size='md' color='gray.700'>
           About {pet.name}
         </Heading>
-        <Text textStyle={'p1'}>
+        <Text textStyle={'p1'} maxW='70ch' wordBreak={'break-all'}>
           {userOwnedPet.about}Quis anim exercitation est in id. Quis id
           consequat do qui. Proident quis nulla eu ex ea velit consequat amet
           consectetur proident fugiat. Reprehenderit aliquip pariatur sint qui
