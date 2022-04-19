@@ -7,6 +7,7 @@ const PetCharacterStep: React.FC<StepProps> = ({ formik }) => {
   return (
     <VStack>
       <InputField label='About' name='about' textarea />
+      <InputField label='Birthdate' name='birthDate' type={'date'} />
     </VStack>
   );
 };

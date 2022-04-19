@@ -47,7 +47,12 @@ const AddUserOwnedPetForm: React.FC = ({}) => {
   const bgColor = useColorModeValue('#ddd2', 'gray.900');
 
   return (
-    <Grid w='100%' h='100%' gridTemplateColumns={'minmax(400px, 1fr) 3fr'}>
+    <Grid
+      w='100%'
+      h='100%'
+      gridTemplateColumns={'minmax(400px, 1fr) 3fr'}
+      pos='relative'
+    >
       <VStack
         py='32px'
         bg={bgColor}

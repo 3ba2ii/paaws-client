@@ -45,7 +45,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
     }),
     placeholder: (provided, _state) => ({
       ...provided,
-      color: '#718096',
+      color: '#A0AEC0',
     }),
     singleValue: (provided, _state) => ({
       ...provided,

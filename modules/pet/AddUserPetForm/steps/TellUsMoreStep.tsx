@@ -33,13 +33,17 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
         </Text>
       </Box>
       <HStack w='100%' spacing={'24px'}>
-        <InputField label='Pet Name' name='name' />
+        <InputField label='Pet Name' name='name' placeholder='Kitty Cat' />
         <InputHOC label='Pet Type' name='type'>
           <SelectComponent
             options={Object.entries(PetType).map(([label, value]) => {
               return { label, value };
             })}
-            selectProps={{ name: 'type' }}
+            selectProps={{
+              name: 'type',
+              placeholder: 'Dog',
+              hideSelectedOptions: true,
+            }}
             handleChange={(value) => {
               formik.setFieldValue('type', value.value);
             }}
@@ -67,7 +71,7 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
             options={Object.entries(PetColors).map(([label, value]) => {
               return { label, value };
             })}
-            selectProps={{ name: 'colors' }}
+            selectProps={{ name: 'colors', placeholder: 'Black, White' }}
             handleChange={(values) => {
               formik.setFieldValue(
                 'colors',
@@ -78,6 +82,23 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
           />
         </InputHOC>
       </HStack>
+      <Box w='calc(50% - 12px)'>
+        <InputHOC label='Size' name='size'>
+          <SelectComponent
+            options={Object.entries(PetSize).map(([label, value]) => {
+              return { label, value };
+            })}
+            handleChange={(value: MyOptionType) =>
+              formik.setFieldValue('size', value.value)
+            }
+            selectProps={{
+              name: 'size',
+              hideSelectedOptions: true,
+              placeholder: 'Large',
+            }}
+          />
+        </InputHOC>
+      </Box>
       <InputHOC label='Gender' name='gender'>
         <TwoOptionsSwitch
           options={Object.entries(PetGender)
@@ -99,20 +120,6 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
           }}
         />
       </InputHOC>
-
-      <HStack w='100%'>
-        <InputField label='Birthdate' name='birthDate' type={'date'} />
-        <InputHOC label='Size' name='size'>
-          <SelectComponent
-            options={Object.entries(PetSize).map(([label, value]) => {
-              return { label, value };
-            })}
-            handleChange={(value: MyOptionType) =>
-              formik.setFieldValue('size', value.value)
-            }
-          />
-        </InputHOC>
-      </HStack>
     </VStack>
   );
 };
