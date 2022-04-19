@@ -18,6 +18,7 @@ import { CreatePetInputType } from 'types';
 import { StepIndicator } from './steps/StepIndicator';
 import PetCharacterStep from './steps/PetCharacterStep';
 import TellUsMoreStep from './steps/TellUsMoreStep';
+import UploadPetImagesStep from './steps/UploadPetImagesStep';
 
 const FormStepsContent: {
   icon: ReactElement;
@@ -112,8 +113,7 @@ const AddUserOwnedPetForm: React.FC = ({}) => {
               </FormikStep>
 
               <FormikStep>
-                <CustomDropzone label='Pet Images' name='images' required />
-                <Text>{JSON.stringify(formik.values)}</Text>
+                <UploadPetImagesStep formik={formik} />
               </FormikStep>
             </FormikStepper>
           )}
