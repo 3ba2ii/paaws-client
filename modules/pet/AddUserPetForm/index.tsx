@@ -1,114 +1,111 @@
-import {
-  Box,
-  Heading,
-  HStack,
-  SimpleGrid,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
-import InputHOC from 'components/common/input/CustomInputComponent';
-import InputField from 'components/common/input/InputField';
-import SelectComponent from 'components/common/input/SelectFieldComponent';
-import TwoOptionsSwitch from 'components/common/input/TwoOptionsSwitch';
+import { Box, Grid, Text, useColorModeValue, VStack } from '@chakra-ui/react';
+import CustomDropzone from 'components/common/input/CustomDropzone';
 import FormikStep from 'components/form/FormikStep';
 import FormikStepper from 'components/form/FormikStepper';
-import { Formik, useFormik } from 'formik';
-import { Breeds, PetColors, PetGender, PetType } from 'generated/graphql';
-import React from 'react';
+import { Formik } from 'formik';
+import { useCreateUserOwnedPetMutation } from 'generated/graphql';
+import React, { ReactElement } from 'react';
+import { BiHash, BiUpload } from 'react-icons/bi';
+import { MdContentPaste } from 'react-icons/md';
+import { CreatePetInputType } from 'types';
+import { StepIndicator } from './steps/StepIndicator';
+import PetCharacterStep from './steps/PetCharacterStep';
+import TellUsMoreStep from './steps/TellUsMoreStep';
 
-interface AddUserOwnedPetFormProps {}
+const FormStepsContent: {
+  icon: ReactElement;
+  title: string;
+  subtitle: string;
+}[] = [
+  {
+    icon: <MdContentPaste size='20px' />,
+    title: 'Tell us more about your pet',
+    subtitle: 'Give us more info about your pet',
+  },
+  {
+    icon: <BiHash size='22px' />,
+    title: 'Add character to your pet',
+    subtitle: 'Make your pet stand out',
+  },
+  {
+    icon: <BiUpload size='22px' />,
+    title: 'Upload your pet’s images ',
+    subtitle: 'Show us the beauty of your pet',
+  },
+];
 
-const AddUserOwnedPetForm: React.FC<AddUserOwnedPetFormProps> = ({}) => {
+const AddUserOwnedPetForm: React.FC = ({}) => {
+  const [createUserPet] = useCreateUserOwnedPetMutation();
   const [step, setStep] = React.useState(0);
+  const bgColor = useColorModeValue('rgb(241, 243, 247)', 'gray.900');
+
   return (
-    <SimpleGrid w='100%' h='100%' gridTemplateColumns={'1.5fr 3fr'}>
-      <VStack p='40px' bg='red'>
-        <Text>STEPPER</Text>
-      </VStack>
-      <Formik
-        initialValues={{
-          name: null,
-          type: null,
-          breeds: [],
-          colors: [],
-          gender: null,
-          birthDate: null,
-          size: null,
-          about: null,
-          skills: [],
-          images: [],
-        }}
-        onSubmit={(values) => {
-          alert(JSON.stringify(values));
-        }}
+    <Grid w='100%' h='100%' gridTemplateColumns={'minmax(400px, 1fr) 3fr'}>
+      <VStack
+        py='32px'
+        bg={bgColor}
+        boxShadow='md'
+        borderRight={'1px solid'}
+        borderColor='gray.100'
+        w='100%'
+        gridColumn={'1 / 2'}
+        position='relative'
+        spacing={'40px'}
       >
-        {(formik) => (
-          <FormikStepper formikProps={formik} step={step} setStep={setStep}>
-            <FormikStep>
-              <VStack align={'flex-start'} w='100%' p='32px' spacing={'24px'}>
-                <Box>
-                  <Heading fontSize={'24px'} size='lg' color='gray.700'>
-                    Tell us more about your pet
-                  </Heading>
-                  <Text textStyle='p1'>
-                    Please fill the sections below to let us know more about
-                    your lovely pet.
-                  </Text>
-                </Box>
-                <HStack w='100%' spacing={'24px'}>
-                  <InputField label='Pet Name' name='name' />
-                  <InputHOC label='Pet Type' name='type'>
-                    <SelectComponent
-                      options={Object.entries(PetType).map(([label, value]) => {
-                        return { label, value };
-                      })}
-                      selectProps={{ name: 'type' }}
-                    />
-                  </InputHOC>
-                </HStack>
-                <HStack w='100%' spacing={'24px'}>
-                  <InputHOC label='Breeds' name='breeds'>
-                    <SelectComponent
-                      options={Object.entries(Breeds).map(([label, value]) => {
-                        return { label, value };
-                      })}
-                      selectProps={{ name: 'breeds' }}
-                      isMulti
-                    />
-                  </InputHOC>
-                  <InputHOC label='Colors' name='colors'>
-                    <SelectComponent
-                      options={Object.entries(PetColors).map(
-                        ([label, value]) => {
-                          return { label, value };
-                        }
-                      )}
-                      selectProps={{ name: 'colors' }}
-                      isMulti
-                    />
-                  </InputHOC>
-                </HStack>
-                <InputHOC label='Gender' name='gender'>
-                  <TwoOptionsSwitch
-                    options={Object.entries(PetGender).map(([label, value]) => {
-                      return { label, value };
-                    })}
-                    handleChange={(value) =>
-                      formik.setFieldValue('gender', value)
-                    }
-                    activeValue={formik.values.gender}
-                  />
-                </InputHOC>
-                <InputField label='Birthdate' name='birthDate' type={'date'} />
-              </VStack>
-            </FormikStep>
-            <VStack>
-              <InputField label='About' name='about' />
-            </VStack>
-          </FormikStepper>
-        )}
-      </Formik>
-    </SimpleGrid>
+        {FormStepsContent.map((sc, index) => (
+          <StepIndicator
+            key={index}
+            icon={sc.icon}
+            step={index}
+            isActive={index === step}
+            title={sc.title}
+            subtitle={sc.subtitle}
+            onClick={() => setStep(index)}
+          />
+        ))}
+      </VStack>
+      <Box w='100%' h='100%' gridColumn={'2 / 3'}>
+        <Formik
+          initialValues={{} as CreatePetInputType}
+          onSubmit={async ({ images, ...petInfo }) => {
+            if (
+              Object.values({ images, ...petInfo }).some(
+                (x) => x == null || x == undefined
+              )
+            ) {
+              return;
+            }
+
+            await createUserPet({
+              variables: {
+                images,
+                petInfo: {
+                  ...petInfo,
+                  thumbnailIdx: petInfo.thumbnailIdx || 0,
+                },
+              },
+            });
+          }}
+          validateOnBlur
+        >
+          {(formik) => (
+            <FormikStepper formikProps={formik} step={step} setStep={setStep}>
+              <FormikStep>
+                <TellUsMoreStep formik={formik} />
+              </FormikStep>
+              <FormikStep>
+                <PetCharacterStep formik={formik} />
+              </FormikStep>
+
+              <FormikStep>
+                <CustomDropzone label='Pet Images' name='images' required />
+                <Text>{JSON.stringify(formik.values)}</Text>
+              </FormikStep>
+            </FormikStepper>
+          )}
+        </Formik>
+      </Box>
+    </Grid>
   );
 };
 export default AddUserOwnedPetForm;

@@ -1,5 +1,6 @@
 import {
   CreateMissingPostInput,
+  CreatePetInput,
   DateFilters,
   LocationFilters,
   Scalars,
@@ -28,5 +29,8 @@ export type TagsType = {
 };
 
 export type PostInputType = CreateMissingPostInput & {
+  images: Array<Scalars['Upload']>;
+};
+export type CreatePetInputType = CreatePetInput & {
   images: Array<Scalars['Upload']>;
 };

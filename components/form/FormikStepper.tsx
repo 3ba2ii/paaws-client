@@ -26,7 +26,7 @@ const FormikStepper: React.FC<FormikStepperProps> = ({
       {currentChild}
       <Button
         onClick={() => {
-          setStep(Math.max(step + 1, childrenArray.length - 1));
+          setStep(Math.min(step + 1, childrenArray.length - 1));
         }}
         type='submit'
       >

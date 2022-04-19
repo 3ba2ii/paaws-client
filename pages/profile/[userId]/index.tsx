@@ -36,7 +36,7 @@ const UserProfilePage: NextPage = () => {
         </VStack>
         <Modal isOpen={true} onClose={() => {}} size={'6xl'} closeOnEsc>
           <ModalOverlay />
-          <ModalContent>
+          <ModalContent css={{ aspectRatio: '16/11' }}>
             <AddUserOwnedPetForm />
             <ModalCloseButton />
           </ModalContent>
