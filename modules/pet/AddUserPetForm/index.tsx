@@ -1,12 +1,4 @@
-import {
-  Box,
-  Divider,
-  Grid,
-  Text,
-  useColorModeValue,
-  VStack,
-} from '@chakra-ui/react';
-import CustomDropzone from 'components/common/input/CustomDropzone';
+import { Box, Grid, useColorModeValue, VStack } from '@chakra-ui/react';
 import FormikStep from 'components/form/FormikStep';
 import FormikStepper from 'components/form/FormikStepper';
 import { Formik } from 'formik';
@@ -15,10 +7,20 @@ import React, { ReactElement } from 'react';
 import { BiHash, BiUpload } from 'react-icons/bi';
 import { MdContentPaste } from 'react-icons/md';
 import { CreatePetInputType } from 'types';
-import { StepIndicator } from './steps/StepIndicator';
 import PetCharacterStep from './steps/PetCharacterStep';
+import { StepIndicator } from './steps/StepIndicator';
 import TellUsMoreStep from './steps/TellUsMoreStep';
 import UploadPetImagesStep from './steps/UploadPetImagesStep';
+
+import * as Yup from 'yup';
+
+export const Step1ValidationSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(6, 'Name must be at least 6 characters')
+    .max(50, 'Name should not exceed 50 characters')
+    .matches(/^[a-zA-Z\s]*$/, 'Name should contain only english characters')
+    .required('Required!'),
+});
 
 const FormStepsContent: {
   icon: ReactElement;
@@ -102,6 +104,7 @@ const AddUserOwnedPetForm: React.FC = ({}) => {
             });
           }}
           validateOnBlur
+          validationSchema={Step1ValidationSchema}
         >
           {(formik) => (
             <FormikStepper formikProps={formik} step={step} setStep={setStep}>

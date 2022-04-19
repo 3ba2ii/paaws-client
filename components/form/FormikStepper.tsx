@@ -2,24 +2,38 @@ import { Button, HStack } from '@chakra-ui/react';
 import { Form, FormikProps } from 'formik';
 import React from 'react';
 import { BiChevronRight } from 'react-icons/bi';
+import { CreatePetInputType } from 'types';
 import { FormikStepProps } from './FormikStep';
 interface FormikStepperProps {
   step: number;
   setStep: (step: number) => void;
-  formikProps?: FormikProps<any>;
+  formikProps?: FormikProps<CreatePetInputType>;
 }
 
 const FormikStepper: React.FC<FormikStepperProps> = ({
   children,
   step,
   setStep,
+  formikProps,
 }) => {
+  console.log(
+    `🚀 ~ file: FormikStepper.tsx ~ line 18 ~ formikProps`,
+    formikProps?.errors
+  );
   const childrenArray = React.Children.toArray(
     children
   ) as React.ReactElement<FormikStepProps>[];
 
   const currentChild = childrenArray[step];
 
+  const isValidStep = () => {
+    const obj = formikProps?.errors;
+    return (
+      obj && // 👈 null and undefined check
+      Object.keys(obj).length === 0 &&
+      Object.getPrototypeOf(obj) === Object.prototype
+    );
+  };
   const isLastStep = () => step === childrenArray.length - 1;
   const isFirstStep = () => step === 0;
 
@@ -44,7 +58,8 @@ const FormikStepper: React.FC<FormikStepperProps> = ({
         </Button>
         <Button
           onClick={() => {
-            setStep(Math.min(step + 1, childrenArray.length - 1));
+            if (isValidStep())
+              setStep(Math.min(step + 1, childrenArray.length - 1));
           }}
           type='submit'
           colorScheme={'teal'}

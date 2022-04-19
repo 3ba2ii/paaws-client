@@ -1,4 +1,4 @@
-import { Box, Text, Heading, VStack } from '@chakra-ui/react';
+import { Box, Heading, Text, VStack } from '@chakra-ui/react';
 import CustomDropzone from 'components/common/input/CustomDropzone';
 import { FormikProps } from 'formik';
 import React from 'react';
