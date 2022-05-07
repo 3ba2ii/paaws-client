@@ -26,7 +26,6 @@ interface OwnedPetsGridProps {
 
 const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
   const router = useRouter();
-  console.log(`🚀 ~ file: OwnedPetsGrid.tsx ~ line 28 ~ router`, router.query);
   const { makeContextualHref } = useContextualRouting();
 
   const { data, fetchMore, loading, variables } = useUserOwnedPetsQuery({

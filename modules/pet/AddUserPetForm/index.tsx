@@ -152,6 +152,7 @@ const AddUserOwnedPetForm: React.FC = ({}) => {
             });
           }}
           isInitialValid={false}
+          validateOnBlur
           validationSchema={buildValidationSchema()}
         >
           {(formik) => (

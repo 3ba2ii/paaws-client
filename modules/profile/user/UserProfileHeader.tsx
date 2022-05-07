@@ -40,10 +40,14 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
       <VStack h='100%' w='100%' align='flex-start' justify='flex-start'>
         <HStack w='100%' align='center' justify={'space-between'}>
           <Heading size='lg'>{full_name}</Heading>
-
-          <Button variant='outline' size='sm'>
-            Edit Profile
-          </Button>
+          <HStack>
+            <Button variant='outline' size='sm'>
+              Edit Profile
+            </Button>
+            <Button colorScheme='teal' size='sm'>
+              Add New Pet
+            </Button>
+          </HStack>
         </HStack>
         <Text maxW={'60ch'} fontWeight='medium' color='gray.500'>
           {bio} I love investing and making wellness and healing for everyone at

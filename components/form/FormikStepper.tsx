@@ -21,10 +21,6 @@ const FormikStepper: React.FC<FormikStepperProps> = ({
   ) as React.ReactElement<FormikStepProps>[];
 
   const currentChild = childrenArray[step];
-  console.log(
-    `🚀 ~ file: FormikStepper.tsx ~ line 27 ~ isValidStep ~ formikProps?.errors`,
-    formikProps?.errors
-  );
 
   const isValidStep = () => {
     const obj = formikProps?.errors;

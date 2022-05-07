@@ -43,6 +43,7 @@ const UserPetInfoColumn: React.FC<UserPetInfoColumnProps> = ({
           </Text>
           {pet.breeds.map((b, index) => (
             <Link
+              key={index}
               fontSize={'16px'}
               color='blue.500'
               colorScheme={'blue'}

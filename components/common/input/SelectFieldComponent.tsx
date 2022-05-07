@@ -82,9 +82,8 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
   };
 
   return (
-    <Box>
+    <Box w='100%' h='100%'>
       <Select
-        {...selectProps}
         styles={
           customSelectFieldStyles as StylesConfig<
             unknown,
@@ -95,6 +94,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
         onChange={handleChange}
         isMulti={isMulti}
         options={options}
+        {...selectProps}
       />
     </Box>
   );
