@@ -20,7 +20,7 @@ const PetInfoCard: React.FC<PetInfoCardProps> = ({ label, value }) => {
       spacing={0}
       pl={2}
       css={{ aspectRatio: '1' }}
-      cursor={['Age', 'Birthdate'].includes(label) && 'pointer'}
+      cursor={['Age', 'Birthdate'].includes(label) ? 'pointer' : 'unset'}
       bg='whiteAlpha.800'
       boxShadow={'sm'}
     >
