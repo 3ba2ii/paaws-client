@@ -61,6 +61,7 @@ const FormikStepper: React.FC<FormikStepperProps> = ({
           type='submit'
           colorScheme={'teal'}
           rightIcon={<BiChevronRight size='20px' />}
+          isLoading={formikProps?.isSubmitting}
         >
           {isLastStep() ? 'Finish' : 'Next'}
         </Button>

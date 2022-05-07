@@ -152,6 +152,7 @@ export type CreatePetInput = {
   gender: PetGender;
   name: Scalars['String'];
   size: PetSize;
+  skills?: Maybe<Array<Scalars['String']>>;
   thumbnailIdx: Scalars['Int'];
   type: PetType;
 };
@@ -553,6 +554,7 @@ export type Pet = {
   images?: Maybe<Array<PetImages>>;
   name: Scalars['String'];
   size: PetSize;
+  skills?: Maybe<Array<PetSkill>>;
   thumbnail?: Maybe<Photo>;
   type: PetType;
   updatedAt: Scalars['DateTime'];
@@ -600,6 +602,13 @@ export enum PetSize {
   Medium = 'MEDIUM',
   Small = 'SMALL'
 }
+
+export type PetSkill = {
+  __typename?: 'PetSkill';
+  pet: Pet;
+  petId: Scalars['Float'];
+  skill: Scalars['String'];
+};
 
 /** Basic Pet Type */
 export enum PetType {
