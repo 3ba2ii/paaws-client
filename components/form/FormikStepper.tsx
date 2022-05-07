@@ -1,12 +1,13 @@
 import { Button, HStack } from '@chakra-ui/react';
 import { Form, FormikProps } from 'formik';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { BiChevronRight } from 'react-icons/bi';
 import { CreatePetInputType } from 'types';
 import { FormikStepProps } from './FormikStep';
 interface FormikStepperProps {
   step: number;
   setStep: (step: number) => void;
+  onCloseForm?: VoidFunction;
   formikProps?: FormikProps<CreatePetInputType>;
 }
 
@@ -14,6 +15,7 @@ const FormikStepper: React.FC<FormikStepperProps> = ({
   children,
   step,
   setStep,
+  onCloseForm,
   formikProps,
 }) => {
   const childrenArray = React.Children.toArray(
@@ -47,6 +49,7 @@ const FormikStepper: React.FC<FormikStepperProps> = ({
       >
         <Button
           onClick={() => {
+            if (isFirstStep() && onCloseForm) onCloseForm();
             setStep(Math.max(step - 1, 0));
           }}
           variant='ghost'

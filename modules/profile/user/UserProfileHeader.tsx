@@ -16,8 +16,7 @@ import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import UserAvatar from 'components/UserAvatar';
 import { useUserProfilePageQuery } from 'generated/graphql';
 import AddUserOwnedPetForm from 'modules/pet/AddUserPetForm';
-import { UserProfileContext } from 'pages/profile/[userId]';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
 export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
   const { data, loading } = useUserProfilePageQuery({
@@ -111,7 +110,9 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
       >
         <ModalOverlay />
         <ModalContent css={{ aspectRatio: '16/12' }}>
-          <AddUserOwnedPetForm />
+          <AddUserOwnedPetForm
+            onCloseForm={() => setModal({ addPet: false })}
+          />
           <ModalCloseButton />
         </ModalContent>
       </Modal>

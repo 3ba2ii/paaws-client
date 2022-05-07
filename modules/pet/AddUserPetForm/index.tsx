@@ -18,7 +18,9 @@ import {
   Step3ValidationSchema,
 } from 'utils/yupSchemas/AddUserPetValidationSchemas';
 
-const AddUserOwnedPetForm: React.FC = () => {
+const AddUserOwnedPetForm: React.FC<{ onCloseForm: VoidFunction }> = ({
+  onCloseForm,
+}) => {
   const [createUserPet] = useCreateUserOwnedPetMutation();
   const [step, setStep] = React.useState(0);
   const bgColor = useColorModeValue('#ddd2', 'gray.900');
@@ -90,13 +92,17 @@ const AddUserOwnedPetForm: React.FC = () => {
                 },
               },
             });
+            onCloseForm();
           }}
           isInitialValid={false}
           validateOnBlur
           validationSchema={buildValidationSchema()}
         >
           {(formik) => (
-            <FormikStepper formikProps={formik} step={step} setStep={setStep}>
+            <FormikStepper
+              formikProps={formik}
+              {...{ step, setStep, onCloseForm }}
+            >
               <FormikStep>
                 <TellUsMoreStep formik={formik} />
               </FormikStep>
