@@ -12,15 +12,19 @@ import { UserProfileHeader } from 'modules/profile/user/UserProfileHeader';
 import UserProfileTabs from 'modules/profile/user/UserProfileTabs';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
+import { createContext, useState } from 'react';
 import withApollo from 'utils/withApollo';
+
+export const UserProfileContext = createContext<{
+  modals: { [key: string]: boolean };
+  setModal: (key: string, value: boolean) => void;
+}>({ modals: { addPet: false }, setModal: () => {} });
 
 const UserProfilePage: NextPage = () => {
   const router = useRouter();
   const { userId } = router.query;
 
-  if (!userId) {
-    return null;
-  }
+  if (!userId) return null;
 
   return (
     <Layout
@@ -34,13 +38,6 @@ const UserProfilePage: NextPage = () => {
             <UserProfileTabs userId={parseInt(userId as string)} />
           </Box>
         </VStack>
-        <Modal isOpen={false} onClose={() => {}} size='6xl' closeOnEsc>
-          <ModalOverlay />
-          <ModalContent css={{ aspectRatio: '16/12' }}>
-            <AddUserOwnedPetForm />
-            <ModalCloseButton />
-          </ModalContent>
-        </Modal>
       </Box>
     </Layout>
   );

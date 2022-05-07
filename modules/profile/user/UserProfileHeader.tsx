@@ -4,6 +4,10 @@ import {
   Flex,
   Heading,
   HStack,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
   Tag,
   Text,
   VStack,
@@ -11,12 +15,15 @@ import {
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import UserAvatar from 'components/UserAvatar';
 import { useUserProfilePageQuery } from 'generated/graphql';
-import React from 'react';
+import AddUserOwnedPetForm from 'modules/pet/AddUserPetForm';
+import { UserProfileContext } from 'pages/profile/[userId]';
+import React, { useContext, useState } from 'react';
 
 export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
   const { data, loading } = useUserProfilePageQuery({
     variables: { userId },
   });
+  const [modals, setModal] = useState({ addPet: false });
 
   if (loading) return <LoadingComponent />;
   if ((!loading && !data) || !data?.user) return null;
@@ -44,7 +51,11 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
             <Button variant='outline' size='sm'>
               Edit Profile
             </Button>
-            <Button colorScheme='teal' size='sm'>
+            <Button
+              colorScheme='teal'
+              size='sm'
+              onClick={() => setModal({ addPet: true })}
+            >
               Add New Pet
             </Button>
           </HStack>
@@ -90,6 +101,20 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
           <Tag>#pet-lover</Tag>
         </HStack>
       </VStack>
+      <Modal
+        isOpen={modals.addPet}
+        onClose={() => {
+          setModal({ addPet: false });
+        }}
+        size='6xl'
+        closeOnEsc
+      >
+        <ModalOverlay />
+        <ModalContent css={{ aspectRatio: '16/12' }}>
+          <AddUserOwnedPetForm />
+          <ModalCloseButton />
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 };
