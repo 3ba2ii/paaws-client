@@ -3,9 +3,11 @@ import {
   useColorModePreference,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { useFormikContext } from 'formik';
 import React from 'react';
 import Select, { GroupBase, Props, StylesConfig } from 'react-select';
+import makeAnimated from 'react-select/animated';
+
+const animatedComponents = makeAnimated();
 
 export type MyOptionType = {
   label: string;
@@ -89,6 +91,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
             GroupBase<unknown>
           >
         }
+        components={animatedComponents}
         onChange={handleChange}
         isMulti={isMulti}
         options={options}
