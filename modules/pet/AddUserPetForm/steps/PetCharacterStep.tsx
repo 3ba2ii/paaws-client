@@ -2,6 +2,7 @@ import { Box, Text, Heading, VStack } from '@chakra-ui/react';
 import CreatableInput from 'components/common/input/CreatableInput';
 import InputFieldWrapper from 'components/common/input/CustomInputComponent';
 import InputField from 'components/common/input/InputField';
+import { format } from 'date-fns';
 import React from 'react';
 import { MyOptionType } from 'types/MyOptionType';
 import { StepProps } from './TellUsMoreStep';
@@ -30,6 +31,7 @@ const PetCharacterStep: React.FC<StepProps> = ({ formik }) => {
           name='birthDate'
           type={'date'}
           color='gray.500'
+          max={format(new Date(), 'yyyy-MM-dd')}
         />
       </Box>
       <Box w='calc(50% - 12px)'>

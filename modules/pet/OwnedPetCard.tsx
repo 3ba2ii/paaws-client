@@ -1,4 +1,5 @@
 import { Box, Text } from '@chakra-ui/react';
+import { formatDistanceToNow } from 'date-fns';
 import { UserOwnedPetsQuery } from 'generated/graphql';
 import React from 'react';
 interface IOwnedPetCardProps {
@@ -6,6 +7,7 @@ interface IOwnedPetCardProps {
 }
 
 export const OwnedPetCard: React.FC<IOwnedPetCardProps> = ({ pet }) => {
+  const age = formatDistanceToNow(new Date(pet.birthDate));
   return (
     <Box
       w='100%'
@@ -29,7 +31,7 @@ export const OwnedPetCard: React.FC<IOwnedPetCardProps> = ({ pet }) => {
         {pet.name}
       </Text>
       <Text fontSize='sm' fontWeight={'semibold'} color='whiteAlpha.800'>
-        10 months
+        {age}
       </Text>
     </Box>
   );
