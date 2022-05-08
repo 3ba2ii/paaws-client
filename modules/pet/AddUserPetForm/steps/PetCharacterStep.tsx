@@ -33,7 +33,11 @@ const PetCharacterStep: React.FC<StepProps> = ({ formik }) => {
         />
       </Box>
       <Box w='calc(50% - 12px)'>
-        <InputFieldWrapper label='Skills' name='skills'>
+        <InputFieldWrapper
+          label='Skills'
+          name='skills'
+          helperText='Add some skills to your pet with a maximum of 5 skills per pet'
+        >
           <CreatableInput
             options={[]}
             onChange={(values) => {
@@ -47,7 +51,11 @@ const PetCharacterStep: React.FC<StepProps> = ({ formik }) => {
                 return { label: s, value: s } as MyOptionType;
               }) || []
             }
-            creatableProps={{ isMulti: true }}
+            creatableProps={{
+              isMulti: true,
+              placeholder: 'Funny, Cute, Smart, etc',
+            }}
+            maxLimit={5}
           />
         </InputFieldWrapper>
       </Box>
