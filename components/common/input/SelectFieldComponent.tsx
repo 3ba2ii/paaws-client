@@ -6,13 +6,9 @@ import {
 import React from 'react';
 import Select, { GroupBase, Props, StylesConfig } from 'react-select';
 import makeAnimated from 'react-select/animated';
+import { MyOptionType } from '../../../types/MyOptionType';
 
 const animatedComponents = makeAnimated();
-
-export type MyOptionType = {
-  label: string;
-  value: string;
-};
 
 interface SelectComponentProps {
   isMulti?: boolean;

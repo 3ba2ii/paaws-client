@@ -1,4 +1,4 @@
-import { MyOptionType } from './../components/common/input/SelectFieldComponent';
+import { MyOptionType } from '../types/MyOptionType';
 export const createObjFromEnum = (enumObj: any): MyOptionType[] => {
   try {
     return Object.entries(enumObj)

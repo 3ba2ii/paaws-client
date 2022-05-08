@@ -1,13 +1,12 @@
 import { Box, Divider, Heading, HStack, Text, VStack } from '@chakra-ui/react';
 import InputFieldWrapper from 'components/common/input/CustomInputComponent';
 import InputField from 'components/common/input/InputField';
-import SelectComponent, {
-  MyOptionType,
-} from 'components/common/input/SelectFieldComponent';
+import SelectComponent from 'components/common/input/SelectFieldComponent';
 import TwoOptionsSwitch from 'components/common/input/TwoOptionsSwitch';
 import { FormikProps } from 'formik';
 import React from 'react';
 import { CreatePetInputType } from 'types';
+import { MyOptionType } from 'types/MyOptionType';
 import {
   PetBreedsObj,
   PetColorObj,
