@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Heading,
   HStack,
@@ -57,9 +58,9 @@ const UserPetInfoColumn: React.FC<UserPetInfoColumnProps> = ({
         <HStack>
           {userOwnedPet.pet.skills?.map((s, index) => {
             return (
-              <Tag key={index + s.skill} boxShadow='base' size='sm'>
+              <Badge key={index + s.skill} boxShadow='base' size='sm'>
                 #{s.skill}
-              </Tag>
+              </Badge>
             );
           })}
         </HStack>
