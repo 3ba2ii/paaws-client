@@ -31,7 +31,7 @@ export const Step1ValidationSchema = Yup.object().shape({
 });
 export const Step2ValidationSchema = Yup.object().shape({
   about: Yup.string()
-    .min(100, 'About should be at least 100 characters')
+    .min(50, 'About should be at least 50 characters')
     .required('Please add a description of your pet.'),
 
   birthDate: Yup.date().required('Required!'),

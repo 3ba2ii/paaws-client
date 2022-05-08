@@ -6,9 +6,8 @@ export const StepIndicator: React.FC<{
   icon: ReactElement;
   title: string;
   subtitle: string;
-  onClick: () => void;
   step: number;
-}> = ({ isActive, icon, title, subtitle, onClick }) => {
+}> = ({ isActive, icon, title, subtitle }) => {
   return (
     <Box
       w='100%'
@@ -26,7 +25,6 @@ export const StepIndicator: React.FC<{
       <Button
         w='100%'
         h='fit-content'
-        onClick={onClick}
         leftIcon={
           <Center
             boxSize={'40px'}

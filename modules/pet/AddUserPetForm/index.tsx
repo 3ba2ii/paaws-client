@@ -68,7 +68,6 @@ const AddUserOwnedPetForm: React.FC<{ onCloseForm: VoidFunction }> = ({
               isActive={index === step}
               title={sc.title}
               subtitle={sc.subtitle}
-              onClick={() => setStep(index)}
             />
           ))}
         </VStack>
