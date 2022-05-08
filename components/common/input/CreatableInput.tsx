@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { ActionMeta, OnChangeValue, Props } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { MyOptionType } from 'types/MyOptionType';
+import { createOption } from 'utils/createOption';
 
 interface CreatableInputProps {
   options: MyOptionType[];
@@ -10,11 +11,6 @@ interface CreatableInputProps {
   value?: MyOptionType[];
   creatableProps?: Props;
 }
-const createOption = (label: string): MyOptionType => ({
-  label,
-  value: label.toLowerCase().replace(/\W/g, '-'),
-});
-
 const CreatableInput: React.FC<CreatableInputProps> = ({
   options,
   value,
