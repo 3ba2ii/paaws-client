@@ -10,13 +10,13 @@ import { StepIndicator } from './steps/StepIndicator';
 import TellUsMoreStep from './steps/TellUsMoreStep';
 import UploadPetImagesStep from './steps/UploadPetImagesStep';
 
-import * as Yup from 'yup';
 import {
   FormStepsContent,
   Step1ValidationSchema,
   Step2ValidationSchema,
   Step3ValidationSchema,
 } from 'utils/yupSchemas/AddUserPetValidationSchemas';
+import * as Yup from 'yup';
 
 const AddUserOwnedPetForm: React.FC<{ onCloseForm: VoidFunction }> = ({
   onCloseForm,
@@ -94,7 +94,6 @@ const AddUserOwnedPetForm: React.FC<{ onCloseForm: VoidFunction }> = ({
             });
             onCloseForm();
           }}
-          isInitialValid={false}
           validateOnBlur
           validationSchema={buildValidationSchema()}
         >
@@ -103,16 +102,13 @@ const AddUserOwnedPetForm: React.FC<{ onCloseForm: VoidFunction }> = ({
               formikProps={formik}
               {...{ step, setStep, onCloseForm }}
             >
-              <FormikStep>
-                <TellUsMoreStep formik={formik} />
-              </FormikStep>
-              <FormikStep>
-                <PetCharacterStep formik={formik} />
-              </FormikStep>
-
-              <FormikStep>
-                <UploadPetImagesStep formik={formik} />
-              </FormikStep>
+              {[TellUsMoreStep, PetCharacterStep, UploadPetImagesStep].map(
+                (Component, index) => (
+                  <FormikStep key={index}>
+                    <Component formik={formik} />
+                  </FormikStep>
+                )
+              )}
             </FormikStepper>
           )}
         </Formik>

@@ -23,12 +23,8 @@ const CreatableInput: React.FC<CreatableInputProps> = ({
 
   const handleChange = (
     newValue: OnChangeValue<MyOptionType, true>,
-    actionMeta: ActionMeta<MyOptionType | unknown>
+    _actionMeta: ActionMeta<MyOptionType | unknown>
   ) => {
-    console.group('Value Changed');
-    console.log(newValue);
-    console.log(actionMeta);
-    console.groupEnd();
     onChange(newValue);
   };
 
