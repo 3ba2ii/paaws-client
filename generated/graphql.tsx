@@ -1093,7 +1093,7 @@ export type UserOwnedPetQueryVariables = Exact<{
 }>;
 
 
-export type UserOwnedPetQuery = { __typename?: 'Query', userOwnedPet?: Maybe<{ __typename?: 'OwnedPet', updatedAt: any, createdAt: any, about: string, petId: number, userId: number, user: { __typename?: 'User', id: number, updatedAt: any, createdAt: any, email: string }, pet: { __typename?: 'Pet', id: number, name: string, type: PetType, gender: PetGender, size: PetSize, birthDate: any, breeds: Array<{ __typename?: 'PetBreed', breed: Breeds }>, colors: Array<{ __typename?: 'PetColor', color: PetColors }>, images?: Maybe<Array<{ __typename?: 'PetImages', photo: { __typename?: 'Photo', url?: Maybe<string> } }>> } }> };
+export type UserOwnedPetQuery = { __typename?: 'Query', userOwnedPet?: Maybe<{ __typename?: 'OwnedPet', updatedAt: any, createdAt: any, about: string, petId: number, userId: number, user: { __typename?: 'User', id: number, updatedAt: any, createdAt: any, email: string }, pet: { __typename?: 'Pet', id: number, name: string, type: PetType, gender: PetGender, size: PetSize, birthDate: any, breeds: Array<{ __typename?: 'PetBreed', breed: Breeds }>, colors: Array<{ __typename?: 'PetColor', color: PetColors }>, skills?: Maybe<Array<{ __typename?: 'PetSkill', skill: string }>>, images?: Maybe<Array<{ __typename?: 'PetImages', photo: { __typename?: 'Photo', url?: Maybe<string> } }>> } }> };
 
 export type UserOwnedPetsQueryVariables = Exact<{
   userId: Scalars['Float'];
@@ -2449,6 +2449,9 @@ export const UserOwnedPetDocument = gql`
       }
       colors {
         color
+      }
+      skills {
+        skill
       }
       images {
         photo {

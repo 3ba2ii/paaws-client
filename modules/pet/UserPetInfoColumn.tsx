@@ -37,14 +37,13 @@ const UserPetInfoColumn: React.FC<UserPetInfoColumnProps> = ({
         <Heading size='lg' color='gray.700'>
           {pet.name}
         </Heading>
-        <HStack align='center' justify='center' spacing='4px'>
-          <Text fontSize='16px' color='blue.500' fontWeight={'semibold'}>
+        <HStack fontSize='14px' align='center' justify='center' spacing='4px'>
+          <Text color='blue.500' fontWeight={'semibold'}>
             {capitalizeTheFirstLetterOfEachWord(pet.type)} -{' '}
           </Text>
           {pet.breeds.map((b, index) => (
             <Link
               key={index}
-              fontSize={'16px'}
               color='blue.500'
               colorScheme={'blue'}
               fontWeight='semibold'
@@ -56,15 +55,13 @@ const UserPetInfoColumn: React.FC<UserPetInfoColumnProps> = ({
           ))}
         </HStack>
         <HStack>
-          <Tag size='sm' variant='subtle' colorScheme='blue'>
-            Playful
-          </Tag>
-          <Tag size='sm' variant='subtle' colorScheme='pink'>
-            Cheerful
-          </Tag>
-          <Tag size='sm' variant='subtle' colorScheme='purple'>
-            Ball-Catcher
-          </Tag>
+          {userOwnedPet.pet.skills?.map((s, index) => {
+            return (
+              <Tag key={index + s.skill} boxShadow='base' size='sm'>
+                #{s.skill}
+              </Tag>
+            );
+          })}
         </HStack>
       </VStack>
       <VStack w='100%' align='flex-start' spacing={4}>

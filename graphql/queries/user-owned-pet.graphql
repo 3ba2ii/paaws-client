@@ -25,6 +25,9 @@ query UserOwnedPet($userOwnedPetId: Int!) {
       colors {
         color
       }
+      skills {
+        skill
+      }
       images {
         photo {
           url
