@@ -5,7 +5,7 @@ export function middleware(req: NextRequest, _ev: NextFetchEvent) {
   const params = req.page.params;
 
   if (!params || !params.token || params.token.length !== 36) {
-    return NextResponse.redirect('/error');
+    return NextResponse.rewrite(new URL('/error', req.url));
   }
   return NextResponse.next();
 }
