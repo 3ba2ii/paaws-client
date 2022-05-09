@@ -21,6 +21,11 @@ export const StepIndicator: React.FC<{
       p={'2px'}
       boxShadow='sm'
       maxW='320px'
+      _dark={{
+        bg: isActive
+          ? 'linear-gradient(269.54deg, #37A29C 0.4%, #EB78FE 99.68%)'
+          : 'gray.800',
+      }}
     >
       <Button
         w='100%'
@@ -40,6 +45,7 @@ export const StepIndicator: React.FC<{
         iconSpacing={3}
         borderRadius={'6px'}
         bg='whiteAlpha.800'
+        _dark={{ bg: 'gray.900' }}
       >
         <VStack w='100%' align={'flex-start'} spacing={1}>
           <Text lineHeight={'1.5'} fontWeight={'semibold'} fontSize='16px'>

@@ -58,6 +58,7 @@ const AddUserOwnedPetForm: React.FC<{ onCloseForm: VoidFunction }> = ({
         h='100%'
         gridColumn={'1 / 2'}
         position='relative'
+        _dark={{ borderColor: 'gray.700' }}
       >
         <VStack h='fit-content' pos='relative' spacing={'40px'}>
           {FormStepsContent.map((sc, index) => (

@@ -19,8 +19,8 @@ const UserProfileTabs: React.FC<UserProfileTabsProps> = ({ userId }) => {
         {ProfileTabs.map(({ tabName }, index) => (
           <Tab
             key={tabName + index}
+            fontWeight='semibold'
             _selected={{
-              fontWeight: 'semibold',
               border: 'none',
               borderBottom: '2px solid',
               borderColor: 'blue.500',
