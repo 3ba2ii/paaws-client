@@ -83,25 +83,29 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
           Load More
         </Button>
       )}
-      <Modal
-        isOpen={!!router.query.petId}
-        onClose={() =>
-          router.push(`/profile/${userId}`, `/profile/${userId}`, {
-            shallow: true,
-          })
-        }
-        size={'6xl'}
-        closeOnEsc
-      >
-        <ModalOverlay />
-        <ModalContent>
-          {router.query.petId && (
-            <UserPetContainer petId={parseInt(router.query.petId as string)} />
-          )}
+      {!!router.query.petId && (
+        <Modal
+          isOpen={!!router.query.petId}
+          onClose={() =>
+            router.push(`/profile/${userId}`, `/profile/${userId}`, {
+              shallow: true,
+            })
+          }
+          size={'6xl'}
+          closeOnEsc
+        >
+          <ModalOverlay />
+          <ModalContent>
+            {router.query.petId && (
+              <UserPetContainer
+                petId={parseInt(router.query.petId as string)}
+              />
+            )}
 
-          <ModalCloseButton />
-        </ModalContent>
-      </Modal>
+            <ModalCloseButton />
+          </ModalContent>
+        </Modal>
+      )}
     </VStack>
   );
 };
