@@ -1,5 +1,6 @@
 import {
   Box,
+  useColorMode,
   useColorModePreference,
   useColorModeValue,
 } from '@chakra-ui/react';
@@ -26,12 +27,12 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
   handleChange,
   selectProps,
 }) => {
-  const colorMode = useColorModePreference();
+  const { colorMode } = useColorMode();
 
   const colors = {
     controlBorderColor: useColorModeValue('gray.200', 'gray.500'),
     placeholder: 'gray.500',
-    menuBG: useColorModeValue('white', 'gray.900'),
+    menuBG: useColorModeValue('white', '#1A202C'),
   };
 
   const customSelectFieldStyles: StylesConfig<MyOptionType, IsMulti> = {
@@ -71,6 +72,7 @@ const SelectComponent: React.FC<SelectComponentProps> = ({
       backgroundColor: colorMode === 'light' ? '#E2E8F0' : '#718096',
       fontSize: '1rem',
     }),
+
     multiValueLabel: (provided, _state) => ({
       ...provided,
       color: 'inherit',
