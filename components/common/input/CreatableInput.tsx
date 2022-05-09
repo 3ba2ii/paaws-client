@@ -1,9 +1,16 @@
-import { Box } from '@chakra-ui/react';
+import { Box, useColorMode } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { ActionMeta, OnChangeValue, Props } from 'react-select';
+import {
+  ActionMeta,
+  GroupBase,
+  OnChangeValue,
+  Props,
+  StylesConfig,
+} from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { MyOptionType } from 'types/MyOptionType';
 import { createOption } from 'utils/createOption';
+import { getSelectStyle } from 'utils/getSelectStyle';
 
 interface CreatableInputProps {
   options: MyOptionType[];
@@ -19,6 +26,7 @@ const CreatableInput: React.FC<CreatableInputProps> = ({
   maxLimit,
   creatableProps,
 }) => {
+  const { colorMode } = useColorMode();
   const [optionsState, setOptionsState] = useState<MyOptionType[]>([
     ...options,
   ]);
@@ -29,10 +37,6 @@ const CreatableInput: React.FC<CreatableInputProps> = ({
     newValue: OnChangeValue<MyOptionType, true>,
     actionMeta: ActionMeta<MyOptionType | unknown>
   ) => {
-    console.log(
-      `🚀 ~ file: CreatableInput.tsx ~ line 32 ~ _actionMeta`,
-      actionMeta
-    );
     if (isOverLimit() && !['remove-value', 'clear'].includes(actionMeta.action))
       return;
     onChange(newValue);
@@ -56,10 +60,19 @@ const CreatableInput: React.FC<CreatableInputProps> = ({
     return [];
   };
 
+  const customSelectFieldStyles = getSelectStyle(colorMode);
+
   return (
     <Box w='100%' h='100%'>
       <CreatableSelect
         isClearable
+        styles={
+          customSelectFieldStyles as StylesConfig<
+            unknown,
+            boolean,
+            GroupBase<unknown>
+          >
+        }
         options={optionsState}
         onChange={handleChange as any}
         onCreateOption={handleCreateOption}
