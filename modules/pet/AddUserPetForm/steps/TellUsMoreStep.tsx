@@ -121,7 +121,14 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
           handleChange={(value) => formik.setFieldValue('gender', value)}
           activeValue={formik.values.gender}
           stackProps={{
-            divider: <Divider w='1px' h='20px' bg='gray.300' />,
+            divider: (
+              <Divider
+                w='1px'
+                h='20px'
+                bg='gray.300'
+                _dark={{ bg: 'gray.600' }}
+              />
+            ),
             bg: 'gray.100',
             borderRadius: '6px',
             w: 'fit-content',
@@ -129,6 +136,7 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
             spacing: '10px',
             border: '1px solid',
             borderColor: 'gray.100',
+            _dark: { bg: 'gray.700', borderColor: 'gray.600' },
           }}
         />
       </InputFieldWrapper>

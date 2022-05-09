@@ -25,7 +25,7 @@ const TwoOptionsSwitch: React.FC<TwoOptionsSwitchProps> = ({
   stackProps,
   ...props
 }) => {
-  const bgActiveColor = useColorModeValue('teal.500', 'teal.900');
+  const bgActiveColor = useColorModeValue('teal.500', 'teal.400');
 
   return (
     <HStack h='100%' {...stackProps}>
