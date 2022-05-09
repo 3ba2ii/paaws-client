@@ -61,9 +61,9 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
         ) : data && data.userOwnedPets ? (
           data.userOwnedPets.ownedPets?.map(({ pet, id }) => (
             <Link
+              key={id}
               href={makeContextualHref({ petId: id })}
               as={`/pet/${id}`}
-              key={id}
               shallow={true}
               scroll={false}
             >
