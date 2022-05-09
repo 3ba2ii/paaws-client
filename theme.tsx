@@ -1,4 +1,4 @@
-import { extendTheme } from '@chakra-ui/react';
+import { ComponentStyleConfig, extendTheme } from '@chakra-ui/react';
 import { createBreakpoints } from '@chakra-ui/theme-tools';
 
 const breakpoints = createBreakpoints({
@@ -8,10 +8,20 @@ const breakpoints = createBreakpoints({
   xl: '80em',
 });
 
+const Heading: ComponentStyleConfig = {
+  baseStyle: {
+    color: 'gray.700',
+    _dark: {
+      color: 'gray.300',
+    },
+  },
+};
+
 const theme = extendTheme({
   colors: {
     black: '#16161D',
   },
+
   textStyles: {
     h1: {
       // you can also use responsive styles
@@ -68,7 +78,10 @@ const theme = extendTheme({
       color: 'gray.600',
       fontWeight: '600',
       fontSize: '.85rem',
-      lineHeight: '1',
+    },
+    link: {
+      color: 'blue.500',
+      _dark: { color: 'blue.400' },
     },
     helperText: {
       color: 'gray.500',
@@ -78,6 +91,7 @@ const theme = extendTheme({
     },
   },
   breakpoints,
+  components: { Heading },
 });
 
 export default theme;
