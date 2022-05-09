@@ -1,0 +1,18 @@
+query MissingPostsByUser(
+  $userId: Int!
+  $input: PaginationArgs!
+  $length: Int!
+) {
+  missingPostsByUser(userId: $userId, input: $input) {
+    errors {
+      field
+      message
+      code
+    }
+    missingPosts {
+      ...MissingPostFragment
+      descriptionSnippet(length: $length)
+    }
+    hasMore
+  }
+}

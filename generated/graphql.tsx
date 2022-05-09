@@ -490,6 +490,7 @@ export type OwnedPet = {
   id: Scalars['Int'];
   pet: Pet;
   petId: Scalars['Int'];
+  skills: Array<PetSkill>;
   updatedAt: Scalars['DateTime'];
   user: User;
   userId: Scalars['Float'];
@@ -677,6 +678,7 @@ export type Query = {
   me?: Maybe<User>;
   missingPost: MissingPostResponse;
   missingPosts: PaginatedMissingPosts;
+  missingPostsByUser: PaginatedMissingPosts;
   notifications: Array<Notification>;
   user?: Maybe<User>;
   userOwnedPet?: Maybe<OwnedPet>;
@@ -727,6 +729,12 @@ export type QueryMissingPostsArgs = {
   filters?: Maybe<PostFilters>;
   input: PaginationArgs;
   type?: Maybe<MissingPostTypes>;
+};
+
+
+export type QueryMissingPostsByUserArgs = {
+  input: PaginationArgs;
+  userId: Scalars['Int'];
 };
 
 
@@ -1056,6 +1064,15 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
+
+export type MissingPostsByUserQueryVariables = Exact<{
+  userId: Scalars['Int'];
+  input: PaginationArgs;
+  length: Scalars['Int'];
+}>;
+
+
+export type MissingPostsByUserQuery = { __typename?: 'Query', missingPostsByUser: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }> } };
 
 export type MissingPostCommentsQueryVariables = Exact<{
   options: MissingPostComments;
@@ -2234,6 +2251,52 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const MissingPostsByUserDocument = gql`
+    query MissingPostsByUser($userId: Int!, $input: PaginationArgs!, $length: Int!) {
+  missingPostsByUser(userId: $userId, input: $input) {
+    errors {
+      field
+      message
+      code
+    }
+    missingPosts {
+      ...MissingPostFragment
+      descriptionSnippet(length: $length)
+    }
+    hasMore
+  }
+}
+    ${MissingPostFragmentFragmentDoc}`;
+
+/**
+ * __useMissingPostsByUserQuery__
+ *
+ * To run a query within a React component, call `useMissingPostsByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMissingPostsByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMissingPostsByUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      input: // value for 'input'
+ *      length: // value for 'length'
+ *   },
+ * });
+ */
+export function useMissingPostsByUserQuery(baseOptions: Apollo.QueryHookOptions<MissingPostsByUserQuery, MissingPostsByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MissingPostsByUserQuery, MissingPostsByUserQueryVariables>(MissingPostsByUserDocument, options);
+      }
+export function useMissingPostsByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MissingPostsByUserQuery, MissingPostsByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MissingPostsByUserQuery, MissingPostsByUserQueryVariables>(MissingPostsByUserDocument, options);
+        }
+export type MissingPostsByUserQueryHookResult = ReturnType<typeof useMissingPostsByUserQuery>;
+export type MissingPostsByUserLazyQueryHookResult = ReturnType<typeof useMissingPostsByUserLazyQuery>;
+export type MissingPostsByUserQueryResult = Apollo.QueryResult<MissingPostsByUserQuery, MissingPostsByUserQueryVariables>;
 export const MissingPostCommentsDocument = gql`
     query MissingPostComments($options: MissingPostComments!) {
   comments(options: $options) {
