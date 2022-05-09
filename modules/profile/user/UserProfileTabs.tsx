@@ -10,7 +10,6 @@ const ProfileTabs: { tabName: string }[] = [
   { tabName: 'Adoption Posts' },
   { tabName: 'Missing Posts' },
   { tabName: 'Owned Pets' },
-  { tabName: 'My Favorites' },
   { tabName: 'Votes' },
 ];
 const UserProfileTabs: React.FC<UserProfileTabsProps> = ({ userId }) => {
@@ -40,9 +39,6 @@ const UserProfileTabs: React.FC<UserProfileTabsProps> = ({ userId }) => {
         </TabPanel>
         <TabPanel>
           <OwnedPetsGrid userId={userId} />
-        </TabPanel>
-        <TabPanel>
-          <p>Favorites</p>
         </TabPanel>
         <TabPanel>
           <p>Votes</p>

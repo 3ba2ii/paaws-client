@@ -60,9 +60,7 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
           </HStack>
         </HStack>
         <Text maxW={'60ch'} fontWeight='medium' color='gray.500'>
-          {bio} I love investing and making wellness and healing for everyone at
-          WellnessOfficial.com. Come do breathwork with me there to calm down.
-          #cryptocurious #mindful
+          {bio}
         </Text>
 
         {/* STATS */}

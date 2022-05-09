@@ -1,4 +1,4 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, useColorModeValue } from '@chakra-ui/react';
 import { formatDistanceToNow } from 'date-fns';
 import { UserOwnedPetsQuery } from 'generated/graphql';
 import React from 'react';
@@ -21,8 +21,6 @@ export const OwnedPetCard: React.FC<IOwnedPetCardProps> = ({ pet }) => {
       display='flex'
       flexDir='column'
       justifyContent={'end'}
-      border='1px solid'
-      borderColor={'gray.50'}
       cursor='pointer'
       _hover={{ filter: 'brightness(50%)' }}
       transition='filter .2s ease-in-out'
