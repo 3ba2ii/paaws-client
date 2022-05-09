@@ -34,9 +34,9 @@ const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
       <HStack w='100%' spacing={'24px'}>
         <InputField
           id='pet-name'
-          value={formik.values.name}
           label='Pet Name'
           name='name'
+          value={formik.values?.name}
           autoFocus
           placeholder='Kitty Cat'
           formErrorMessageProps={{

@@ -1,5 +1,6 @@
 import {
   Button,
+  Center,
   GridItem,
   Heading,
   Modal,
@@ -11,6 +12,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
+import NotFound from 'components/NotFound';
 import { useUserOwnedPetsQuery } from 'generated/graphql';
 import { useContextualRouting } from 'next-use-contextual-routing';
 import Link from 'next/link';
@@ -48,7 +50,21 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
       },
     });
   };
+  if (loading) {
+    return (
+      <Center w='100%' h='100%' py='50px'>
+        <LoadingComponent />
+      </Center>
+    );
+  }
 
+  if (!loading && (!data || !data?.userOwnedPets.ownedPets.length)) {
+    return (
+      <Center py={50}>
+        <Heading size='md'>There is no owned pets for this user yet</Heading>
+      </Center>
+    );
+  }
   return (
     <VStack w='100%'>
       <SimpleGrid
@@ -56,23 +72,19 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
         minChildWidth={['220px', '220px', '220px', 'calc(100% / 3.5)']}
         spacing='30px'
       >
-        {loading ? (
-          <LoadingComponent />
-        ) : data && data.userOwnedPets ? (
-          data.userOwnedPets.ownedPets?.map(({ pet, id }) => (
-            <Link
-              key={id}
-              href={makeContextualHref({ petId: id })}
-              as={`/pet/${id}`}
-              shallow={true}
-              scroll={false}
-            >
-              <GridItem w='100%' h='100%' css={{ aspectRatio: '1' }}>
-                <OwnedPetCard pet={pet} />
-              </GridItem>
-            </Link>
-          ))
-        ) : null}
+        {data?.userOwnedPets.ownedPets?.map(({ pet, id }) => (
+          <Link
+            key={id}
+            href={makeContextualHref({ petId: id })}
+            as={`/pet/${id}`}
+            shallow={true}
+            scroll={false}
+          >
+            <GridItem w='100%' h='100%' css={{ aspectRatio: '1' }}>
+              <OwnedPetCard pet={pet} />
+            </GridItem>
+          </Link>
+        ))}
       </SimpleGrid>
       {data?.userOwnedPets.hasMore && (
         <Button

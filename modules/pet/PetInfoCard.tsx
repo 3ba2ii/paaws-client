@@ -23,7 +23,7 @@ const PetInfoCard: React.FC<PetInfoCardProps> = ({ label, value }) => {
       cursor={['Age', 'Birthdate'].includes(label) ? 'pointer' : 'unset'}
       bg='whiteAlpha.800'
       boxShadow={'sm'}
-      _dark={{ bg: 'blackAlpha.50', borderColor: 'gray.700' }}
+      _dark={{ bg: 'blackAlpha.300', borderColor: 'gray.700' }}
     >
       <Text fontSize={'90%'} color='gray.500' fontWeight={'medium'}>
         {capitalizeString(label)}
