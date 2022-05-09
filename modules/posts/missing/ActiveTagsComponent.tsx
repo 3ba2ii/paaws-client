@@ -18,7 +18,7 @@ import {
   FiMapPin,
 } from 'react-icons/fi';
 import { FiltersTypes, FiltersTypeString } from 'types';
-import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
+import { capitalizeFirstLetterOfEachWord } from 'utils/capitalizeString';
 
 export const ActiveTagsComponent: React.FC<{
   type: FiltersTypeString;
@@ -48,7 +48,7 @@ export const ActiveTagsComponent: React.FC<{
       {filters.map((filter) => (
         <Tag colorScheme={'gray'} boxShadow={'base'} key={filter}>
           <TagIcon />
-          <TagLabel>{capitalizeTheFirstLetterOfEachWord(filter)}</TagLabel>
+          <TagLabel>{capitalizeFirstLetterOfEachWord(filter)}</TagLabel>
           <Tooltip label='Delete' placement='top'>
             <TagRightIcon
               boxSize={'8px'}

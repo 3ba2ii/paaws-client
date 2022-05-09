@@ -2,7 +2,7 @@ import { Stack } from '@chakra-ui/layout';
 import { Radio } from '@chakra-ui/react';
 import React from 'react';
 import { FiltersTypes } from 'types';
-import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
+import { capitalizeFirstLetterOfEachWord } from 'utils/capitalizeString';
 
 interface CustomTabPanelProps {
   handleChange: (filter: FiltersTypes) => void;
@@ -28,7 +28,7 @@ export const CustomTabPanel: React.FC<CustomTabPanelProps> = ({
           isChecked={value === checked}
           size='sm'
         >
-          {capitalizeTheFirstLetterOfEachWord(value)}
+          {capitalizeFirstLetterOfEachWord(value)}
         </Radio>
       ))}
     </Stack>

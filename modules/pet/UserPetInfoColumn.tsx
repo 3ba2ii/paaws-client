@@ -5,11 +5,12 @@ import {
   HStack,
   Link,
   Text,
+  useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
 import { UserOwnedPetQuery } from 'generated/graphql';
 import React from 'react';
-import { capitalizeTheFirstLetterOfEachWord } from 'utils/capitalizeString';
+import { capitalizeFirstLetterOfEachWord } from 'utils/capitalizeString';
 import { PetInfoCardsRow } from './PetInfoCardsRow';
 
 interface UserPetInfoColumnProps {
@@ -20,6 +21,7 @@ const UserPetInfoColumn: React.FC<UserPetInfoColumnProps> = ({
   userOwnedPet,
 }) => {
   if (!userOwnedPet) return null;
+
   const { pet } = userOwnedPet;
   return (
     <Box
@@ -34,24 +36,17 @@ const UserPetInfoColumn: React.FC<UserPetInfoColumnProps> = ({
       overflowY='scroll'
     >
       <VStack w='100%' align='flex-start'>
-        <Heading size='lg' color='gray.700'>
-          {pet.name}
-        </Heading>
+        <Heading size='lg'>{pet.name}</Heading>
         <HStack fontSize='14px' align='center' justify='center' spacing='4px'>
-          <Text color='blue.500' fontWeight={'semibold'}>
-            {capitalizeTheFirstLetterOfEachWord(pet.type)} -{' '}
+          <Text as={Link} textStyle='link' fontWeight={'semibold'}>
+            {capitalizeFirstLetterOfEachWord(pet.type)} -{' '}
           </Text>
           {pet.breeds.map((b, index) => (
-            <Link
-              key={index}
-              color='blue.500'
-              colorScheme={'blue'}
-              fontWeight='semibold'
-            >
-              {capitalizeTheFirstLetterOfEachWord(
+            <Text key={index} as={Link} textStyle='link' fontWeight='semibold'>
+              {capitalizeFirstLetterOfEachWord(
                 b.breed + (index === pet.breeds.length - 1 ? '' : ',')
               )}
-            </Link>
+            </Text>
           ))}
         </HStack>
         <HStack>
@@ -65,16 +60,12 @@ const UserPetInfoColumn: React.FC<UserPetInfoColumnProps> = ({
         </HStack>
       </VStack>
       <VStack w='100%' align='flex-start' spacing={4}>
-        <Heading size='md' color='gray.700'>
-          Pet Information
-        </Heading>
+        <Heading size='md'>Pet Information</Heading>
         <PetInfoCardsRow userPet={userOwnedPet} />
       </VStack>
 
       <VStack align='flex-start'>
-        <Heading size='md' color='gray.700'>
-          About {pet.name}
-        </Heading>
+        <Heading size='md'>About {pet.name.split(' ')[0]}</Heading>
         <Text textStyle={'p1'} maxW='70ch' wordBreak={'break-all'}>
           {userOwnedPet.about}Quis anim exercitation est in id. Quis id
           consequat do qui. Proident quis nulla eu ex ea velit consequat amet
