@@ -14,17 +14,19 @@ const ProfileTabs: { tabName: string }[] = [
 ];
 const UserProfileTabs: React.FC<UserProfileTabsProps> = ({ userId }) => {
   return (
-    <Tabs isFitted size='md' variant='line'>
+    <Tabs isFitted size='md' variant='line' isLazy>
       <TabList color='gray.500'>
         {ProfileTabs.map(({ tabName }, index) => (
           <Tab
             key={tabName + index}
             _selected={{
               fontWeight: 'semibold',
+              border: 'none',
               borderBottom: '2px solid',
-              borderColor: 'blue.600',
-              color: 'blue.600',
+              borderColor: 'blue.500',
+              color: 'blue.500',
             }}
+            _focus={{ border: 'none' }}
           >
             {tabName}
           </Tab>
