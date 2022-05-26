@@ -1,11 +1,11 @@
 import { OperationVariables, QueryResult } from '@apollo/client';
-import { Divider, GridItem, HStack, VStack } from '@chakra-ui/layout';
-import { Button, IconButton, Skeleton } from '@chakra-ui/react';
+import { GridItem, VStack } from '@chakra-ui/layout';
 import NotFound from 'components/NotFound';
 import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
 import { MissingPostsQuery } from 'generated/graphql';
 import React from 'react';
 import { MissingPostsList } from './MissingPostsList';
+import { PostsLoadingSkeleton } from '../../../components/skeltons/PostsLoadingSkeleton';
 import { PostsOptions } from './PostsOptions';
 
 interface IMissingPageContent {
@@ -15,31 +15,6 @@ interface IMissingPageContent {
   loading: boolean;
   paginationLoading: boolean;
 }
-
-const PostsLoadingSkeleton: React.FC = () => (
-  <VStack w='100%'>
-    <VStack w='100%' align='flex-start' spacing={4}>
-      <HStack
-        w='100%'
-        alignSelf={'flex-end'}
-        justify='flex-end'
-        position='relative'
-        wrap={['wrap', 'unset']}
-      >
-        <Skeleton as={IconButton} borderRadius={4} h='32px' />
-
-        <Skeleton as={Button} borderRadius={4} h='32px'>
-          New Post
-        </Skeleton>
-      </HStack>
-      <Divider />
-      <Skeleton as={Button} w='90px' h='28px' borderRadius={4}>
-        Add Filter
-      </Skeleton>
-    </VStack>
-    <DummyPostsSkeleton noOfPosts={3} />
-  </VStack>
-);
 
 export const MissingPageContent: React.FC<IMissingPageContent> = ({
   fetchMorePosts,
