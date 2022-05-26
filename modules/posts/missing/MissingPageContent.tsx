@@ -5,7 +5,7 @@ import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
 import { MissingPostsQuery } from 'generated/graphql';
 import React from 'react';
 import { MissingPostsList } from './MissingPostsList';
-import { PostsLoadingSkeleton } from '../../../components/skeltons/PostsLoadingSkeleton';
+import { PostsLoadingSkeleton } from 'components/skeltons/PostsLoadingSkeleton';
 import { PostsOptions } from './PostsOptions';
 
 interface IMissingPageContent {

@@ -1,14 +1,9 @@
-import { Box, HStack } from '@chakra-ui/react';
 import { LoadScript, Marker } from '@react-google-maps/api';
 import GoogleMapComponent from 'components/GoogleMapComponent';
-import { Form, Formik } from 'formik';
-import { AddressInput } from 'generated/graphql';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Libraries, LocationType } from 'types';
-import { Country, SelectLocationOptions } from 'utils/constants/enums';
+import { SelectLocationOptions } from 'utils/constants/enums';
 import { isProduction } from 'utils/isProduction';
-import InputFieldWrapper from '../input/CustomInputComponent';
-import SelectComponent from '../input/SelectFieldComponent';
 import { CustomLocationAutocomplete } from './LocationAutoComplete';
 import { MapLoadingComponent } from './MapLoadingComponent';
 
@@ -103,75 +98,6 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
     ]
   );
 
-  const AddressFormComponent = () => {
-    const [address] = useState<Partial<AddressInput>>({
-      city: null,
-      country: null,
-      street: null,
-      state: null,
-      zip: null,
-      lat: undefined,
-      lng: undefined,
-    });
-    /* 
-      A. User needs to select address from the list
-        1. Country
-        2. State
-        3. City
-        4. Street
-        5. Zip Code
-
-      B. On user selects address from the list, the address will be validated with google api
-        1. If the address is valid, the address will be updated in the state
-        2. If the address is invalid, we will show an error for the user
-
-    */
-    return (
-      <Formik initialValues={address} onSubmit={() => {}}>
-        {({ setFieldValue }) => (
-          <Form>
-            <HStack w='100%'>
-              <InputFieldWrapper label='Country' name='country'>
-                <Box w='100%'>
-                  <SelectComponent
-                    selectProps={{
-                      placeholder: 'Country',
-                      menuPlacement: 'top',
-                    }}
-                    options={Object.entries(Country).map(([key, value]) => ({
-                      value: value,
-                      label: key,
-                    }))}
-                    handleChange={(value) => {
-                      setFieldValue('country', value?.label);
-                    }}
-                  />
-                </Box>
-              </InputFieldWrapper>
-              <InputFieldWrapper label='State' name='state'>
-                <Box w='100%'>
-                  <SelectComponent
-                    selectProps={{
-                      placeholder: 'State',
-                      menuPlacement: 'top',
-                    }}
-                    options={Object.entries(Country).map(([key, value]) => ({
-                      value: value,
-                      label: key,
-                    }))}
-                    handleChange={(value) => {
-                      setFieldValue('state', value?.label);
-                    }}
-                  />
-                </Box>
-              </InputFieldWrapper>
-            </HStack>
-          </Form>
-        )}
-      </Formik>
-    );
-  };
-
   return (
     <LoadScript
       libraries={libraries}
@@ -182,12 +108,7 @@ export const CustomLocationPicker: React.FC<CustomLocationPickerProps> = ({
       onUnmount={() => setLoaded(false)}
       loadingElement={<MapLoadingComponent />}
     >
-      {/* todo: we need to add custom address selection form */}
-      {selectLocationType === SelectLocationOptions.MAP ? (
-        MapComponent
-      ) : (
-        <AddressFormComponent />
-      )}
+      {MapComponent}
     </LoadScript>
   );
 };
