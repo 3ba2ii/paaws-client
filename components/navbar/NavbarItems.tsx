@@ -89,7 +89,7 @@ export const NavBarItems = () => {
         <Link href='/explore'>Explore</Link>
         <Link href='/missing'>Missing Pets</Link>
         <Link href='/adoption'>Adoption Pets</Link>
-        <Link href='/login'>Sign in</Link>
+        {!isLoggedIn && <Link href='/login'>Sign in</Link>}
         {loading ? (
           <LoadingComponent />
         ) : isLoggedIn ? (
