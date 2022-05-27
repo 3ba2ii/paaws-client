@@ -9,7 +9,7 @@ import {
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import Footer from './Footer';
-import NavBar from './NavBar';
+import NavBar from './Navbar/Navbar';
 
 interface ContainerProps {
   children: React.ReactNode;

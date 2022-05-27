@@ -1,20 +1,47 @@
-import { Button, IconButton } from '@chakra-ui/button';
-import { SearchIcon } from '@chakra-ui/icons';
+import { IconButton } from '@chakra-ui/button';
+import { ArrowForwardIcon, SearchIcon } from '@chakra-ui/icons';
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/input';
 import { Box } from '@chakra-ui/layout';
+import { Flex, Button, Text } from '@chakra-ui/react';
 import { useMeQuery } from 'generated/graphql';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { Suspense } from 'react';
 import { BiBell } from 'react-icons/bi';
 import { FaHeart } from 'react-icons/fa';
 import navbarStyles from 'styles/navbar.module.css';
 import { isServer } from 'utils/isServer';
-import { LoadingComponent } from './common/loading/LoadingSpinner';
-import ProfileMenu from './common/overlays/ProfileMenu';
-import { DarkModeSwitch } from './DarkModeSwitch';
-import { JoinUsNavbarItems } from './NavBar';
+import { LoadingComponent } from '../common/loading/LoadingSpinner';
+import ProfileMenu from '../common/overlays/ProfileMenu';
+import { DarkModeSwitch } from '../DarkModeSwitch';
 
+export function JoinUsNavbarItems(
+  isRegisterScreen: boolean,
+  isLoginScreen: boolean
+): any {
+  return (
+    <Flex alignItems='center'>
+      <Text color={'gray.500'} mr={4}>
+        {isRegisterScreen
+          ? 'Already a member?'
+          : isLoginScreen
+          ? 'Not a member?'
+          : ''}
+      </Text>
+      <Link
+        href={isRegisterScreen ? '/login' : isLoginScreen ? '/register' : '/'}
+      >
+        <Button
+          px={6}
+          variant='outline'
+          mr={4}
+          rightIcon={<ArrowForwardIcon />}
+        >
+          {isRegisterScreen ? 'Login' : isLoginScreen ? 'Register' : ''}
+        </Button>
+      </Link>
+    </Flex>
+  );
+}
 export const NavBarItems = () => {
   const { data, loading } = useMeQuery({
     skip: isServer(),
@@ -23,6 +50,7 @@ export const NavBarItems = () => {
   });
 
   const { pathname } = useRouter();
+
   const isLoginScreen = pathname.includes('/login');
   const isRegisterScreen = pathname.includes('/register');
 
@@ -32,7 +60,7 @@ export const NavBarItems = () => {
   if (isLoginScreen || isRegisterScreen) {
     //set body to Register or Login
     body = JoinUsNavbarItems(isRegisterScreen, isLoginScreen);
-    //return body
+
     return body;
   }
 
@@ -61,6 +89,7 @@ export const NavBarItems = () => {
         <Link href='/explore'>Explore</Link>
         <Link href='/missing'>Missing Pets</Link>
         <Link href='/adoption'>Adoption Pets</Link>
+        <Link href='/login'>Sign in</Link>
         {loading ? (
           <LoadingComponent />
         ) : isLoggedIn ? (
