@@ -1,7 +1,4 @@
-import { Button } from '@chakra-ui/button';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
-import { Box, Flex, Text } from '@chakra-ui/layout';
-import Link from 'next/link';
+import { Box } from '@chakra-ui/layout';
 import navbarStyles from 'styles/navbar.module.css';
 import withApollo from 'utils/withApollo';
 import Logo from '../Logo';
