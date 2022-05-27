@@ -1,6 +1,6 @@
 import { Box, Button, Heading, useToast, VStack } from '@chakra-ui/react';
 import InputField from 'components/input/InputField';
-import Footer from 'components/Footer';
+import Footer from 'components/common/Footer';
 import Logo from 'components/common/Logo';
 import { Form, Formik } from 'formik';
 import { useChangePasswordMutation } from 'generated/graphql';

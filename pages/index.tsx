@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Confetti from 'react-confetti';
-import { Layout } from '../components/Layout';
+import { Layout } from '../components/common/Layout';
 
 const Home: NextPage = () => {
   const router = useRouter();

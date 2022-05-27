@@ -1,5 +1,5 @@
 import { Box, Flex } from '@chakra-ui/layout';
-import { Layout } from 'components/Layout';
+import { Layout } from 'components/common/Layout';
 import { SideFooter } from 'components/SideFooter';
 import {
   MissingPostTypes,

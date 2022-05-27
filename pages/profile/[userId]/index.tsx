@@ -6,7 +6,7 @@ import {
   ModalOverlay,
   VStack,
 } from '@chakra-ui/react';
-import { Layout } from 'components/Layout';
+import { Layout } from 'components/common/Layout';
 import AddUserOwnedPetForm from 'modules/pet/AddUserPetForm';
 import { UserProfileHeader } from 'modules/profile/user/UserProfileHeader';
 import UserProfileTabs from 'modules/profile/user/UserProfileTabs';

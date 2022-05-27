@@ -14,7 +14,7 @@ import React from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import { FcGoogle } from 'react-icons/fc';
 import withApollo from 'utils/withApollo';
-import { Layout } from '../../components/Layout';
+import { Layout } from '../../components/common/Layout';
 import styles from '../../styles/register.module.css';
 
 const RegisterPage: React.FC = () => {

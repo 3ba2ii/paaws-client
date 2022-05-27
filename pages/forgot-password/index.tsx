@@ -1,5 +1,5 @@
 import { Box, Button, Heading, Input, Text, VStack } from '@chakra-ui/react';
-import Footer from 'components/Footer';
+import Footer from 'components/common/Footer';
 import Logo from 'components/common/Logo';
 import { useForgotPasswordMutation } from 'generated/graphql';
 import Image from 'next/image';

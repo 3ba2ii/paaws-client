@@ -1,6 +1,6 @@
 import { Heading } from '@chakra-ui/layout';
 import { Button, useToast } from '@chakra-ui/react';
-import { Layout } from 'components/Layout';
+import { Layout } from 'components/common/Layout';
 import {
   MeDocument,
   MeQuery,

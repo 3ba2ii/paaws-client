@@ -1,4 +1,4 @@
-import { Layout } from 'components/Layout';
+import { Layout } from 'components/common/Layout';
 import UserPetContainer from 'modules/pet/UserPetContainer';
 import { useRouter } from 'next/router';
 import React from 'react';
