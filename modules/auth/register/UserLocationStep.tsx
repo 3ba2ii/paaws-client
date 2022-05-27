@@ -1,4 +1,4 @@
-import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
+import CustomLocationPicker from 'components/location/CustomLocationPicker';
 import React from 'react';
 import { LocationType } from 'types';
 

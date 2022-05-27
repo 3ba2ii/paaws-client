@@ -1,5 +1,5 @@
 import { Box, Text, useColorModeValue } from '@chakra-ui/react';
-import ImageWithFallback from 'components/common/media/ImageWithFallback';
+import ImageWithFallback from 'components/media/ImageWithFallback';
 import { formatDistanceToNow } from 'date-fns';
 import { UserOwnedPetsQuery } from 'generated/graphql';
 import React from 'react';

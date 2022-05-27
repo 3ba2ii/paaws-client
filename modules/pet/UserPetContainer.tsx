@@ -1,7 +1,7 @@
 import { Center, GridItem, SimpleGrid } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
-import CustomCarousel from 'components/common/media/CustomCarousel';
-import NotFound from 'components/NotFound';
+import CustomCarousel from 'components/media/CustomCarousel';
+import NotFound from 'components/errors/NotFound';
 import { useUserOwnedPetQuery } from 'generated/graphql';
 import React from 'react';
 import { CarouselProps } from 'react-responsive-carousel';

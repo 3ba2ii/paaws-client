@@ -1,6 +1,6 @@
 import { Divider, VStack } from '@chakra-ui/layout';
 import { Button } from '@chakra-ui/react';
-import NotFound from 'components/NotFound';
+import NotFound from 'components/errors/NotFound';
 import { MissingPostsQuery } from 'generated/graphql';
 import React, { useEffect, useRef } from 'react';
 import useOnScreen from 'hooks/useOnScreen';

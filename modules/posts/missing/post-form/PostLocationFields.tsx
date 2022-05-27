@@ -1,7 +1,7 @@
 import { Heading, HStack, VStack } from '@chakra-ui/layout';
 import { Button, MenuProps, SlideFade } from '@chakra-ui/react';
-import InputFieldWrapper from 'components/common/input/CustomInputComponent';
-import { DropdownMenu } from 'components/common/input/DropdownMenu';
+import InputFieldWrapper from 'components/input/CustomInputComponent';
+import { DropdownMenu } from 'components/input/DropdownMenu';
 import React from 'react';
 import { GoChevronRight } from 'react-icons/go';
 import { PostInputType } from 'types';

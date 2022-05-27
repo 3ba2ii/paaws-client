@@ -1,7 +1,7 @@
 import { getDataFromTree } from '@apollo/client/react/ssr';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { Layout } from 'components/Layout';
-import NotFound from 'components/NotFound';
+import NotFound from 'components/errors/NotFound';
 import { useMissingPostQuery } from 'generated/graphql';
 import MissingPostContainer from 'modules/posts/missing/post-details/MissingPostContainer';
 import { useRouter } from 'next/router';

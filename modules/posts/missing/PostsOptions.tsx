@@ -1,7 +1,7 @@
 import { HStack, VStack } from '@chakra-ui/layout';
 import { Button, DrawerProps } from '@chakra-ui/react';
-import { AnimatedSearchBox } from 'components/common/input/AnimatedSearchBox';
-import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
+import { AnimatedSearchBox } from 'components/input/AnimatedSearchBox';
+import { CustomDrawer } from 'components/overlays/CustomDrawer';
 import { useMeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';

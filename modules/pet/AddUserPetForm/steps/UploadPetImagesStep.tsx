@@ -1,5 +1,5 @@
 import { Box, Heading, Text, VStack } from '@chakra-ui/react';
-import CustomDropzone from 'components/common/input/CustomDropzone';
+import CustomDropzone from 'components/input/CustomDropzone';
 import { FormikProps } from 'formik';
 import React from 'react';
 import { CreatePetInputType } from 'types';

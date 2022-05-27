@@ -13,7 +13,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
-import UserAvatar from 'components/UserAvatar';
+import UserAvatar from 'components/common/UserAvatar';
 import { useUserProfilePageQuery } from 'generated/graphql';
 import AddUserOwnedPetForm from 'modules/pet/AddUserPetForm';
 import React, { useState } from 'react';

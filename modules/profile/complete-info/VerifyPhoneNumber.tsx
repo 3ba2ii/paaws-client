@@ -6,7 +6,7 @@ import {
   Button,
   useToast,
 } from '@chakra-ui/react';
-import InputFieldWrapper from 'components/common/input/CustomInputComponent';
+import InputFieldWrapper from 'components/input/CustomInputComponent';
 import { Formik, Form } from 'formik';
 import { MeQuery, useVerifyPhoneNumberMutation } from 'generated/graphql';
 import router from 'next/router';

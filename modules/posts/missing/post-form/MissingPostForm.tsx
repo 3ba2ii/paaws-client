@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/layout';
 import { useToast } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
-import NotFound from 'components/NotFound';
+import NotFound from 'components/errors/NotFound';
 import { Formik, FormikHelpers } from 'formik';
 import {
   MissingPostQuery,
@@ -16,8 +16,8 @@ import { PostInputType } from 'types';
 import { addNewMissingPostToCache } from 'utils/cache/addNewMissingPost';
 import { toErrorMap } from 'utils/toErrorMap';
 import { CreateMPSchema } from 'utils/yupSchemas/CreateMPSchema';
-import { CustomAlertDialog } from 'components/common/overlays/AlertDialog';
-import { NotAuthenticatedComponent } from 'components/NotAuthenticatedComponent';
+import { CustomAlertDialog } from 'components/overlays/AlertDialog';
+import { NotAuthenticatedComponent } from 'components/errors/NotAuthenticatedComponent';
 import MPFormContent from './MPFormContent';
 
 const initialValues: PostInputType = {

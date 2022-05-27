@@ -11,7 +11,7 @@ import {
   useColorMode,
   useToast,
 } from '@chakra-ui/react';
-import UserAvatar from 'components/UserAvatar';
+import UserAvatar from 'components/common/UserAvatar';
 import { useLogoutMutation } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import router from 'next/router';
@@ -23,7 +23,7 @@ import {
   BiMoon,
   BiUserCircle,
 } from 'react-icons/bi';
-import { LoadingComponent } from '../loading/LoadingSpinner';
+import { LoadingComponent } from '../common/loading/LoadingSpinner';
 
 const ProfileMenu = () => {
   const { user, loading } = useIsAuth();

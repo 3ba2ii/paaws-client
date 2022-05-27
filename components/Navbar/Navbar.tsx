@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/layout';
 import navbarStyles from 'styles/navbar.module.css';
 import withApollo from 'utils/withApollo';
-import Logo from '../Logo';
+import Logo from '../common/Logo';
 import { NavBarItems } from './NavbarItems';
 
 const NavBar = () => {

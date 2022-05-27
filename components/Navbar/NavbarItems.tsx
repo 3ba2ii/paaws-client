@@ -11,8 +11,8 @@ import { FaHeart } from 'react-icons/fa';
 import navbarStyles from 'styles/navbar.module.css';
 import { isServer } from 'utils/isServer';
 import { LoadingComponent } from '../common/loading/LoadingSpinner';
-import ProfileMenu from '../common/overlays/ProfileMenu';
-import { DarkModeSwitch } from '../DarkModeSwitch';
+import ProfileMenu from '../overlays/ProfileMenu';
+import { DarkModeSwitch } from '../common/DarkModeSwitch';
 
 export function JoinUsNavbarItems(
   isRegisterScreen: boolean,

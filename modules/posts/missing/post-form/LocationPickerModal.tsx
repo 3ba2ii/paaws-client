@@ -1,8 +1,8 @@
 import { Box, HStack } from '@chakra-ui/layout';
 import { Button, ModalProps } from '@chakra-ui/react';
-import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
-import GenericModal from 'components/common/overlays/CustomModal';
-import ModalHeader from 'components/common/overlays/ModalHeader';
+import CustomLocationPicker from 'components/location/CustomLocationPicker';
+import GenericModal from 'components/overlays/CustomModal';
+import ModalHeader from 'components/overlays/ModalHeader';
 import React, { useState } from 'react';
 import { LocationType } from 'types';
 import { SelectLocationOptions } from 'utils/constants/enums';

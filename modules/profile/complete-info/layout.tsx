@@ -7,9 +7,9 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
-import ProfileMenu from 'components/common/overlays/ProfileMenu';
+import ProfileMenu from 'components/overlays/ProfileMenu';
 import { Layout } from 'components/Layout';
-import Logo from 'components/Logo';
+import Logo from 'components/common/Logo';
 import router, { useRouter } from 'next/router';
 import React from 'react';
 

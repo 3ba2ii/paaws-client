@@ -1,6 +1,6 @@
 import { OperationVariables, QueryResult } from '@apollo/client';
 import { GridItem, VStack } from '@chakra-ui/layout';
-import NotFound from 'components/NotFound';
+import NotFound from 'components/errors/NotFound';
 import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
 import { MissingPostsQuery } from 'generated/graphql';
 import React from 'react';

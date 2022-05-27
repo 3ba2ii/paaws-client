@@ -18,7 +18,7 @@ import {
   TwitterShareButton,
   WhatsappShareButton,
 } from 'react-share';
-import GenericModal from './common/overlays/CustomModal';
+import GenericModal from '../CustomModal';
 
 const ShareSocialMediaList = [
   {

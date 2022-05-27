@@ -12,7 +12,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
-import NotFound from 'components/NotFound';
+import NotFound from 'components/errors/NotFound';
 import { useUserOwnedPetsQuery } from 'generated/graphql';
 import { useContextualRouting } from 'next-use-contextual-routing';
 import Link from 'next/link';

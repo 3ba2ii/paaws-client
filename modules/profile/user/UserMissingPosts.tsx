@@ -1,6 +1,6 @@
 import { Box, Center } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
-import NotFound from 'components/NotFound';
+import NotFound from 'components/errors/NotFound';
 import { useMissingPostsByUserQuery } from 'generated/graphql';
 import { MissingPostsList } from 'modules/posts/missing/MissingPostsList';
 import React, { useState } from 'react';

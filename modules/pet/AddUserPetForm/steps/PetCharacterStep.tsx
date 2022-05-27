@@ -1,7 +1,7 @@
 import { Box, Text, Heading, VStack } from '@chakra-ui/react';
-import CreatableInput from 'components/common/input/CreatableInput';
-import InputFieldWrapper from 'components/common/input/CustomInputComponent';
-import InputField from 'components/common/input/InputField';
+import CreatableInput from 'components/input/CreatableInput';
+import InputFieldWrapper from 'components/input/CustomInputComponent';
+import InputField from 'components/input/InputField';
 import { format } from 'date-fns';
 import React from 'react';
 import { MyOptionType } from 'types/MyOptionType';

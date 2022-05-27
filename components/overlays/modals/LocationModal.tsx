@@ -15,9 +15,9 @@ import {
 import React, { useState } from 'react';
 import { Libraries, LocationType } from 'types';
 import { isProduction } from 'utils/isProduction';
-import { MapLoadingComponent } from './common/location/MapLoadingComponent';
-import GenericModal from './common/overlays/CustomModal';
-import GoogleMapComponent from './GoogleMapComponent';
+import { MapLoadingComponent } from '../../location/MapLoadingComponent';
+import GenericModal from '../CustomModal';
+import GoogleMapComponent from '../../GoogleMapComponent';
 
 interface LocationModalProps {
   isOpen: boolean;

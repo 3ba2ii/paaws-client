@@ -7,7 +7,7 @@ import {
   IconButtonProps,
   VStack,
 } from '@chakra-ui/react';
-import NotFound from 'components/NotFound';
+import NotFound from 'components/errors/NotFound';
 import { VoteComponent } from 'components/VoteComponent';
 import { MissingPostQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';

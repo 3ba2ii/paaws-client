@@ -14,8 +14,8 @@ import {
 } from 'generated/graphql';
 import gql from 'graphql-tag';
 import React from 'react';
-import { LoadingComponent } from './common/loading/LoadingSpinner';
-import GenericModal from './common/overlays/CustomModal';
+import { LoadingComponent } from '../../common/loading/LoadingSpinner';
+import GenericModal from '../CustomModal';
 
 interface ContactInfoModalProps {
   isOpen: boolean;

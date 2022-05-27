@@ -1,6 +1,6 @@
 import { Box, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/layout';
 import { Button, Image } from '@chakra-ui/react';
-import { UserAvatar } from 'components/UserAvatar';
+import { UserAvatar } from 'components/common/UserAvatar';
 import { MissingPostTypes, useMeQuery } from 'generated/graphql';
 import router from 'next/router';
 import React from 'react';
