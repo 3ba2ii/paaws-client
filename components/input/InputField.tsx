@@ -64,7 +64,7 @@ const InputField: React.FC<InputFieldProps> = ({
         {label}
       </FormLabel>
       <MaxInputLengthAlert />
-      <Component {...props} {...field} borderWidth='1.5px' id={field.name} />
+      <Component {...field} {...props} borderWidth='1.5px' id={field.name} />
 
       {helperText ? (
         <FormHelperText maxW='45ch'>{helperText}</FormHelperText>
