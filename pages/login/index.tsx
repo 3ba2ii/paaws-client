@@ -45,10 +45,15 @@ const LoginPage: React.FC = () => {
       return onFailure();
     }
     //check if the user verified his phone number or not
-    const { phone, phoneVerified, lat, lng } = data.loginWithAuthProvider.user;
+    const { phone, phoneVerified, lat, lng, bio } =
+      data.loginWithAuthProvider.user;
     if (!phoneVerified && !phone) {
       //if the user did not verify his phone number then redirect to the verify phone number page
       return router.push('/profile/complete-info/phone-number');
+    }
+
+    if (!bio || bio === '') {
+      return router.push('/profile/complete-info/bio');
     }
     //redirect the user to the next step
     if (!lat || !lng) {
