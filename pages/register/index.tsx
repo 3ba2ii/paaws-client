@@ -60,13 +60,18 @@ const RegisterPage: React.FC = () => {
       });
     }
     //check if the user verified his phone number or not
-    const { phone, phoneVerified, lat, lng } =
+    const { phone, phoneVerified, lat, lng, bio } =
       data.registerWithAuthProvider.user;
     if (!phoneVerified && !phone) {
       //if the user did not verify his phone number then redirect to the verify phone number page
       return router.push('/profile/complete-info/phone-number');
     }
-    //redirect the user to the next step
+    //otherwise redirect the user to the bio step
+
+    if (!bio || bio === '') {
+      return router.push('/profile/complete-info/bio');
+    }
+
     if (!lat || !lng) {
       return router.push('/profile/complete-info/location');
     }
