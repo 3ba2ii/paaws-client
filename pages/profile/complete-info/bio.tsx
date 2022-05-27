@@ -45,6 +45,7 @@ const BioStep: React.FC<BioStepProps> = () => {
             }
             //check if the user verified his phone number or not
             if (!user) return;
+
             return router.push(getUrlBaseOnUserInfo(user, 'bio'));
           }}
         >

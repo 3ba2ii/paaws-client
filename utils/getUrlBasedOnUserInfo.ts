@@ -13,7 +13,7 @@ export const getUrlBaseOnUserInfo = (
     return '/profile/complete-info/phone-number';
   }
   //otherwise redirect the user to the bio step
-  if (!bio || (bio === '' && currentUrl !== 'bio')) {
+  if ((!bio || bio === '') && currentUrl !== 'bio') {
     return '/profile/complete-info/bio';
   }
 

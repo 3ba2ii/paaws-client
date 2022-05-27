@@ -12,6 +12,8 @@ import { Layout } from 'components/common/Layout';
 import Logo from 'components/common/Logo';
 import router, { useRouter } from 'next/router';
 import React from 'react';
+import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
+import { useIsAuth } from 'hooks/useIsAuth';
 
 interface CompleteInfoProps {
   pageTitle: string;
@@ -41,6 +43,7 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
   pageTitle,
   children,
 }) => {
+  const { user } = useIsAuth();
   const { setColorMode } = useColorMode();
   const { pathname } = useRouter();
   const isPhoneNumberStep = pathname.includes('phone');
@@ -48,6 +51,7 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
   React.useEffect(() => {
     setColorMode('light');
   }, []);
+
   return (
     <Layout
       title={pageTitle}
@@ -79,12 +83,10 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
             opacity='.6'
             fontWeight={'medium'}
             onClick={() =>
-              router.push(
-                isPhoneNumberStep ? '/profile/complete-info/location' : '/'
-              )
+              router.push(getUrlBaseOnUserInfo(user, 'phone-number'))
             }
           >
-            Complete Later
+            Complete later
           </Button>
         </Center>
       </HStack>
