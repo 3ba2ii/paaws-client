@@ -1,13 +1,6 @@
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  List,
-  ListItem,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { Box, Button, ButtonGroup, useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
-import styles from '../styles/footer.module.css';
+import styles from 'styles/footer.module.css';
 
 const Footer: React.FC = () => {
   return (
