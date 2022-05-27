@@ -49,7 +49,6 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
             variant: 'left-accent',
             isClosable: true,
           });
-          /* redirect to the location page in case the user has no previous location*/
           const redirectURL = getUrlBaseOnUserInfo(user, 'phone-number');
           return router.push(redirectURL);
         }}

@@ -34,3 +34,5 @@ export type PostInputType = CreateMissingPostInput & {
 export type CreatePetInputType = CreatePetInput & {
   images: Array<Scalars['Upload']>;
 };
+
+export type StringWithAutoComplete<T> = T | (string & Record<never, never>);
