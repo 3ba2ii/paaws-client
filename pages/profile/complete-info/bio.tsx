@@ -5,15 +5,17 @@ import { Form, Formik } from 'formik';
 import { useUpdateUserInfoMutation } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
+import { useRouter } from 'next/router';
 import React from 'react';
+import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
 import withApollo from 'utils/withApollo';
 
 interface BioStepProps {}
 
 const BioStep: React.FC<BioStepProps> = () => {
   const { user, loading } = useIsAuth();
-  const [updateUser, { loading: mutLoading }] = useUpdateUserInfoMutation();
-
+  const [updateUser] = useUpdateUserInfoMutation();
+  const router = useRouter();
   const toaster = useToast();
 
   if (loading) return <LoadingComponent />;
@@ -43,7 +45,7 @@ const BioStep: React.FC<BioStepProps> = () => {
             }
             //check if the user verified his phone number or not
             if (!user) return;
-            const { phone, phoneVerified, lat, lng } = user;
+            return router.push(getUrlBaseOnUserInfo(user, 'bio'));
           }}
         >
           {({ isSubmitting }) => (

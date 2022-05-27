@@ -11,6 +11,7 @@ import { Formik, Form } from 'formik';
 import { MeQuery, useVerifyPhoneNumberMutation } from 'generated/graphql';
 import router from 'next/router';
 import React from 'react';
+import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
 import { toErrorMap } from 'utils/toErrorMap';
 
 interface IVerifyOTPProps {
@@ -27,7 +28,7 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
       <Formik
         initialValues={{ otp: '' }}
         onSubmit={async ({ otp }, { setErrors }) => {
-          if (!otp || !otp.length || !phone) return;
+          if (!otp || !otp.length || !phone || !user) return;
 
           /* send verification request */
           const { data } = await verifyPhoneNumber({
@@ -45,13 +46,12 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
             title: 'Phone Number Verified',
             description: 'You rock! 🤘',
             position: 'top-right',
-            variant: 'subtle',
+            variant: 'left-accent',
             isClosable: true,
           });
           /* redirect to the location page in case the user has no previous location*/
-          if (!user?.lat || !user?.lng) {
-            return router.push('/profile/complete-info/location');
-          }
+          const redirectURL = getUrlBaseOnUserInfo(user, 'phone-number');
+          return router.push(redirectURL);
         }}
       >
         {({ isSubmitting, setFieldValue }) => (

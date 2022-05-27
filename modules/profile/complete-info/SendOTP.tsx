@@ -26,6 +26,7 @@ const SendOTPComponent: React.FC<SendOTPProps> = ({ onSuccess }) => {
               sendOtpPhone: phone.toString(),
             },
           });
+
           /* map the error */
           if (data?.sendOTP.errors?.length) {
             const mappedErrors = toErrorMap(data?.sendOTP?.errors);
