@@ -29,6 +29,7 @@ const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
     });
 
     if (data?.updateUser) return router.push('/');
+
     return toaster({
       status: 'error',
       title: 'An error occurred while updating your location',

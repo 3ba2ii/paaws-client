@@ -13,6 +13,7 @@ import React from 'react';
 import { GoogleLogin, GoogleLoginResponse } from 'react-google-login';
 import { FcGoogle } from 'react-icons/fc';
 import styles from 'styles/login.module.css';
+import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
 import withApollo from 'utils/withApollo';
 import { LoginForm } from '../../modules/auth/login/LoginForm';
 
@@ -45,22 +46,11 @@ const LoginPage: React.FC = () => {
       return onFailure();
     }
     //check if the user verified his phone number or not
-    const { phone, phoneVerified, lat, lng, bio } =
-      data.loginWithAuthProvider.user;
-    if (!phoneVerified && !phone) {
-      //if the user did not verify his phone number then redirect to the verify phone number page
-      return router.push('/profile/complete-info/phone-number');
-    }
-
-    if (!bio || bio === '') {
-      return router.push('/profile/complete-info/bio');
-    }
-    //redirect the user to the next step
-    if (!lat || !lng) {
-      return router.push('/profile/complete-info/location');
-    }
-
-    return router.push('/');
+    const redirectURL = getUrlBaseOnUserInfo(
+      data.loginWithAuthProvider.user,
+      'login'
+    );
+    return router.push(redirectURL);
   };
 
   const onFailure = () =>

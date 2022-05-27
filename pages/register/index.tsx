@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import { FcGoogle } from 'react-icons/fc';
+import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
 import withApollo from 'utils/withApollo';
 import { Layout } from '../../components/common/Layout';
 import styles from '../../styles/register.module.css';
@@ -60,23 +61,12 @@ const RegisterPage: React.FC = () => {
       });
     }
     //check if the user verified his phone number or not
-    const { phone, phoneVerified, lat, lng, bio } =
-      data.registerWithAuthProvider.user;
-    if (!phoneVerified && !phone) {
-      //if the user did not verify his phone number then redirect to the verify phone number page
-      return router.push('/profile/complete-info/phone-number');
-    }
-    //otherwise redirect the user to the bio step
 
-    if (!bio || bio === '') {
-      return router.push('/profile/complete-info/bio');
-    }
-
-    if (!lat || !lng) {
-      return router.push('/profile/complete-info/location');
-    }
-
-    return router.push('/');
+    const redirectURL = getUrlBaseOnUserInfo(
+      data.registerWithAuthProvider.user,
+      'register'
+    );
+    return router.push(redirectURL);
   };
 
   return (
