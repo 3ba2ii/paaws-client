@@ -89,7 +89,7 @@ export const NavBarItems = () => {
         <Link href='/explore'>Explore</Link>
         <Link href='/missing'>Missing Pets</Link>
         <Link href='/adoption'>Adoption Pets</Link>
-        {!isLoggedIn && <Link href='/login'>Sign in</Link>}
+        {!isLoggedIn && !loading && <Link href='/login'>Sign in</Link>}
         {loading ? (
           <LoadingComponent />
         ) : isLoggedIn ? (
@@ -98,6 +98,7 @@ export const NavBarItems = () => {
               aria-label='Notifications'
               icon={<BiBell size='18px' />}
               variant='flushed'
+              style={{ minWidth: 'auto' }}
             />
             <ProfileMenu />
           </>
