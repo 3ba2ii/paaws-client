@@ -1,4 +1,12 @@
-import { Box, Button, Heading, Text, useToast, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Heading,
+  HStack,
+  Text,
+  useToast,
+  VStack,
+} from '@chakra-ui/react';
 import {
   MeDocument,
   MeQuery,
@@ -47,7 +55,17 @@ const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
       },
     });
 
-    if (data?.updateUser) return router.push('/profile/complete-info');
+    if (data?.updateUser) {
+      toaster({
+        status: 'success',
+        title: 'Success',
+        description: 'Location updated successfully',
+        position: 'top-right',
+        variant: 'subtle',
+        isClosable: true,
+      });
+      return router.push('/profile/complete-info');
+    }
 
     return toaster({
       status: 'error',
@@ -86,15 +104,20 @@ const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
         >
           <UserLocationStep handleChange={handleChange} />
         </Box>
-        <Button
-          colorScheme={'teal'}
-          onClick={handleSubmitLocation}
-          isLoading={loading}
-          px={4}
-          fontSize='sm'
-        >
-          Save Location
-        </Button>
+        <HStack w='80%' justify={'flex-end'}>
+          <Button variant='ghost' fontSize='sm' onClick={() => router.back()}>
+            Back
+          </Button>
+          <Button
+            colorScheme={'teal'}
+            onClick={handleSubmitLocation}
+            isLoading={loading}
+            px={4}
+            fontSize='sm'
+          >
+            Save Location
+          </Button>
+        </HStack>
       </VStack>
     </CompleteInfoLayout>
   );
