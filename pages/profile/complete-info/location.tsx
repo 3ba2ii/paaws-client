@@ -1,5 +1,9 @@
 import { Box, Button, Heading, Text, useToast, VStack } from '@chakra-ui/react';
-import { useUpdateUserInfoMutation } from 'generated/graphql';
+import {
+  MeDocument,
+  MeQuery,
+  useUpdateUserInfoMutation,
+} from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import { UserLocationStep } from 'modules/auth/register/UserLocationStep';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
@@ -26,9 +30,24 @@ const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
     if (!user || !coords?.lat || !coords.lng) return;
     const { data } = await updateUserInfo({
       variables: { updateUserUpdateOptions: { ...coords } },
+      update: (cache, { data: returnedData, errors }) => {
+        if (!returnedData || !returnedData.updateUser || errors) return;
+        const result = cache.readQuery<MeQuery>({ query: MeDocument });
+        if (!result || !result.me) return;
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            me: {
+              ...result.me,
+              lat: coords.lat.toString(),
+              lng: coords.lng.toString(),
+            },
+          },
+        });
+      },
     });
 
-    if (data?.updateUser) return router.push('/');
+    if (data?.updateUser) return router.push('/profile/complete-info');
 
     return toaster({
       status: 'error',
