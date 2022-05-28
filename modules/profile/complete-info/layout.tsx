@@ -3,6 +3,7 @@ import {
   Center,
   Heading,
   HStack,
+  Text,
   useColorMode,
   useColorModeValue,
   VStack,
@@ -45,8 +46,6 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
 }) => {
   const { user } = useIsAuth();
   const { setColorMode } = useColorMode();
-  const { pathname } = useRouter();
-  const isPhoneNumberStep = pathname.includes('phone');
 
   React.useEffect(() => {
     setColorMode('light');
@@ -83,7 +82,7 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
             opacity='.6'
             fontWeight={'medium'}
             onClick={() =>
-              router.push(getUrlBaseOnUserInfo(user, 'phone-number'))
+              router.push(getUrlBaseOnUserInfo(user, '/profile/complete-info'))
             }
           >
             Complete later

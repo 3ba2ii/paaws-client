@@ -1,13 +1,25 @@
 import { MeQuery } from 'generated/graphql';
 export const getUrlBaseOnUserInfo = (
   user: MeQuery['me'],
-  currentUrl: 'phone-number' | 'bio' | 'location' | 'login' | 'register'
+  currentUrl:
+    | 'phone-number'
+    | 'bio'
+    | 'location'
+    | 'login'
+    | 'register'
+    | '/profile/complete-info'
 ): string => {
   if (!user) {
     return '/';
   }
-  const { bio, phoneVerified, phone, lat, lng } = user;
+  if (currentUrl === '/profile/complete-info') {
+    return '/';
+  }
+  return 'profile/complete-info';
 
+  /* 
+  const { bio, phoneVerified, phone, lat, lng } = user;
+  
   if (!phoneVerified && !phone && currentUrl !== 'phone-number') {
     //if the user did not verify his phone number then redirect to the verify phone number page
     return '/profile/complete-info/phone-number';
@@ -21,5 +33,5 @@ export const getUrlBaseOnUserInfo = (
     return '/profile/complete-info/location';
   }
 
-  return '/';
+  return '/'; */
 };
