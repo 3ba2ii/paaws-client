@@ -17,7 +17,7 @@ const SendOTPComponent: React.FC<SendOTPProps> = ({ onSuccess }) => {
   const router = useRouter();
 
   return (
-    <VStack flex={['1', '.75', '.75', '.75']} w='100%'>
+    <VStack align='flex-start' flex={['1', '.75', '.75', '.75']} w='100%'>
       <Formik
         initialValues={{ phone: '' }}
         onSubmit={async ({ phone }, { setErrors }) => {
@@ -39,7 +39,7 @@ const SendOTPComponent: React.FC<SendOTPProps> = ({ onSuccess }) => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <VStack align='flex-start' spacing={5}>
+            <VStack w='100%' align='flex-start' spacing={5}>
               <InputField
                 label='Phone Number'
                 name='phone'

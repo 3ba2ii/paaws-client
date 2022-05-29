@@ -1,4 +1,4 @@
-import { Box, Button, Heading, useToast, VStack } from '@chakra-ui/react';
+import { Box, Button, Heading, Text, useToast, VStack } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import InputField from 'components/input/InputField';
 import { Form, Formik } from 'formik';
@@ -52,6 +52,13 @@ const BioStep: React.FC<BioStepProps> = () => {
           {({ isSubmitting }) => (
             <Form>
               <VStack align='flex-start' w='100%' spacing={5}>
+                <VStack align='flex-start' w='100%'>
+                  <Heading size='md'>Personalize your profile</Heading>
+                  <Text color='gray.500' fontSize='sm' maxW='65ch'>
+                    Tell us a bit about yourself. We'll give you more
+                    personalized experience.
+                  </Text>
+                </VStack>
                 <Box minW='450px' w='100%'>
                   <InputField
                     label='Bio'

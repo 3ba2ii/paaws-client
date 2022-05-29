@@ -58,8 +58,7 @@ const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
     if (data?.updateUser) {
       toaster({
         status: 'success',
-        title: 'Success',
-        description: 'Location updated successfully',
+        title: 'Looks Good!',
         position: 'top-right',
         variant: 'subtle',
         isClosable: true,

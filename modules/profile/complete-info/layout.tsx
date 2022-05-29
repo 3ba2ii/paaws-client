@@ -34,7 +34,8 @@ const CompleteInfoStaticComponent = () => {
       display={['none', 'flex', 'flex', 'flex']}
     >
       <Heading color='inherit' size='xl' fontWeight='medium'>
-        Let's make your account <br /> attractive 😉
+        Let's make your account <br />
+        more attractive
       </Heading>
     </VStack>
   );
@@ -44,10 +45,9 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
   pageTitle,
   children,
 }) => {
-  const { user, loading } = useIsAuth();
+  const { user } = useIsAuth();
   const { setColorMode } = useColorMode();
   const { pathname } = useRouter();
-  const isCompleteInfoPage = pathname === '/profile/complete-info';
 
   const isCompletedProfile = !!(
     user &&

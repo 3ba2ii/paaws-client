@@ -68,7 +68,7 @@ const completeInfoSteps: StepsComponentsData = [
     title: 'Personalize your profile',
     subtitle: 'Add tags, bio and other information about you',
     Icon: <BiStar size='32px' color='gray' />,
-    href: '/bio',
+    href: '/personal-info',
   },
 ];
 
