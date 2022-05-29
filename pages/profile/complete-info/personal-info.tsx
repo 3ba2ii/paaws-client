@@ -1,13 +1,22 @@
-import { Box, Button, Heading, Text, useToast, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  Heading,
+  HStack,
+  Text,
+  useToast,
+  VStack,
+} from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
+import InputFieldWrapper from 'components/input/CustomInputComponent';
 import InputField from 'components/input/InputField';
+import SegmentedControl from 'components/input/SegmentedControl';
 import { Form, Formik } from 'formik';
-import { useUpdateUserInfoMutation } from 'generated/graphql';
+import { UserGender, useUpdateUserInfoMutation } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
+import { OptionTypeWithEnums } from 'types';
 import withApollo from 'utils/withApollo';
 
 interface BioStepProps {}
@@ -26,11 +35,15 @@ const BioStep: React.FC<BioStepProps> = () => {
     <CompleteInfoLayout pageTitle='Add Your Bio - Paaws'>
       <VStack h='100%' align='center' justify={'center'}>
         <Formik
-          initialValues={{ bio: hasBio ? user?.bio : '' }}
-          onSubmit={async ({ bio }) => {
-            console.log(`🚀 ~ file: bio.tsx ~ line 22 ~ bio`, bio);
+          initialValues={
+            { bio: hasBio ? user?.bio : '', gender: user?.gender || null } as {
+              bio: string;
+              gender: UserGender;
+            }
+          }
+          onSubmit={async ({ bio, gender }) => {
             const { data } = await updateUser({
-              variables: { updateUserUpdateOptions: { bio } },
+              variables: { updateUserUpdateOptions: { bio, gender } },
             });
             if (!data || !data.updateUser) {
               return toaster({
@@ -46,10 +59,10 @@ const BioStep: React.FC<BioStepProps> = () => {
             //check if the user verified his phone number or not
             if (!user) return;
 
-            return router.push(getUrlBaseOnUserInfo(user, 'bio'));
+            return router.push('/profile/complete-info');
           }}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, setFieldValue, values }) => (
             <Form>
               <VStack align='flex-start' w='100%' spacing={5}>
                 <VStack align='flex-start' w='100%'>
@@ -59,22 +72,49 @@ const BioStep: React.FC<BioStepProps> = () => {
                     personalized experience.
                   </Text>
                 </VStack>
-                <Box minW='450px' w='100%'>
+                <VStack spacing={5} minW='450px' w='100%'>
                   <InputField
                     label='Bio'
                     name='bio'
                     textarea
                     helperText='This bio will show up on your profile page'
                   />
-                </Box>
-                <Button
-                  isLoading={isSubmitting}
-                  colorScheme={'teal'}
-                  type='submit'
-                  fontSize='sm'
-                >
-                  {hasBio ? 'Update Bio' : 'Add Bio'}
-                </Button>
+                  <InputFieldWrapper label='Gender' name='gender'>
+                    <SegmentedControl
+                      options={
+                        [
+                          { label: 'Male', value: UserGender.Male },
+                          { label: 'Female', value: UserGender.Female },
+                        ] as OptionTypeWithEnums<UserGender>[]
+                      }
+                      selectedValue={{
+                        label: values.gender,
+                        value: values.gender,
+                      }}
+                      onChange={(val) => {
+                        setFieldValue('gender', val.value);
+                      }}
+                    />
+                  </InputFieldWrapper>
+                </VStack>
+                <HStack w='100%' justify='flex-end'>
+                  <Button
+                    onClick={() => router.back()}
+                    type='reset'
+                    variant='ghost'
+                    fontSize='sm'
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    isLoading={isSubmitting}
+                    colorScheme={'teal'}
+                    type='submit'
+                    fontSize='sm'
+                  >
+                    Save Updates
+                  </Button>
+                </HStack>
               </VStack>
             </Form>
           )}
