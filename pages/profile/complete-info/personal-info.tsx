@@ -109,9 +109,17 @@ const BioStep: React.FC<BioStepProps> = () => {
                     name='birthDate'
                     label='Birthday'
                     type='date'
-                    value={convertDateFormat(
+                    value={
+                      values?.birthDate
+                        ? convertDateFormat(
+                            new Date(values?.birthDate).toLocaleDateString(),
+                            'yyyy-mm-dd'
+                          )
+                        : ''
+                    }
+                    max={convertDateFormat(
                       new Date().toLocaleDateString(),
-                      'yyyy/mm/dd'
+                      'yyyy-mm-dd'
                     )}
                   />
                 </VStack>
