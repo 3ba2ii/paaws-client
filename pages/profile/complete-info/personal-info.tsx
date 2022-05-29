@@ -17,6 +17,7 @@ import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { OptionTypeWithEnums } from 'types';
+import { convertDateFormat } from 'utils/convertDateFormat';
 import withApollo from 'utils/withApollo';
 
 interface BioStepProps {}
@@ -36,14 +37,21 @@ const BioStep: React.FC<BioStepProps> = () => {
       <VStack h='100%' align='center' justify={'center'}>
         <Formik
           initialValues={
-            { bio: hasBio ? user?.bio : '', gender: user?.gender || null } as {
+            {
+              bio: hasBio ? user?.bio : '',
+              gender: user?.gender || null,
+              birthDate: user?.birthDate || null,
+            } as {
               bio: string;
               gender: UserGender;
+              birthDate: Date | null;
             }
           }
-          onSubmit={async ({ bio, gender }) => {
+          onSubmit={async ({ bio, gender, birthDate }) => {
             const { data } = await updateUser({
-              variables: { updateUserUpdateOptions: { bio, gender } },
+              variables: {
+                updateUserUpdateOptions: { bio, gender, birthDate },
+              },
             });
             if (!data || !data.updateUser) {
               return toaster({
@@ -97,6 +105,15 @@ const BioStep: React.FC<BioStepProps> = () => {
                       }}
                     />
                   </InputFieldWrapper>
+                  <InputField
+                    name='birthDate'
+                    label='Birthday'
+                    type='date'
+                    value={convertDateFormat(
+                      new Date().toLocaleDateString(),
+                      'yyyy/mm/dd'
+                    )}
+                  />
                 </VStack>
                 <HStack w='100%' justify='flex-end'>
                   <Button

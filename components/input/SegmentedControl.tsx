@@ -44,15 +44,3 @@ export const SegmentedControl = <T extends {}>({
     </ButtonGroup>
   );
 };
-
-{
-  /* interface SegmentedControlProps2<T> {
-  options: OptionTypeWithEnums<T>[];
-  onChange: (value: OptionTypeWithEnums<T>) => void;
-  selectedValue: OptionTypeWithEnums<T>;
-}
-const SelectList = <T extends {}>({options,selectedValue,onChange}: SegmentedControlProps2<T>)=>{
-  return <div></div>
-}
-*/
-}

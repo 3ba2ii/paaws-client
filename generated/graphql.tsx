@@ -782,6 +782,7 @@ export type UpdateMissingPostInput = {
 export type UpdateUserInfo = {
   avatar?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
+  birthDate?: Maybe<Scalars['DateTime']>;
   gender?: Maybe<UserGender>;
   lat?: Maybe<Scalars['Float']>;
   lng?: Maybe<Scalars['Float']>;
@@ -802,6 +803,7 @@ export type User = {
   avatar?: Maybe<Photo>;
   avatarId?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
+  birthDate?: Maybe<Scalars['DateTime']>;
   blocked: Scalars['Boolean'];
   comments: Array<Comment>;
   confirmed: Scalars['Boolean'];
@@ -882,7 +884,7 @@ export type CommentFragmentFragment = { __typename?: 'Comment', id: number, upda
 
 export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> };
 
-export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
+export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
 
 export type AddMpCommentMutationVariables = Exact<{
   input: CreateCommentInputType;
@@ -963,7 +965,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', code: number, field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', code: number, field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
 
 export type LoginWithAuthProviderMutationVariables = Exact<{
   providerId: Scalars['String'];
@@ -971,7 +973,7 @@ export type LoginWithAuthProviderMutationVariables = Exact<{
 }>;
 
 
-export type LoginWithAuthProviderMutation = { __typename?: 'Mutation', loginWithAuthProvider: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
+export type LoginWithAuthProviderMutation = { __typename?: 'Mutation', loginWithAuthProvider: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -991,7 +993,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
 
 export type RegisterWithProviderMutationVariables = Exact<{
   providerId: Scalars['String'];
@@ -999,7 +1001,7 @@ export type RegisterWithProviderMutationVariables = Exact<{
 }>;
 
 
-export type RegisterWithProviderMutation = { __typename?: 'Mutation', registerWithAuthProvider: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type RegisterWithProviderMutation = { __typename?: 'Mutation', registerWithAuthProvider: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
 
 export type SendOtpMutationVariables = Exact<{
   sendOtpPhone: Scalars['String'];
@@ -1071,7 +1073,7 @@ export type GetUserEmailQuery = { __typename?: 'Query', user?: Maybe<{ __typenam
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
 
 export type MissingPostsByUserQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -1216,6 +1218,7 @@ export const RequiredUserInfoFragmentDoc = gql`
   providerId
   phoneVerified
   gender
+  birthDate
   avatar {
     id
     url
