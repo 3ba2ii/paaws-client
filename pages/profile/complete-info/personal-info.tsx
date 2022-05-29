@@ -17,6 +17,7 @@ import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { OptionTypeWithEnums } from 'types';
+import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import { convertDateFormat } from 'utils/convertDateFormat';
 import withApollo from 'utils/withApollo';
 
@@ -52,6 +53,11 @@ const BioStep: React.FC<BioStepProps> = () => {
           const { data } = await updateUser({
             variables: {
               updateUserUpdateOptions: { bio, gender, birthDate },
+            },
+            update: (cache, { data: result, errors }) => {
+              if (!result?.updateUser) return;
+              if (errors && errors.length) return;
+              updateMeQueryCache(cache, { ...user, bio, gender, birthDate });
             },
           });
           if (!data || !data.updateUser) {
