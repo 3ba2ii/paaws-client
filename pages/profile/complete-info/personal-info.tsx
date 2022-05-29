@@ -9,7 +9,7 @@ import {
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import InputFieldWrapper from 'components/input/CustomInputComponent';
 import InputField from 'components/input/InputField';
-import SegmentedControl from 'components/input/SegmentedControl';
+import { SegmentedControl } from 'components/input/SegmentedControl';
 import { Form, Formik } from 'formik';
 import { UserGender, useUpdateUserInfoMutation } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
@@ -65,6 +65,7 @@ const BioStep: React.FC<BioStepProps> = () => {
           {({ isSubmitting, setFieldValue, values }) => (
             <Form>
               <VStack align='flex-start' w='100%' spacing={5}>
+                <Text>{JSON.stringify(values)}</Text>
                 <VStack align='flex-start' w='100%'>
                   <Heading size='md'>Personalize your profile</Heading>
                   <Text color='gray.500' fontSize='sm' maxW='65ch'>
