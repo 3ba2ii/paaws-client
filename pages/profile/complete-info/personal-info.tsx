@@ -31,7 +31,7 @@ const BioStep: React.FC<BioStepProps> = () => {
 
   if (loading) return <LoadingComponent />;
 
-  if (!user) return null;
+  if (!user) return <></>;
 
   const hasBio: boolean = !!(user && user.bio && user.bio !== '');
 
@@ -87,8 +87,8 @@ const BioStep: React.FC<BioStepProps> = () => {
               <VStack align='flex-start' w='100%' mb={5}>
                 <Heading size='md'>Personalize your profile</Heading>
                 <Text color='gray.500' fontSize='sm' maxW='65ch'>
-                  Tell us a bit about yourself. We'll give you more personalized
-                  experience.
+                  Tell us a bit about yourself. We will give you more
+                  personalized experience.
                 </Text>
               </VStack>
               <VStack spacing={5} w='100%'>

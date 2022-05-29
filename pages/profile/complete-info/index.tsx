@@ -108,6 +108,7 @@ const CompleteInfo: React.FC = () => {
   if (loading) {
     return <LoadingComponent />;
   }
+  if (!user) return null;
   return (
     <CompleteInfoLayout pageTitle='Complete your profile'>
       <VStack
