@@ -1,12 +1,12 @@
 import { Button, ButtonGroup } from '@chakra-ui/react';
 import React from 'react';
 import { BiCheck } from 'react-icons/bi';
-import { MyOptionType } from 'types/MyOptionType';
+import { OptionTypeWithEnums } from 'types';
 
 interface SegmentedControlProps {
-  options: MyOptionType[];
-  onChange: (value: MyOptionType) => void;
-  selectedValue: MyOptionType;
+  options: OptionTypeWithEnums<any>[];
+  onChange: (value: OptionTypeWithEnums<any>) => void;
+  selectedValue: OptionTypeWithEnums<any>;
 }
 
 const SegmentedControl: React.FC<SegmentedControlProps> = ({

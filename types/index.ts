@@ -36,3 +36,5 @@ export type CreatePetInputType = CreatePetInput & {
 };
 
 export type StringWithAutoComplete<T> = T | (string & Record<never, never>);
+
+export type OptionTypeWithEnums<T> = { label: string; value: T };
