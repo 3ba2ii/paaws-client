@@ -15,6 +15,7 @@ import {
 } from 'generated/graphql';
 import router from 'next/router';
 import React from 'react';
+import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import { toErrorMap } from 'utils/toErrorMap';
 
 interface IVerifyOTPProps {
@@ -36,19 +37,14 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
           /* send verification request */
           const { data } = await verifyPhoneNumber({
             variables: { otp, phone },
-            update: (cache, { data: returnedData, errors }) => {
-              if (!returnedData || !returnedData.verifyPhoneNumber.success)
-                return;
+            update: (cache, { data: result, errors }) => {
+              if (!result || !result.verifyPhoneNumber.success) return;
               if (errors && errors.length) return;
 
-              const result = cache.readQuery<MeQuery>({ query: MeDocument });
-              if (!result || !result.me) return;
-
-              cache.writeQuery<MeQuery>({
-                query: MeDocument,
-                data: {
-                  me: { ...result.me, phone, phoneVerified: true },
-                },
+              updateMeQueryCache(cache, {
+                ...user,
+                phone,
+                phoneVerified: true,
               });
             },
           });
