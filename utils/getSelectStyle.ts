@@ -1,6 +1,6 @@
 import { useColorModeValue } from '@chakra-ui/react';
 import { StylesConfig } from 'react-select';
-import { MyOptionType } from '../types/MyOptionType';
+import { MyOptionType } from '../types';
 import { IsMulti } from '../components/input/SelectFieldComponent';
 
 export const getSelectStyle = (

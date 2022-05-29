@@ -6,7 +6,7 @@ import TwoOptionsSwitch from 'components/input/TwoOptionsSwitch';
 import { FormikProps } from 'formik';
 import React from 'react';
 import { CreatePetInputType } from 'types';
-import { MyOptionType } from 'types/MyOptionType';
+import { MyOptionType } from 'types';
 import {
   PetBreedsObj,
   PetColorObj,

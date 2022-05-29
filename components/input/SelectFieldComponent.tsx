@@ -2,7 +2,7 @@ import { Box, useColorMode } from '@chakra-ui/react';
 import React from 'react';
 import Select, { GroupBase, Props, StylesConfig } from 'react-select';
 import makeAnimated from 'react-select/animated';
-import { MyOptionType } from 'types/MyOptionType';
+import { MyOptionType } from 'types';
 import { getSelectStyle } from 'utils/getSelectStyle';
 
 const animatedComponents = makeAnimated();

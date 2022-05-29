@@ -4,7 +4,7 @@ import InputFieldWrapper from 'components/input/CustomInputComponent';
 import InputField from 'components/input/InputField';
 import { format } from 'date-fns';
 import React from 'react';
-import { MyOptionType } from 'types/MyOptionType';
+import { MyOptionType } from 'types';
 import { StepProps } from './TellUsMoreStep';
 
 const PetCharacterStep: React.FC<StepProps> = ({ formik }) => {

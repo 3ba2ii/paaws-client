@@ -35,6 +35,11 @@ export type CreatePetInputType = CreatePetInput & {
   images: Array<Scalars['Upload']>;
 };
 
+export type MyOptionType = {
+  label: string;
+  value: string;
+};
+
 export type StringWithAutoComplete<T> = T | (string & Record<never, never>);
 
 export type OptionTypeWithEnums<T> = { label: string; value: T };

@@ -1,4 +1,4 @@
-import { MyOptionType } from 'types/MyOptionType';
+import { MyOptionType } from 'types';
 
 export const createOption = (label: string): MyOptionType => ({
   label,

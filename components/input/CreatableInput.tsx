@@ -8,7 +8,7 @@ import {
   StylesConfig,
 } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import { MyOptionType } from 'types/MyOptionType';
+import { MyOptionType } from 'types';
 import { createOption } from 'utils/createOption';
 import { getSelectStyle } from 'utils/getSelectStyle';
 
