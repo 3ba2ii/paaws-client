@@ -26,12 +26,12 @@ const CompleteInfoStaticComponent = () => {
     <VStack
       w='100%'
       h='100%'
-      flex='.4'
+      flex='.3'
       align={'flex-start'}
       justify='center'
       px='65px'
       bg={bgColor}
-      display={['none', 'flex', 'flex', 'flex']}
+      display={['none', 'none', 'flex', 'flex']}
     >
       <Heading color='inherit' size='xl' fontWeight='medium'>
         Let's make your account <br />
@@ -47,7 +47,6 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
 }) => {
   const { user } = useIsAuth();
   const { setColorMode } = useColorMode();
-  const { pathname } = useRouter();
 
   const isCompletedProfile = !!(
     user &&
@@ -72,9 +71,9 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
     >
       <HStack
         pos='absolute'
-        px={'65px'}
-        top='65px'
         w='100%'
+        px={['14px', '45px', '65px']}
+        top={['48px', '48px', '65px']}
         justify={'space-between'}
         zIndex={2}
       >
