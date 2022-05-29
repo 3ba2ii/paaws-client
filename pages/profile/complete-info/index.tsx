@@ -25,11 +25,6 @@ import withApollo from 'utils/withApollo';
 
 type CompleteInfoSteps = 'location' | 'phone' | 'avatar' | 'personalInfo';
 
-/* 
-[
-    {title: 'location',subtitle:'Please select a location', icon: <LocationIcon />,href='/location',},
-]
-*/
 type StepsComponentsData = {
   id: CompleteInfoSteps;
   title: string;
@@ -66,7 +61,8 @@ const completeInfoSteps: StepsComponentsData = [
   {
     id: 'personalInfo',
     title: 'Personalize your profile',
-    subtitle: 'Add tags, bio and other information about you',
+    subtitle:
+      'Tell us a bit about yourself. We will give you more personalized experience',
     Icon: <BiStar size='32px' color='gray' />,
     href: '/personal-info',
   },
@@ -87,11 +83,12 @@ const CompleteInfo: React.FC = () => {
   const getCompletedSteps = () => {
     return Object.values(steps).reduce((acc, curr) => acc + (curr ? 1 : 0), 0);
   };
+  const getTotalStepsNumber = () => Object.keys(steps).length;
 
   const getSliderPercentage = () => {
     const total = getCompletedSteps();
 
-    return (total / Object.keys(steps).length) * 100;
+    return (total / getTotalStepsNumber()) * 100;
   };
 
   React.useEffect(() => {
@@ -124,7 +121,8 @@ const CompleteInfo: React.FC = () => {
       >
         <Box w='100%'>
           <Heading size='md'>
-            Complete your profile ({getCompletedSteps()}/4)
+            Complete your profile{' '}
+            {`(${getCompletedSteps()}/${getTotalStepsNumber()})`}
           </Heading>
           <Slider
             colorScheme={'teal'}
@@ -147,7 +145,7 @@ const CompleteInfo: React.FC = () => {
               borderColor='gray.200'
               borderRadius={'6px'}
               px='24px'
-              py='12px'
+              py='16px'
               spacing={'24px'}
               bg='transparent'
               boxShadow={'sm'}

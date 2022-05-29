@@ -7,17 +7,14 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import {
-  MeDocument,
-  MeQuery,
-  useUpdateUserInfoMutation,
-} from 'generated/graphql';
+import { useUpdateUserInfoMutation } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import { UserLocationStep } from 'modules/auth/register/UserLocationStep';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { LocationType } from 'types';
+import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import withApollo from 'utils/withApollo';
 
 interface SelectILocationPageProps {}
@@ -38,19 +35,12 @@ const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
     if (!user || !coords?.lat || !coords.lng) return;
     const { data } = await updateUserInfo({
       variables: { updateUserUpdateOptions: { ...coords } },
-      update: (cache, { data: returnedData, errors }) => {
-        if (!returnedData || !returnedData.updateUser || errors) return;
-        const result = cache.readQuery<MeQuery>({ query: MeDocument });
-        if (!result || !result.me) return;
-        cache.writeQuery<MeQuery>({
-          query: MeDocument,
-          data: {
-            me: {
-              ...result.me,
-              lat: coords.lat.toString(),
-              lng: coords.lng.toString(),
-            },
-          },
+      update: (cache, { data: result, errors }) => {
+        if (!result || !result.updateUser || errors) return;
+        updateMeQueryCache(cache, {
+          ...user,
+          lat: coords.lat.toString(),
+          lng: coords.lng.toString(),
         });
       },
     });

@@ -38,9 +38,9 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
           const { data } = await verifyPhoneNumber({
             variables: { otp, phone },
             update: (cache, { data: result, errors }) => {
-              if (!result || !result.verifyPhoneNumber.success) return;
-              if (errors && errors.length) return;
-
+              if (!result || !result.verifyPhoneNumber.success || errors) {
+                return;
+              }
               updateMeQueryCache(cache, {
                 ...user,
                 phone,

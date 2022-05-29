@@ -31,7 +31,7 @@ const BioStep: React.FC<BioStepProps> = () => {
 
   if (loading) return <LoadingComponent />;
 
-  if (!user) return <></>;
+  if (!user) return null;
 
   const hasBio: boolean = !!(user && user.bio && user.bio !== '');
 
@@ -55,8 +55,7 @@ const BioStep: React.FC<BioStepProps> = () => {
               updateUserUpdateOptions: { bio, gender, birthDate },
             },
             update: (cache, { data: result, errors }) => {
-              if (!result?.updateUser) return;
-              if (errors && errors.length) return;
+              if (!result?.updateUser || errors) return;
               updateMeQueryCache(cache, { ...user, bio, gender, birthDate });
             },
           });
