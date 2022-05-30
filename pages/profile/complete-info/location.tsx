@@ -17,9 +17,7 @@ import { LocationType } from 'types';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import withApollo from 'utils/withApollo';
 
-interface SelectILocationPageProps {}
-
-const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
+const SelectLocationPage: React.FC = () => {
   const { user } = useIsAuth();
   const router = useRouter();
   const toaster = useToast();

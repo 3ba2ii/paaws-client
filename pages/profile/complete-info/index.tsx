@@ -93,13 +93,14 @@ const CompleteInfo: React.FC = () => {
   React.useEffect(() => {
     //update the initial state based on user data
     if (user) {
-      const { avatar, bio, phone, phoneVerified, lat, lng } = user;
+      const { avatar, bio, phone, phoneVerified, lat, lng, gender, birthDate } =
+        user;
       setSteps({
         ...steps,
         avatar: !!(avatar && avatar.url),
         location: !!(lat && lng),
         phone: !!(phone && phoneVerified),
-        personalInfo: !!(bio && bio !== ''),
+        personalInfo: !!(bio && bio !== '' && gender && birthDate),
       });
     }
   }, [user, loading]);
