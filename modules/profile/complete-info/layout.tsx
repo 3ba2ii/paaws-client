@@ -47,6 +47,9 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
 }) => {
   const { user } = useIsAuth();
   const { setColorMode } = useColorMode();
+  const { pathname } = useRouter();
+
+  const isCompleteInfoPage = pathname === '/profile/complete-info';
 
   const isCompletedProfile = !!(
     user &&
@@ -84,7 +87,7 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
         <CompleteInfoStaticComponent />
         <Center pos='relative' w='100%' h='100%' flex='.8'>
           {children}
-          <HStack pos={'absolute'} bottom='32px' right='65px'>
+          <HStack pos={'absolute'} bottom='48px' right='65px'>
             {!isCompletedProfile ? (
               <Button
                 variant='ghost'
@@ -98,13 +101,15 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
                 Complete later
               </Button>
             ) : (
-              <Button
-                colorScheme='teal'
-                fontSize='sm'
-                onClick={() => router.push('/')}
-              >
-                Finish Profile
-              </Button>
+              isCompleteInfoPage && (
+                <Button
+                  colorScheme='teal'
+                  fontSize='sm'
+                  onClick={() => router.push('/')}
+                >
+                  Finish Profile
+                </Button>
+              )
             )}
           </HStack>
         </Center>
