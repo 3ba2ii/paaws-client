@@ -151,6 +151,9 @@ const CompleteInfo: React.FC = () => {
               boxShadow={'sm'}
               as={Button}
               onClick={() => router.push(`/profile/complete-info/${href}`)}
+              _dark={{
+                borderColor: 'gray.700',
+              }}
             >
               {steps[id] ? <BiCheck size='32px' color='teal' /> : Icon}
               <VStack w='100%' align='flex-start' spacing={'4px'}>

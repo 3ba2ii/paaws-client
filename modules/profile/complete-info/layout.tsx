@@ -46,7 +46,6 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
   children,
 }) => {
   const { user } = useIsAuth();
-  const { setColorMode } = useColorMode();
   const { pathname } = useRouter();
 
   const isCompleteInfoPage = pathname === '/profile/complete-info';
@@ -60,9 +59,6 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
     user.lat &&
     user.lng
   );
-  React.useEffect(() => {
-    setColorMode('light');
-  }, []);
 
   return (
     <Layout
