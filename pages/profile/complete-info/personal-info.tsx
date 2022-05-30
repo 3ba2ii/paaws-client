@@ -10,7 +10,7 @@ import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import InputFieldWrapper from 'components/input/CustomInputComponent';
 import InputField from 'components/input/InputField';
 import { SegmentedControl } from 'components/input/SegmentedControl';
-import { Form, Formik } from 'formik';
+import { Form, Formik, FormikHelpers } from 'formik';
 import { UserGender, useUpdateUserInfoMutation } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
@@ -32,6 +32,44 @@ const PersonalInfoStep: React.FC = () => {
   const router = useRouter();
   const toaster = useToast();
 
+  const handleSubmit = async (
+    { bio, gender, birthDate }: FormValuesType,
+    _helpers: FormikHelpers<FormValuesType>
+  ) => {
+    if (!user) return;
+    const { data } = await updateUser({
+      variables: {
+        updateUserUpdateOptions: { bio, gender, birthDate },
+      },
+      update: (cache, { data: result, errors }) => {
+        if (!result?.updateUser || errors) return;
+        updateMeQueryCache(cache, { ...user, bio, gender, birthDate });
+      },
+    });
+
+    if (data?.updateUser) {
+      toaster({
+        status: 'success',
+        title: 'We could be friends, you know? 🥰',
+        position: 'top-right',
+        variant: 'subtle',
+        isClosable: true,
+      });
+
+      return router.push('/profile/complete-info');
+    }
+
+    return toaster({
+      status: 'error',
+      title: 'An error occurred while updating your info',
+      description:
+        'We could not update your info at this time. Please try again later.',
+      position: 'top-right',
+      variant: 'subtle',
+      isClosable: true,
+    });
+  };
+
   if (loading) return <LoadingComponent />;
 
   if (!user) return <></>;
@@ -46,39 +84,7 @@ const PersonalInfoStep: React.FC = () => {
             birthDate: user?.birthDate || null,
           } as FormValuesType
         }
-        onSubmit={async ({ bio, gender, birthDate }) => {
-          const { data } = await updateUser({
-            variables: {
-              updateUserUpdateOptions: { bio, gender, birthDate },
-            },
-            update: (cache, { data: result, errors }) => {
-              if (!result?.updateUser || errors) return;
-              updateMeQueryCache(cache, { ...user, bio, gender, birthDate });
-            },
-          });
-
-          if (data?.updateUser) {
-            toaster({
-              status: 'success',
-              title: 'We could be friends, you know? 🥰',
-              position: 'top-right',
-              variant: 'subtle',
-              isClosable: true,
-            });
-
-            return router.push('/profile/complete-info');
-          }
-
-          return toaster({
-            status: 'error',
-            title: 'An error occurred while updating your info',
-            description:
-              'We could not update your info at this time. Please try again later.',
-            position: 'top-right',
-            variant: 'subtle',
-            isClosable: true,
-          });
-        }}
+        onSubmit={handleSubmit}
       >
         {({ isSubmitting, setFieldValue, values }) => (
           <Form
