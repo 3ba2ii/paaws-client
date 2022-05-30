@@ -15,19 +15,26 @@ import {
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import UserAvatar from 'components/common/UserAvatar';
 import { useUserProfilePageQuery } from 'generated/graphql';
+import { useIsAuth } from 'hooks/useIsAuth';
 import AddUserOwnedPetForm from 'modules/pet/AddUserPetForm';
 import React, { useState } from 'react';
 
 export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
+  const { user: loggedInUser, loading: loggedInUserLoading } = useIsAuth();
   const { data, loading } = useUserProfilePageQuery({
     variables: { userId },
   });
   const [modals, setModal] = useState({ addPet: false });
 
-  if (loading) return <LoadingComponent />;
-  if ((!loading && !data) || !data?.user) return null;
+  if (loading || loggedInUserLoading) return <LoadingComponent />;
+
+  if ((!loading && !data) || !data?.user || !loggedInUser) return null;
 
   const { displayName, full_name, id, bio, avatar, petsCount } = data?.user;
+  const isProfileOwner = () => {
+    return userId === loggedInUser.id;
+  };
+
   return (
     <Flex
       w='100%'
@@ -46,18 +53,20 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
       <VStack h='100%' w='100%' align='flex-start' justify='flex-start'>
         <HStack w='100%' align='center' justify={'space-between'}>
           <Heading size='lg'>{full_name}</Heading>
-          <HStack>
-            <Button variant='outline' size='sm'>
-              Edit Profile
-            </Button>
-            <Button
-              colorScheme='teal'
-              size='sm'
-              onClick={() => setModal({ addPet: true })}
-            >
-              Add New Pet
-            </Button>
-          </HStack>
+          {isProfileOwner() && (
+            <HStack>
+              <Button variant='outline' size='sm'>
+                Edit Profile
+              </Button>
+              <Button
+                colorScheme='teal'
+                size='sm'
+                onClick={() => setModal({ addPet: true })}
+              >
+                Add New Pet
+              </Button>
+            </HStack>
+          )}
         </HStack>
         <Text maxW={'60ch'} fontWeight='medium' color='gray.500'>
           {bio}

@@ -13,6 +13,7 @@ import { useIsAuth } from 'hooks/useIsAuth';
 import router, { useRouter } from 'next/router';
 import React from 'react';
 import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
+import { isCompleteProfile } from 'utils/isCompletedProfile';
 
 interface CompleteInfoProps {
   pageTitle: string;
@@ -48,17 +49,7 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
 
   const isCompleteInfoPage = pathname === '/profile/complete-info';
 
-  const isCompletedProfile = !!(
-    user &&
-    user.avatar?.url &&
-    user.bio &&
-    user.gender &&
-    user.birthDate &&
-    user.phone &&
-    user.phoneVerified &&
-    user.lat &&
-    user.lng
-  );
+  const isCompleted = isCompleteProfile(user);
 
   return (
     <Layout
@@ -84,7 +75,7 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
         <Center pos='relative' w='100%' h='100%' flex='.8'>
           {children}
           <HStack pos={'absolute'} bottom='48px' right='65px'>
-            {!isCompletedProfile ? (
+            {!isCompleted ? (
               <Button
                 variant='ghost'
                 opacity='.6'

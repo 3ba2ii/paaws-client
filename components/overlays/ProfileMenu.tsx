@@ -38,6 +38,7 @@ const ProfileMenu = () => {
         update: (cache, { data: res }) => {
           if (!res) return;
           cache.evict({});
+          router.reload();
         },
       });
     } catch {
@@ -51,6 +52,8 @@ const ProfileMenu = () => {
       });
     }
   };
+  if (loading) return <LoadingComponent />;
+  if (!user) return null;
   return (
     <Menu placement='bottom-end'>
       <MenuButton w='fit-content' px={0}>
@@ -70,7 +73,12 @@ const ProfileMenu = () => {
 
       <MenuList>
         <MenuGroup title='Profile'>
-          <MenuItem icon={<BiUserCircle size={'18px'} />}>My Profile</MenuItem>
+          <MenuItem
+            icon={<BiUserCircle size={'18px'} />}
+            onClick={() => router.push(`/profile/${user.id}`)}
+          >
+            My Profile
+          </MenuItem>
           <MenuItem icon={<BiHeart size={'18px'} />}>Favorites</MenuItem>
           <MenuItem icon={<BiCreditCard size='18px' />}>Payments </MenuItem>
         </MenuGroup>
