@@ -6,6 +6,7 @@ import { useIsAuth } from 'hooks/useIsAuth';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { BiCloudUpload, BiUpload } from 'react-icons/bi';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import { createFileWithURL } from 'utils/createFilewithURL';
 import withApollo from 'utils/withApollo';
@@ -13,7 +14,8 @@ import withApollo from 'utils/withApollo';
 const SelectAvatar: React.FC = () => {
   const { user, loading } = useIsAuth();
   const [userAvatar, setUserAvatar] = React.useState<File | null>(null);
-  const [uploadUserAvatar] = useAddUserAvatarMutation();
+  const [uploadUserAvatar, { loading: uploadLoading }] =
+    useAddUserAvatarMutation();
 
   const router = useRouter();
 
@@ -83,10 +85,12 @@ const SelectAvatar: React.FC = () => {
             </Button>
             <Button
               colorScheme={'teal'}
-              isLoading={loading}
+              isLoading={uploadLoading}
               px={4}
               fontSize='sm'
               onClick={uploadAvatar}
+              leftIcon={<BiCloudUpload size='20px' />}
+              loadingText='Uploading'
             >
               Upload
             </Button>
