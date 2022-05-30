@@ -150,6 +150,7 @@ export const MissingPostForm: React.FC<MPFormProps> = ({
       />
     );
   }
+
   return (
     <Box w='100%' h='100%' my={2} ref={formRef}>
       {loading ? (

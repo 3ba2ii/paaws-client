@@ -25,7 +25,7 @@ const TwoOptionsSwitch: React.FC<TwoOptionsSwitchProps> = ({
   stackProps,
   ...props
 }) => {
-  const bgActiveColor = useColorModeValue('teal.500', 'teal.400');
+  const bgActiveColor = useColorModeValue('teal.500', 'teal.800');
 
   return (
     <HStack h='100%' {...stackProps}>
@@ -39,6 +39,9 @@ const TwoOptionsSwitch: React.FC<TwoOptionsSwitchProps> = ({
             onClick={() => handleChange(value)}
             leftIcon={isActive ? <CheckIcon /> : undefined}
             bgColor={isActive ? bgActiveColor : 'transparent'}
+            borderColor={isActive ? bgActiveColor : 'gray.600'}
+            color={isActive ? 'white' : 'gray.500'}
+            _hover={{ color: isActive ? 'white' : 'gray.500' }}
           >
             {label}
           </Button>
