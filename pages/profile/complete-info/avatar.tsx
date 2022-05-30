@@ -1,4 +1,11 @@
-import { Button, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  Heading,
+  HStack,
+  Text,
+  useToast,
+  VStack,
+} from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import SelectAvatarComponent from 'components/SelectAvatarComponent';
 import { useAddUserAvatarMutation } from 'generated/graphql';
@@ -17,6 +24,7 @@ const SelectAvatar: React.FC = () => {
   const [uploadUserAvatar, { loading: uploadLoading }] =
     useAddUserAvatarMutation();
 
+  const toaster = useToast();
   const router = useRouter();
 
   const uploadAvatar = async () => {
@@ -44,9 +52,26 @@ const SelectAvatar: React.FC = () => {
       },
     });
 
-    if (!data?.addUserAvatar) return;
+    if (data?.addUserAvatar) {
+      toaster({
+        status: 'success',
+        title: "You're beautiful 😍",
+        position: 'top-right',
+        variant: 'subtle',
+        isClosable: true,
+      });
+      return router.push('/profile/complete-info');
+    }
 
-    router.push('/profile/complete-info');
+    return toaster({
+      status: 'error',
+      title: 'An error occurred while updating your info',
+      description:
+        'We could not update your info at this time. Please try again later.',
+      position: 'top-right',
+      variant: 'subtle',
+      isClosable: true,
+    });
   };
 
   React.useEffect(() => {

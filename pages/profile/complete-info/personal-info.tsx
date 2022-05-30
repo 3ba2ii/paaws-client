@@ -20,10 +20,13 @@ import { OptionTypeWithEnums } from 'types';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import { convertDateFormat } from 'utils/convertDateFormat';
 import withApollo from 'utils/withApollo';
+type FormValuesType = {
+  bio: string;
+  gender: UserGender;
+  birthDate: Date | null;
+};
 
-interface BioStepProps {}
-
-const BioStep: React.FC<BioStepProps> = () => {
+const PersonalInfoStep: React.FC = () => {
   const { user, loading } = useIsAuth();
   const [updateUser] = useUpdateUserInfoMutation();
   const router = useRouter();
@@ -36,18 +39,14 @@ const BioStep: React.FC<BioStepProps> = () => {
   const hasBio: boolean = !!(user && user.bio && user.bio !== '');
 
   return (
-    <CompleteInfoLayout pageTitle='Add Your Bio - Paaws'>
+    <CompleteInfoLayout pageTitle='Personalize your Profile - Paaws'>
       <Formik
         initialValues={
           {
             bio: hasBio ? user?.bio : '',
             gender: user?.gender || null,
             birthDate: user?.birthDate || null,
-          } as {
-            bio: string;
-            gender: UserGender;
-            birthDate: Date | null;
-          }
+          } as FormValuesType
         }
         onSubmit={async ({ bio, gender, birthDate }) => {
           const { data } = await updateUser({
@@ -70,10 +69,27 @@ const BioStep: React.FC<BioStepProps> = () => {
               isClosable: true,
             });
           }
-          //check if the user verified his phone number or not
-          if (!user) return;
+          if (data?.updateUser) {
+            toaster({
+              status: 'success',
+              title: 'We could be friends, you know? 🥰',
+              position: 'top-right',
+              variant: 'subtle',
+              isClosable: true,
+            });
 
-          return router.push('/profile/complete-info');
+            return router.push('/profile/complete-info');
+          }
+
+          return toaster({
+            status: 'error',
+            title: 'An error occurred while updating your info',
+            description:
+              'We could not update your info at this time. Please try again later.',
+            position: 'top-right',
+            variant: 'subtle',
+            isClosable: true,
+          });
         }}
       >
         {({ isSubmitting, setFieldValue, values }) => (
@@ -158,4 +174,4 @@ const BioStep: React.FC<BioStepProps> = () => {
     </CompleteInfoLayout>
   );
 };
-export default withApollo(BioStep);
+export default withApollo(PersonalInfoStep);
