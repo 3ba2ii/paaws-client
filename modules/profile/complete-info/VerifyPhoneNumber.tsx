@@ -7,12 +7,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import InputFieldWrapper from 'components/input/CustomInputComponent';
-import { Form, Formik } from 'formik';
-import {
-  MeDocument,
-  MeQuery,
-  useVerifyPhoneNumberMutation,
-} from 'generated/graphql';
+import { Form, Formik, FormikHelpers } from 'formik';
+import { MeQuery, useVerifyPhoneNumberMutation } from 'generated/graphql';
 import router from 'next/router';
 import React from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
@@ -27,44 +23,47 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
   const [verifyPhoneNumber] = useVerifyPhoneNumberMutation();
   const toaster = useToast();
 
+  const handleSubmit = async (
+    { otp }: { otp: string },
+    { setErrors }: FormikHelpers<{ otp: string }>
+  ) => {
+    if (!user) return;
+    if (!otp || !otp.length || !phone || !user) return;
+
+    /* send verification request */
+    const { data } = await verifyPhoneNumber({
+      variables: { otp, phone },
+      update: (cache, { data: result, errors }) => {
+        if (!result || !result.verifyPhoneNumber.success || errors) {
+          return;
+        }
+        updateMeQueryCache(cache, {
+          ...user,
+          phone,
+          phoneVerified: true,
+        });
+      },
+    });
+
+    /* map the error */
+    if (data?.verifyPhoneNumber.errors?.length) {
+      const mappedErrors = toErrorMap(data?.verifyPhoneNumber?.errors);
+      return setErrors(mappedErrors);
+    }
+    /* show a toaster */
+    toaster({
+      status: 'success',
+      title: 'Voila! Phone number verified.',
+      position: 'top-right',
+      variant: 'subtle',
+      isClosable: true,
+    });
+    return router.push('/profile/complete-info');
+  };
+
   return (
     <VStack w='100%' flex={['1', '.75', '.75', '.75']}>
-      <Formik
-        initialValues={{ otp: '' }}
-        onSubmit={async ({ otp }, { setErrors }) => {
-          if (!otp || !otp.length || !phone || !user) return;
-
-          /* send verification request */
-          const { data } = await verifyPhoneNumber({
-            variables: { otp, phone },
-            update: (cache, { data: result, errors }) => {
-              if (!result || !result.verifyPhoneNumber.success || errors) {
-                return;
-              }
-              updateMeQueryCache(cache, {
-                ...user,
-                phone,
-                phoneVerified: true,
-              });
-            },
-          });
-
-          /* map the error */
-          if (data?.verifyPhoneNumber.errors?.length) {
-            const mappedErrors = toErrorMap(data?.verifyPhoneNumber?.errors);
-            return setErrors(mappedErrors);
-          }
-          /* show a toaster */
-          toaster({
-            status: 'success',
-            description: 'Phone Number Verified',
-            position: 'top-right',
-            variant: 'subtle',
-            isClosable: true,
-          });
-          return router.push('/profile/complete-info');
-        }}
-      >
+      <Formik initialValues={{ otp: '' }} onSubmit={handleSubmit}>
         {({ isSubmitting, setFieldValue }) => (
           <Form>
             <VStack
