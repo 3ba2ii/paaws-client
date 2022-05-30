@@ -288,6 +288,7 @@ export enum MissingPostTypes {
 export type Mutation = {
   __typename?: 'Mutation';
   addMPComment: CommentResponse;
+  addUserAvatar: Scalars['Boolean'];
   addUserTag: Scalars['Boolean'];
   changePassword: ChangePasswordResponse;
   createMissingPost: CreateMissingPostResponse;
@@ -318,6 +319,11 @@ export type Mutation = {
 
 export type MutationAddMpCommentArgs = {
   input: CreateCommentInputType;
+};
+
+
+export type MutationAddUserAvatarArgs = {
+  avatar: Scalars['Upload'];
 };
 
 
@@ -684,7 +690,6 @@ export type Query = {
   userOwnedPet?: Maybe<OwnedPet>;
   userOwnedPets: PaginatedUserOwnedPetsResponse;
   users: PaginatedUsers;
-  usersCount: Scalars['Int'];
 };
 
 
@@ -780,7 +785,6 @@ export type UpdateMissingPostInput = {
 };
 
 export type UpdateUserInfo = {
-  avatar?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
   birthDate?: Maybe<Scalars['DateTime']>;
   gender?: Maybe<UserGender>;
@@ -1010,6 +1014,13 @@ export type SendOtpMutationVariables = Exact<{
 
 
 export type SendOtpMutation = { __typename?: 'Mutation', sendOTP: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, code: number, field: string }>> } };
+
+export type AddUserAvatarMutationVariables = Exact<{
+  avatar: Scalars['Upload'];
+}>;
+
+
+export type AddUserAvatarMutation = { __typename?: 'Mutation', addUserAvatar: boolean };
 
 export type UpdateUserInfoMutationVariables = Exact<{
   updateUserUpdateOptions: UpdateUserInfo;
@@ -1896,6 +1907,37 @@ export function useSendOtpMutation(baseOptions?: Apollo.MutationHookOptions<Send
 export type SendOtpMutationHookResult = ReturnType<typeof useSendOtpMutation>;
 export type SendOtpMutationResult = Apollo.MutationResult<SendOtpMutation>;
 export type SendOtpMutationOptions = Apollo.BaseMutationOptions<SendOtpMutation, SendOtpMutationVariables>;
+export const AddUserAvatarDocument = gql`
+    mutation AddUserAvatar($avatar: Upload!) {
+  addUserAvatar(avatar: $avatar)
+}
+    `;
+export type AddUserAvatarMutationFn = Apollo.MutationFunction<AddUserAvatarMutation, AddUserAvatarMutationVariables>;
+
+/**
+ * __useAddUserAvatarMutation__
+ *
+ * To run a mutation, you first call `useAddUserAvatarMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddUserAvatarMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addUserAvatarMutation, { data, loading, error }] = useAddUserAvatarMutation({
+ *   variables: {
+ *      avatar: // value for 'avatar'
+ *   },
+ * });
+ */
+export function useAddUserAvatarMutation(baseOptions?: Apollo.MutationHookOptions<AddUserAvatarMutation, AddUserAvatarMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddUserAvatarMutation, AddUserAvatarMutationVariables>(AddUserAvatarDocument, options);
+      }
+export type AddUserAvatarMutationHookResult = ReturnType<typeof useAddUserAvatarMutation>;
+export type AddUserAvatarMutationResult = Apollo.MutationResult<AddUserAvatarMutation>;
+export type AddUserAvatarMutationOptions = Apollo.BaseMutationOptions<AddUserAvatarMutation, AddUserAvatarMutationVariables>;
 export const UpdateUserInfoDocument = gql`
     mutation updateUserInfo($updateUserUpdateOptions: UpdateUserInfo!) {
   updateUser(updateOptions: $updateUserUpdateOptions)
