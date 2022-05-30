@@ -52,6 +52,8 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
     user &&
     user.avatar?.url &&
     user.bio &&
+    user.gender &&
+    user.birthDate &&
     user.phone &&
     user.phoneVerified &&
     user.lat &&
