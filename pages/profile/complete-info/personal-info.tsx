@@ -140,7 +140,7 @@ const BioStep: React.FC<BioStepProps> = () => {
                   variant='ghost'
                   fontSize='sm'
                 >
-                  Cancel
+                  Back
                 </Button>
                 <Button
                   isLoading={isSubmitting}

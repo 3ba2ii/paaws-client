@@ -80,16 +80,15 @@ const CompleteInfo: React.FC = () => {
     personalInfo: false,
   });
 
-  const getCompletedSteps = () => {
-    return Object.values(steps).reduce((acc, curr) => acc + (curr ? 1 : 0), 0);
-  };
+  const getCompletedSteps = () =>
+    Object.values(steps).reduce((acc, curr) => acc + (curr ? 1 : 0), 0);
+
   const getTotalStepsNumber = () => Object.keys(steps).length;
 
-  const getSliderPercentage = () => {
-    const total = getCompletedSteps();
+  const getSliderPercentage = () =>
+    (getCompletedSteps() / getTotalStepsNumber()) * 100;
 
-    return (total / getTotalStepsNumber()) * 100;
-  };
+  const isAllDone = () => getCompletedSteps() === getTotalStepsNumber();
 
   React.useEffect(() => {
     //update the initial state based on user data
@@ -122,7 +121,7 @@ const CompleteInfo: React.FC = () => {
       >
         <Box w='100%'>
           <Heading size='md'>
-            Complete your profile{' '}
+            {isAllDone() ? 'You are all set! ✨ ' : 'Complete your profile'}
             {`(${getCompletedSteps()}/${getTotalStepsNumber()})`}
           </Heading>
           <Slider
