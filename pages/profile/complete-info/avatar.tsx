@@ -6,29 +6,16 @@ import { useIsAuth } from 'hooks/useIsAuth';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
+import { createFileWithURL } from 'utils/createFilewithURL';
 import withApollo from 'utils/withApollo';
 
-const SelectAvatar: React.FC = ({}) => {
+const SelectAvatar: React.FC = () => {
   const { user, loading } = useIsAuth();
-  console.log(`🚀 ~ file: avatar.tsx ~ line 13 ~ loading`, loading);
   const [userAvatar, setUserAvatar] = React.useState<File | null>(null);
-  console.log(`🚀 ~ file: avatar.tsx ~ line 14 ~ userAvatar`, userAvatar);
   const [uploadUserAvatar] = useAddUserAvatarMutation();
 
   const router = useRouter();
-
-  async function createFile(url: string): Promise<File | null> {
-    try {
-      let response = await fetch(url);
-      let data = await response.blob();
-      let metadata = {
-        type: 'image/jpeg',
-      };
-      return new File([data], 'initial.jpg', metadata);
-    } catch (e) {
-      return null;
-    }
-  }
 
   const uploadAvatar = async () => {
     if (!userAvatar) return;
@@ -36,6 +23,22 @@ const SelectAvatar: React.FC = ({}) => {
     const { data } = await uploadUserAvatar({
       variables: {
         avatar: userAvatar,
+      },
+      update: (cache, { data: result, errors }) => {
+        try {
+          if (!result?.addUserAvatar || errors) return;
+          const url = URL.createObjectURL(userAvatar);
+          console.log(
+            `🚀 ~ file: avatar.tsx ~ line 30 ~ uploadAvatar ~ url`,
+            url
+          );
+          if (!url || typeof url !== 'string') return;
+
+          //@ts-ignore
+          updateMeQueryCache(cache, { ...user, avatar: { url, id: 1243 } });
+        } catch (e) {
+          console.log(`🚀 ~ file: avatar.tsx ~ line 40 ~ uploadAvatar ~ e`, e);
+        }
       },
     });
 
@@ -45,14 +48,12 @@ const SelectAvatar: React.FC = ({}) => {
   };
 
   React.useEffect(() => {
-    async function setInitialFile() {
+    (async () => {
       if (!loading && user && user.avatar?.url) {
-        const file = await createFile(user.avatar.url);
+        const file = await createFileWithURL(user.avatar.url);
         setUserAvatar(file);
       }
-    }
-
-    setInitialFile();
+    })();
   }, [loading]);
 
   if (loading) return <LoadingComponent />;
