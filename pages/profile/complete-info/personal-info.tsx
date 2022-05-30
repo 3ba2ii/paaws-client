@@ -36,14 +36,12 @@ const PersonalInfoStep: React.FC = () => {
 
   if (!user) return <></>;
 
-  const hasBio: boolean = !!(user && user.bio && user.bio !== '');
-
   return (
     <CompleteInfoLayout pageTitle='Personalize your Profile - Paaws'>
       <Formik
         initialValues={
           {
-            bio: hasBio ? user?.bio : '',
+            bio: user.bio ? user?.bio : '',
             gender: user?.gender || null,
             birthDate: user?.birthDate || null,
           } as FormValuesType
@@ -58,17 +56,7 @@ const PersonalInfoStep: React.FC = () => {
               updateMeQueryCache(cache, { ...user, bio, gender, birthDate });
             },
           });
-          if (!data || !data.updateUser) {
-            return toaster({
-              status: 'error',
-              title: 'An error occurred while updating your bio',
-              description:
-                'We could not update your bio at this time. Please try again later.',
-              position: 'top-right',
-              variant: 'subtle',
-              isClosable: true,
-            });
-          }
+
           if (data?.updateUser) {
             toaster({
               status: 'success',

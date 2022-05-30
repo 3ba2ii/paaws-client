@@ -3,18 +3,16 @@ import {
   Center,
   Heading,
   HStack,
-  Text,
-  useColorMode,
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
-import ProfileMenu from 'components/overlays/ProfileMenu';
 import { Layout } from 'components/common/Layout';
 import Logo from 'components/common/Logo';
+import ProfileMenu from 'components/overlays/ProfileMenu';
+import { useIsAuth } from 'hooks/useIsAuth';
 import router, { useRouter } from 'next/router';
 import React from 'react';
 import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
-import { useIsAuth } from 'hooks/useIsAuth';
 
 interface CompleteInfoProps {
   pageTitle: string;
