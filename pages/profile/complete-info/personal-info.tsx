@@ -3,6 +3,7 @@ import {
   Heading,
   HStack,
   Text,
+  useColorMode,
   useToast,
   VStack,
 } from '@chakra-ui/react';
@@ -29,6 +30,7 @@ type FormValuesType = {
 const PersonalInfoStep: React.FC = () => {
   const { user, loading } = useIsAuth();
   const [updateUser] = useUpdateUserInfoMutation();
+  const { colorMode } = useColorMode();
   const router = useRouter();
   const toaster = useToast();
 
@@ -141,6 +143,7 @@ const PersonalInfoStep: React.FC = () => {
                     new Date().toLocaleDateString(),
                     'yyyy-mm-dd'
                   )}
+                  style={{ colorScheme: colorMode }}
                 />
               </VStack>
               <HStack w='100%' justify='flex-end'>
