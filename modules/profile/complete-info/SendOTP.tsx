@@ -38,7 +38,7 @@ const SendOTPComponent: React.FC<SendOTPProps> = ({ onSuccess }) => {
         }}
       >
         {({ isSubmitting }) => (
-          <Form>
+          <Form style={{ width: '100%' }}>
             <VStack w='100%' align='flex-start' spacing={5}>
               <InputField
                 label='Phone Number'

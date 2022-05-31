@@ -28,13 +28,12 @@ const CompleteInfoStaticComponent = () => {
       flex='.3'
       align={'flex-start'}
       justify='center'
-      px='65px'
+      px='3%'
       bg={bgColor}
       display={['none', 'none', 'flex', 'flex']}
     >
       <Heading color='inherit' size='xl' fontWeight='medium'>
-        Let's make your account <br />
-        more attractive
+        Let's make your account more attractive
       </Heading>
     </VStack>
   );
@@ -62,7 +61,7 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
       <HStack
         pos='absolute'
         w='100%'
-        px={['14px', '45px', '65px']}
+        px={['3%']}
         top={['48px', '48px', '65px']}
         justify={'space-between'}
         zIndex={2}
@@ -72,9 +71,15 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
       </HStack>
       <HStack position={'absolute'} w='100%' h='100vh'>
         <CompleteInfoStaticComponent />
-        <Center pos='relative' w='100%' h='100%' flex='.8'>
+        <Center
+          pos='relative'
+          w='100%'
+          h='100%'
+          flex={['auto', '.9', '.8']}
+          px={['3%']}
+        >
           {children}
-          <HStack pos={'absolute'} bottom='48px' right='65px'>
+          <HStack pos={'absolute'} bottom='48px' right={['2%']}>
             {!isCompleted ? (
               <Button
                 variant='ghost'

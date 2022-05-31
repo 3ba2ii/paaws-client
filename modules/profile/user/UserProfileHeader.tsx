@@ -30,10 +30,9 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
 
   if ((!loading && !data) || !data?.user || !loggedInUser) return null;
 
-  const { displayName, full_name, id, bio, avatar, petsCount } = data?.user;
-  const isProfileOwner = () => {
-    return userId === loggedInUser.id;
-  };
+  const { displayName, full_name, bio, avatar, petsCount } = data?.user;
+
+  const isProfileOwner = () => userId === loggedInUser.id;
 
   return (
     <Flex

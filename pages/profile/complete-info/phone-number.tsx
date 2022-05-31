@@ -36,7 +36,7 @@ const VerifyPhoneNumberPage: React.FC = () => {
 
   return (
     <CompleteInfoLayout pageTitle='Verify Phone Number - Paaws'>
-      <VStack spacing={'24px'}>
+      <VStack w='100%' maxW={['unset', '450px', '450px']} spacing='32px'>
         <VStack align='flex-start' w='100%'>
           <Heading size='md'>Verify your Phone Number</Heading>
           <Text color='gray.500' fontSize='sm' maxW='65ch'>
