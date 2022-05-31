@@ -143,7 +143,7 @@ const PersonalInfoStep: React.FC = () => {
                     new Date().toLocaleDateString(),
                     'yyyy-mm-dd'
                   )}
-                  style={{ colorScheme: colorMode }}
+                  style={{ colorScheme: colorMode, cursor: 'text' }}
                 />
               </VStack>
               <HStack w='100%' justify='flex-end'>

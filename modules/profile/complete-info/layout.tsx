@@ -79,7 +79,7 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
           px={['3%']}
         >
           {children}
-          <HStack pos={'absolute'} bottom='48px' right={['2%']}>
+          <HStack pos={'absolute'} bottom='48px' right={['3%']}>
             {!isCompleted ? (
               <Button
                 variant='ghost'
@@ -99,7 +99,7 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
                   fontSize='sm'
                   onClick={() => router.push('/')}
                 >
-                  Finish Profile
+                  Go Home
                 </Button>
               )
             )}

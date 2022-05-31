@@ -18,6 +18,7 @@ import { useUserProfilePageQuery } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import AddUserOwnedPetForm from 'modules/pet/AddUserPetForm';
 import React, { useState } from 'react';
+import UserProfileStats from './UserProfileStats';
 
 export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
   const { user: loggedInUser, loading: loggedInUserLoading } = useIsAuth();
@@ -30,7 +31,7 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
 
   if ((!loading && !data) || !data?.user || !loggedInUser) return null;
 
-  const { displayName, full_name, bio, avatar, petsCount } = data?.user;
+  const { displayName, full_name, bio, avatar } = data?.user;
 
   const isProfileOwner = () => userId === loggedInUser.id;
 
@@ -72,32 +73,7 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
         </Text>
 
         {/* STATS */}
-        <HStack
-          w='100%'
-          spacing='12px'
-          fontSize='sm'
-          fontWeight={'semibold'}
-          flexWrap='wrap'
-        >
-          <Text>
-            <Text as='span' fontWeight={'extrabold'}>
-              128
-            </Text>{' '}
-            Posts
-          </Text>
-          <Text>
-            <Text as='span' fontWeight={'extrabold'}>
-              12
-            </Text>{' '}
-            Rescued Pets
-          </Text>
-          <Text>
-            <Text as='span' fontWeight={'extrabold'}>
-              {petsCount}
-            </Text>{' '}
-            Owned Pets
-          </Text>
-        </HStack>
+        <UserProfileStats user={data.user} />
 
         {/* Tags */}
         <HStack py={2}>

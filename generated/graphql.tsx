@@ -804,6 +804,7 @@ export type User = {
   address?: Maybe<Address>;
   addressId?: Maybe<Scalars['Int']>;
   adoptionPosts?: Maybe<Array<AdoptionPost>>;
+  adoptionPostsCount?: Maybe<Scalars['Int']>;
   avatar?: Maybe<Photo>;
   avatarId?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
@@ -822,6 +823,7 @@ export type User = {
   lat?: Maybe<Scalars['String']>;
   lng?: Maybe<Scalars['String']>;
   missingPosts?: Maybe<Array<MissingPost>>;
+  missingPostsCount?: Maybe<Scalars['Int']>;
   notifications: Array<Notification>;
   ownedPets?: Maybe<Array<OwnedPet>>;
   pets: Array<Pet>;
@@ -832,6 +834,7 @@ export type User = {
   provider: Scalars['String'];
   providerId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<UserTag>>;
+  totalPostsCount: Scalars['Int'];
   updatedAt: Scalars['DateTime'];
   updoots: Array<PostUpdoot>;
   userPets?: Maybe<Array<OwnedPet>>;
@@ -1146,7 +1149,7 @@ export type UserProfilePageQueryVariables = Exact<{
 }>;
 
 
-export type UserProfilePageQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, full_name: string, displayName: string, createdAt: any, bio?: Maybe<string>, petsCount?: Maybe<number>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
+export type UserProfilePageQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, full_name: string, displayName: string, createdAt: any, bio?: Maybe<string>, petsCount?: Maybe<number>, totalPostsCount: number, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
 
 export type PaginatedUsersQueryVariables = Exact<{
   usersWhere: WhereClause;
@@ -2678,6 +2681,7 @@ export const UserProfilePageDocument = gql`
     }
     bio
     petsCount
+    totalPostsCount
   }
 }
     `;
