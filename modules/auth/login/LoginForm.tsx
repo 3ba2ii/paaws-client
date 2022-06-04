@@ -1,5 +1,5 @@
 import { Button, Checkbox, Text } from '@chakra-ui/react';
-import InputField from 'components/common/input/InputField';
+import InputField from 'components/input/InputField';
 import { Form, Formik } from 'formik';
 import { MeDocument, MeQuery, useLoginMutation, User } from 'generated/graphql';
 import Link from 'next/link';

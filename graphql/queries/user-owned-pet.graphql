@@ -1,0 +1,38 @@
+query UserOwnedPet($userOwnedPetId: Int!) {
+  userOwnedPet(id: $userOwnedPetId) {
+    updatedAt
+    createdAt
+    about
+    petId
+    userId
+    user {
+      id
+      updatedAt
+      createdAt
+      email
+    }
+
+    pet {
+      id
+      name
+      type
+      gender
+      size
+      birthDate
+      breeds {
+        breed
+      }
+      colors {
+        color
+      }
+      skills {
+        skill
+      }
+      images {
+        photo {
+          url
+        }
+      }
+    }
+  }
+}

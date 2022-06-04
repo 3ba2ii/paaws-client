@@ -1,4 +1,12 @@
-import { Box, Button, Heading, Text, useToast, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Heading,
+  HStack,
+  Text,
+  useToast,
+  VStack,
+} from '@chakra-ui/react';
 import { useUpdateUserInfoMutation } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import { UserLocationStep } from 'modules/auth/register/UserLocationStep';
@@ -6,11 +14,10 @@ import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { LocationType } from 'types';
+import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import withApollo from 'utils/withApollo';
 
-interface SelectILocationPageProps {}
-
-const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
+const SelectLocationPage: React.FC = () => {
   const { user } = useIsAuth();
   const router = useRouter();
   const toaster = useToast();
@@ -26,9 +33,27 @@ const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
     if (!user || !coords?.lat || !coords.lng) return;
     const { data } = await updateUserInfo({
       variables: { updateUserUpdateOptions: { ...coords } },
+      update: (cache, { data: result, errors }) => {
+        if (!result || !result.updateUser || errors) return;
+        updateMeQueryCache(cache, {
+          ...user,
+          lat: coords.lat.toString(),
+          lng: coords.lng.toString(),
+        });
+      },
     });
 
-    if (data?.updateUser) return router.push('/');
+    if (data?.updateUser) {
+      toaster({
+        status: 'success',
+        title: 'Looks Good!',
+        position: 'top-right',
+        variant: 'subtle',
+        isClosable: true,
+      });
+      return router.push('/profile/complete-info');
+    }
+
     return toaster({
       status: 'error',
       title: 'An error occurred while updating your location',
@@ -66,15 +91,20 @@ const SelectLocationPage: React.FC<SelectILocationPageProps> = ({}) => {
         >
           <UserLocationStep handleChange={handleChange} />
         </Box>
-        <Button
-          colorScheme={'teal'}
-          onClick={handleSubmitLocation}
-          isLoading={loading}
-          px={4}
-          fontSize='sm'
-        >
-          Save Location
-        </Button>
+        <HStack w='80%' justify={'flex-end'}>
+          <Button variant='ghost' fontSize='sm' onClick={() => router.back()}>
+            Back
+          </Button>
+          <Button
+            colorScheme={'teal'}
+            onClick={handleSubmitLocation}
+            isLoading={loading}
+            px={4}
+            fontSize='sm'
+          >
+            Save Location
+          </Button>
+        </HStack>
       </VStack>
     </CompleteInfoLayout>
   );

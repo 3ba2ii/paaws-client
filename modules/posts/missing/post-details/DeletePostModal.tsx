@@ -7,7 +7,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
-import GenericModal from 'components/common/overlays/CustomModal';
+import GenericModal from 'components/overlays/CustomModal';
 import React from 'react';
 
 export const DeletePostModal: React.FC<{

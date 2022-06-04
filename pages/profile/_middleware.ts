@@ -4,8 +4,8 @@ import { NextFetchEvent, NextRequest, NextResponse } from 'next/server';
 export function middleware(req: NextRequest, _ev: NextFetchEvent) {
   const cookies = req.cookies;
 
-  if (!cookies || !cookies.qid) {
-    return NextResponse.redirect('/login');
+  if (!cookies || !cookies?.qid) {
+    return NextResponse.rewrite(new URL('/login', req.url));
   }
   return NextResponse.next();
 }

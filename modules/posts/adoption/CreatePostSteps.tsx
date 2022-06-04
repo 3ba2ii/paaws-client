@@ -1,10 +1,10 @@
 import { Box, Flex, Text } from '@chakra-ui/react';
-import CustomDatePicker from 'components/common/input/CustomDatePicker';
-import MyDropzone from 'components/common/input/CustomDropzone';
-import CustomCheckbox from 'components/common/input/CustomCheckbox';
-import CustomLocationPicker from 'components/common/location/CustomLocationPicker';
-import InputField from 'components/common/input/InputField';
-import SelectComponent from 'components/common/input/SelectFieldComponent';
+import CustomDatePicker from 'components/input/CustomDatePicker';
+import MyDropzone from 'components/input/CustomDropzone';
+import CustomCheckbox from 'components/input/CustomCheckbox';
+import CustomLocationPicker from 'components/location/CustomLocationPicker';
+import InputField from 'components/input/InputField';
+import SelectComponent from 'components/input/SelectFieldComponent';
 import { useFormikContext } from 'formik';
 import { Breeds, PetGender, PetSize, PetType } from 'generated/graphql';
 import Image from 'next/image';

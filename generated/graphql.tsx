@@ -4,7 +4,7 @@ export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-const defaultOptions =  {}
+const defaultOptions = {} as const;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -152,6 +152,7 @@ export type CreatePetInput = {
   gender: PetGender;
   name: Scalars['String'];
   size: PetSize;
+  skills?: Maybe<Array<Scalars['String']>>;
   thumbnailIdx: Scalars['Int'];
   type: PetType;
 };
@@ -287,6 +288,7 @@ export enum MissingPostTypes {
 export type Mutation = {
   __typename?: 'Mutation';
   addMPComment: CommentResponse;
+  addUserAvatar: Scalars['Boolean'];
   addUserTag: Scalars['Boolean'];
   changePassword: ChangePasswordResponse;
   createMissingPost: CreateMissingPostResponse;
@@ -317,6 +319,11 @@ export type Mutation = {
 
 export type MutationAddMpCommentArgs = {
   input: CreateCommentInputType;
+};
+
+
+export type MutationAddUserAvatarArgs = {
+  avatar: Scalars['Upload'];
 };
 
 
@@ -486,8 +493,10 @@ export type OwnedPet = {
   __typename?: 'OwnedPet';
   about: Scalars['String'];
   createdAt: Scalars['DateTime'];
+  id: Scalars['Int'];
   pet: Pet;
   petId: Scalars['Int'];
+  skills: Array<PetSkill>;
   updatedAt: Scalars['DateTime'];
   user: User;
   userId: Scalars['Float'];
@@ -512,6 +521,13 @@ export type PaginatedMissingPosts = {
   errors?: Maybe<Array<FieldError>>;
   hasMore?: Maybe<Scalars['Boolean']>;
   missingPosts: Array<MissingPost>;
+};
+
+export type PaginatedUserOwnedPetsResponse = {
+  __typename?: 'PaginatedUserOwnedPetsResponse';
+  errors?: Maybe<Array<FieldError>>;
+  hasMore?: Maybe<Scalars['Boolean']>;
+  ownedPets: Array<OwnedPet>;
 };
 
 export type PaginatedUsers = {
@@ -545,6 +561,7 @@ export type Pet = {
   images?: Maybe<Array<PetImages>>;
   name: Scalars['String'];
   size: PetSize;
+  skills?: Maybe<Array<PetSkill>>;
   thumbnail?: Maybe<Photo>;
   type: PetType;
   updatedAt: Scalars['DateTime'];
@@ -593,6 +610,13 @@ export enum PetSize {
   Small = 'SMALL'
 }
 
+export type PetSkill = {
+  __typename?: 'PetSkill';
+  pet: Pet;
+  petId: Scalars['Float'];
+  skill: Scalars['String'];
+};
+
 /** Basic Pet Type */
 export enum PetType {
   Cat = 'CAT',
@@ -629,6 +653,7 @@ export type PostUpdoot = {
   __typename?: 'PostUpdoot';
   changes: Scalars['Int'];
   createdAt: Scalars['DateTime'];
+  post: MissingPost;
   updatedAt: Scalars['DateTime'];
   value: Scalars['Int'];
 };
@@ -660,12 +685,13 @@ export type Query = {
   me?: Maybe<User>;
   missingPost: MissingPostResponse;
   missingPosts: PaginatedMissingPosts;
+  missingPostsByUser: PaginatedMissingPosts;
   notifications: Array<Notification>;
-  pet?: Maybe<Pet>;
-  pets: Array<Pet>;
   user?: Maybe<User>;
+  userOwnedPet?: Maybe<OwnedPet>;
+  userOwnedPets: PaginatedUserOwnedPetsResponse;
   users: PaginatedUsers;
-  usersCount: Scalars['Int'];
+  votes: PaginatedMissingPosts;
 };
 
 
@@ -713,8 +739,9 @@ export type QueryMissingPostsArgs = {
 };
 
 
-export type QueryPetArgs = {
-  petId: Scalars['Int'];
+export type QueryMissingPostsByUserArgs = {
+  input: PaginationArgs;
+  userId: Scalars['Int'];
 };
 
 
@@ -723,8 +750,25 @@ export type QueryUserArgs = {
 };
 
 
+export type QueryUserOwnedPetArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryUserOwnedPetsArgs = {
+  paginationArgs: PaginationArgs;
+  userId: Scalars['Float'];
+};
+
+
 export type QueryUsersArgs = {
   where: WhereClause;
+};
+
+
+export type QueryVotesArgs = {
+  paginationArgs?: Maybe<PaginationArgs>;
+  userId: Scalars['Int'];
 };
 
 export type RegularResponse = {
@@ -749,8 +793,9 @@ export type UpdateMissingPostInput = {
 };
 
 export type UpdateUserInfo = {
-  avatar?: Maybe<Scalars['String']>;
   bio?: Maybe<Scalars['String']>;
+  birthDate?: Maybe<Scalars['DateTime']>;
+  gender?: Maybe<UserGender>;
   lat?: Maybe<Scalars['Float']>;
   lng?: Maybe<Scalars['Float']>;
 };
@@ -767,9 +812,11 @@ export type User = {
   address?: Maybe<Address>;
   addressId?: Maybe<Scalars['Int']>;
   adoptionPosts?: Maybe<Array<AdoptionPost>>;
+  adoptionPostsCount?: Maybe<Scalars['Int']>;
   avatar?: Maybe<Photo>;
   avatarId?: Maybe<Scalars['Int']>;
   bio?: Maybe<Scalars['String']>;
+  birthDate?: Maybe<Scalars['DateTime']>;
   blocked: Scalars['Boolean'];
   comments: Array<Comment>;
   confirmed: Scalars['Boolean'];
@@ -778,11 +825,13 @@ export type User = {
   email: Scalars['String'];
   favorites?: Maybe<Array<UserFavorites>>;
   full_name: Scalars['String'];
+  gender?: Maybe<UserGender>;
   id: Scalars['Int'];
   last_login?: Maybe<Scalars['DateTime']>;
   lat?: Maybe<Scalars['String']>;
   lng?: Maybe<Scalars['String']>;
   missingPosts?: Maybe<Array<MissingPost>>;
+  missingPostsCount?: Maybe<Scalars['Int']>;
   notifications: Array<Notification>;
   ownedPets?: Maybe<Array<OwnedPet>>;
   pets: Array<Pet>;
@@ -793,6 +842,7 @@ export type User = {
   provider: Scalars['String'];
   providerId?: Maybe<Scalars['String']>;
   tags?: Maybe<Array<UserTag>>;
+  totalPostsCount: Scalars['Int'];
   updatedAt: Scalars['DateTime'];
   updoots: Array<PostUpdoot>;
   userPets?: Maybe<Array<OwnedPet>>;
@@ -804,6 +854,12 @@ export type UserFavorites = {
   user: User;
   userId: Scalars['Float'];
 };
+
+/** The gender of the user */
+export enum UserGender {
+  Female = 'FEMALE',
+  Male = 'MALE'
+}
 
 export type UserResponse = {
   __typename?: 'UserResponse';
@@ -843,7 +899,7 @@ export type CommentFragmentFragment = { __typename?: 'Comment', id: number, upda
 
 export type MissingPostFragmentFragment = { __typename?: 'MissingPost', id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> };
 
-export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
+export type RequiredUserInfoFragment = { __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> };
 
 export type AddMpCommentMutationVariables = Exact<{
   input: CreateCommentInputType;
@@ -924,7 +980,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', code: number, field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', code: number, field: string, message: string }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
 
 export type LoginWithAuthProviderMutationVariables = Exact<{
   providerId: Scalars['String'];
@@ -932,7 +988,7 @@ export type LoginWithAuthProviderMutationVariables = Exact<{
 }>;
 
 
-export type LoginWithAuthProviderMutation = { __typename?: 'Mutation', loginWithAuthProvider: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
+export type LoginWithAuthProviderMutation = { __typename?: 'Mutation', loginWithAuthProvider: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -952,7 +1008,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
 
 export type RegisterWithProviderMutationVariables = Exact<{
   providerId: Scalars['String'];
@@ -960,7 +1016,7 @@ export type RegisterWithProviderMutationVariables = Exact<{
 }>;
 
 
-export type RegisterWithProviderMutation = { __typename?: 'Mutation', registerWithAuthProvider: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+export type RegisterWithProviderMutation = { __typename?: 'Mutation', registerWithAuthProvider: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
 
 export type SendOtpMutationVariables = Exact<{
   sendOtpPhone: Scalars['String'];
@@ -969,6 +1025,13 @@ export type SendOtpMutationVariables = Exact<{
 
 
 export type SendOtpMutation = { __typename?: 'Mutation', sendOTP: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, code: number, field: string }>> } };
+
+export type AddUserAvatarMutationVariables = Exact<{
+  avatar: Scalars['Upload'];
+}>;
+
+
+export type AddUserAvatarMutation = { __typename?: 'Mutation', addUserAvatar: boolean };
 
 export type UpdateUserInfoMutationVariables = Exact<{
   updateUserUpdateOptions: UpdateUserInfo;
@@ -1032,7 +1095,16 @@ export type GetUserEmailQuery = { __typename?: 'Query', user?: Maybe<{ __typenam
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
+export type MeQuery = { __typename?: 'Query', me?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
+
+export type MissingPostsByUserQueryVariables = Exact<{
+  userId: Scalars['Int'];
+  input: PaginationArgs;
+  length: Scalars['Int'];
+}>;
+
+
+export type MissingPostsByUserQuery = { __typename?: 'Query', missingPostsByUser: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }> } };
 
 export type MissingPostCommentsQueryVariables = Exact<{
   options: MissingPostComments;
@@ -1064,6 +1136,37 @@ export type UserContactInfoQueryVariables = Exact<{
 
 
 export type UserContactInfoQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, displayName: string, email: string, phone?: Maybe<string> }> };
+
+export type UserOwnedPetQueryVariables = Exact<{
+  userOwnedPetId: Scalars['Int'];
+}>;
+
+
+export type UserOwnedPetQuery = { __typename?: 'Query', userOwnedPet?: Maybe<{ __typename?: 'OwnedPet', updatedAt: any, createdAt: any, about: string, petId: number, userId: number, user: { __typename?: 'User', id: number, updatedAt: any, createdAt: any, email: string }, pet: { __typename?: 'Pet', id: number, name: string, type: PetType, gender: PetGender, size: PetSize, birthDate: any, breeds: Array<{ __typename?: 'PetBreed', breed: Breeds }>, colors: Array<{ __typename?: 'PetColor', color: PetColors }>, skills?: Maybe<Array<{ __typename?: 'PetSkill', skill: string }>>, images?: Maybe<Array<{ __typename?: 'PetImages', photo: { __typename?: 'Photo', url?: Maybe<string> } }>> } }> };
+
+export type UserOwnedPetsQueryVariables = Exact<{
+  userId: Scalars['Float'];
+  paginationArgs: PaginationArgs;
+}>;
+
+
+export type UserOwnedPetsQuery = { __typename?: 'Query', userOwnedPets: { __typename?: 'PaginatedUserOwnedPetsResponse', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, ownedPets: Array<{ __typename?: 'OwnedPet', id: number, userId: number, petId: number, createdAt: any, pet: { __typename?: 'Pet', id: number, updatedAt: any, createdAt: any, name: string, type: PetType, birthDate: any, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
+
+export type UserProfilePageQueryVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
+
+
+export type UserProfilePageQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, full_name: string, displayName: string, createdAt: any, bio?: Maybe<string>, petsCount?: Maybe<number>, missingPostsCount?: Maybe<number>, adoptionPostsCount?: Maybe<number>, totalPostsCount: number, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
+
+export type UserVotesQueryVariables = Exact<{
+  userId: Scalars['Int'];
+  paginationArgs?: Maybe<PaginationArgs>;
+  length?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type UserVotesQuery = { __typename?: 'Query', votes: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, code: number, message: string }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }> } };
 
 export type PaginatedUsersQueryVariables = Exact<{
   usersWhere: WhereClause;
@@ -1145,6 +1248,8 @@ export const RequiredUserInfoFragmentDoc = gql`
   provider
   providerId
   phoneVerified
+  gender
+  birthDate
   avatar {
     id
     url
@@ -1822,6 +1927,37 @@ export function useSendOtpMutation(baseOptions?: Apollo.MutationHookOptions<Send
 export type SendOtpMutationHookResult = ReturnType<typeof useSendOtpMutation>;
 export type SendOtpMutationResult = Apollo.MutationResult<SendOtpMutation>;
 export type SendOtpMutationOptions = Apollo.BaseMutationOptions<SendOtpMutation, SendOtpMutationVariables>;
+export const AddUserAvatarDocument = gql`
+    mutation AddUserAvatar($avatar: Upload!) {
+  addUserAvatar(avatar: $avatar)
+}
+    `;
+export type AddUserAvatarMutationFn = Apollo.MutationFunction<AddUserAvatarMutation, AddUserAvatarMutationVariables>;
+
+/**
+ * __useAddUserAvatarMutation__
+ *
+ * To run a mutation, you first call `useAddUserAvatarMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddUserAvatarMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addUserAvatarMutation, { data, loading, error }] = useAddUserAvatarMutation({
+ *   variables: {
+ *      avatar: // value for 'avatar'
+ *   },
+ * });
+ */
+export function useAddUserAvatarMutation(baseOptions?: Apollo.MutationHookOptions<AddUserAvatarMutation, AddUserAvatarMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddUserAvatarMutation, AddUserAvatarMutationVariables>(AddUserAvatarDocument, options);
+      }
+export type AddUserAvatarMutationHookResult = ReturnType<typeof useAddUserAvatarMutation>;
+export type AddUserAvatarMutationResult = Apollo.MutationResult<AddUserAvatarMutation>;
+export type AddUserAvatarMutationOptions = Apollo.BaseMutationOptions<AddUserAvatarMutation, AddUserAvatarMutationVariables>;
 export const UpdateUserInfoDocument = gql`
     mutation updateUserInfo($updateUserUpdateOptions: UpdateUserInfo!) {
   updateUser(updateOptions: $updateUserUpdateOptions)
@@ -2189,6 +2325,52 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const MissingPostsByUserDocument = gql`
+    query MissingPostsByUser($userId: Int!, $input: PaginationArgs!, $length: Int!) {
+  missingPostsByUser(userId: $userId, input: $input) {
+    errors {
+      field
+      message
+      code
+    }
+    missingPosts {
+      ...MissingPostFragment
+      descriptionSnippet(length: $length)
+    }
+    hasMore
+  }
+}
+    ${MissingPostFragmentFragmentDoc}`;
+
+/**
+ * __useMissingPostsByUserQuery__
+ *
+ * To run a query within a React component, call `useMissingPostsByUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMissingPostsByUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMissingPostsByUserQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      input: // value for 'input'
+ *      length: // value for 'length'
+ *   },
+ * });
+ */
+export function useMissingPostsByUserQuery(baseOptions: Apollo.QueryHookOptions<MissingPostsByUserQuery, MissingPostsByUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MissingPostsByUserQuery, MissingPostsByUserQueryVariables>(MissingPostsByUserDocument, options);
+      }
+export function useMissingPostsByUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MissingPostsByUserQuery, MissingPostsByUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MissingPostsByUserQuery, MissingPostsByUserQueryVariables>(MissingPostsByUserDocument, options);
+        }
+export type MissingPostsByUserQueryHookResult = ReturnType<typeof useMissingPostsByUserQuery>;
+export type MissingPostsByUserLazyQueryHookResult = ReturnType<typeof useMissingPostsByUserLazyQuery>;
+export type MissingPostsByUserQueryResult = Apollo.QueryResult<MissingPostsByUserQuery, MissingPostsByUserQueryVariables>;
 export const MissingPostCommentsDocument = gql`
     query MissingPostComments($options: MissingPostComments!) {
   comments(options: $options) {
@@ -2378,6 +2560,224 @@ export function useUserContactInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type UserContactInfoQueryHookResult = ReturnType<typeof useUserContactInfoQuery>;
 export type UserContactInfoLazyQueryHookResult = ReturnType<typeof useUserContactInfoLazyQuery>;
 export type UserContactInfoQueryResult = Apollo.QueryResult<UserContactInfoQuery, UserContactInfoQueryVariables>;
+export const UserOwnedPetDocument = gql`
+    query UserOwnedPet($userOwnedPetId: Int!) {
+  userOwnedPet(id: $userOwnedPetId) {
+    updatedAt
+    createdAt
+    about
+    petId
+    userId
+    user {
+      id
+      updatedAt
+      createdAt
+      email
+    }
+    pet {
+      id
+      name
+      type
+      gender
+      size
+      birthDate
+      breeds {
+        breed
+      }
+      colors {
+        color
+      }
+      skills {
+        skill
+      }
+      images {
+        photo {
+          url
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserOwnedPetQuery__
+ *
+ * To run a query within a React component, call `useUserOwnedPetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserOwnedPetQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserOwnedPetQuery({
+ *   variables: {
+ *      userOwnedPetId: // value for 'userOwnedPetId'
+ *   },
+ * });
+ */
+export function useUserOwnedPetQuery(baseOptions: Apollo.QueryHookOptions<UserOwnedPetQuery, UserOwnedPetQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserOwnedPetQuery, UserOwnedPetQueryVariables>(UserOwnedPetDocument, options);
+      }
+export function useUserOwnedPetLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserOwnedPetQuery, UserOwnedPetQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserOwnedPetQuery, UserOwnedPetQueryVariables>(UserOwnedPetDocument, options);
+        }
+export type UserOwnedPetQueryHookResult = ReturnType<typeof useUserOwnedPetQuery>;
+export type UserOwnedPetLazyQueryHookResult = ReturnType<typeof useUserOwnedPetLazyQuery>;
+export type UserOwnedPetQueryResult = Apollo.QueryResult<UserOwnedPetQuery, UserOwnedPetQueryVariables>;
+export const UserOwnedPetsDocument = gql`
+    query UserOwnedPets($userId: Float!, $paginationArgs: PaginationArgs!) {
+  userOwnedPets(userId: $userId, paginationArgs: $paginationArgs) {
+    errors {
+      field
+      message
+      code
+    }
+    hasMore
+    ownedPets {
+      id
+      userId
+      petId
+      createdAt
+      pet {
+        id
+        updatedAt
+        createdAt
+        name
+        type
+        birthDate
+        thumbnail {
+          url
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserOwnedPetsQuery__
+ *
+ * To run a query within a React component, call `useUserOwnedPetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserOwnedPetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserOwnedPetsQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      paginationArgs: // value for 'paginationArgs'
+ *   },
+ * });
+ */
+export function useUserOwnedPetsQuery(baseOptions: Apollo.QueryHookOptions<UserOwnedPetsQuery, UserOwnedPetsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserOwnedPetsQuery, UserOwnedPetsQueryVariables>(UserOwnedPetsDocument, options);
+      }
+export function useUserOwnedPetsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserOwnedPetsQuery, UserOwnedPetsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserOwnedPetsQuery, UserOwnedPetsQueryVariables>(UserOwnedPetsDocument, options);
+        }
+export type UserOwnedPetsQueryHookResult = ReturnType<typeof useUserOwnedPetsQuery>;
+export type UserOwnedPetsLazyQueryHookResult = ReturnType<typeof useUserOwnedPetsLazyQuery>;
+export type UserOwnedPetsQueryResult = Apollo.QueryResult<UserOwnedPetsQuery, UserOwnedPetsQueryVariables>;
+export const UserProfilePageDocument = gql`
+    query UserProfilePage($userId: Int!) {
+  user(id: $userId) {
+    id
+    full_name
+    displayName
+    createdAt
+    avatar {
+      url
+      id
+    }
+    bio
+    petsCount
+    missingPostsCount
+    adoptionPostsCount
+    totalPostsCount
+  }
+}
+    `;
+
+/**
+ * __useUserProfilePageQuery__
+ *
+ * To run a query within a React component, call `useUserProfilePageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserProfilePageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserProfilePageQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useUserProfilePageQuery(baseOptions: Apollo.QueryHookOptions<UserProfilePageQuery, UserProfilePageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserProfilePageQuery, UserProfilePageQueryVariables>(UserProfilePageDocument, options);
+      }
+export function useUserProfilePageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserProfilePageQuery, UserProfilePageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserProfilePageQuery, UserProfilePageQueryVariables>(UserProfilePageDocument, options);
+        }
+export type UserProfilePageQueryHookResult = ReturnType<typeof useUserProfilePageQuery>;
+export type UserProfilePageLazyQueryHookResult = ReturnType<typeof useUserProfilePageLazyQuery>;
+export type UserProfilePageQueryResult = Apollo.QueryResult<UserProfilePageQuery, UserProfilePageQueryVariables>;
+export const UserVotesDocument = gql`
+    query UserVotes($userId: Int!, $paginationArgs: PaginationArgs, $length: Int) {
+  votes(userId: $userId, paginationArgs: $paginationArgs) {
+    errors {
+      field
+      code
+      message
+    }
+    hasMore
+    missingPosts {
+      ...MissingPostFragment
+      descriptionSnippet(length: $length)
+    }
+  }
+}
+    ${MissingPostFragmentFragmentDoc}`;
+
+/**
+ * __useUserVotesQuery__
+ *
+ * To run a query within a React component, call `useUserVotesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserVotesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserVotesQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      paginationArgs: // value for 'paginationArgs'
+ *      length: // value for 'length'
+ *   },
+ * });
+ */
+export function useUserVotesQuery(baseOptions: Apollo.QueryHookOptions<UserVotesQuery, UserVotesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserVotesQuery, UserVotesQueryVariables>(UserVotesDocument, options);
+      }
+export function useUserVotesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserVotesQuery, UserVotesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserVotesQuery, UserVotesQueryVariables>(UserVotesDocument, options);
+        }
+export type UserVotesQueryHookResult = ReturnType<typeof useUserVotesQuery>;
+export type UserVotesLazyQueryHookResult = ReturnType<typeof useUserVotesLazyQuery>;
+export type UserVotesQueryResult = Apollo.QueryResult<UserVotesQuery, UserVotesQueryVariables>;
 export const PaginatedUsersDocument = gql`
     query PaginatedUsers($usersWhere: WhereClause!) {
   users(where: $usersWhere) {

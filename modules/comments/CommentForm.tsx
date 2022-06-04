@@ -9,7 +9,7 @@ import {
   ScaleFade,
   useToast,
 } from '@chakra-ui/react';
-import { UserAvatar } from 'components/UserAvatar';
+import { UserAvatar } from 'components/common/UserAvatar';
 import {
   GetCommentRepliesDocument,
   MissingPostCommentsDocument,

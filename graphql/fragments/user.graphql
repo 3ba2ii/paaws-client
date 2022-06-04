@@ -15,6 +15,8 @@ fragment RequiredUserInfo on User {
   provider
   providerId
   phoneVerified
+  gender
+  birthDate
   avatar {
     id
     url

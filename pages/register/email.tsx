@@ -1,4 +1,4 @@
-import { Layout } from 'components/Layout';
+import { Layout } from 'components/common/Layout';
 import React from 'react';
 import withApollo from 'utils/withApollo';
 import { RegisterForm } from 'modules/auth/register/RegisterForm';

@@ -7,9 +7,9 @@ import {
   useBreakpointValue,
   useToast,
 } from '@chakra-ui/react';
-import { CustomDrawer } from 'components/common/overlays/CustomDrawer';
-import ContactInfoModal from 'components/ContactInfoModal';
-import ShareModal from 'components/ShareModal';
+import { CustomDrawer } from 'components/overlays/CustomDrawer';
+import ContactInfoModal from 'components/overlays/modals/ContactInfoModal';
+import ShareModal from 'components/overlays/modals/ShareModal';
 import {
   MissingPostQuery,
   useDeleteMissingPostMutation,

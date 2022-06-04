@@ -3,15 +3,17 @@ import {
   Center,
   Heading,
   HStack,
-  useColorMode,
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
-import ProfileMenu from 'components/common/overlays/ProfileMenu';
-import { Layout } from 'components/Layout';
-import Logo from 'components/Logo';
+import { Layout } from 'components/common/Layout';
+import Logo from 'components/common/Logo';
+import ProfileMenu from 'components/overlays/ProfileMenu';
+import { useIsAuth } from 'hooks/useIsAuth';
 import router, { useRouter } from 'next/router';
 import React from 'react';
+import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
+import { isCompleteProfile } from 'utils/isCompletedProfile';
 
 interface CompleteInfoProps {
   pageTitle: string;
@@ -23,15 +25,15 @@ const CompleteInfoStaticComponent = () => {
     <VStack
       w='100%'
       h='100%'
-      flex='.4'
+      flex='.3'
       align={'flex-start'}
       justify='center'
-      px='65px'
+      px='3%'
       bg={bgColor}
-      display={['none', 'flex', 'flex', 'flex']}
+      display={['none', 'none', 'flex', 'flex']}
     >
       <Heading color='inherit' size='xl' fontWeight='medium'>
-        Let's make your account <br /> attractive 😉
+        Let's make your account more attractive
       </Heading>
     </VStack>
   );
@@ -41,13 +43,13 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
   pageTitle,
   children,
 }) => {
-  const { setColorMode } = useColorMode();
+  const { user } = useIsAuth();
   const { pathname } = useRouter();
-  const isPhoneNumberStep = pathname.includes('phone');
 
-  React.useEffect(() => {
-    setColorMode('light');
-  }, []);
+  const isCompleteInfoPage = pathname === '/profile/complete-info';
+
+  const isCompleted = isCompleteProfile(user);
+
   return (
     <Layout
       title={pageTitle}
@@ -58,9 +60,9 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
     >
       <HStack
         pos='absolute'
-        px={'65px'}
-        top='65px'
         w='100%'
+        px={['3%']}
+        top={['48px', '48px', '65px']}
         justify={'space-between'}
         zIndex={2}
       >
@@ -69,23 +71,39 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
       </HStack>
       <HStack position={'absolute'} w='100%' h='100vh'>
         <CompleteInfoStaticComponent />
-        <Center pos='relative' w='100%' h='100%' flex='.8'>
+        <Center
+          pos='relative'
+          w='100%'
+          h='100%'
+          flex={['auto', '.9', '.8']}
+          px={['3%']}
+        >
           {children}
-          <Button
-            pos={'absolute'}
-            bottom='32px'
-            right='65px'
-            variant='ghost'
-            opacity='.6'
-            fontWeight={'medium'}
-            onClick={() =>
-              router.push(
-                isPhoneNumberStep ? '/profile/complete-info/location' : '/'
+          <HStack pos={'absolute'} bottom='48px' right={['3%']}>
+            {!isCompleted ? (
+              <Button
+                variant='ghost'
+                opacity='.6'
+                onClick={() =>
+                  router.push(
+                    getUrlBaseOnUserInfo(user, '/profile/complete-info')
+                  )
+                }
+              >
+                Complete later
+              </Button>
+            ) : (
+              isCompleteInfoPage && (
+                <Button
+                  colorScheme='teal'
+                  fontSize='sm'
+                  onClick={() => router.push('/')}
+                >
+                  Go Home
+                </Button>
               )
-            }
-          >
-            Complete Later
-          </Button>
+            )}
+          </HStack>
         </Center>
       </HStack>
     </Layout>

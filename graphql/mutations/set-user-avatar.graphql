@@ -1,0 +1,3 @@
+mutation AddUserAvatar($avatar: Upload!) {
+  addUserAvatar(avatar: $avatar)
+}

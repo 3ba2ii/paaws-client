@@ -1,16 +1,17 @@
 import {
-  VStack,
+  Button,
   HStack,
   PinInput,
   PinInputField,
-  Button,
   useToast,
+  VStack,
 } from '@chakra-ui/react';
-import InputHOC from 'components/common/input/CustomInputComponent';
-import { Formik, Form } from 'formik';
+import InputFieldWrapper from 'components/input/CustomInputComponent';
+import { Form, Formik, FormikHelpers } from 'formik';
 import { MeQuery, useVerifyPhoneNumberMutation } from 'generated/graphql';
 import router from 'next/router';
 import React from 'react';
+import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import { toErrorMap } from 'utils/toErrorMap';
 
 interface IVerifyOTPProps {
@@ -22,54 +23,68 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
   const [verifyPhoneNumber] = useVerifyPhoneNumberMutation();
   const toaster = useToast();
 
+  const handleSubmit = async (
+    { otp }: { otp: string },
+    { setErrors }: FormikHelpers<{ otp: string }>
+  ) => {
+    if (!user) return;
+    if (!otp || !otp.length || !phone || !user) return;
+
+    /* send verification request */
+    const { data } = await verifyPhoneNumber({
+      variables: { otp, phone },
+      update: (cache, { data: result, errors }) => {
+        if (!result || !result.verifyPhoneNumber.success || errors) {
+          return;
+        }
+        updateMeQueryCache(cache, {
+          ...user,
+          phone,
+          phoneVerified: true,
+        });
+      },
+    });
+
+    /* map the error */
+    if (data?.verifyPhoneNumber.errors?.length) {
+      const mappedErrors = toErrorMap(data?.verifyPhoneNumber?.errors);
+      return setErrors(mappedErrors);
+    }
+    /* show a toaster */
+    toaster({
+      status: 'success',
+      title: 'Voila! Phone number verified.',
+      position: 'top-right',
+      variant: 'subtle',
+      isClosable: true,
+    });
+    return router.push('/profile/complete-info');
+  };
+
   return (
     <VStack w='100%' flex={['1', '.75', '.75', '.75']}>
-      <Formik
-        initialValues={{ otp: '' }}
-        onSubmit={async ({ otp }, { setErrors }) => {
-          if (!otp || !otp.length || !phone) return;
-
-          /* send verification request */
-          const { data } = await verifyPhoneNumber({
-            variables: { otp, phone },
-          });
-
-          /* map the error */
-          if (data?.verifyPhoneNumber.errors?.length) {
-            const mappedErrors = toErrorMap(data?.verifyPhoneNumber?.errors);
-            return setErrors(mappedErrors);
-          }
-          /* show a toaster */
-          toaster({
-            status: 'success',
-            title: 'Phone Number Verified',
-            description: 'You rock! 🤘',
-            position: 'top-right',
-            variant: 'subtle',
-            isClosable: true,
-          });
-          /* redirect to the location page in case the user has no previous location*/
-          if (!user?.lat || !user?.lng) {
-            return router.push('/profile/complete-info/location');
-          }
-        }}
-      >
+      <Formik initialValues={{ otp: '' }} onSubmit={handleSubmit}>
         {({ isSubmitting, setFieldValue }) => (
           <Form>
-            <VStack align='flex-start' spacing={5} maxW='450px'>
-              <InputHOC
+            <VStack
+              align='flex-start'
+              spacing={6}
+              minW='370px'
+              maxW='fit-content'
+            >
+              <InputFieldWrapper
                 label={`A 4-digit number has been sent to this phone number${
                   phone ? ' xxxxxxxx' + phone?.slice(-3) : ''
                 }, Please type it in the box below `}
                 name='otp'
-                helperText='In case you didn’t receive an OTP, Click Resend OTP'
+                helperText='In case you didn’t receive an OTP, Click here to resend OTP'
                 required
               >
                 <HStack>
                   <PinInput
-                    otp
-                    placeholder='😻'
+                    placeholder='🔢'
                     onChange={(val) => setFieldValue('otp', val.toString())}
+                    otp
                   >
                     <PinInputField />
                     <PinInputField />
@@ -77,16 +92,27 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
                     <PinInputField />
                   </PinInput>
                 </HStack>
-              </InputHOC>
-              <Button
-                isLoading={isSubmitting}
-                colorScheme={'teal'}
-                type='submit'
-                px={4}
-                fontSize='sm'
-              >
-                Verify Phone Number
-              </Button>
+              </InputFieldWrapper>
+              <HStack w='100%' justify={'flex-end'}>
+                <Button
+                  fontSize='sm'
+                  variant='ghost'
+                  type='reset'
+                  onClick={() => router.push('/profile/complete-info')}
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  isLoading={isSubmitting}
+                  loadingText='Verifying...'
+                  colorScheme={'teal'}
+                  type='submit'
+                  fontSize='sm'
+                >
+                  Verify Phone Number
+                </Button>
+              </HStack>
             </VStack>
           </Form>
         )}

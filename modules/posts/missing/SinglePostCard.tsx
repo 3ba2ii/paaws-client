@@ -1,6 +1,6 @@
 import { Box, Flex, HStack, Text, VStack } from '@chakra-ui/layout';
 import { Tag, useColorModeValue } from '@chakra-ui/react';
-import ImageWithFallback from 'components/common/media/ImageWithFallback';
+import ImageWithFallback from 'components/media/ImageWithFallback';
 import { formatDistance } from 'date-fns';
 import { MissingPostsQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';

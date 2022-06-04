@@ -16,8 +16,8 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { Tooltip } from '@chakra-ui/tooltip';
-import InputField from 'components/common/input/InputField';
-import GenericModal from 'components/common/overlays/CustomModal';
+import InputField from 'components/input/InputField';
+import GenericModal from 'components/overlays/CustomModal';
 import { Field, Form, Formik } from 'formik';
 import { useRegisterMutation } from 'generated/graphql';
 import router from 'next/router';

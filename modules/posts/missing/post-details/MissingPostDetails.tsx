@@ -7,11 +7,11 @@ import {
   useColorModeValue,
   VStack,
 } from '@chakra-ui/react';
-import CustomCarousel from 'components/common/media/CustomCarousel';
-import { LocationModal } from 'components/LocationModal';
+import CustomCarousel from 'components/media/CustomCarousel';
+import { LocationModal } from 'components/overlays/modals/LocationModal';
 import { PostOwner } from 'components/PostOwner';
 import ResponsiveButton from 'components/ResponsiveButton';
-import ShareModal from 'components/ShareModal';
+import ShareModal from 'components/overlays/modals/ShareModal';
 import { formatDistance } from 'date-fns';
 import { MissingPostQuery } from 'generated/graphql';
 import CommentsSection from 'modules/comments/CommentsSection';
