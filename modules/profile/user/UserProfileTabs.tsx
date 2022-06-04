@@ -33,17 +33,17 @@ const UserProfileTabs: React.FC<UserProfileTabsProps> = ({ userId }) => {
           </Tab>
         ))}
       </TabList>
-      <TabPanels>
+      <TabPanels minH='400px' h='100%'>
         <TabPanel>
           <p>Adoptions Posts!</p>
         </TabPanel>
         <TabPanel p='0'>
           <UserMissingPosts userId={userId} />
         </TabPanel>
-        <TabPanel>
+        <TabPanel p='0'>
           <OwnedPetsGrid userId={userId} />
         </TabPanel>
-        <TabPanel>
+        <TabPanel p='0'>
           <UserVotesMP userId={userId} />
         </TabPanel>
       </TabPanels>
