@@ -2,6 +2,7 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import OwnedPetsGrid from 'modules/pet/OwnedPetsGrid';
 import React from 'react';
 import UserMissingPosts from './UserMissingPosts';
+import UserVotesMP from './UserVotesMP';
 
 interface UserProfileTabsProps {
   userId: number;
@@ -43,7 +44,7 @@ const UserProfileTabs: React.FC<UserProfileTabsProps> = ({ userId }) => {
           <OwnedPetsGrid userId={userId} />
         </TabPanel>
         <TabPanel>
-          <p>Votes</p>
+          <UserVotesMP userId={userId} />
         </TabPanel>
       </TabPanels>
     </Tabs>

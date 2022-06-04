@@ -1,0 +1,14 @@
+query UserVotes($userId: Int!, $paginationArgs: PaginationArgs, $length: Int) {
+  votes(userId: $userId, paginationArgs: $paginationArgs) {
+    errors {
+      field
+      code
+      message
+    }
+    hasMore
+    missingPosts {
+      ...MissingPostFragment
+      descriptionSnippet(length: $length)
+    }
+  }
+}

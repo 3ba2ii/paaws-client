@@ -653,6 +653,7 @@ export type PostUpdoot = {
   __typename?: 'PostUpdoot';
   changes: Scalars['Int'];
   createdAt: Scalars['DateTime'];
+  post: MissingPost;
   updatedAt: Scalars['DateTime'];
   value: Scalars['Int'];
 };
@@ -690,6 +691,7 @@ export type Query = {
   userOwnedPet?: Maybe<OwnedPet>;
   userOwnedPets: PaginatedUserOwnedPetsResponse;
   users: PaginatedUsers;
+  votes: PaginatedMissingPosts;
 };
 
 
@@ -761,6 +763,12 @@ export type QueryUserOwnedPetsArgs = {
 
 export type QueryUsersArgs = {
   where: WhereClause;
+};
+
+
+export type QueryVotesArgs = {
+  paginationArgs?: Maybe<PaginationArgs>;
+  userId: Scalars['Int'];
 };
 
 export type RegularResponse = {
@@ -1150,6 +1158,15 @@ export type UserProfilePageQueryVariables = Exact<{
 
 
 export type UserProfilePageQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, full_name: string, displayName: string, createdAt: any, bio?: Maybe<string>, petsCount?: Maybe<number>, totalPostsCount: number, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
+
+export type UserVotesQueryVariables = Exact<{
+  userId: Scalars['Int'];
+  paginationArgs?: Maybe<PaginationArgs>;
+  length?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type UserVotesQuery = { __typename?: 'Query', votes: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, code: number, message: string }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }> } };
 
 export type PaginatedUsersQueryVariables = Exact<{
   usersWhere: WhereClause;
@@ -2713,6 +2730,52 @@ export function useUserProfilePageLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type UserProfilePageQueryHookResult = ReturnType<typeof useUserProfilePageQuery>;
 export type UserProfilePageLazyQueryHookResult = ReturnType<typeof useUserProfilePageLazyQuery>;
 export type UserProfilePageQueryResult = Apollo.QueryResult<UserProfilePageQuery, UserProfilePageQueryVariables>;
+export const UserVotesDocument = gql`
+    query UserVotes($userId: Int!, $paginationArgs: PaginationArgs, $length: Int) {
+  votes(userId: $userId, paginationArgs: $paginationArgs) {
+    errors {
+      field
+      code
+      message
+    }
+    hasMore
+    missingPosts {
+      ...MissingPostFragment
+      descriptionSnippet(length: $length)
+    }
+  }
+}
+    ${MissingPostFragmentFragmentDoc}`;
+
+/**
+ * __useUserVotesQuery__
+ *
+ * To run a query within a React component, call `useUserVotesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserVotesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserVotesQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *      paginationArgs: // value for 'paginationArgs'
+ *      length: // value for 'length'
+ *   },
+ * });
+ */
+export function useUserVotesQuery(baseOptions: Apollo.QueryHookOptions<UserVotesQuery, UserVotesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserVotesQuery, UserVotesQueryVariables>(UserVotesDocument, options);
+      }
+export function useUserVotesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserVotesQuery, UserVotesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserVotesQuery, UserVotesQueryVariables>(UserVotesDocument, options);
+        }
+export type UserVotesQueryHookResult = ReturnType<typeof useUserVotesQuery>;
+export type UserVotesLazyQueryHookResult = ReturnType<typeof useUserVotesLazyQuery>;
+export type UserVotesQueryResult = Apollo.QueryResult<UserVotesQuery, UserVotesQueryVariables>;
 export const PaginatedUsersDocument = gql`
     query PaginatedUsers($usersWhere: WhereClause!) {
   users(where: $usersWhere) {
