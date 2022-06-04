@@ -17,7 +17,8 @@ import UserAvatar from 'components/common/UserAvatar';
 import { useUserProfilePageQuery } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import AddUserOwnedPetForm from 'modules/pet/AddUserPetForm';
-import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import UserProfileStats from './UserProfileStats';
 
 export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
@@ -26,6 +27,13 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
     variables: { userId },
   });
   const [modals, setModal] = useState({ addPet: false });
+  const router = useRouter();
+
+  useEffect(() => {
+    if (data?.user) {
+      document.title = `${data.user.displayName}'s Profile`;
+    }
+  }, [data, loading]);
 
   if (loading || loggedInUserLoading) return <LoadingComponent />;
 
@@ -55,7 +63,11 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
           <Heading size='lg'>{full_name}</Heading>
           {isProfileOwner() && (
             <HStack>
-              <Button variant='outline' size='sm'>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => router.push('/settings/profile')}
+              >
                 Edit Profile
               </Button>
               <Button
