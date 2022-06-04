@@ -15,8 +15,9 @@ const UserVotesMP: React.FC<UserVotesMPProps> = ({ userId }) => {
     variables: {
       userId,
       length: 120,
-      paginationArgs: { cursor: null, limit: 1 },
+      paginationArgs: { cursor: null, limit: 3 },
     },
+    fetchPolicy: 'no-cache',
   });
 
   const fetchMorePosts = async () => {
@@ -27,7 +28,7 @@ const UserVotesMP: React.FC<UserVotesMPProps> = ({ userId }) => {
 
     const newVariables: UserVotesQueryVariables = {
       ...variables,
-      paginationArgs: { limit: 4, cursor },
+      paginationArgs: { limit: 3, cursor },
       userId,
     };
 
