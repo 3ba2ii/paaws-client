@@ -8,7 +8,7 @@ interface UserProfileStatsProps {
 
 const UserProfileStats: React.FC<UserProfileStatsProps> = ({ user }) => {
   if (!user) return null;
-  const { petsCount, totalPostsCount } = user;
+  const { petsCount, adoptionPostsCount } = user;
   return (
     <HStack
       w='100%'
@@ -19,15 +19,9 @@ const UserProfileStats: React.FC<UserProfileStatsProps> = ({ user }) => {
     >
       <Text>
         <Text as='span' fontWeight={'extrabold'}>
-          {totalPostsCount}
+          {adoptionPostsCount}
         </Text>{' '}
-        Posts
-      </Text>
-      <Text>
-        <Text as='span' fontWeight={'extrabold'}>
-          12
-        </Text>{' '}
-        Rescued Pets
+        Adoption Posts
       </Text>
       <Text>
         <Text as='span' fontWeight={'extrabold'}>

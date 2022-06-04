@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
-import { useUserVotesQuery } from 'generated/graphql';
+import { UserVotesQueryVariables, useUserVotesQuery } from 'generated/graphql';
 import { MissingPostsList } from 'modules/posts/missing/MissingPostsList';
 import React from 'react';
 
@@ -15,7 +15,7 @@ const UserVotesMP: React.FC<UserVotesMPProps> = ({ userId }) => {
     variables: {
       userId,
       length: 120,
-      paginationArgs: { cursor: null, limit: 4 },
+      paginationArgs: { cursor: null, limit: 1 },
     },
   });
 
@@ -25,9 +25,10 @@ const UserVotesMP: React.FC<UserVotesMPProps> = ({ userId }) => {
     if (!hasMore) return;
     const { createdAt: cursor } = missingPosts[missingPosts.length - 1];
 
-    const newVariables = {
+    const newVariables: UserVotesQueryVariables = {
       ...variables,
-      input: { limit: 5, cursor },
+      paginationArgs: { limit: 4, cursor },
+      userId,
     };
 
     fetchMore({ variables: newVariables }).finally(() => {

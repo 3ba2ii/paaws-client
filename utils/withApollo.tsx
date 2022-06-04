@@ -93,6 +93,24 @@ const cache = new InMemoryCache({
             };
           },
         },
+
+        votes: {
+          keyArgs: [],
+          merge(
+            existing: PaginatedMissingPosts | undefined,
+            incoming: PaginatedMissingPosts
+          ) {
+            if (!existing) return incoming;
+
+            return {
+              ...incoming,
+              missingPosts: [
+                ...(existing?.missingPosts || []),
+                ...incoming.missingPosts,
+              ],
+            };
+          },
+        },
         comments: {
           keyArgs: [],
           merge(

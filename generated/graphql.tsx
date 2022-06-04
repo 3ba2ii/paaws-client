@@ -1157,7 +1157,7 @@ export type UserProfilePageQueryVariables = Exact<{
 }>;
 
 
-export type UserProfilePageQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, full_name: string, displayName: string, createdAt: any, bio?: Maybe<string>, petsCount?: Maybe<number>, totalPostsCount: number, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
+export type UserProfilePageQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, full_name: string, displayName: string, createdAt: any, bio?: Maybe<string>, petsCount?: Maybe<number>, missingPostsCount?: Maybe<number>, adoptionPostsCount?: Maybe<number>, totalPostsCount: number, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string>, id: number }> }> };
 
 export type UserVotesQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -2698,6 +2698,8 @@ export const UserProfilePageDocument = gql`
     }
     bio
     petsCount
+    missingPostsCount
+    adoptionPostsCount
     totalPostsCount
   }
 }

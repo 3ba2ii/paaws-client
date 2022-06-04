@@ -33,7 +33,7 @@ const UserProfileTabs: React.FC<UserProfileTabsProps> = ({ userId }) => {
           </Tab>
         ))}
       </TabList>
-      <TabPanels minH='400px' h='100%'>
+      <TabPanels minH='500px' h='100%'>
         <TabPanel>
           <p>Adoptions Posts!</p>
         </TabPanel>
