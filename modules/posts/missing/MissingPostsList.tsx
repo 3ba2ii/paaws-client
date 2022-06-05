@@ -4,7 +4,7 @@ import NotFound from 'components/errors/NotFound';
 import { MissingPostsQuery } from 'generated/graphql';
 import React, { useEffect, useRef } from 'react';
 import useOnScreen from 'hooks/useOnScreen';
-import { DummyPostsSkeleton } from '../../../components/skeltons/DummyPostSkelton';
+import { DummyPostsSkeleton } from 'components/skeltons/DummyPostSkelton';
 import { SinglePostCard } from './SinglePostCard';
 import { BsThreeDots } from 'react-icons/bs';
 

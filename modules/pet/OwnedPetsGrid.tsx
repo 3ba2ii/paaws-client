@@ -52,8 +52,8 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
   };
   if (loading) {
     return (
-      <Center w='100%' h='100%' py='50px'>
-        <LoadingComponent />
+      <Center w='100%' h='100%' minH='500px'>
+        <LoadingComponent progressProps={{ size: '28px' }} />
       </Center>
     );
   }

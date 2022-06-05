@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Center } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { UserVotesQueryVariables, useUserVotesQuery } from 'generated/graphql';
 import { MissingPostsList } from 'modules/posts/missing/MissingPostsList';
@@ -36,7 +36,13 @@ const UserVotesMP: React.FC<UserVotesMPProps> = ({ userId }) => {
       setPaginationLoading(false);
     });
   };
-  if (loading) return <LoadingComponent />;
+
+  if (loading)
+    return (
+      <Center w='100%' h='100%' minH='400px'>
+        <LoadingComponent />
+      </Center>
+    );
   if (!data) return <h1>No data</h1>;
 
   return (

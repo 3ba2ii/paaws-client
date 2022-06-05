@@ -33,7 +33,12 @@ const UserMissingPosts: React.FC<UserMissingPostsProps> = ({ userId }) => {
     });
   };
 
-  if (loading) return <LoadingComponent />;
+  if (loading)
+    return (
+      <Center w='100%' h='100%' minH='400px'>
+        <LoadingComponent />
+      </Center>
+    );
   if (!loading && (!data || !data?.missingPostsByUser.missingPosts.length))
     return (
       <Box w='100%' h='100%' py='5rem'>
