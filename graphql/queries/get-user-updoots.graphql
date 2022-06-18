@@ -1,0 +1,13 @@
+query GetUserUpdoots($userId: Int!) {
+  user(id: $userId) {
+    updoots {
+      updatedAt
+      createdAt
+      value
+      changes
+      post {
+        ...MissingPostFragment
+      }
+    }
+  }
+}

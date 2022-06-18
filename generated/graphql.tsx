@@ -1092,6 +1092,13 @@ export type GetUserEmailQueryVariables = Exact<{
 
 export type GetUserEmailQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, displayName: string, email: string }> };
 
+export type GetUserUpdootsQueryVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
+
+
+export type GetUserUpdootsQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', updoots: Array<{ __typename?: 'PostUpdoot', updatedAt: any, createdAt: any, value: number, changes: number, post: { __typename?: 'MissingPost', id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> } }> }> };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -2288,6 +2295,49 @@ export function useGetUserEmailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetUserEmailQueryHookResult = ReturnType<typeof useGetUserEmailQuery>;
 export type GetUserEmailLazyQueryHookResult = ReturnType<typeof useGetUserEmailLazyQuery>;
 export type GetUserEmailQueryResult = Apollo.QueryResult<GetUserEmailQuery, GetUserEmailQueryVariables>;
+export const GetUserUpdootsDocument = gql`
+    query GetUserUpdoots($userId: Int!) {
+  user(id: $userId) {
+    updoots {
+      updatedAt
+      createdAt
+      value
+      changes
+      post {
+        ...MissingPostFragment
+      }
+    }
+  }
+}
+    ${MissingPostFragmentFragmentDoc}`;
+
+/**
+ * __useGetUserUpdootsQuery__
+ *
+ * To run a query within a React component, call `useGetUserUpdootsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserUpdootsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserUpdootsQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetUserUpdootsQuery(baseOptions: Apollo.QueryHookOptions<GetUserUpdootsQuery, GetUserUpdootsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserUpdootsQuery, GetUserUpdootsQueryVariables>(GetUserUpdootsDocument, options);
+      }
+export function useGetUserUpdootsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserUpdootsQuery, GetUserUpdootsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserUpdootsQuery, GetUserUpdootsQueryVariables>(GetUserUpdootsDocument, options);
+        }
+export type GetUserUpdootsQueryHookResult = ReturnType<typeof useGetUserUpdootsQuery>;
+export type GetUserUpdootsLazyQueryHookResult = ReturnType<typeof useGetUserUpdootsLazyQuery>;
+export type GetUserUpdootsQueryResult = Apollo.QueryResult<GetUserUpdootsQuery, GetUserUpdootsQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
