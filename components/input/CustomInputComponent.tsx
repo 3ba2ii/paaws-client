@@ -3,6 +3,7 @@ import {
   FormErrorMessage,
   FormHelperText,
   FormLabel,
+  FormLabelProps,
   Text,
 } from '@chakra-ui/react';
 import { useField } from 'formik';
@@ -16,6 +17,7 @@ type GenericInputComponentProps = InputHTMLAttributes<
   helperText?: string;
   required?: boolean;
   placeholder?: string;
+  labelStyles?: FormLabelProps;
 };
 
 const InputFieldWrapper: React.FC<GenericInputComponentProps> = ({
@@ -23,6 +25,7 @@ const InputFieldWrapper: React.FC<GenericInputComponentProps> = ({
   required = true,
   helperText,
   children,
+  labelStyles,
   ...props
 }) => {
   const [field, { error, touched }] = useField(props);
@@ -34,7 +37,7 @@ const InputFieldWrapper: React.FC<GenericInputComponentProps> = ({
       isRequired={required}
       h='fit-content'
     >
-      <FormLabel fontSize='sm' htmlFor={field.name}>
+      <FormLabel fontSize='sm' htmlFor={field.name} {...labelStyles}>
         {label}
       </FormLabel>
       {children}

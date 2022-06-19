@@ -1,4 +1,4 @@
-import { Box, Input } from '@chakra-ui/react';
+import { AvatarProps, Box, Input } from '@chakra-ui/react';
 import { MeQuery } from 'generated/graphql';
 import React from 'react';
 import UserAvatar from './common/UserAvatar';
@@ -7,12 +7,14 @@ interface SelectAvatarComponentProps {
   user: MeQuery['me'];
   onChange: (avatarFile: File) => void;
   avatarURL?: string | null;
+  avatarProps?: AvatarProps;
 }
 
 const SelectAvatarComponent: React.FC<SelectAvatarComponentProps> = ({
   user,
   avatarURL,
   onChange,
+  avatarProps,
 }) => {
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -52,6 +54,7 @@ const SelectAvatarComponent: React.FC<SelectAvatarComponentProps> = ({
             textTransform: 'initial',
             color: 'whiteAlpha.700',
           },
+          ...avatarProps,
         }}
       />
       <Input
