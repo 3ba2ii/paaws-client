@@ -18,6 +18,7 @@ import {
   useUploadAvatarMutation,
 } from 'generated/graphql';
 import React from 'react';
+import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import { toErrorMap } from 'utils/toErrorMap';
 
 interface AboutYouProps {
@@ -43,7 +44,16 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
     full_name: string
   ) => {
     const { data } = await updateUserName({
-      variables: { fullName: full_name.trim().toLowerCase() },
+      variables: { fullName: full_name },
+      update: (cache, { data }) => {
+        if (
+          !data?.updateUserFullName.success ||
+          data.updateUserFullName.errors?.length
+        ) {
+          return;
+        }
+        updateMeQueryCache(cache, { ...user, full_name });
+      },
     });
 
     if (
@@ -54,6 +64,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
       return setErrors(mappedErrors);
     }
   };
+
   return (
     <VStack align='flex-start' w='100%' spacing={5}>
       <Heading fontSize='24px' fontWeight={'semibold'}>
@@ -69,10 +80,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             email: user.email,
           } as UpdateUserDataType
         }
-        onSubmit={async (
-          { full_name, bio, email },
-          { setErrors, setSubmitting }
-        ) => {
+        onSubmit={async ({ full_name, bio, email }, { setErrors }) => {
           console.log(full_name, bio, email);
           const hasNameChanged =
             full_name.trim().toLowerCase() !==
@@ -80,20 +88,38 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
           const hasAvatarChanged = newAvatar !== null;
           const hasBioChanged = bio !== user.bio;
 
+          if (!hasNameChanged && !hasAvatarChanged && !hasBioChanged) return;
           const promises: Function[] = [];
-          if (hasNameChanged)
+
+          hasNameChanged &&
             promises.push(() => updateName(setErrors, full_name));
-          if (hasAvatarChanged)
+
+          hasAvatarChanged &&
             promises.push(() =>
               updateUserAvatar({
                 variables: { uploadAvatarImage: newAvatar },
+                update: (cache, { data }) => {
+                  if (!data?.uploadAvatar.url) return;
+                  updateMeQueryCache(cache, {
+                    ...user,
+                    avatar: {
+                      url: data.uploadAvatar.url,
+                      id: Math.floor(Math.random() * 1000),
+                    },
+                  });
+                  setNewAvatar(null);
+                },
               })
             );
 
-          if (hasBioChanged)
+          hasBioChanged &&
             promises.push(() =>
               updateUserInfo({
                 variables: { updateUserUpdateOptions: { bio } },
+                update: (cache, { data }) => {
+                  if (!data?.updateUser) return;
+                  updateMeQueryCache(cache, { ...user, bio });
+                },
               })
             );
 
@@ -101,12 +127,13 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             promises.map(async (f) => f())
           );
           toaster({
-            title: 'Success',
-            description: 'Your profile has been updated',
+            title: 'Your profile has been updated',
+            description:
+              "If you don't see the updates, Please refresh the page.",
             status: 'success',
             duration: 5000,
             isClosable: true,
-            position: 'top-right',
+            position: 'bottom-right',
             variant: 'subtle',
           });
         }}
@@ -193,8 +220,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                 />
               </InputFieldWrapper>
             </VStack>
-            <HStack mt={'5rem'} w='100%' justify='flex-end'>
-              <Button variant='ghost'>Cancel</Button>
+            <HStack mt={'3rem'} w='100%' justify='flex-start'>
               <Button colorScheme='teal' type='submit' isLoading={isSubmitting}>
                 Save Changes
               </Button>

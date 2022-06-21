@@ -127,7 +127,7 @@ export const RegisterForm = () => {
                 'We could not create your account right now, Please try again later.',
               status: 'error',
               isClosable: true,
-              position: 'top-right',
+              position: 'bottom-right',
             });
           }
 
@@ -148,7 +148,7 @@ export const RegisterForm = () => {
               'We could not create your account right now, Please try again later.',
             status: 'error',
             isClosable: true,
-            position: 'top-right',
+            position: 'bottom-right',
           });
         }
       }}

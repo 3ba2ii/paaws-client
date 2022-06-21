@@ -56,7 +56,7 @@ const SelectAvatar: React.FC = () => {
       toaster({
         status: 'success',
         title: "You're beautiful 😍",
-        position: 'top-right',
+        position: 'bottom-right',
         variant: 'subtle',
         isClosable: true,
       });
@@ -68,7 +68,7 @@ const SelectAvatar: React.FC = () => {
       title: 'An error occurred while updating your info',
       description:
         'We could not update your info at this time. Please try again later.',
-      position: 'top-right',
+      position: 'bottom-right',
       variant: 'subtle',
       isClosable: true,
     });

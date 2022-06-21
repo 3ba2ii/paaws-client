@@ -47,7 +47,7 @@ const SelectLocationPage: React.FC = () => {
       toaster({
         status: 'success',
         title: 'Looks Good!',
-        position: 'top-right',
+        position: 'bottom-right',
         variant: 'subtle',
         isClosable: true,
       });
@@ -59,7 +59,7 @@ const SelectLocationPage: React.FC = () => {
       title: 'An error occurred while updating your location',
       description:
         'We could not update your location at this time. Please try again later.',
-      position: 'top-right',
+      position: 'bottom-right',
       variant: 'subtle',
       isClosable: true,
     });

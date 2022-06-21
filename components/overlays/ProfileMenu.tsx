@@ -47,7 +47,7 @@ const ProfileMenu = () => {
         description:
           'An error occurred while logging you out, Please try again',
         status: 'error',
-        position: 'top-right',
+        position: 'bottom-right',
         isClosable: true,
       });
     }

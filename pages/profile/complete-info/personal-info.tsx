@@ -53,7 +53,7 @@ const PersonalInfoStep: React.FC = () => {
       toaster({
         status: 'success',
         title: 'We could be friends, you know? 🥰',
-        position: 'top-right',
+        position: 'bottom-right',
         variant: 'subtle',
         isClosable: true,
       });
@@ -66,7 +66,7 @@ const PersonalInfoStep: React.FC = () => {
       title: 'An error occurred while updating your info',
       description:
         'We could not update your info at this time. Please try again later.',
-      position: 'top-right',
+      position: 'bottom-right',
       variant: 'subtle',
       isClosable: true,
     });

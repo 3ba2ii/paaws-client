@@ -95,7 +95,7 @@ const RegisterPage: React.FC = () => {
             }}
             onFailure={() => {
               toaster({
-                position: 'top-right',
+                position: 'bottom-right',
                 status: 'error',
                 variant: 'subtle',
                 isClosable: true,

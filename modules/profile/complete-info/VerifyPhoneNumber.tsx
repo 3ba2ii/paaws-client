@@ -54,7 +54,7 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
     toaster({
       status: 'success',
       title: 'Voila! Phone number verified.',
-      position: 'top-right',
+      position: 'bottom-right',
       variant: 'subtle',
       isClosable: true,
     });
