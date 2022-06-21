@@ -11,24 +11,34 @@ import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { SideFooter } from 'components/SideFooter';
 import { useIsAuth } from 'hooks/useIsAuth';
 import AboutYouSettings from 'modules/settings/AboutYou';
+import { useRouter } from 'next/router';
 import React from 'react';
 import withApollo from 'utils/withApollo';
 
 interface SettingsPageProps {}
 
-const SettingsTabsList: { key: string; label: string }[] = [
-  { key: 'about-you', label: 'About you' },
-  { key: 'security', label: 'Security' },
-  { key: 'account', label: 'Account' },
-  { key: 'connections', label: 'Connections' },
-  { key: 'email-settings', label: 'Email Settings' },
-  { key: 'preferences', label: 'Preferences' },
-  { key: 'notifications', label: 'Notifications' },
-  { key: 'display', label: 'Display' },
-  { key: 'danger-area', label: 'Danger Area' },
+const SettingsTabsList: { key: string; label: string; url: string }[] = [
+  { key: 'about-you', label: 'About you', url: '/settings' },
+  { key: 'security', label: 'Security', url: `/settings/security` },
+  { key: 'account', label: 'Account', url: '/settings/account' },
+  { key: 'connections', label: 'Connections', url: '/settings/connections' },
+  {
+    key: 'email-settings',
+    label: 'Email Settings',
+    url: '/settings/email-settings',
+  },
+  { key: 'preferences', label: 'Preferences', url: '/settings/preferences' },
+  {
+    key: 'notifications',
+    label: 'Notifications',
+    url: '/settings/notifications',
+  },
+  { key: 'display', label: 'Display', url: '/settings/display' },
+  { key: 'danger-area', label: 'Danger Area', url: '/settings/danger-area' },
 ];
 const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
   const { user, loading } = useIsAuth();
+  const { pathname } = useRouter();
   if (loading) return <LoadingComponent />;
   if (!user) return <Heading>You are not logged in</Heading>;
   return (
@@ -37,7 +47,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
         w='100%'
         h='100vh'
         gridTemplateColumns={'265px 4.5fr'}
-        gap={10}
+        gap={14}
       >
         <VStack
           w='100%'
@@ -49,15 +59,16 @@ const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
         >
           <Heading fontSize='22px'>Settings</Heading>
           <VStack align='flex-start' spacing={4}>
-            {SettingsTabsList.map(({ key, label }) => (
+            {SettingsTabsList.map(({ key, label, url }) => (
               <Button
                 height={'fit-content'}
                 variant='unstyled'
                 as={Link}
                 key={key}
+                href={url}
                 fontSize='18px'
-                color='blackAlpha.600'
-                fontWeight={'400'}
+                color={pathname === url ? 'blackAlpha.800' : 'blackAlpha.600'}
+                fontWeight={pathname === url ? 'semibold' : '400'}
                 _dark={{ color: 'whiteAlpha.800' }}
               >
                 {label}

@@ -302,6 +302,7 @@ export type Mutation = {
   editMissingPost: EditMissingPostResponse;
   forgotPassword: Scalars['Boolean'];
   isUserRegistered: FindUserByTokenIdResponse;
+  isValidAccountURL: Scalars['Boolean'];
   login: UserResponse;
   loginWithAuthProvider: UserResponse;
   logout: Scalars['Boolean'];
@@ -309,7 +310,10 @@ export type Mutation = {
   registerWithAuthProvider: UserResponse;
   sendEmailVerification: RegularResponse;
   sendOTP: RegularResponse;
+  updateAccountURL: RegularResponse;
   updateUser: Scalars['Boolean'];
+  updateUserFullName: RegularResponse;
+  updateUserSettings: RegularResponse;
   updootComment: CommentResponse;
   uploadAvatar: UploadImageResponse;
   verifyPhoneNumber: RegularResponse;
@@ -397,6 +401,11 @@ export type MutationIsUserRegisteredArgs = {
 };
 
 
+export type MutationIsValidAccountUrlArgs = {
+  accountURL: Scalars['String'];
+};
+
+
 export type MutationLoginArgs = {
   options: LoginInput;
 };
@@ -430,8 +439,23 @@ export type MutationSendOtpArgs = {
 };
 
 
+export type MutationUpdateAccountUrlArgs = {
+  accountURL: Scalars['String'];
+};
+
+
 export type MutationUpdateUserArgs = {
   updateOptions: UpdateUserInfo;
+};
+
+
+export type MutationUpdateUserFullNameArgs = {
+  fullName: Scalars['String'];
+};
+
+
+export type MutationUpdateUserSettingsArgs = {
+  updateUserSettingsInput: UpdateUserSettingsInput;
 };
 
 
@@ -686,6 +710,7 @@ export type Query = {
   missingPost: MissingPostResponse;
   missingPosts: PaginatedMissingPosts;
   missingPostsByUser: PaginatedMissingPosts;
+  mySettings?: Maybe<UserSetting>;
   notifications: Array<Notification>;
   user?: Maybe<User>;
   userOwnedPet?: Maybe<OwnedPet>;
@@ -800,6 +825,16 @@ export type UpdateUserInfo = {
   lng?: Maybe<Scalars['Float']>;
 };
 
+export type UpdateUserSettingsInput = {
+  language?: Maybe<Scalars['String']>;
+  showBio?: Maybe<Scalars['Boolean']>;
+  showBirthDate?: Maybe<Scalars['Boolean']>;
+  showEmail?: Maybe<Scalars['Boolean']>;
+  showGender?: Maybe<Scalars['Boolean']>;
+  showLocation?: Maybe<Scalars['Boolean']>;
+  showPhoneNumber?: Maybe<Scalars['Boolean']>;
+};
+
 export type UploadImageResponse = {
   __typename?: 'UploadImageResponse';
   errors?: Maybe<Array<FieldError>>;
@@ -830,6 +865,7 @@ export type User = {
   last_login?: Maybe<Scalars['DateTime']>;
   lat?: Maybe<Scalars['String']>;
   lng?: Maybe<Scalars['String']>;
+  metadata: Array<UserMetadata>;
   missingPosts?: Maybe<Array<MissingPost>>;
   missingPostsCount?: Maybe<Scalars['Int']>;
   notifications: Array<Notification>;
@@ -841,6 +877,8 @@ export type User = {
   photos?: Maybe<Array<Photo>>;
   provider: Scalars['String'];
   providerId?: Maybe<Scalars['String']>;
+  settings: UserSetting;
+  settingsId: Scalars['Int'];
   tags?: Maybe<Array<UserTag>>;
   totalPostsCount: Scalars['Int'];
   updatedAt: Scalars['DateTime'];
@@ -861,10 +899,43 @@ export enum UserGender {
   Male = 'MALE'
 }
 
+export type UserMetadata = {
+  __typename?: 'UserMetadata';
+  createdAt: Scalars['DateTime'];
+  description: UserMetadataDescription;
+  id: Scalars['Int'];
+  updatedAt: Scalars['DateTime'];
+  user: User;
+  userId: Scalars['Int'];
+  value: Scalars['String'];
+};
+
+export enum UserMetadataDescription {
+  UpdateDisplayName = 'UPDATE_DISPLAY_NAME',
+  UpdateEmail = 'UPDATE_EMAIL',
+  UpdateFullName = 'UPDATE_FULL_NAME',
+  UpdateFullNameCount = 'UPDATE_FULL_NAME_COUNT',
+  UpdateUsername = 'UPDATE_USERNAME',
+  UserId = 'USER_ID'
+}
+
 export type UserResponse = {
   __typename?: 'UserResponse';
   errors?: Maybe<Array<FieldError>>;
   user?: Maybe<User>;
+};
+
+export type UserSetting = {
+  __typename?: 'UserSetting';
+  accountURL: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['Int'];
+  language: Scalars['String'];
+  showEmail: Scalars['Boolean'];
+  showPhone: Scalars['Boolean'];
+  updatedAt: Scalars['DateTime'];
+  user: User;
+  userId: Scalars['Int'];
 };
 
 export type UserTag = {
@@ -1039,6 +1110,13 @@ export type UpdateUserInfoMutationVariables = Exact<{
 
 
 export type UpdateUserInfoMutation = { __typename?: 'Mutation', updateUser: boolean };
+
+export type UpdateUserFullNameMutationVariables = Exact<{
+  fullName: Scalars['String'];
+}>;
+
+
+export type UpdateUserFullNameMutation = { __typename?: 'Mutation', updateUserFullName: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
 export type UpdootCommentMutationVariables = Exact<{
   value: Scalars['Int'];
@@ -1989,6 +2067,44 @@ export function useUpdateUserInfoMutation(baseOptions?: Apollo.MutationHookOptio
 export type UpdateUserInfoMutationHookResult = ReturnType<typeof useUpdateUserInfoMutation>;
 export type UpdateUserInfoMutationResult = Apollo.MutationResult<UpdateUserInfoMutation>;
 export type UpdateUserInfoMutationOptions = Apollo.BaseMutationOptions<UpdateUserInfoMutation, UpdateUserInfoMutationVariables>;
+export const UpdateUserFullNameDocument = gql`
+    mutation UpdateUserFullName($fullName: String!) {
+  updateUserFullName(fullName: $fullName) {
+    errors {
+      field
+      message
+      code
+    }
+    success
+  }
+}
+    `;
+export type UpdateUserFullNameMutationFn = Apollo.MutationFunction<UpdateUserFullNameMutation, UpdateUserFullNameMutationVariables>;
+
+/**
+ * __useUpdateUserFullNameMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserFullNameMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserFullNameMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserFullNameMutation, { data, loading, error }] = useUpdateUserFullNameMutation({
+ *   variables: {
+ *      fullName: // value for 'fullName'
+ *   },
+ * });
+ */
+export function useUpdateUserFullNameMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserFullNameMutation, UpdateUserFullNameMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserFullNameMutation, UpdateUserFullNameMutationVariables>(UpdateUserFullNameDocument, options);
+      }
+export type UpdateUserFullNameMutationHookResult = ReturnType<typeof useUpdateUserFullNameMutation>;
+export type UpdateUserFullNameMutationResult = Apollo.MutationResult<UpdateUserFullNameMutation>;
+export type UpdateUserFullNameMutationOptions = Apollo.BaseMutationOptions<UpdateUserFullNameMutation, UpdateUserFullNameMutationVariables>;
 export const UpdootCommentDocument = gql`
     mutation UpdootComment($value: Int!, $id: Int!) {
   updootComment(value: $value, commentId: $id) {

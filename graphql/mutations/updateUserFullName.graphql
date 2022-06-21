@@ -1,0 +1,10 @@
+mutation UpdateUserFullName($fullName: String!) {
+  updateUserFullName(fullName: $fullName) {
+    errors {
+      field
+      message
+      code
+    }
+    success
+  }
+}

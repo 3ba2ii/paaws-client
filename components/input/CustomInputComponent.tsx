@@ -51,7 +51,7 @@ const InputFieldWrapper: React.FC<GenericInputComponentProps> = ({
         <Text
           textStyle={'p2'}
           pos='absolute'
-          color='red.500'
+          color='red.400'
           bottom={'-26px'}
           display='block'
           fontSize={'13px'}

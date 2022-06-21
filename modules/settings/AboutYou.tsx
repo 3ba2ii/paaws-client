@@ -5,22 +5,55 @@ import {
   HStack,
   Input,
   Textarea,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import InputFieldWrapper from 'components/input/CustomInputComponent';
 import SelectAvatarComponent from 'components/SelectAvatarComponent';
-import { Field, Form, Formik } from 'formik';
-import { MeQuery } from 'generated/graphql';
+import { FastField, Form, Formik, FormikErrors, FormikProps } from 'formik';
+import {
+  MeQuery,
+  useUpdateUserFullNameMutation,
+  useUpdateUserInfoMutation,
+  useUploadAvatarMutation,
+} from 'generated/graphql';
 import React from 'react';
-import { AboutYouSchema } from 'utils/yupSchemas/SettingsSchema';
+import { toErrorMap } from 'utils/toErrorMap';
 
 interface AboutYouProps {
   user: MeQuery['me'];
 }
+type UpdateUserDataType = {
+  full_name: string;
+  bio: string;
+  avatar: string | null;
+  email: string;
+};
 
 const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
   if (!user) return null;
   const [newAvatar, setNewAvatar] = React.useState<File | null>(null);
+  const toaster = useToast();
+  const [updateUserName] = useUpdateUserFullNameMutation();
+  const [updateUserAvatar] = useUploadAvatarMutation();
+  const [updateUserInfo] = useUpdateUserInfoMutation();
+
+  const updateName = async (
+    setErrors: (errors: FormikErrors<UpdateUserDataType>) => void,
+    full_name: string
+  ) => {
+    const { data } = await updateUserName({
+      variables: { fullName: full_name.trim().toLowerCase() },
+    });
+
+    if (
+      !data?.updateUserFullName.success &&
+      data?.updateUserFullName.errors?.length
+    ) {
+      const mappedErrors = toErrorMap(data?.updateUserFullName?.errors);
+      return setErrors(mappedErrors);
+    }
+  };
   return (
     <VStack align='flex-start' w='100%' spacing={5}>
       <Heading fontSize='24px' fontWeight={'semibold'}>
@@ -28,16 +61,55 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
       </Heading>
       <Divider />
       <Formik
-        initialValues={{
-          name: user.full_name,
-          bio: user.bio,
-          avatar: user.avatar?.url || null,
-          email: user.email,
+        initialValues={
+          {
+            full_name: user.full_name,
+            bio: user.bio,
+            avatar: user.avatar?.url || null,
+            email: user.email,
+          } as UpdateUserDataType
+        }
+        onSubmit={async (
+          { full_name, bio, email },
+          { setErrors, setSubmitting }
+        ) => {
+          console.log(full_name, bio, email);
+          const hasNameChanged =
+            full_name.trim().toLowerCase() !==
+            user.full_name.trim().toLowerCase();
+          const hasAvatarChanged = newAvatar !== null;
+          const hasBioChanged = bio !== user.bio;
+
+          const promises: Function[] = [];
+          if (hasNameChanged)
+            promises.push(() => updateName(setErrors, full_name));
+          if (hasAvatarChanged)
+            promises.push(() =>
+              updateUserAvatar({
+                variables: { uploadAvatarImage: newAvatar },
+              })
+            );
+
+          if (hasBioChanged)
+            promises.push(() =>
+              updateUserInfo({
+                variables: { updateUserUpdateOptions: { bio } },
+              })
+            );
+
+          const [x, y, z] = await Promise.allSettled(
+            promises.map(async (f) => f())
+          );
+          toaster({
+            title: 'Success',
+            description: 'Your profile has been updated',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+            position: 'top-right',
+            variant: 'subtle',
+          });
         }}
-        onSubmit={({ name, bio, email }) => {
-          console.log(name, bio, email);
-        }}
-        validationSchema={AboutYouSchema}
         validateOnBlur
       >
         {({ setFieldValue, values, errors, touched, isSubmitting }) => (
@@ -48,52 +120,31 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
               height: '100%',
             }}
           >
-            <VStack spacing={10} maxW='600px'>
+            <VStack spacing={14} maxW='600px'>
               <InputFieldWrapper
                 label='Name'
-                name='name'
-                helperText='This value will appear on your profile'
+                name='full_name'
+                helperText='You can update your name once every 30 days with a maximum of 5 times.'
                 labelStyles={{ fontSize: 'md', fontWeight: 'semibold' }}
                 required={false}
               >
-                <Field
+                <FastField
                   as={Input}
                   variant='flushed'
-                  id='name'
-                  name='name'
+                  id='full_name'
+                  name='full_name'
                   opacity='.8'
                 />
               </InputFieldWrapper>
 
               <InputFieldWrapper
-                label='Email Address'
-                name='email'
-                labelStyles={{ fontSize: 'md', fontWeight: 'semibold' }}
-                required={false}
-              >
-                <Field
-                  as={Input}
-                  variant='flushed'
-                  id='email'
-                  name='email'
-                  opacity='.8'
-                  type='email'
-                />
-                <HStack my={3} w='100%' align='center'>
-                  <Button color={'blue.600'} size='sm' variant='link'>
-                    Verify now
-                  </Button>
-                </HStack>
-              </InputFieldWrapper>
-
-              <InputFieldWrapper
-                label='User Avatar'
+                label='Your Avatar'
                 name='avatar'
                 helperText='Recommended size: at least 1000 pixels per side. File type: JPG, PNG or GIF.'
                 labelStyles={{ fontSize: 'md', fontWeight: 'semibold', mb: 5 }}
                 required={false}
               >
-                <Field
+                <FastField
                   as={() => (
                     <SelectAvatarComponent
                       user={user}
@@ -102,7 +153,10 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                           ? URL.createObjectURL(newAvatar)
                           : user.avatar?.url
                       }
-                      onChange={(file) => setNewAvatar(file)}
+                      onChange={(file) => {
+                        setNewAvatar(file);
+                        setFieldValue('avatar', URL.createObjectURL(file));
+                      }}
                       avatarProps={{ size: '2xl' }}
                     />
                   )}
@@ -110,6 +164,15 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                   id='avatar'
                   name='Avatar'
                   opacity='.8'
+                  shouldUpdate={(
+                    nextProps: { formik: FormikProps<UpdateUserDataType> },
+                    currentProps: { formik: FormikProps<UpdateUserDataType> }
+                  ) => {
+                    return (
+                      nextProps.formik.values.avatar !==
+                      currentProps.formik.values.avatar
+                    );
+                  }}
                 />
               </InputFieldWrapper>
               <InputFieldWrapper
@@ -119,18 +182,20 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                 labelStyles={{ fontSize: 'md', fontWeight: 'semibold' }}
                 required={false}
               >
-                <Field
+                <FastField
                   as={Textarea}
                   variant='flushed'
                   id='bio'
                   name='bio'
                   opacity='.8'
+                  minHeight='42px'
+                  placeholder='Tell us about yourself'
                 />
               </InputFieldWrapper>
             </VStack>
             <HStack mt={'5rem'} w='100%' justify='flex-end'>
               <Button variant='ghost'>Cancel</Button>
-              <Button colorScheme='teal' type='submit'>
+              <Button colorScheme='teal' type='submit' isLoading={isSubmitting}>
                 Save Changes
               </Button>
             </HStack>
