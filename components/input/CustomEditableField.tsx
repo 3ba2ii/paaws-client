@@ -11,6 +11,7 @@ import {
   EditableProps,
   EditablePreviewProps,
   EditableInputProps,
+  EditableTextarea,
 } from '@chakra-ui/react';
 import { FastField, useField } from 'formik';
 import React, { InputHTMLAttributes } from 'react';
@@ -21,6 +22,7 @@ type CustomEditableFieldProps = InputHTMLAttributes<
   name: string;
   label: string;
   defaultValue: string;
+  textarea?: boolean;
   editableProps?: EditableProps;
   editablePreviewProps?: EditablePreviewProps;
   editableInputProps?: EditableInputProps;
@@ -29,6 +31,7 @@ type CustomEditableFieldProps = InputHTMLAttributes<
 const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
   label,
   defaultValue,
+  textarea = false,
   editableProps,
   editableInputProps,
   editablePreviewProps,
@@ -76,7 +79,7 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
         <EditablePreview {...editablePreviewProps} />
         {/* Here is the custom input */}
         <FastField
-          as={EditableInput}
+          as={textarea ? EditableTextarea : EditableInput}
           {...field}
           {...props}
           id={field.name}
