@@ -1,18 +1,8 @@
-import {
-  Button,
-  Divider,
-  Heading,
-  HStack,
-  Input,
-  Text,
-  Textarea,
-  useToast,
-  VStack,
-} from '@chakra-ui/react';
+import { Divider, Heading, Textarea, useToast, VStack } from '@chakra-ui/react';
 import CustomEditableField from 'components/input/CustomEditableField';
 import InputFieldWrapper from 'components/input/CustomInputComponent';
 import SelectAvatarComponent from 'components/SelectAvatarComponent';
-import { FastField, Form, Formik, FormikErrors, FormikProps } from 'formik';
+import { FastField, Form, Formik, FormikProps } from 'formik';
 import {
   MeQuery,
   useUpdateUserFullNameMutation,
@@ -55,19 +45,36 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
           !result?.updateUserFullName.success ||
           result.updateUserFullName.errors?.length
         ) {
+          /* Error case */
+          const mappedErrors = toErrorMap(
+            data?.updateUserFullName.errors || []
+          );
+          formikProps.setErrors(mappedErrors);
           return;
         }
         updateMeQueryCache(cache, { ...user, full_name });
       },
     });
-
-    if (
-      !data?.updateUserFullName.success &&
-      data?.updateUserFullName.errors?.length
-    ) {
-      const mappedErrors = toErrorMap(data?.updateUserFullName?.errors);
-      return formikProps.setErrors(mappedErrors);
+  };
+  const onUpdateInfo = async (formikProps: FormikProps<UpdateUserDataType>) => {
+    const { values, initialValues } = formikProps;
+    if (values.bio.trim() === initialValues.bio.trim()) {
+      //show warning that its the same value
+      return;
     }
+    await updateUserInfo({
+      variables: { updateUserUpdateOptions: { bio: values.bio.trim() } },
+      update: (cache, { data: result }) => {
+        if (!result?.updateUser) {
+          formikProps.setFieldError(
+            'bio',
+            'An error occurred while updating your info, Please try again later'
+          );
+          return;
+        }
+        updateMeQueryCache(cache, { ...user, bio: values.bio });
+      },
+    });
   };
 
   return (
@@ -193,7 +200,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                   editableProps={{
                     isPreviewFocusable: false,
                     submitOnBlur: false,
-                    onSubmit: () => updateName(formikProps),
+                    onSubmit: () => onUpdateInfo(formikProps),
                     onAbort: () =>
                       formikProps.setFieldValue(
                         'bio',
@@ -248,23 +255,6 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                       currentProps.formik.values.avatar
                     );
                   }}
-                />
-              </InputFieldWrapper>
-              <InputFieldWrapper
-                label='Short Bio'
-                name='bio'
-                helperText='This bio will appear on your Profile page, so make it short and sweet.'
-                labelStyles={{ fontSize: 'md', fontWeight: 'semibold' }}
-                required={false}
-              >
-                <FastField
-                  as={Textarea}
-                  variant='flushed'
-                  id='bio'
-                  name='bio'
-                  opacity='.8'
-                  minHeight='42px'
-                  placeholder='Tell us about yourself'
                 />
               </InputFieldWrapper>
             </VStack>
