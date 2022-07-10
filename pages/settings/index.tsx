@@ -43,12 +43,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
   if (!user) return <Heading>You are not logged in</Heading>;
   return (
     <Layout title='Settings Page - Paaws' includeFooter={false}>
-      <SimpleGrid
-        w='100%'
-        h='100vh'
-        gridTemplateColumns={'265px 4.5fr'}
-        gap={14}
-      >
+      <SimpleGrid w='100%' gridTemplateColumns={'265px 4.5fr'} gap={14}>
         <VStack
           w='100%'
           h='100%'

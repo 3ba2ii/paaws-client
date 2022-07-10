@@ -1,17 +1,16 @@
 import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
 import {
-  useEditableControls,
   ButtonGroup,
-  IconButton,
-  Flex,
   Editable,
-  EditablePreview,
-  Input,
   EditableInput,
-  EditableProps,
-  EditablePreviewProps,
   EditableInputProps,
+  EditablePreview,
+  EditablePreviewProps,
+  EditableProps,
   EditableTextarea,
+  Flex,
+  IconButton,
+  useEditableControls,
 } from '@chakra-ui/react';
 import { FastField, useField } from 'formik';
 import React, { InputHTMLAttributes } from 'react';
@@ -31,10 +30,10 @@ type CustomEditableFieldProps = InputHTMLAttributes<
 const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
   label,
   defaultValue,
-  textarea = false,
   editableProps,
   editableInputProps,
   editablePreviewProps,
+  textarea = false,
   ...props
 }) => {
   /* Here's a custom control */

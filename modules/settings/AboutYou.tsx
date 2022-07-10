@@ -4,10 +4,12 @@ import {
   Heading,
   HStack,
   Input,
+  Text,
   Textarea,
   useToast,
   VStack,
 } from '@chakra-ui/react';
+import CustomEditableField from 'components/input/CustomEditableField';
 import InputFieldWrapper from 'components/input/CustomInputComponent';
 import SelectAvatarComponent from 'components/SelectAvatarComponent';
 import { FastField, Form, Formik, FormikErrors, FormikProps } from 'formik';
@@ -39,16 +41,19 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
   const [updateUserAvatar] = useUploadAvatarMutation();
   const [updateUserInfo] = useUpdateUserInfoMutation();
 
-  const updateName = async (
-    setErrors: (errors: FormikErrors<UpdateUserDataType>) => void,
-    full_name: string
-  ) => {
+  const updateName = async (formikProps: FormikProps<UpdateUserDataType>) => {
+    const { full_name } = formikProps.values;
+    const { full_name: initialFullName } = formikProps.initialValues;
+
+    if (initialFullName.trim() === full_name.trim()) {
+      return;
+    }
     const { data } = await updateUserName({
       variables: { fullName: full_name },
-      update: (cache, { data }) => {
+      update: (cache, { data: result }) => {
         if (
-          !data?.updateUserFullName.success ||
-          data.updateUserFullName.errors?.length
+          !result?.updateUserFullName.success ||
+          result.updateUserFullName.errors?.length
         ) {
           return;
         }
@@ -61,7 +66,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
       data?.updateUserFullName.errors?.length
     ) {
       const mappedErrors = toErrorMap(data?.updateUserFullName?.errors);
-      return setErrors(mappedErrors);
+      return formikProps.setErrors(mappedErrors);
     }
   };
 
@@ -70,7 +75,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
       <Heading fontSize='24px' fontWeight={'semibold'}>
         About you
       </Heading>
-      <Divider />
+      <Divider maxW='800px' />
       <Formik
         initialValues={
           {
@@ -90,9 +95,6 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
 
           if (!hasNameChanged && !hasAvatarChanged && !hasBioChanged) return;
           const promises: Function[] = [];
-
-          hasNameChanged &&
-            promises.push(() => updateName(setErrors, full_name));
 
           hasAvatarChanged &&
             promises.push(() =>
@@ -139,7 +141,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
         }}
         validateOnBlur
       >
-        {({ setFieldValue, values, errors, touched, isSubmitting }) => (
+        {(formikProps) => (
           <Form
             style={{
               width: '100%',
@@ -147,20 +149,63 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
               height: '100%',
             }}
           >
-            <VStack spacing={14} maxW='600px'>
+            <VStack spacing={14} maxW='800px'>
               <InputFieldWrapper
-                label='Name'
+                label='Full Name'
                 name='full_name'
                 helperText='You can update your name once every 30 days with a maximum of 5 times.'
                 labelStyles={{ fontSize: 'md', fontWeight: 'semibold' }}
                 required={false}
               >
-                <FastField
-                  as={Input}
-                  variant='flushed'
-                  id='full_name'
+                <CustomEditableField
+                  defaultValue={formikProps.values.full_name}
+                  label='Name'
                   name='full_name'
-                  opacity='.8'
+                  editableProps={{
+                    isPreviewFocusable: false,
+                    submitOnBlur: false,
+                    onSubmit: () => updateName(formikProps),
+                    onAbort: () =>
+                      formikProps.setFieldValue(
+                        'full_name',
+                        formikProps.initialValues.full_name
+                      ),
+                    onCancel: () =>
+                      formikProps.setFieldValue(
+                        'full_name',
+                        formikProps.initialValues.full_name
+                      ),
+                  }}
+                />
+              </InputFieldWrapper>
+              <InputFieldWrapper
+                label='Short Bio'
+                name='bio'
+                helperText='This bio will appear on your Profile page, so make it short and sweet.'
+                labelStyles={{ fontSize: 'md', fontWeight: 'semibold' }}
+                required={false}
+              >
+                <CustomEditableField
+                  defaultValue={formikProps.values.bio}
+                  label='Short Bio'
+                  name='bio'
+                  placeholder='Tell us about yourself'
+                  editableProps={{
+                    isPreviewFocusable: false,
+                    submitOnBlur: false,
+                    onSubmit: () => updateName(formikProps),
+                    onAbort: () =>
+                      formikProps.setFieldValue(
+                        'bio',
+                        formikProps.initialValues.bio
+                      ),
+                    onCancel: () =>
+                      formikProps.setFieldValue(
+                        'bio',
+                        formikProps.initialValues.bio
+                      ),
+                  }}
+                  textarea
                 />
               </InputFieldWrapper>
 
@@ -182,7 +227,10 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                       }
                       onChange={(file) => {
                         setNewAvatar(file);
-                        setFieldValue('avatar', URL.createObjectURL(file));
+                        formikProps.setFieldValue(
+                          'avatar',
+                          URL.createObjectURL(file)
+                        );
                       }}
                       avatarProps={{ size: '2xl' }}
                     />
@@ -220,11 +268,6 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                 />
               </InputFieldWrapper>
             </VStack>
-            <HStack mt={'3rem'} w='100%' justify='flex-start'>
-              <Button colorScheme='teal' type='submit' isLoading={isSubmitting}>
-                Save Changes
-              </Button>
-            </HStack>
           </Form>
         )}
       </Formik>
