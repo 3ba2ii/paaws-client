@@ -1,4 +1,13 @@
-import { Divider, Heading, Textarea, useToast, VStack } from '@chakra-ui/react';
+import {
+  Button,
+  Divider,
+  EditableProps,
+  Heading,
+  HStack,
+  Text,
+  useToast,
+  VStack,
+} from '@chakra-ui/react';
 import CustomEditableField from 'components/input/CustomEditableField';
 import InputFieldWrapper from 'components/input/CustomInputComponent';
 import SelectAvatarComponent from 'components/SelectAvatarComponent';
@@ -22,14 +31,63 @@ type UpdateUserDataType = {
   avatar: string | null;
   email: string;
 };
+type EditableFieldsType = {
+  key: keyof UpdateUserDataType;
+  label: string;
+  name: string;
+  onSubmit: (formikProps: FormikProps<UpdateUserDataType>) => void;
+  onAbort: (formikProps: FormikProps<UpdateUserDataType>) => void;
+  onCancel: (formikProps: FormikProps<UpdateUserDataType>) => void;
+  helperText?: string;
+  textarea?: boolean;
+  editableProps?: EditableProps;
+};
 
 const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
   if (!user) return null;
   const [newAvatar, setNewAvatar] = React.useState<File | null>(null);
+
   const toaster = useToast();
   const [updateUserName] = useUpdateUserFullNameMutation();
-  const [updateUserAvatar] = useUploadAvatarMutation();
+  const [updateUserAvatar, { loading: isUploadingImage }] =
+    useUploadAvatarMutation();
   const [updateUserInfo] = useUpdateUserInfoMutation();
+
+  const handleAbort = (
+    fp: FormikProps<UpdateUserDataType>,
+    af: keyof UpdateUserDataType
+  ) => {
+    fp.setFieldValue(af, fp.initialValues[af]);
+  };
+
+  const successToaster = () => {
+    return toaster({
+      id: 'success-toast',
+      title: 'Profile Updated Successfully 🚀',
+      description: "If you didn't see updates, please refresh the page",
+      variant: 'solid',
+      status: 'success',
+      position: 'top-right',
+      isClosable: true,
+    });
+  };
+  const errorToaster = () => {
+    return toaster({
+      id: 'success-toast',
+      title: 'Something went wrong! 🙁',
+      description: (
+        <p>
+          An error occurred while trying to save your info,
+          <br />
+          Retry later, or contact support.
+        </p>
+      ),
+      variant: 'solid',
+      status: 'error',
+      position: 'top-right',
+      isClosable: true,
+    });
+  };
 
   const updateName = async (formikProps: FormikProps<UpdateUserDataType>) => {
     const { full_name } = formikProps.values;
@@ -38,7 +96,9 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
     if (initialFullName.trim() === full_name.trim()) {
       return;
     }
-    const { data } = await updateUserName({
+    handleAbort(formikProps, 'full_name');
+
+    await updateUserName({
       variables: { fullName: full_name },
       update: (cache, { data: result }) => {
         if (
@@ -47,9 +107,12 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
         ) {
           /* Error case */
           const mappedErrors = toErrorMap(
-            data?.updateUserFullName.errors || []
+            result?.updateUserFullName.errors || []
           );
+
           formikProps.setErrors(mappedErrors);
+          handleAbort(formikProps, 'full_name');
+          errorToaster();
           return;
         }
         updateMeQueryCache(cache, { ...user, full_name });
@@ -70,12 +133,59 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             'bio',
             'An error occurred while updating your info, Please try again later'
           );
+          errorToaster();
           return;
         }
         updateMeQueryCache(cache, { ...user, bio: values.bio });
+        successToaster();
       },
     });
   };
+  const onUploadUserAvatar = async () => {
+    if (!newAvatar) return;
+
+    await updateUserAvatar({
+      variables: { uploadAvatarImage: newAvatar },
+      update: (cache, { data: result }) => {
+        if (
+          result &&
+          result.uploadAvatar.url &&
+          !result?.uploadAvatar.errors?.length
+        ) {
+          /* success case */
+          updateMeQueryCache(cache, {
+            ...user,
+            avatar: { url: result.uploadAvatar.url, id: Math.random() * 110 },
+          });
+          return successToaster();
+        }
+
+        errorToaster();
+      },
+    });
+  };
+
+  const aboutYouSettingsFormFields: EditableFieldsType[] = [
+    {
+      key: 'full_name',
+      label: 'Full Name',
+      name: 'full_name',
+      helperText:
+        'You can update your name once every 30 days with a maximum of 5 times.',
+      onSubmit: (fp) => updateName(fp),
+      onAbort: (fp) => handleAbort(fp, 'full_name'),
+      onCancel: (fp) => handleAbort(fp, 'full_name'),
+    },
+    {
+      key: 'bio',
+      label: 'Short Bio',
+      name: 'bio',
+      onSubmit: (fp) => onUpdateInfo(fp),
+      onAbort: (fp) => handleAbort(fp, 'bio'),
+      onCancel: (fp) => handleAbort(fp, 'bio'),
+      textarea: true,
+    },
+  ];
 
   return (
     <VStack align='flex-start' w='100%' spacing={5}>
@@ -92,60 +202,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             email: user.email,
           } as UpdateUserDataType
         }
-        onSubmit={async ({ full_name, bio, email }, { setErrors }) => {
-          console.log(full_name, bio, email);
-          const hasNameChanged =
-            full_name.trim().toLowerCase() !==
-            user.full_name.trim().toLowerCase();
-          const hasAvatarChanged = newAvatar !== null;
-          const hasBioChanged = bio !== user.bio;
-
-          if (!hasNameChanged && !hasAvatarChanged && !hasBioChanged) return;
-          const promises: Function[] = [];
-
-          hasAvatarChanged &&
-            promises.push(() =>
-              updateUserAvatar({
-                variables: { uploadAvatarImage: newAvatar },
-                update: (cache, { data }) => {
-                  if (!data?.uploadAvatar.url) return;
-                  updateMeQueryCache(cache, {
-                    ...user,
-                    avatar: {
-                      url: data.uploadAvatar.url,
-                      id: Math.floor(Math.random() * 1000),
-                    },
-                  });
-                  setNewAvatar(null);
-                },
-              })
-            );
-
-          hasBioChanged &&
-            promises.push(() =>
-              updateUserInfo({
-                variables: { updateUserUpdateOptions: { bio } },
-                update: (cache, { data }) => {
-                  if (!data?.updateUser) return;
-                  updateMeQueryCache(cache, { ...user, bio });
-                },
-              })
-            );
-
-          const [x, y, z] = await Promise.allSettled(
-            promises.map(async (f) => f())
-          );
-          toaster({
-            title: 'Your profile has been updated',
-            description:
-              "If you don't see the updates, Please refresh the page.",
-            status: 'success',
-            duration: 5000,
-            isClosable: true,
-            position: 'bottom-right',
-            variant: 'subtle',
-          });
-        }}
+        onSubmit={() => {}}
         validateOnBlur
       >
         {(formikProps) => (
@@ -157,64 +214,34 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             }}
           >
             <VStack spacing={14} maxW='800px'>
-              <InputFieldWrapper
-                label='Full Name'
-                name='full_name'
-                helperText='You can update your name once every 30 days with a maximum of 5 times.'
-                labelStyles={{ fontSize: 'md', fontWeight: 'semibold' }}
-                required={false}
-              >
-                <CustomEditableField
-                  defaultValue={formikProps.values.full_name}
-                  label='Name'
-                  name='full_name'
-                  editableProps={{
-                    isPreviewFocusable: false,
-                    submitOnBlur: false,
-                    onSubmit: () => updateName(formikProps),
-                    onAbort: () =>
-                      formikProps.setFieldValue(
-                        'full_name',
-                        formikProps.initialValues.full_name
-                      ),
-                    onCancel: () =>
-                      formikProps.setFieldValue(
-                        'full_name',
-                        formikProps.initialValues.full_name
-                      ),
-                  }}
-                />
-              </InputFieldWrapper>
-              <InputFieldWrapper
-                label='Short Bio'
-                name='bio'
-                helperText='This bio will appear on your Profile page, so make it short and sweet.'
-                labelStyles={{ fontSize: 'md', fontWeight: 'semibold' }}
-                required={false}
-              >
-                <CustomEditableField
-                  defaultValue={formikProps.values.bio}
-                  label='Short Bio'
-                  name='bio'
-                  placeholder='Tell us about yourself'
-                  editableProps={{
-                    isPreviewFocusable: false,
-                    submitOnBlur: false,
-                    onSubmit: () => onUpdateInfo(formikProps),
-                    onAbort: () =>
-                      formikProps.setFieldValue(
-                        'bio',
-                        formikProps.initialValues.bio
-                      ),
-                    onCancel: () =>
-                      formikProps.setFieldValue(
-                        'bio',
-                        formikProps.initialValues.bio
-                      ),
-                  }}
-                  textarea
-                />
-              </InputFieldWrapper>
+              <Text>{JSON.stringify(formikProps.values, null, 2)}</Text>
+              {aboutYouSettingsFormFields.map((fieldData) => {
+                return (
+                  <InputFieldWrapper
+                    key={fieldData.key}
+                    label={fieldData.label}
+                    name={fieldData.name}
+                    helperText={fieldData.helperText || ''}
+                    labelStyles={{ fontSize: 'md', fontWeight: 'semibold' }}
+                    required={false}
+                  >
+                    <CustomEditableField
+                      defaultValue={formikProps.values[fieldData.key] || ''}
+                      label={fieldData.label}
+                      name={fieldData.name}
+                      textarea={fieldData.textarea}
+                      editableProps={{
+                        isPreviewFocusable: false,
+                        submitOnBlur: false,
+                        onSubmit: () => fieldData.onSubmit(formikProps),
+                        onAbort: () => fieldData.onAbort(formikProps),
+                        onCancel: () => fieldData.onAbort(formikProps),
+                        ...fieldData.editableProps,
+                      }}
+                    />
+                  </InputFieldWrapper>
+                );
+              })}
 
               <InputFieldWrapper
                 label='Your Avatar'
@@ -223,39 +250,59 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                 labelStyles={{ fontSize: 'md', fontWeight: 'semibold', mb: 5 }}
                 required={false}
               >
-                <FastField
-                  as={() => (
-                    <SelectAvatarComponent
-                      user={user}
-                      avatarURL={
-                        newAvatar
-                          ? URL.createObjectURL(newAvatar)
-                          : user.avatar?.url
-                      }
-                      onChange={(file) => {
-                        setNewAvatar(file);
-                        formikProps.setFieldValue(
-                          'avatar',
-                          URL.createObjectURL(file)
-                        );
-                      }}
-                      avatarProps={{ size: '2xl' }}
-                    />
-                  )}
-                  variant='flushed'
-                  id='avatar'
-                  name='Avatar'
-                  opacity='.8'
-                  shouldUpdate={(
-                    nextProps: { formik: FormikProps<UpdateUserDataType> },
-                    currentProps: { formik: FormikProps<UpdateUserDataType> }
-                  ) => {
-                    return (
+                <HStack align='center' spacing={5}>
+                  <FastField
+                    as={() => (
+                      <SelectAvatarComponent
+                        user={user}
+                        avatarURL={
+                          newAvatar
+                            ? URL.createObjectURL(newAvatar)
+                            : user.avatar?.url
+                        }
+                        onChange={(file) => {
+                          setNewAvatar(file);
+                          formikProps.setFieldValue(
+                            'avatar',
+                            URL.createObjectURL(file)
+                          );
+                        }}
+                        avatarProps={{ size: '2xl', borderRadius: 0 }}
+                      />
+                    )}
+                    variant='flushed'
+                    id='avatar'
+                    name='Avatar'
+                    opacity='.8'
+                    shouldUpdate={(
+                      nextProps: { formik: FormikProps<UpdateUserDataType> },
+                      currentProps: { formik: FormikProps<UpdateUserDataType> }
+                    ) =>
                       nextProps.formik.values.avatar !==
                       currentProps.formik.values.avatar
-                    );
-                  }}
-                />
+                    }
+                  />
+                  <VStack w='200px' py={4}>
+                    <Button
+                      variant='outline'
+                      w='100%'
+                      size='sm'
+                      disabled={!!!newAvatar}
+                      isLoading={isUploadingImage}
+                      onClick={onUploadUserAvatar}
+                    >
+                      Upload Photo
+                    </Button>
+                    <Button
+                      variant='link'
+                      size='sm'
+                      fontWeight={'medium'}
+                      colorScheme='red'
+                    >
+                      Remove Photo
+                    </Button>
+                  </VStack>
+                </HStack>
               </InputFieldWrapper>
             </VStack>
           </Form>

@@ -15,7 +15,7 @@ import {
 import { FastField, useField } from 'formik';
 import React, { InputHTMLAttributes } from 'react';
 
-type CustomEditableFieldProps = InputHTMLAttributes<
+export type CustomEditableFieldProps = InputHTMLAttributes<
   HTMLInputElement | HTMLTextAreaElement
 > & {
   name: string;
@@ -70,7 +70,7 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
     );
   }
 
-  const [field, { error, touched }] = useField(props);
+  const [field] = useField(props);
 
   return (
     <Editable {...{ defaultValue, ...editableProps }}>

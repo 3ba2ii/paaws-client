@@ -16,6 +16,10 @@ const SelectAvatarComponent: React.FC<SelectAvatarComponentProps> = ({
   onChange,
   avatarProps,
 }) => {
+  console.log(
+    `🚀 ~ file: SelectAvatarComponent.tsx ~ line 19 ~ avatarProps`,
+    avatarProps
+  );
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   if (!user) return null;
@@ -30,6 +34,7 @@ const SelectAvatarComponent: React.FC<SelectAvatarComponentProps> = ({
           pos: 'relative',
           cursor: 'pointer',
           overflow: 'hidden',
+          borderRadius: avatarProps?.borderRadius || 'full',
           onClick: () => {
             if (inputRef && inputRef.current) inputRef.current.click();
           },
@@ -54,7 +59,6 @@ const SelectAvatarComponent: React.FC<SelectAvatarComponentProps> = ({
             textTransform: 'initial',
             color: 'whiteAlpha.700',
           },
-          ...avatarProps,
         }}
       />
       <Input
