@@ -238,7 +238,6 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             }}
           >
             <VStack spacing={14} maxW='800px'>
-              <Text>{JSON.stringify(formikProps.values)}</Text>
               {aboutYouSettingsFormFields.map((fieldData) => {
                 return (
                   <InputFieldWrapper
