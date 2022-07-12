@@ -1,0 +1,10 @@
+mutation RemoveUserAvatar {
+  removeAvatar {
+    errors {
+      field
+      message
+      code
+    }
+    success
+  }
+}

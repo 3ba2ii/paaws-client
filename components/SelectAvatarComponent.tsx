@@ -16,10 +16,6 @@ const SelectAvatarComponent: React.FC<SelectAvatarComponentProps> = ({
   onChange,
   avatarProps,
 }) => {
-  console.log(
-    `🚀 ~ file: SelectAvatarComponent.tsx ~ line 19 ~ avatarProps`,
-    avatarProps
-  );
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   if (!user) return null;
@@ -49,16 +45,20 @@ const SelectAvatarComponent: React.FC<SelectAvatarComponentProps> = ({
             left: '50%',
             transform: 'translateX(-50%)',
             width: '100%',
-            height: '50px',
+            height: '30px',
             backgroundColor: 'whiteAlpha.300',
-            fontSize: '1rem',
+            fontSize: '.875rem',
             display: 'flex',
             justifyContent: 'center',
-            paddingTop: '0.6rem',
+            paddingTop: '0.4rem',
             fontWeight: 'semibold',
             textTransform: 'initial',
             color: 'whiteAlpha.700',
           },
+          _hover: {
+            filter: 'blur(1px)',
+          },
+          rounded: 'md',
         }}
       />
       <Input

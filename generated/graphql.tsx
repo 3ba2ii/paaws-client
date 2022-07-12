@@ -308,6 +308,7 @@ export type Mutation = {
   logout: Scalars['Boolean'];
   register: UserResponse;
   registerWithAuthProvider: UserResponse;
+  removeAvatar: RegularResponse;
   sendEmailVerification: RegularResponse;
   sendOTP: RegularResponse;
   updateAccountURL: RegularResponse;
@@ -1088,6 +1089,11 @@ export type RegisterWithProviderMutationVariables = Exact<{
 
 
 export type RegisterWithProviderMutation = { __typename?: 'Mutation', registerWithAuthProvider: { __typename?: 'UserResponse', errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, user?: Maybe<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string>, displayName: string, full_name: string, confirmed: boolean, blocked: boolean, lng?: Maybe<string>, lat?: Maybe<string>, bio?: Maybe<string>, last_login?: Maybe<any>, createdAt: any, updatedAt: any, provider: string, providerId?: Maybe<string>, phoneVerified: boolean, gender?: Maybe<UserGender>, birthDate?: Maybe<any>, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }> } };
+
+export type RemoveUserAvatarMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type RemoveUserAvatarMutation = { __typename?: 'Mutation', removeAvatar: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
 export type SendOtpMutationVariables = Exact<{
   sendOtpPhone: Scalars['String'];
@@ -1966,6 +1972,43 @@ export function useRegisterWithProviderMutation(baseOptions?: Apollo.MutationHoo
 export type RegisterWithProviderMutationHookResult = ReturnType<typeof useRegisterWithProviderMutation>;
 export type RegisterWithProviderMutationResult = Apollo.MutationResult<RegisterWithProviderMutation>;
 export type RegisterWithProviderMutationOptions = Apollo.BaseMutationOptions<RegisterWithProviderMutation, RegisterWithProviderMutationVariables>;
+export const RemoveUserAvatarDocument = gql`
+    mutation RemoveUserAvatar {
+  removeAvatar {
+    errors {
+      field
+      message
+      code
+    }
+    success
+  }
+}
+    `;
+export type RemoveUserAvatarMutationFn = Apollo.MutationFunction<RemoveUserAvatarMutation, RemoveUserAvatarMutationVariables>;
+
+/**
+ * __useRemoveUserAvatarMutation__
+ *
+ * To run a mutation, you first call `useRemoveUserAvatarMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveUserAvatarMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeUserAvatarMutation, { data, loading, error }] = useRemoveUserAvatarMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useRemoveUserAvatarMutation(baseOptions?: Apollo.MutationHookOptions<RemoveUserAvatarMutation, RemoveUserAvatarMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveUserAvatarMutation, RemoveUserAvatarMutationVariables>(RemoveUserAvatarDocument, options);
+      }
+export type RemoveUserAvatarMutationHookResult = ReturnType<typeof useRemoveUserAvatarMutation>;
+export type RemoveUserAvatarMutationResult = Apollo.MutationResult<RemoveUserAvatarMutation>;
+export type RemoveUserAvatarMutationOptions = Apollo.BaseMutationOptions<RemoveUserAvatarMutation, RemoveUserAvatarMutationVariables>;
 export const SendOtpDocument = gql`
     mutation SendOTP($sendOtpPhone: String!, $email: String!) {
   sendOTP(phone: $sendOtpPhone, email: $email) {

@@ -14,10 +14,12 @@ import SelectAvatarComponent from 'components/SelectAvatarComponent';
 import { FastField, Form, Formik, FormikProps } from 'formik';
 import {
   MeQuery,
+  useRemoveUserAvatarMutation,
   useUpdateUserFullNameMutation,
   useUpdateUserInfoMutation,
   useUploadAvatarMutation,
 } from 'generated/graphql';
+import { useRouter } from 'next/router';
 import React from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import { toErrorMap } from 'utils/toErrorMap';
@@ -48,9 +50,12 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
   const [newAvatar, setNewAvatar] = React.useState<File | null>(null);
 
   const toaster = useToast();
+  const router = useRouter();
   const [updateUserName] = useUpdateUserFullNameMutation();
-  const [updateUserAvatar, { loading: isUploadingImage }] =
+  const [updateUserAvatar, { loading: uploadAvatarLoading }] =
     useUploadAvatarMutation();
+  const [removeUserAvatar, { loading: removeAvatarLoading }] =
+    useRemoveUserAvatarMutation();
   const [updateUserInfo] = useUpdateUserInfoMutation();
 
   const handleAbort = (
@@ -141,7 +146,9 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
       },
     });
   };
-  const onUploadUserAvatar = async () => {
+  const onUploadUserAvatar = async (
+    formikProps: FormikProps<UpdateUserDataType>
+  ) => {
     if (!newAvatar) return;
 
     await updateUserAvatar({
@@ -157,7 +164,10 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             ...user,
             avatar: { url: result.uploadAvatar.url, id: Math.random() * 110 },
           });
-          return successToaster();
+          successToaster();
+          formikProps.setFieldValue('avatar', result.uploadAvatar.url);
+          setNewAvatar(null);
+          return;
         }
 
         errorToaster();
@@ -165,6 +175,18 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
     });
   };
 
+  const onRemoveAvatar = async (
+    _formikProps: FormikProps<UpdateUserDataType>
+  ) => {
+    await removeUserAvatar({
+      update: (cache, { data }) => {
+        if (data?.removeAvatar.success) {
+          updateMeQueryCache(cache, { ...user, avatar: null });
+          router.reload();
+        }
+      },
+    });
+  };
   const aboutYouSettingsFormFields: EditableFieldsType[] = [
     {
       key: 'full_name',
@@ -179,6 +201,8 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
     {
       key: 'bio',
       label: 'Short Bio',
+      helperText:
+        'This bio will appear on your profile page, so make it short and sweet!',
       name: 'bio',
       onSubmit: (fp) => onUpdateInfo(fp),
       onAbort: (fp) => handleAbort(fp, 'bio'),
@@ -214,7 +238,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             }}
           >
             <VStack spacing={14} maxW='800px'>
-              <Text>{JSON.stringify(formikProps.values, null, 2)}</Text>
+              <Text>{JSON.stringify(formikProps.values)}</Text>
               {aboutYouSettingsFormFields.map((fieldData) => {
                 return (
                   <InputFieldWrapper
@@ -288,8 +312,8 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                       w='100%'
                       size='sm'
                       disabled={!!!newAvatar}
-                      isLoading={isUploadingImage}
-                      onClick={onUploadUserAvatar}
+                      isLoading={uploadAvatarLoading}
+                      onClick={() => onUploadUserAvatar(formikProps)}
                     >
                       Upload Photo
                     </Button>
@@ -298,6 +322,12 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                       size='sm'
                       fontWeight={'medium'}
                       colorScheme='red'
+                      onClick={() => onRemoveAvatar(formikProps)}
+                      isLoading={removeAvatarLoading}
+                      disabled={
+                        !formikProps.values.avatar ||
+                        formikProps.values.avatar?.includes('blob')
+                      }
                     >
                       Remove Photo
                     </Button>
