@@ -1,61 +1,31 @@
-import {
-  Button,
-  Divider,
-  EditableProps,
-  Heading,
-  HStack,
-  Text,
-  useToast,
-  VStack,
-} from '@chakra-ui/react';
+import { Divider, Heading, Text, useToast, VStack } from '@chakra-ui/react';
+import ChangeAvatarComponents from 'components/avatar/ChangeAvatarComponent';
 import CustomEditableField from 'components/input/CustomEditableField';
 import InputFieldWrapper from 'components/input/CustomInputComponent';
-import SelectAvatarComponent from 'components/SelectAvatarComponent';
-import { FastField, Form, Formik, FormikProps } from 'formik';
+import { Form, Formik, FormikProps } from 'formik';
 import {
   MeQuery,
-  useRemoveUserAvatarMutation,
   useUpdateUserFullNameMutation,
   useUpdateUserInfoMutation,
-  useUploadAvatarMutation,
 } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import { toErrorMap } from 'utils/toErrorMap';
+import { EditableFieldsType, UpdateUserDataType } from './_types';
 
 interface AboutYouProps {
   user: MeQuery['me'];
 }
-type UpdateUserDataType = {
-  full_name: string;
-  bio: string;
-  avatar: string | null;
-  email: string;
-};
-type EditableFieldsType = {
-  key: keyof UpdateUserDataType;
-  label: string;
-  name: string;
-  onSubmit: (formikProps: FormikProps<UpdateUserDataType>) => void;
-  onAbort: (formikProps: FormikProps<UpdateUserDataType>) => void;
-  onCancel: (formikProps: FormikProps<UpdateUserDataType>) => void;
-  helperText?: string;
-  textarea?: boolean;
-  editableProps?: EditableProps;
-};
 
 const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
   if (!user) return null;
-  const [newAvatar, setNewAvatar] = React.useState<File | null>(null);
+  const [newAvatarFile, setNewAvatarFile] = React.useState<File | null>(null);
 
   const toaster = useToast();
   const router = useRouter();
+
   const [updateUserName] = useUpdateUserFullNameMutation();
-  const [updateUserAvatar, { loading: uploadAvatarLoading }] =
-    useUploadAvatarMutation();
-  const [removeUserAvatar, { loading: removeAvatarLoading }] =
-    useRemoveUserAvatarMutation();
   const [updateUserInfo] = useUpdateUserInfoMutation();
 
   const handleAbort = (
@@ -146,47 +116,22 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
       },
     });
   };
-  const onUploadUserAvatar = async (
-    formikProps: FormikProps<UpdateUserDataType>
-  ) => {
-    if (!newAvatar) return;
 
-    await updateUserAvatar({
-      variables: { uploadAvatarImage: newAvatar },
-      update: (cache, { data: result }) => {
-        if (
-          result &&
-          result.uploadAvatar.url &&
-          !result?.uploadAvatar.errors?.length
-        ) {
-          /* success case */
-          updateMeQueryCache(cache, {
-            ...user,
-            avatar: { url: result.uploadAvatar.url, id: Math.random() * 110 },
-          });
-          successToaster();
-          formikProps.setFieldValue('avatar', result.uploadAvatar.url);
-          setNewAvatar(null);
-          return;
-        }
-
-        errorToaster();
-      },
-    });
+  const handleChangeAvatar = (file: File | null) => {
+    setNewAvatarFile(file);
   };
-
-  const onRemoveAvatar = async (
-    _formikProps: FormikProps<UpdateUserDataType>
-  ) => {
-    await removeUserAvatar({
-      update: (cache, { data }) => {
-        if (data?.removeAvatar.success) {
-          updateMeQueryCache(cache, { ...user, avatar: null });
-          router.reload();
-        }
-      },
-    });
+  const uploadSuccessCB = (formikProps: FormikProps<UpdateUserDataType>) => {
+    if (!newAvatarFile) return errorToaster();
+    formikProps.setFieldValue('avatar', URL.createObjectURL(newAvatarFile));
+    setNewAvatarFile(null);
+    successToaster();
   };
+  function removeSuccessCB(formikProps: FormikProps<UpdateUserDataType>) {
+    formikProps.setFieldValue('avatar', null);
+    setNewAvatarFile(null);
+    successToaster();
+    router.reload();
+  }
   const aboutYouSettingsFormFields: EditableFieldsType[] = [
     {
       key: 'full_name',
@@ -238,6 +183,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             }}
           >
             <VStack spacing={14} maxW='800px'>
+              <Text>{JSON.stringify(formikProps.values)}</Text>
               {aboutYouSettingsFormFields.map((fieldData) => {
                 return (
                   <InputFieldWrapper
@@ -273,65 +219,16 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                 labelStyles={{ fontSize: 'md', fontWeight: 'semibold', mb: 5 }}
                 required={false}
               >
-                <HStack align='center' spacing={5}>
-                  <FastField
-                    as={() => (
-                      <SelectAvatarComponent
-                        user={user}
-                        avatarURL={
-                          newAvatar
-                            ? URL.createObjectURL(newAvatar)
-                            : user.avatar?.url
-                        }
-                        onChange={(file) => {
-                          setNewAvatar(file);
-                          formikProps.setFieldValue(
-                            'avatar',
-                            URL.createObjectURL(file)
-                          );
-                        }}
-                        avatarProps={{ size: '2xl', borderRadius: 0 }}
-                      />
-                    )}
-                    variant='flushed'
-                    id='avatar'
-                    name='Avatar'
-                    opacity='.8'
-                    shouldUpdate={(
-                      nextProps: { formik: FormikProps<UpdateUserDataType> },
-                      currentProps: { formik: FormikProps<UpdateUserDataType> }
-                    ) =>
-                      nextProps.formik.values.avatar !==
-                      currentProps.formik.values.avatar
-                    }
-                  />
-                  <VStack w='200px' py={4}>
-                    <Button
-                      variant='outline'
-                      w='100%'
-                      size='sm'
-                      disabled={!!!newAvatar}
-                      isLoading={uploadAvatarLoading}
-                      onClick={() => onUploadUserAvatar(formikProps)}
-                    >
-                      Upload Photo
-                    </Button>
-                    <Button
-                      variant='link'
-                      size='sm'
-                      fontWeight={'medium'}
-                      colorScheme='red'
-                      onClick={() => onRemoveAvatar(formikProps)}
-                      isLoading={removeAvatarLoading}
-                      disabled={
-                        !formikProps.values.avatar ||
-                        formikProps.values.avatar?.includes('blob')
-                      }
-                    >
-                      Remove Photo
-                    </Button>
-                  </VStack>
-                </HStack>
+                <ChangeAvatarComponents
+                  {...{
+                    newAvatarFile,
+                    user,
+                    currentUserAvatarURL: user.avatar?.url,
+                    onChange: handleChangeAvatar,
+                    uploadSuccessCB: () => uploadSuccessCB(formikProps),
+                    removeSuccessCB: () => removeSuccessCB(formikProps),
+                  }}
+                />
               </InputFieldWrapper>
             </VStack>
           </Form>
