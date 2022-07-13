@@ -1,11 +1,11 @@
 import { Button, HStack, VStack } from '@chakra-ui/react';
-import { Field } from 'formik';
+import { FastField, Field } from 'formik';
 import {
   MeQuery,
   useRemoveUserAvatarMutation,
   useUploadAvatarMutation,
 } from 'generated/graphql';
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import SelectAvatarComponent from './SelectAvatarComponent';
 
@@ -30,11 +30,6 @@ const ChangeAvatarComponents: React.FC<ChangeAvatarComponentsProps> = ({
   removeSuccessCB,
   removeFailedCB,
 }) => {
-  console.log(
-    `🚀 ~ file: ChangeAvatarComponent.tsx ~ line 33 ~ newAvatarFile`,
-    newAvatarFile,
-    currentUserAvatarURL
-  );
   const [updateUserAvatar, { loading: uploadAvatarLoading }] =
     useUploadAvatarMutation();
   const [removeUserAvatar, { loading: removeAvatarLoading }] =
@@ -84,8 +79,8 @@ const ChangeAvatarComponents: React.FC<ChangeAvatarComponentsProps> = ({
     [onChange]
   );
 
-  return (
-    <HStack align='center' spacing={5}>
+  const memoizedInputField = useMemo(() => {
+    return (
       <Field
         as={() => (
           <SelectAvatarComponent
@@ -103,6 +98,21 @@ const ChangeAvatarComponents: React.FC<ChangeAvatarComponentsProps> = ({
         id='avatar'
         name='Avatar'
         opacity='.8'
+      />
+    );
+  }, [newAvatarFile, currentUserAvatarURL]);
+
+  return (
+    <HStack align='center' spacing={5}>
+      <SelectAvatarComponent
+        user={user}
+        avatarURL={
+          newAvatarFile
+            ? URL.createObjectURL(newAvatarFile)
+            : currentUserAvatarURL
+        }
+        onChange={handleChange}
+        avatarProps={{ size: '2xl', borderRadius: 0 }}
       />
       <VStack w='200px' py={4}>
         <Button
@@ -131,5 +141,8 @@ const ChangeAvatarComponents: React.FC<ChangeAvatarComponentsProps> = ({
   );
 };
 export default React.memo(ChangeAvatarComponents, (nextProps, currentProps) => {
-  return nextProps.newAvatarFile === currentProps.newAvatarFile;
+  return (
+    nextProps.newAvatarFile === currentProps.newAvatarFile &&
+    nextProps.currentUserAvatarURL === currentProps.currentUserAvatarURL
+  );
 });

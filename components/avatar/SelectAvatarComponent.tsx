@@ -76,7 +76,6 @@ const SelectAvatarComponent: React.FC<SelectAvatarComponentProps> = ({
     </Box>
   );
 };
-export default React.memo(
-  SelectAvatarComponent,
-  (_nextProps, _currentProps) => true
-);
+export default React.memo(SelectAvatarComponent, (currentProps, nextProps) => {
+  return nextProps.avatarURL === currentProps.avatarURL;
+});

@@ -9,7 +9,7 @@ import {
   useUpdateUserInfoMutation,
 } from 'generated/graphql';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import { toErrorMap } from 'utils/toErrorMap';
 import { EditableFieldsType, UpdateUserDataType } from './_types';
@@ -132,29 +132,32 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
     successToaster();
     router.reload();
   }
-  const aboutYouSettingsFormFields: EditableFieldsType[] = [
-    {
-      key: 'full_name',
-      label: 'Full Name',
-      name: 'full_name',
-      helperText:
-        'You can update your name once every 30 days with a maximum of 5 times.',
-      onSubmit: (fp) => updateName(fp),
-      onAbort: (fp) => handleAbort(fp, 'full_name'),
-      onCancel: (fp) => handleAbort(fp, 'full_name'),
-    },
-    {
-      key: 'bio',
-      label: 'Short Bio',
-      helperText:
-        'This bio will appear on your profile page, so make it short and sweet!',
-      name: 'bio',
-      onSubmit: (fp) => onUpdateInfo(fp),
-      onAbort: (fp) => handleAbort(fp, 'bio'),
-      onCancel: (fp) => handleAbort(fp, 'bio'),
-      textarea: true,
-    },
-  ];
+  const SettingsFormFields: EditableFieldsType<UpdateUserDataType>[] = useMemo(
+    () => [
+      {
+        key: 'full_name',
+        label: 'Full Name',
+        name: 'full_name',
+        helperText:
+          'You can update your name once every 30 days with a maximum of 5 times.',
+        onSubmit: (fp) => updateName(fp),
+        onAbort: (fp) => handleAbort(fp, 'full_name'),
+        onCancel: (fp) => handleAbort(fp, 'full_name'),
+      },
+      {
+        key: 'bio',
+        label: 'Short Bio',
+        helperText:
+          'This bio will appear on your profile page, so make it short and sweet!',
+        name: 'bio',
+        onSubmit: (fp) => onUpdateInfo(fp),
+        onAbort: (fp) => handleAbort(fp, 'bio'),
+        onCancel: (fp) => handleAbort(fp, 'bio'),
+        textarea: true,
+      },
+    ],
+    [updateName, handleAbort, onUpdateInfo]
+  );
 
   return (
     <VStack align='flex-start' w='100%' spacing={5}>
@@ -183,8 +186,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             }}
           >
             <VStack spacing={14} maxW='800px'>
-              <Text>{JSON.stringify(formikProps.values)}</Text>
-              {aboutYouSettingsFormFields.map((fieldData) => {
+              {SettingsFormFields.map((fieldData) => {
                 return (
                   <InputFieldWrapper
                     key={fieldData.key}
