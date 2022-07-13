@@ -1142,6 +1142,13 @@ export type UploadAvatarMutationVariables = Exact<{
 
 export type UploadAvatarMutation = { __typename?: 'Mutation', uploadAvatar: { __typename?: 'UploadImageResponse', url?: Maybe<string>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
+export type VerifyUserEmailMutationVariables = Exact<{
+  token: Scalars['String'];
+}>;
+
+
+export type VerifyUserEmailMutation = { __typename?: 'Mutation', verifyUserEmail: boolean };
+
 export type VerifyPhoneNumberMutationVariables = Exact<{
   otp: Scalars['String'];
   phone: Scalars['String'];
@@ -2266,6 +2273,37 @@ export function useUploadAvatarMutation(baseOptions?: Apollo.MutationHookOptions
 export type UploadAvatarMutationHookResult = ReturnType<typeof useUploadAvatarMutation>;
 export type UploadAvatarMutationResult = Apollo.MutationResult<UploadAvatarMutation>;
 export type UploadAvatarMutationOptions = Apollo.BaseMutationOptions<UploadAvatarMutation, UploadAvatarMutationVariables>;
+export const VerifyUserEmailDocument = gql`
+    mutation VerifyUserEmail($token: String!) {
+  verifyUserEmail(token: $token)
+}
+    `;
+export type VerifyUserEmailMutationFn = Apollo.MutationFunction<VerifyUserEmailMutation, VerifyUserEmailMutationVariables>;
+
+/**
+ * __useVerifyUserEmailMutation__
+ *
+ * To run a mutation, you first call `useVerifyUserEmailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVerifyUserEmailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [verifyUserEmailMutation, { data, loading, error }] = useVerifyUserEmailMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useVerifyUserEmailMutation(baseOptions?: Apollo.MutationHookOptions<VerifyUserEmailMutation, VerifyUserEmailMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VerifyUserEmailMutation, VerifyUserEmailMutationVariables>(VerifyUserEmailDocument, options);
+      }
+export type VerifyUserEmailMutationHookResult = ReturnType<typeof useVerifyUserEmailMutation>;
+export type VerifyUserEmailMutationResult = Apollo.MutationResult<VerifyUserEmailMutation>;
+export type VerifyUserEmailMutationOptions = Apollo.BaseMutationOptions<VerifyUserEmailMutation, VerifyUserEmailMutationVariables>;
 export const VerifyPhoneNumberDocument = gql`
     mutation VerifyPhoneNumber($otp: String!, $phone: String!) {
   verifyPhoneNumber(otp: $otp, phone: $phone) {

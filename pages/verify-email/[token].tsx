@@ -1,11 +1,56 @@
-import { Text } from '@chakra-ui/react';
+import { Button, Heading, Text, VStack } from '@chakra-ui/react';
+import { Layout } from 'components/common/Layout';
+import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
+import NotFound from 'components/errors/NotFound';
+import { useVerifyUserEmailMutation } from 'generated/graphql';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { BiChevronLeft } from 'react-icons/bi';
+import { GoHome } from 'react-icons/go';
+import withApollo from 'utils/withApollo';
 
 interface VerifyEmailProps {}
 
 const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
-  const { pathname, query } = useRouter();
-  return <Text>{query.token}</Text>;
+  const { query } = useRouter();
+  const router = useRouter();
+  const [verifyEmail, { loading }] = useVerifyUserEmailMutation();
+  const [isVerified, setIsVerified] = useState(false);
+
+  const handleVerifyEmail = async () => {
+    const token = query.token as string;
+    if (!token) return;
+
+    const { data } = await verifyEmail({ variables: { token } });
+    if (data?.verifyUserEmail) {
+      setIsVerified(true);
+    }
+  };
+
+  useEffect(() => {
+    handleVerifyEmail();
+  }, [query]);
+
+  return (
+    <Layout title='Verify Email'>
+      {loading ? (
+        <LoadingComponent />
+      ) : isVerified ? (
+        <VStack>
+          <Heading>🎉</Heading>
+          <Heading size='md'>Voilà, Your email has been verified ✅</Heading>
+          <Button size='sm' onClick={() => router.push('/')}>
+            Go back home
+          </Button>
+        </VStack>
+      ) : (
+        <Heading size='md' textAlign={'center'}>
+          ❌<br />
+          An error occurred while verifying your email
+          <br /> Please try again later
+        </Heading>
+      )}
+    </Layout>
+  );
 };
-export default VerifyEmail;
+export default withApollo(VerifyEmail);

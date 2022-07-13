@@ -20,9 +20,7 @@ import SettingsPageLayout from 'modules/settings/layout';
 import React, { useEffect, useRef, useState } from 'react';
 import withApollo from 'utils/withApollo';
 
-interface EmailSettingsProps {}
-
-const EmailSettings: React.FC<EmailSettingsProps> = ({}) => {
+const EmailSettings: React.FC = () => {
   const { user, loading } = useIsAuth();
   const { data } = useIsEmailVerifiedQuery();
 
@@ -124,7 +122,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({}) => {
                       size='sm'
                       fontSize='sm'
                       fontWeight='regular'
-                      colorScheme='blue'
+                      colorScheme={timer !== 0 ? 'gray' : 'blue'}
                       onClick={() =>
                         onSendEmailVerification(formikProps.values.email)
                       }
@@ -132,10 +130,10 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({}) => {
                       isDisabled={isSending || timer !== 0}
                     >
                       {verifyEmailSent
-                        ? `You can resend another mail ${
+                        ? `You can resend another verification email ${
                             timer === 0 ? 'now' : `in ${timer}`
                           }`
-                        : 'Send verification mail'}
+                        : 'Send verification email'}
                     </Button>
                   ) : null}
                 </Box>
