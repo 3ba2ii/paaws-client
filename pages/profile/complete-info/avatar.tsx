@@ -7,7 +7,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
-import SelectAvatarComponent from 'components/SelectAvatarComponent';
+import SelectAvatarComponent from 'components/avatar/SelectAvatarComponent';
 import { useAddUserAvatarMutation } from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
