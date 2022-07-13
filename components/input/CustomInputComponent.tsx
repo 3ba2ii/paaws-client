@@ -9,7 +9,7 @@ import {
 import { useField } from 'formik';
 import React, { InputHTMLAttributes } from 'react';
 
-type GenericInputComponentProps = InputHTMLAttributes<
+export type GenericInputComponentProps = InputHTMLAttributes<
   HTMLInputElement | HTMLTextAreaElement
 > & {
   name: string;

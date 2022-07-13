@@ -1,7 +1,7 @@
 import { AvatarProps, Box, Input } from '@chakra-ui/react';
 import { MeQuery } from 'generated/graphql';
 import React from 'react';
-import UserAvatar from './common/UserAvatar';
+import UserAvatar from '../common/UserAvatar';
 
 interface SelectAvatarComponentProps {
   user: MeQuery['me'];
@@ -76,4 +76,7 @@ const SelectAvatarComponent: React.FC<SelectAvatarComponentProps> = ({
     </Box>
   );
 };
-export default SelectAvatarComponent;
+export default React.memo(
+  SelectAvatarComponent,
+  (_nextProps, _currentProps) => true
+);
