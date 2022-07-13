@@ -1,11 +1,10 @@
 import { Button, HStack, VStack } from '@chakra-ui/react';
-import { FastField, Field } from 'formik';
 import {
   MeQuery,
   useRemoveUserAvatarMutation,
   useUploadAvatarMutation,
 } from 'generated/graphql';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import SelectAvatarComponent from './SelectAvatarComponent';
 
@@ -78,29 +77,6 @@ const ChangeAvatarComponents: React.FC<ChangeAvatarComponentsProps> = ({
     },
     [onChange]
   );
-
-  const memoizedInputField = useMemo(() => {
-    return (
-      <Field
-        as={() => (
-          <SelectAvatarComponent
-            user={user}
-            avatarURL={
-              newAvatarFile
-                ? URL.createObjectURL(newAvatarFile)
-                : currentUserAvatarURL
-            }
-            onChange={handleChange}
-            avatarProps={{ size: '2xl', borderRadius: 0 }}
-          />
-        )}
-        variant='flushed'
-        id='avatar'
-        name='Avatar'
-        opacity='.8'
-      />
-    );
-  }, [newAvatarFile, currentUserAvatarURL]);
 
   return (
     <HStack align='center' spacing={5}>
