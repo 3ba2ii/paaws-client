@@ -188,7 +188,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                   label={fieldData.label}
                   name={fieldData.name}
                   helperText={fieldData.helperText || ''}
-                  labelStyles={{ fontSize: 'md', fontWeight: 'semibold' }}
+                  labelStyles={{ fontSize: 'md', fontWeight: 'bold' }}
                   required={false}
                 >
                   <CustomEditableField
@@ -212,8 +212,8 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             <InputFieldWrapper
               label='Your Avatar'
               name='avatar'
-              helperText='Recommended size: at least 1000 pixels per side. File type: JPG, PNG or GIF.'
-              labelStyles={{ fontSize: 'md', fontWeight: 'semibold', mb: 5 }}
+              helperText='Recommended size: at least 1000 pixels per side. File type: JPG, PNG or Webp.'
+              labelStyles={{ fontSize: 'md', fontWeight: 'bold', mb: 5 }}
               required={false}
             >
               <ChangeAvatarComponents

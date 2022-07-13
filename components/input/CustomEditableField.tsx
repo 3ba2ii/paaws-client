@@ -1,5 +1,6 @@
 import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
 import {
+  Button,
   ButtonGroup,
   Editable,
   EditableInput,
@@ -47,14 +48,18 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
 
     return isEditing ? (
       <ButtonGroup ms={4} justifyContent='center' size='sm'>
-        <IconButton
+        <Button
           aria-label='submit'
-          icon={<CheckIcon />}
+          colorScheme='teal'
+          variant='outline'
           {...getSubmitButtonProps()}
-        />
+        >
+          Save
+        </Button>
         <IconButton
           aria-label='cancel'
           icon={<CloseIcon />}
+          variant='outline'
           {...getCancelButtonProps()}
         />
       </ButtonGroup>
@@ -74,7 +79,12 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
 
   return (
     <Editable {...{ defaultValue, ...editableProps }}>
-      <Flex w='100%' flexDir={'row'} justify='space-between'>
+      <Flex
+        w='100%'
+        flexDir={'row'}
+        justify='space-between'
+        style={{ wordBreak: 'break-all' }}
+      >
         <EditablePreview {...editablePreviewProps} />
         {/* Here is the custom input */}
         <FastField
@@ -82,7 +92,6 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
           {...field}
           {...props}
           id={field.name}
-          opacity='.8'
         />
         <EditableControls />
       </Flex>

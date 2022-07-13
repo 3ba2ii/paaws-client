@@ -69,6 +69,12 @@ export type BaseRegisterInput = {
   password: Scalars['String'];
 };
 
+export type BooleanResponseType = {
+  __typename?: 'BooleanResponseType';
+  errors?: Maybe<Array<FieldError>>;
+  response?: Maybe<Scalars['Boolean']>;
+};
+
 /** Basic Pet Breeds */
 export enum Breeds {
   Bulldog = 'BULLDOG',
@@ -536,7 +542,7 @@ export type PaginatedAdoptionPosts = {
 
 export type PaginatedComments = {
   __typename?: 'PaginatedComments';
-  comments: Array<Comment>;
+  comments?: Maybe<Array<Comment>>;
   errors?: Maybe<Array<FieldError>>;
   hasMore?: Maybe<Scalars['Boolean']>;
 };
@@ -545,21 +551,14 @@ export type PaginatedMissingPosts = {
   __typename?: 'PaginatedMissingPosts';
   errors?: Maybe<Array<FieldError>>;
   hasMore?: Maybe<Scalars['Boolean']>;
-  missingPosts: Array<MissingPost>;
+  missingPosts?: Maybe<Array<MissingPost>>;
 };
 
 export type PaginatedUserOwnedPetsResponse = {
   __typename?: 'PaginatedUserOwnedPetsResponse';
   errors?: Maybe<Array<FieldError>>;
   hasMore?: Maybe<Scalars['Boolean']>;
-  ownedPets: Array<OwnedPet>;
-};
-
-export type PaginatedUsers = {
-  __typename?: 'PaginatedUsers';
-  errors?: Maybe<Array<FieldError>>;
-  hasMore: Scalars['Boolean'];
-  users: Array<User>;
+  ownedPets?: Maybe<Array<OwnedPet>>;
 };
 
 export type PaginationArgs = {
@@ -706,6 +705,7 @@ export type Query = {
   comments: PaginatedComments;
   getCommentReplies: PaginatedComments;
   getNearestUsers?: Maybe<Array<User>>;
+  isEmailVerified: BooleanResponseType;
   isValidToken: Scalars['Boolean'];
   me?: Maybe<User>;
   missingPost: MissingPostResponse;
@@ -716,7 +716,6 @@ export type Query = {
   user?: Maybe<User>;
   userOwnedPet?: Maybe<OwnedPet>;
   userOwnedPets: PaginatedUserOwnedPetsResponse;
-  users: PaginatedUsers;
   votes: PaginatedMissingPosts;
 };
 
@@ -784,11 +783,6 @@ export type QueryUserOwnedPetArgs = {
 export type QueryUserOwnedPetsArgs = {
   paginationArgs: PaginationArgs;
   userId: Scalars['Float'];
-};
-
-
-export type QueryUsersArgs = {
-  where: WhereClause;
 };
 
 
@@ -928,12 +922,13 @@ export type UserResponse = {
 
 export type UserSetting = {
   __typename?: 'UserSetting';
-  accountURL: Scalars['String'];
   createdAt: Scalars['DateTime'];
+  emailVerified: Scalars['Boolean'];
   id: Scalars['Int'];
   language: Scalars['String'];
   showEmail: Scalars['Boolean'];
   showPhone: Scalars['Boolean'];
+  slug: Scalars['String'];
   updatedAt: Scalars['DateTime'];
   user: User;
   userId: Scalars['Int'];
@@ -960,11 +955,6 @@ export type VotingResponse = {
   __typename?: 'VotingResponse';
   errors?: Maybe<Array<FieldError>>;
   success?: Maybe<Scalars['Boolean']>;
-};
-
-export type WhereClause = {
-  cursor?: Maybe<Scalars['String']>;
-  limit?: Maybe<Scalars['Int']>;
 };
 
 export type CommentFragmentFragment = { __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } };
@@ -1160,7 +1150,7 @@ export type GetCommentRepliesQueryVariables = Exact<{
 }>;
 
 
-export type GetCommentRepliesQuery = { __typename?: 'Query', getCommentReplies: { __typename?: 'PaginatedComments', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comments: Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
+export type GetCommentRepliesQuery = { __typename?: 'Query', getCommentReplies: { __typename?: 'PaginatedComments', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comments?: Maybe<Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }>> } };
 
 export type GetUserPhoneQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -1176,6 +1166,11 @@ export type GetUserEmailQueryVariables = Exact<{
 
 export type GetUserEmailQuery = { __typename?: 'Query', user?: Maybe<{ __typename?: 'User', id: number, displayName: string, email: string }> };
 
+export type IsEmailVerifiedQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type IsEmailVerifiedQuery = { __typename?: 'Query', isEmailVerified: { __typename?: 'BooleanResponseType', response?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1188,14 +1183,14 @@ export type MissingPostsByUserQueryVariables = Exact<{
 }>;
 
 
-export type MissingPostsByUserQuery = { __typename?: 'Query', missingPostsByUser: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }> } };
+export type MissingPostsByUserQuery = { __typename?: 'Query', missingPostsByUser: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts?: Maybe<Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }>> } };
 
 export type MissingPostCommentsQueryVariables = Exact<{
   options: MissingPostComments;
 }>;
 
 
-export type MissingPostCommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComments', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comments: Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
+export type MissingPostCommentsQuery = { __typename?: 'Query', comments: { __typename?: 'PaginatedComments', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, comments?: Maybe<Array<{ __typename?: 'Comment', id: number, updatedAt: any, createdAt: any, postId: number, parentId?: Maybe<number>, text: string, points: number, voteStatus?: Maybe<number>, repliesCount: number, isReply: boolean, isEdited: boolean, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }>> } };
 
 export type MissingPostQueryVariables = Exact<{
   missingPostId: Scalars['Int'];
@@ -1212,7 +1207,7 @@ export type MissingPostsQueryVariables = Exact<{
 }>;
 
 
-export type MissingPostsQuery = { __typename?: 'Query', missingPosts: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }> } };
+export type MissingPostsQuery = { __typename?: 'Query', missingPosts: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts?: Maybe<Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }>> } };
 
 export type UserContactInfoQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -1234,7 +1229,7 @@ export type UserOwnedPetsQueryVariables = Exact<{
 }>;
 
 
-export type UserOwnedPetsQuery = { __typename?: 'Query', userOwnedPets: { __typename?: 'PaginatedUserOwnedPetsResponse', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, ownedPets: Array<{ __typename?: 'OwnedPet', id: number, userId: number, petId: number, createdAt: any, pet: { __typename?: 'Pet', id: number, updatedAt: any, createdAt: any, name: string, type: PetType, birthDate: any, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }> } };
+export type UserOwnedPetsQuery = { __typename?: 'Query', userOwnedPets: { __typename?: 'PaginatedUserOwnedPetsResponse', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, ownedPets?: Maybe<Array<{ __typename?: 'OwnedPet', id: number, userId: number, petId: number, createdAt: any, pet: { __typename?: 'Pet', id: number, updatedAt: any, createdAt: any, name: string, type: PetType, birthDate: any, thumbnail?: Maybe<{ __typename?: 'Photo', url?: Maybe<string> }> } }>> } };
 
 export type UserProfilePageQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -1250,14 +1245,7 @@ export type UserVotesQueryVariables = Exact<{
 }>;
 
 
-export type UserVotesQuery = { __typename?: 'Query', votes: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, code: number, message: string }>>, missingPosts: Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }> } };
-
-export type PaginatedUsersQueryVariables = Exact<{
-  usersWhere: WhereClause;
-}>;
-
-
-export type PaginatedUsersQuery = { __typename?: 'Query', users: { __typename?: 'PaginatedUsers', hasMore: boolean, users: Array<{ __typename?: 'User', id: number, email: string, phone?: Maybe<string> }>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+export type UserVotesQuery = { __typename?: 'Query', votes: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, code: number, message: string }>>, missingPosts?: Maybe<Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }>> } };
 
 export const CommentFragmentFragmentDoc = gql`
     fragment CommentFragment on Comment {
@@ -2447,6 +2435,45 @@ export function useGetUserEmailLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type GetUserEmailQueryHookResult = ReturnType<typeof useGetUserEmailQuery>;
 export type GetUserEmailLazyQueryHookResult = ReturnType<typeof useGetUserEmailLazyQuery>;
 export type GetUserEmailQueryResult = Apollo.QueryResult<GetUserEmailQuery, GetUserEmailQueryVariables>;
+export const IsEmailVerifiedDocument = gql`
+    query IsEmailVerified {
+  isEmailVerified {
+    response
+    errors {
+      field
+      message
+      code
+    }
+  }
+}
+    `;
+
+/**
+ * __useIsEmailVerifiedQuery__
+ *
+ * To run a query within a React component, call `useIsEmailVerifiedQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIsEmailVerifiedQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIsEmailVerifiedQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useIsEmailVerifiedQuery(baseOptions?: Apollo.QueryHookOptions<IsEmailVerifiedQuery, IsEmailVerifiedQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<IsEmailVerifiedQuery, IsEmailVerifiedQueryVariables>(IsEmailVerifiedDocument, options);
+      }
+export function useIsEmailVerifiedLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IsEmailVerifiedQuery, IsEmailVerifiedQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<IsEmailVerifiedQuery, IsEmailVerifiedQueryVariables>(IsEmailVerifiedDocument, options);
+        }
+export type IsEmailVerifiedQueryHookResult = ReturnType<typeof useIsEmailVerifiedQuery>;
+export type IsEmailVerifiedLazyQueryHookResult = ReturnType<typeof useIsEmailVerifiedLazyQuery>;
+export type IsEmailVerifiedQueryResult = Apollo.QueryResult<IsEmailVerifiedQuery, IsEmailVerifiedQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -2937,48 +2964,3 @@ export function useUserVotesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type UserVotesQueryHookResult = ReturnType<typeof useUserVotesQuery>;
 export type UserVotesLazyQueryHookResult = ReturnType<typeof useUserVotesLazyQuery>;
 export type UserVotesQueryResult = Apollo.QueryResult<UserVotesQuery, UserVotesQueryVariables>;
-export const PaginatedUsersDocument = gql`
-    query PaginatedUsers($usersWhere: WhereClause!) {
-  users(where: $usersWhere) {
-    users {
-      id
-      email
-      phone
-    }
-    errors {
-      field
-      message
-      code
-    }
-    hasMore
-  }
-}
-    `;
-
-/**
- * __usePaginatedUsersQuery__
- *
- * To run a query within a React component, call `usePaginatedUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `usePaginatedUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePaginatedUsersQuery({
- *   variables: {
- *      usersWhere: // value for 'usersWhere'
- *   },
- * });
- */
-export function usePaginatedUsersQuery(baseOptions: Apollo.QueryHookOptions<PaginatedUsersQuery, PaginatedUsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PaginatedUsersQuery, PaginatedUsersQueryVariables>(PaginatedUsersDocument, options);
-      }
-export function usePaginatedUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PaginatedUsersQuery, PaginatedUsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PaginatedUsersQuery, PaginatedUsersQueryVariables>(PaginatedUsersDocument, options);
-        }
-export type PaginatedUsersQueryHookResult = ReturnType<typeof usePaginatedUsersQuery>;
-export type PaginatedUsersLazyQueryHookResult = ReturnType<typeof usePaginatedUsersLazyQuery>;
-export type PaginatedUsersQueryResult = Apollo.QueryResult<PaginatedUsersQuery, PaginatedUsersQueryVariables>;

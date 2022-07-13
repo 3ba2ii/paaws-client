@@ -19,3 +19,23 @@ export type EditableFieldsType<T> = {
   textarea?: boolean;
   editableProps?: EditableProps;
 };
+
+export const SettingsTabsList: { key: string; title: string; url: string }[] = [
+  { key: 'about-you', title: 'About you', url: '/settings' },
+  { key: 'security', title: 'Security', url: `/settings/security` },
+  { key: 'account', title: 'Account', url: '/settings/account' },
+  { key: 'connections', title: 'Connections', url: '/settings/connections' },
+  {
+    key: 'email-settings',
+    title: 'Email Settings',
+    url: '/settings/email-settings',
+  },
+  { key: 'preferences', title: 'Preferences', url: '/settings/preferences' },
+  {
+    key: 'notifications',
+    title: 'Notifications',
+    url: '/settings/notifications',
+  },
+  { key: 'display', title: 'Display', url: '/settings/display' },
+  { key: 'danger-area', title: 'Danger Area', url: '/settings/danger-area' },
+];

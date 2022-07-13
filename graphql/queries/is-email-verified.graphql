@@ -1,0 +1,10 @@
+query IsEmailVerified {
+  isEmailVerified {
+    response
+    errors {
+      field
+      message
+      code
+    }
+  }
+}

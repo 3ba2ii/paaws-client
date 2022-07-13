@@ -11,29 +11,11 @@ import { SideFooter } from 'components/SideFooter';
 import { MeQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React from 'react';
+import { SettingsTabsList } from './_types';
 
 interface SettingsPageLayoutProps {
   user: MeQuery['me'];
 }
-const SettingsTabsList: { key: string; title: string; url: string }[] = [
-  { key: 'about-you', title: 'About you', url: '/settings' },
-  { key: 'security', title: 'Security', url: `/settings/security` },
-  { key: 'account', title: 'Account', url: '/settings/account' },
-  { key: 'connections', title: 'Connections', url: '/settings/connections' },
-  {
-    key: 'email-settings',
-    title: 'Email Settings',
-    url: '/settings/email-settings',
-  },
-  { key: 'preferences', title: 'Preferences', url: '/settings/preferences' },
-  {
-    key: 'notifications',
-    title: 'Notifications',
-    url: '/settings/notifications',
-  },
-  { key: 'display', title: 'Display', url: '/settings/display' },
-  { key: 'danger-area', title: 'Danger Area', url: '/settings/danger-area' },
-];
 
 const SettingsPageLayout: React.FC<SettingsPageLayoutProps> = ({
   children,
@@ -93,7 +75,7 @@ const SettingsPageLayout: React.FC<SettingsPageLayoutProps> = ({
           gridColumn={'2/3'}
         >
           <VStack align='flex-start' w='100%' spacing={5}>
-            <Heading fontSize='24px' fontWeight={'semibold'}>
+            <Heading fontSize='24px' fontWeight={'bold'}>
               {getCurrentTitleFromURL()}
             </Heading>
             <Divider maxW='800px' />
