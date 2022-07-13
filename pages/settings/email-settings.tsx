@@ -5,16 +5,19 @@ import {
   FormLabel,
   Heading,
   HStack,
-  Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import CustomEditableField from 'components/input/CustomEditableField';
 import { Form, Formik } from 'formik';
-import { useIsEmailVerifiedQuery } from 'generated/graphql';
+import {
+  useIsEmailVerifiedQuery,
+  useSendEmailVerificationMailMutation,
+} from 'generated/graphql';
 import { useIsAuth } from 'hooks/useIsAuth';
 import SettingsPageLayout from 'modules/settings/layout';
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import withApollo from 'utils/withApollo';
 
 interface EmailSettingsProps {}
@@ -23,7 +26,42 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({}) => {
   const { user, loading } = useIsAuth();
   const { data } = useIsEmailVerifiedQuery();
 
-  const onSendEmailVerification = () => {};
+  const [timer, settimer] = useState(0);
+  const intervalId = useRef<NodeJS.Timer | null>(null);
+
+  const [verifyEmailSent, setEmailVerifySent] = useState(false);
+  const [sendVerificationEmail, { loading: isSending }] =
+    useSendEmailVerificationMailMutation();
+
+  const toaster = useToast();
+
+  const onSendEmailVerification = async (email: string) => {
+    if (!email) return;
+    await sendVerificationEmail({
+      variables: { email: email.trim().toLowerCase() },
+      update: (_cache, { data: result }) => {
+        if (result?.sendEmailVerification.success) {
+          toaster({
+            isClosable: true,
+            position: 'top-right',
+            status: 'success',
+            variant: 'subtle',
+            title: 'Email sent 💌',
+            description: 'Please check your inbox for a message from us',
+          });
+          setEmailVerifySent(true);
+          settimer(60);
+        }
+      },
+    });
+  };
+
+  useEffect(() => {
+    if (timer <= 0) return;
+
+    if (intervalId.current) clearInterval(intervalId.current);
+    intervalId.current = setInterval(() => settimer(timer - 1), 1000);
+  }, [timer]);
 
   if (loading) return <LoadingComponent />;
   if (!user) return <Heading>You are not logged in</Heading>;
@@ -79,17 +117,28 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({}) => {
                     onCancel: () => {},
                   }}
                 />
-                {!isVerified ? (
-                  <Button
-                    variant='link'
-                    size='sm'
-                    colorScheme='blue'
-                    my={3}
-                    onClick={onSendEmailVerification}
-                  >
-                    Verify my email
-                  </Button>
-                ) : null}
+                <Box my={1}>
+                  {!isVerified ? (
+                    <Button
+                      variant='link'
+                      size='sm'
+                      fontSize='sm'
+                      fontWeight='regular'
+                      colorScheme='blue'
+                      onClick={() =>
+                        onSendEmailVerification(formikProps.values.email)
+                      }
+                      isLoading={isSending}
+                      isDisabled={isSending || timer !== 0}
+                    >
+                      {verifyEmailSent
+                        ? `You can resend another mail ${
+                            timer === 0 ? 'now' : `in ${timer}`
+                          }`
+                        : 'Send verification mail'}
+                    </Button>
+                  ) : null}
+                </Box>
               </Box>
             </VStack>
           </Form>

@@ -324,6 +324,7 @@ export type Mutation = {
   updootComment: CommentResponse;
   uploadAvatar: UploadImageResponse;
   verifyPhoneNumber: RegularResponse;
+  verifyUserEmail: Scalars['Boolean'];
   vote: VotingResponse;
 };
 
@@ -480,6 +481,11 @@ export type MutationUploadAvatarArgs = {
 export type MutationVerifyPhoneNumberArgs = {
   otp: Scalars['String'];
   phone: Scalars['String'];
+};
+
+
+export type MutationVerifyUserEmailArgs = {
+  token: Scalars['String'];
 };
 
 
@@ -1084,6 +1090,13 @@ export type RemoveUserAvatarMutationVariables = Exact<{ [key: string]: never; }>
 
 
 export type RemoveUserAvatarMutation = { __typename?: 'Mutation', removeAvatar: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+
+export type SendEmailVerificationMailMutationVariables = Exact<{
+  email: Scalars['String'];
+}>;
+
+
+export type SendEmailVerificationMailMutation = { __typename?: 'Mutation', sendEmailVerification: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string, code: number }>> } };
 
 export type SendOtpMutationVariables = Exact<{
   sendOtpPhone: Scalars['String'];
@@ -1997,6 +2010,44 @@ export function useRemoveUserAvatarMutation(baseOptions?: Apollo.MutationHookOpt
 export type RemoveUserAvatarMutationHookResult = ReturnType<typeof useRemoveUserAvatarMutation>;
 export type RemoveUserAvatarMutationResult = Apollo.MutationResult<RemoveUserAvatarMutation>;
 export type RemoveUserAvatarMutationOptions = Apollo.BaseMutationOptions<RemoveUserAvatarMutation, RemoveUserAvatarMutationVariables>;
+export const SendEmailVerificationMailDocument = gql`
+    mutation SendEmailVerificationMail($email: String!) {
+  sendEmailVerification(email: $email) {
+    errors {
+      message
+      field
+      code
+    }
+    success
+  }
+}
+    `;
+export type SendEmailVerificationMailMutationFn = Apollo.MutationFunction<SendEmailVerificationMailMutation, SendEmailVerificationMailMutationVariables>;
+
+/**
+ * __useSendEmailVerificationMailMutation__
+ *
+ * To run a mutation, you first call `useSendEmailVerificationMailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendEmailVerificationMailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendEmailVerificationMailMutation, { data, loading, error }] = useSendEmailVerificationMailMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *   },
+ * });
+ */
+export function useSendEmailVerificationMailMutation(baseOptions?: Apollo.MutationHookOptions<SendEmailVerificationMailMutation, SendEmailVerificationMailMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendEmailVerificationMailMutation, SendEmailVerificationMailMutationVariables>(SendEmailVerificationMailDocument, options);
+      }
+export type SendEmailVerificationMailMutationHookResult = ReturnType<typeof useSendEmailVerificationMailMutation>;
+export type SendEmailVerificationMailMutationResult = Apollo.MutationResult<SendEmailVerificationMailMutation>;
+export type SendEmailVerificationMailMutationOptions = Apollo.BaseMutationOptions<SendEmailVerificationMailMutation, SendEmailVerificationMailMutationVariables>;
 export const SendOtpDocument = gql`
     mutation SendOTP($sendOtpPhone: String!, $email: String!) {
   sendOTP(phone: $sendOtpPhone, email: $email) {

@@ -1,0 +1,10 @@
+mutation SendEmailVerificationMail($email: String!) {
+  sendEmailVerification(email: $email) {
+    errors {
+      message
+      field
+      code
+    }
+    success
+  }
+}
