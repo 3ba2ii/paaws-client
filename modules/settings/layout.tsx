@@ -15,24 +15,24 @@ import React from 'react';
 interface SettingsPageLayoutProps {
   user: MeQuery['me'];
 }
-const SettingsTabsList: { key: string; label: string; url: string }[] = [
-  { key: 'about-you', label: 'About you', url: '/settings' },
-  { key: 'security', label: 'Security', url: `/settings/security` },
-  { key: 'account', label: 'Account', url: '/settings/account' },
-  { key: 'connections', label: 'Connections', url: '/settings/connections' },
+const SettingsTabsList: { key: string; title: string; url: string }[] = [
+  { key: 'about-you', title: 'About you', url: '/settings' },
+  { key: 'security', title: 'Security', url: `/settings/security` },
+  { key: 'account', title: 'Account', url: '/settings/account' },
+  { key: 'connections', title: 'Connections', url: '/settings/connections' },
   {
     key: 'email-settings',
-    label: 'Email Settings',
+    title: 'Email Settings',
     url: '/settings/email-settings',
   },
-  { key: 'preferences', label: 'Preferences', url: '/settings/preferences' },
+  { key: 'preferences', title: 'Preferences', url: '/settings/preferences' },
   {
     key: 'notifications',
-    label: 'Notifications',
+    title: 'Notifications',
     url: '/settings/notifications',
   },
-  { key: 'display', label: 'Display', url: '/settings/display' },
-  { key: 'danger-area', label: 'Danger Area', url: '/settings/danger-area' },
+  { key: 'display', title: 'Display', url: '/settings/display' },
+  { key: 'danger-area', title: 'Danger Area', url: '/settings/danger-area' },
 ];
 
 const SettingsPageLayout: React.FC<SettingsPageLayoutProps> = ({
@@ -41,6 +41,14 @@ const SettingsPageLayout: React.FC<SettingsPageLayoutProps> = ({
 }) => {
   const { pathname } = useRouter();
   if (!user) return <Heading>You are not logged in</Heading>;
+
+  const getCurrentTitleFromURL = (): string => {
+    const tab = SettingsTabsList.find((tab) => {
+      return tab.url === pathname;
+    });
+
+    return tab?.title || 'Settings';
+  };
   return (
     <Layout
       title='Settings Page - Paaws'
@@ -58,7 +66,7 @@ const SettingsPageLayout: React.FC<SettingsPageLayoutProps> = ({
         >
           <Heading fontSize='22px'>Settings</Heading>
           <VStack align='flex-start' spacing={4}>
-            {SettingsTabsList.map(({ key, label, url }) => (
+            {SettingsTabsList.map(({ key, title, url }) => (
               <Button
                 height={'fit-content'}
                 variant='unstyled'
@@ -70,7 +78,7 @@ const SettingsPageLayout: React.FC<SettingsPageLayoutProps> = ({
                 fontWeight={pathname === url ? 'semibold' : '400'}
                 _dark={{ color: 'whiteAlpha.800' }}
               >
-                {label}
+                {title}
               </Button>
             ))}
           </VStack>
@@ -84,7 +92,13 @@ const SettingsPageLayout: React.FC<SettingsPageLayoutProps> = ({
           spacing={5}
           gridColumn={'2/3'}
         >
-          {children}
+          <VStack align='flex-start' w='100%' spacing={5}>
+            <Heading fontSize='24px' fontWeight={'semibold'}>
+              {getCurrentTitleFromURL()}
+            </Heading>
+            <Divider maxW='800px' />
+            {children}
+          </VStack>
         </VStack>
       </SimpleGrid>
     </Layout>
