@@ -1,12 +1,9 @@
-import { Button, Heading, Text, VStack } from '@chakra-ui/react';
+import { Button, Heading, VStack } from '@chakra-ui/react';
 import { Layout } from 'components/common/Layout';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
-import NotFound from 'components/errors/NotFound';
 import { useVerifyUserEmailMutation } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
-import { BiChevronLeft } from 'react-icons/bi';
-import { GoHome } from 'react-icons/go';
 import withApollo from 'utils/withApollo';
 
 interface VerifyEmailProps {}
