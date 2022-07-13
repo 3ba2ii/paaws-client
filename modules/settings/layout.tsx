@@ -1,4 +1,11 @@
-import { Button, Divider, Heading, SimpleGrid, VStack,Link } from '@chakra-ui/react';
+import {
+  Button,
+  Divider,
+  Heading,
+  SimpleGrid,
+  VStack,
+  Link,
+} from '@chakra-ui/react';
 import { Layout } from 'components/common/Layout';
 import { SideFooter } from 'components/SideFooter';
 import { MeQuery } from 'generated/graphql';
@@ -35,7 +42,11 @@ const SettingsPageLayout: React.FC<SettingsPageLayoutProps> = ({
   const { pathname } = useRouter();
   if (!user) return <Heading>You are not logged in</Heading>;
   return (
-    <Layout title='Settings Page - Paaws' includeFooter={false}>
+    <Layout
+      title='Settings Page - Paaws'
+      includeFooter={false}
+      childrenProps={{ justifyContent: 'flex-start' }}
+    >
       <SimpleGrid w='100%' gridTemplateColumns={'265px 4.5fr'} gap={14}>
         <VStack
           w='100%'
