@@ -74,13 +74,7 @@ const SettingsPageLayout: React.FC<SettingsPageLayoutProps> = ({
           spacing={5}
           gridColumn={'2/3'}
         >
-          <VStack align='flex-start' w='100%' spacing={5}>
-            <Heading fontSize='24px' fontWeight={'bold'}>
-              {getCurrentTitleFromURL()}
-            </Heading>
-            <Divider maxW='800px' />
-            {children}
-          </VStack>
+          {children}
         </VStack>
       </SimpleGrid>
     </Layout>

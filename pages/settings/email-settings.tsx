@@ -2,32 +2,33 @@ import {
   Badge,
   Box,
   Button,
+  Divider,
   FormLabel,
   Heading,
   HStack,
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import CustomEditableField from 'components/input/CustomEditableField';
 import { Form, Formik } from 'formik';
 import {
-  useIsEmailVerifiedQuery,
+  MeQuery,
+  MySettingsQuery,
   useSendEmailVerificationMailMutation,
 } from 'generated/graphql';
-import { useIsAuth } from 'hooks/useIsAuth';
 import SettingsPageLayout from 'modules/settings/layout';
 import React, { useEffect, useRef, useState } from 'react';
-import withApollo from 'utils/withApollo';
 
-const EmailSettings: React.FC = () => {
-  const { user, loading } = useIsAuth();
-  const { data } = useIsEmailVerifiedQuery();
+interface EmailSettingsProps {
+  user: MeQuery['me'];
+  settings: MySettingsQuery['mySettings'];
+}
 
-  const [timer, settimer] = useState(0);
+const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
+  const [timer, setTimer] = useState(0);
+  const [verifyEmailSent, setEmailVerifySent] = useState(false);
   const intervalId = useRef<NodeJS.Timer | null>(null);
 
-  const [verifyEmailSent, setEmailVerifySent] = useState(false);
   const [sendVerificationEmail, { loading: isSending }] =
     useSendEmailVerificationMailMutation();
 
@@ -48,7 +49,7 @@ const EmailSettings: React.FC = () => {
             description: 'Please check your inbox for a message from us',
           });
           setEmailVerifySent(true);
-          settimer(60);
+          setTimer(60);
         }
       },
     });
@@ -58,16 +59,19 @@ const EmailSettings: React.FC = () => {
     if (timer <= 0) return;
 
     if (intervalId.current) clearInterval(intervalId.current);
-    intervalId.current = setInterval(() => settimer(timer - 1), 1000);
+    intervalId.current = setInterval(() => setTimer(timer - 1), 1000);
   }, [timer]);
 
-  if (loading) return <LoadingComponent />;
-  if (!user) return <Heading>You are not logged in</Heading>;
+  if (!user || !settings) return <Heading>You are not logged in</Heading>;
 
-  const isVerified = data?.isEmailVerified.response;
+  const isVerified = settings?.emailVerified;
 
   return (
-    <SettingsPageLayout user={user}>
+    <VStack w='100%' h='100%' align='flex-start' spacing={5}>
+      <Heading fontSize='24px' fontWeight={'bold'}>
+        Email Settings
+      </Heading>
+      <Divider maxW='800px' />
       <Formik
         initialValues={{
           email: user.email,
@@ -79,70 +83,67 @@ const EmailSettings: React.FC = () => {
           <Form
             style={{
               width: '100%',
-              maxWidth: '900px',
               height: '100%',
             }}
           >
-            <VStack spacing={14} maxW='800px'>
-              <Box w='100%'>
-                <HStack
-                  spacing={0}
-                  h='fit-content'
-                  w='fit-content'
-                  align='center'
-                  mb='4'
+            <Box w='100%' h='100%'>
+              <HStack
+                spacing={0}
+                h='fit-content'
+                w='fit-content'
+                align='center'
+                mb='4'
+              >
+                <FormLabel mb='0' fontSize='16px' fontWeight='bold'>
+                  Your email
+                </FormLabel>
+                <Badge
+                  fontSize='10px'
+                  colorScheme={isVerified ? 'blue' : 'red'}
                 >
-                  <FormLabel mb='0' fontSize='16px' fontWeight='bold'>
-                    Your email
-                  </FormLabel>
-                  <Badge
-                    fontSize='10px'
-                    colorScheme={isVerified ? 'blue' : 'red'}
+                  {isVerified ? 'Verified' : 'Not Verified'}
+                </Badge>
+              </HStack>
+              <CustomEditableField
+                defaultValue={formikProps.values.email || ''}
+                label={'Your email'}
+                name={'email'}
+                type='email'
+                editableProps={{
+                  isPreviewFocusable: false,
+                  submitOnBlur: false,
+                  onSubmit: () => {},
+                  onAbort: () => {},
+                  onCancel: () => {},
+                }}
+              />
+              <Box my={1}>
+                {!isVerified ? (
+                  <Button
+                    variant='link'
+                    size='sm'
+                    fontSize='sm'
+                    fontWeight='regular'
+                    colorScheme={timer !== 0 ? 'gray' : 'blue'}
+                    onClick={() =>
+                      onSendEmailVerification(formikProps.values.email)
+                    }
+                    isLoading={isSending}
+                    isDisabled={isSending || timer !== 0}
                   >
-                    {isVerified ? 'Verified' : 'Not Verified'}
-                  </Badge>
-                </HStack>
-                <CustomEditableField
-                  defaultValue={formikProps.values.email || ''}
-                  label={'Your email'}
-                  name={'email'}
-                  type='email'
-                  editableProps={{
-                    isPreviewFocusable: false,
-                    submitOnBlur: false,
-                    onSubmit: () => {},
-                    onAbort: () => {},
-                    onCancel: () => {},
-                  }}
-                />
-                <Box my={1}>
-                  {!isVerified ? (
-                    <Button
-                      variant='link'
-                      size='sm'
-                      fontSize='sm'
-                      fontWeight='regular'
-                      colorScheme={timer !== 0 ? 'gray' : 'blue'}
-                      onClick={() =>
-                        onSendEmailVerification(formikProps.values.email)
-                      }
-                      isLoading={isSending}
-                      isDisabled={isSending || timer !== 0}
-                    >
-                      {verifyEmailSent
-                        ? `You can resend another verification email ${
-                            timer === 0 ? 'now' : `in ${timer}`
-                          }`
-                        : 'Send verification email'}
-                    </Button>
-                  ) : null}
-                </Box>
+                    {verifyEmailSent
+                      ? `You can resend another verification email ${
+                          timer === 0 ? 'now' : `in ${timer}`
+                        }`
+                      : 'Send verification email'}
+                  </Button>
+                ) : null}
               </Box>
-            </VStack>
+            </Box>
           </Form>
         )}
       </Formik>
-    </SettingsPageLayout>
+    </VStack>
   );
 };
-export default withApollo(EmailSettings);
+export default EmailSettings;

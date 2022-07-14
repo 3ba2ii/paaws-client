@@ -20,6 +20,7 @@ interface AboutYouProps {
 
 const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
   if (!user) return null;
+
   const [newAvatarFile, setNewAvatarFile] = React.useState<File | null>(null);
 
   const toaster = useToast();
@@ -160,77 +161,83 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
   );
 
   return (
-    <Formik
-      initialValues={
-        {
-          full_name: user.full_name,
-          bio: user.bio,
-          avatar: user.avatar?.url || null,
-          email: user.email,
-        } as UpdateUserDataType
-      }
-      onSubmit={() => {}}
-      validateOnBlur
-    >
-      {(formikProps) => (
-        <Form
-          style={{
-            width: '100%',
-            maxWidth: '900px',
-            height: '100%',
-          }}
-        >
-          <VStack spacing={14} maxW='800px'>
-            {SettingsFormFields.map((fieldData) => {
-              return (
-                <InputFieldWrapper
-                  key={fieldData.key}
-                  label={fieldData.label}
-                  name={fieldData.name}
-                  helperText={fieldData.helperText || ''}
-                  labelStyles={{ fontSize: 'md', fontWeight: 'bold' }}
-                  required={false}
-                >
-                  <CustomEditableField
-                    defaultValue={formikProps.values[fieldData.key] || ''}
+    <VStack align='flex-start' w='100%' spacing={5}>
+      <Heading fontSize='24px' fontWeight={'bold'}>
+        About you
+      </Heading>
+      <Divider maxW='800px' />
+      <Formik
+        initialValues={
+          {
+            full_name: user.full_name,
+            bio: user.bio,
+            avatar: user.avatar?.url || null,
+            email: user.email,
+          } as UpdateUserDataType
+        }
+        onSubmit={() => {}}
+        validateOnBlur
+      >
+        {(formikProps) => (
+          <Form
+            style={{
+              width: '100%',
+              maxWidth: '900px',
+              height: '100%',
+            }}
+          >
+            <VStack spacing={14} maxW='800px'>
+              {SettingsFormFields.map((fieldData) => {
+                return (
+                  <InputFieldWrapper
+                    key={fieldData.key}
                     label={fieldData.label}
                     name={fieldData.name}
-                    textarea={fieldData.textarea}
-                    editableProps={{
-                      isPreviewFocusable: false,
-                      submitOnBlur: false,
-                      onSubmit: () => fieldData.onSubmit(formikProps),
-                      onAbort: () => fieldData.onAbort(formikProps),
-                      onCancel: () => fieldData.onAbort(formikProps),
-                      ...fieldData.editableProps,
-                    }}
-                  />
-                </InputFieldWrapper>
-              );
-            })}
+                    helperText={fieldData.helperText || ''}
+                    labelStyles={{ fontSize: 'md', fontWeight: 'bold' }}
+                    required={false}
+                  >
+                    <CustomEditableField
+                      defaultValue={formikProps.values[fieldData.key] || ''}
+                      label={fieldData.label}
+                      name={fieldData.name}
+                      textarea={fieldData.textarea}
+                      editableProps={{
+                        isPreviewFocusable: false,
+                        submitOnBlur: false,
+                        onSubmit: () => fieldData.onSubmit(formikProps),
+                        onAbort: () => fieldData.onAbort(formikProps),
+                        onCancel: () => fieldData.onAbort(formikProps),
+                        ...fieldData.editableProps,
+                      }}
+                    />
+                  </InputFieldWrapper>
+                );
+              })}
 
-            <InputFieldWrapper
-              label='Your Avatar'
-              name='avatar'
-              helperText='Recommended size: at least 1000 pixels per side. File type: JPG, PNG or Webp.'
-              labelStyles={{ fontSize: 'md', fontWeight: 'bold', mb: 5 }}
-              required={false}
-            >
-              <ChangeAvatarComponents
-                {...{
-                  newAvatarFile,
-                  user,
-                  currentUserAvatarURL: user.avatar?.url,
-                  onChange: handleChangeAvatar,
-                  uploadSuccessCB: () => uploadSuccessCB(formikProps),
-                  removeSuccessCB: () => removeSuccessCB(formikProps),
-                }}
-              />
-            </InputFieldWrapper>
-          </VStack>
-        </Form>
-      )}
-    </Formik>
+              <InputFieldWrapper
+                label='Your Avatar'
+                name='avatar'
+                helperText='Recommended size: at least 1000 pixels per side. File type: JPG, PNG or Webp.'
+                labelStyles={{ fontSize: 'md', fontWeight: 'bold', mb: 5 }}
+                required={false}
+              >
+                <ChangeAvatarComponents
+                  {...{
+                    newAvatarFile,
+                    user,
+                    currentUserAvatarURL: user.avatar?.url,
+                    onChange: handleChangeAvatar,
+                    uploadSuccessCB: () => uploadSuccessCB(formikProps),
+                    removeSuccessCB: () => removeSuccessCB(formikProps),
+                  }}
+                />
+              </InputFieldWrapper>
+            </VStack>
+          </Form>
+        )}
+      </Formik>
+    </VStack>
   );
 };
 export default AboutYouSettings;

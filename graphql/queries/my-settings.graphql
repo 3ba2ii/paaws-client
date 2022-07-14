@@ -1,0 +1,13 @@
+query MySettings {
+  mySettings {
+    updatedAt
+    createdAt
+    id
+    userId
+    emailVerified
+    showEmail
+    showPhone
+    slug
+    language
+  }
+}

@@ -1229,6 +1229,11 @@ export type MissingPostsQueryVariables = Exact<{
 
 export type MissingPostsQuery = { __typename?: 'Query', missingPosts: { __typename?: 'PaginatedMissingPosts', hasMore?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>>, missingPosts?: Maybe<Array<{ __typename?: 'MissingPost', descriptionSnippet: string, id: number, title: string, description: string, voteStatus?: Maybe<number>, privacy: PrivacyType, type: MissingPostTypes, showEmail?: Maybe<boolean>, showPhoneNumber?: Maybe<boolean>, commentsCount: number, tags: Array<MissingPostTags>, points: number, createdAt: any, updatedAt: any, user: { __typename?: 'User', id: number, displayName: string, avatar?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }> }, thumbnail?: Maybe<{ __typename?: 'Photo', id: number, url?: Maybe<string> }>, address?: Maybe<{ __typename?: 'Address', id: number, distance?: Maybe<number> }> }>> } };
 
+export type MySettingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MySettingsQuery = { __typename?: 'Query', mySettings?: Maybe<{ __typename?: 'UserSetting', updatedAt: any, createdAt: any, id: number, userId: number, emailVerified: boolean, showEmail: boolean, showPhone: boolean, slug: string, language: string }> };
+
 export type UserContactInfoQueryVariables = Exact<{
   userId: Scalars['Int'];
 }>;
@@ -2797,6 +2802,48 @@ export function useMissingPostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type MissingPostsQueryHookResult = ReturnType<typeof useMissingPostsQuery>;
 export type MissingPostsLazyQueryHookResult = ReturnType<typeof useMissingPostsLazyQuery>;
 export type MissingPostsQueryResult = Apollo.QueryResult<MissingPostsQuery, MissingPostsQueryVariables>;
+export const MySettingsDocument = gql`
+    query MySettings {
+  mySettings {
+    updatedAt
+    createdAt
+    id
+    userId
+    emailVerified
+    showEmail
+    showPhone
+    slug
+    language
+  }
+}
+    `;
+
+/**
+ * __useMySettingsQuery__
+ *
+ * To run a query within a React component, call `useMySettingsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMySettingsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMySettingsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMySettingsQuery(baseOptions?: Apollo.QueryHookOptions<MySettingsQuery, MySettingsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MySettingsQuery, MySettingsQueryVariables>(MySettingsDocument, options);
+      }
+export function useMySettingsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MySettingsQuery, MySettingsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MySettingsQuery, MySettingsQueryVariables>(MySettingsDocument, options);
+        }
+export type MySettingsQueryHookResult = ReturnType<typeof useMySettingsQuery>;
+export type MySettingsLazyQueryHookResult = ReturnType<typeof useMySettingsLazyQuery>;
+export type MySettingsQueryResult = Apollo.QueryResult<MySettingsQuery, MySettingsQueryVariables>;
 export const UserContactInfoDocument = gql`
     query UserContactInfo($userId: Int!) {
   user(id: $userId) {
