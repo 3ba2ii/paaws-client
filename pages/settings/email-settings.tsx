@@ -6,6 +6,7 @@ import {
   FormLabel,
   Heading,
   HStack,
+  Text,
   useToast,
   VStack,
 } from '@chakra-ui/react';
@@ -16,7 +17,8 @@ import {
   MySettingsQuery,
   useSendEmailVerificationMailMutation,
 } from 'generated/graphql';
-import SettingsPageLayout from 'modules/settings/layout';
+import * as Yup from 'yup';
+
 import React, { useEffect, useRef, useState } from 'react';
 
 interface EmailSettingsProps {
@@ -55,6 +57,8 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
     });
   };
 
+  const onChangeEmail = async () => {};
+
   useEffect(() => {
     if (timer <= 0) return;
 
@@ -76,8 +80,13 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
         initialValues={{
           email: user.email,
         }}
-        onSubmit={() => {}}
-        validateOnBlur
+        onSubmit={async ({ email }) => {
+          console.log(`🚀 ~ file: email-settings.tsx ~ line 86 ~ email`, email);
+          await new Promise((r) => setTimeout(r, 3000));
+        }}
+        validationSchema={Yup.object().shape({
+          email: Yup.string().email('You should provide a valid email'),
+        })}
       >
         {(formikProps) => (
           <Form
@@ -87,6 +96,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
             }}
           >
             <Box w='100%' h='100%'>
+              <>{JSON.stringify(formikProps.isSubmitting)}</>
               <HStack
                 spacing={0}
                 h='fit-content'
@@ -109,14 +119,29 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
                 label={'Your email'}
                 name={'email'}
                 type='email'
+                isLoading={formikProps.isSubmitting}
                 editableProps={{
                   isPreviewFocusable: false,
                   submitOnBlur: false,
-                  onSubmit: () => {},
-                  onAbort: () => {},
-                  onCancel: () => {},
+                  onSubmit: () => formikProps.submitForm(),
+                  onAbort: () => formikProps.resetForm(),
+                  onCancel: () => formikProps.resetForm(),
                 }}
               />
+              {/* Error component*/}
+              {formikProps.errors.email && formikProps.touched.email ? (
+                <Text
+                  py={2}
+                  textStyle={'p2'}
+                  color='red.400'
+                  display='block'
+                  fontSize={'13px'}
+                  maxW='60ch'
+                  fontWeight={'regular'}
+                >
+                  {formikProps.errors.email}
+                </Text>
+              ) : null}
               <Box my={1}>
                 {!isVerified ? (
                   <Button

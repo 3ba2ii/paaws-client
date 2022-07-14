@@ -26,8 +26,10 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
   const toaster = useToast();
   const router = useRouter();
 
-  const [updateUserName] = useUpdateUserFullNameMutation();
-  const [updateUserInfo] = useUpdateUserInfoMutation();
+  const [editFullName, { loading: editNameLoading }] =
+    useUpdateUserFullNameMutation();
+  const [updateUserInfo, { loading: editUserInfoLoading }] =
+    useUpdateUserInfoMutation();
 
   const handleAbort = (
     fp: FormikProps<UpdateUserDataType>,
@@ -74,7 +76,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
     }
     handleAbort(formikProps, 'full_name');
 
-    await updateUserName({
+    await editFullName({
       variables: { fullName: full_name },
       update: (cache, { data: result }) => {
         if (
@@ -141,6 +143,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
         name: 'full_name',
         helperText:
           'You can update your name once every 30 days with a maximum of 5 times.',
+        isLoading: editNameLoading,
         onSubmit: (fp) => updateName(fp),
         onAbort: (fp) => handleAbort(fp, 'full_name'),
         onCancel: (fp) => handleAbort(fp, 'full_name'),
@@ -151,6 +154,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
         helperText:
           'This bio will appear on your profile page, so make it short and sweet!',
         name: 'bio',
+        isLoading: editUserInfoLoading,
         onSubmit: (fp) => onUpdateInfo(fp),
         onAbort: (fp) => handleAbort(fp, 'bio'),
         onCancel: (fp) => handleAbort(fp, 'bio'),
@@ -187,33 +191,43 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             }}
           >
             <VStack spacing={14} maxW='800px'>
-              {SettingsFormFields.map((fieldData) => {
-                return (
-                  <InputFieldWrapper
-                    key={fieldData.key}
-                    label={fieldData.label}
-                    name={fieldData.name}
-                    helperText={fieldData.helperText || ''}
-                    labelStyles={{ fontSize: 'md', fontWeight: 'bold' }}
-                    required={false}
-                  >
-                    <CustomEditableField
-                      defaultValue={formikProps.values[fieldData.key] || ''}
-                      label={fieldData.label}
-                      name={fieldData.name}
-                      textarea={fieldData.textarea}
-                      editableProps={{
-                        isPreviewFocusable: false,
-                        submitOnBlur: false,
-                        onSubmit: () => fieldData.onSubmit(formikProps),
-                        onAbort: () => fieldData.onAbort(formikProps),
-                        onCancel: () => fieldData.onAbort(formikProps),
-                        ...fieldData.editableProps,
-                      }}
-                    />
-                  </InputFieldWrapper>
-                );
-              })}
+              {SettingsFormFields.map(
+                ({
+                  key,
+                  label,
+                  name,
+                  textarea,
+                  onSubmit,
+                  onAbort,
+                  isLoading = false,
+                  helperText = '',
+                }) => {
+                  return (
+                    <InputFieldWrapper
+                      {...{ key, label, name, helperText }}
+                      labelStyles={{ fontSize: 'md', fontWeight: 'bold' }}
+                      required={false}
+                    >
+                      <CustomEditableField
+                        defaultValue={formikProps.values[key] || ''}
+                        {...{
+                          label,
+                          name,
+                          textarea,
+                          isLoading,
+                        }}
+                        editableProps={{
+                          isPreviewFocusable: false,
+                          submitOnBlur: false,
+                          onSubmit: () => onSubmit(formikProps),
+                          onAbort: () => onAbort(formikProps),
+                          onCancel: () => onAbort(formikProps),
+                        }}
+                      />
+                    </InputFieldWrapper>
+                  );
+                }
+              )}
 
               <InputFieldWrapper
                 label='Your Avatar'

@@ -1,4 +1,4 @@
-import { CheckIcon, CloseIcon, EditIcon } from '@chakra-ui/icons';
+import { CloseIcon, EditIcon } from '@chakra-ui/icons';
 import {
   Button,
   ButtonGroup,
@@ -23,17 +23,17 @@ export type CustomEditableFieldProps = InputHTMLAttributes<
   label: string;
   defaultValue: string;
   textarea?: boolean;
+  isLoading?: boolean;
   editableProps?: EditableProps;
   editablePreviewProps?: EditablePreviewProps;
   editableInputProps?: EditableInputProps;
 };
 
 const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
-  label,
   defaultValue,
   editableProps,
-  editableInputProps,
   editablePreviewProps,
+  isLoading = false,
   textarea = false,
   ...props
 }) => {
@@ -46,13 +46,23 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
       getEditButtonProps,
     } = useEditableControls();
 
-    return isEditing ? (
+    return !isEditing && !isLoading ? (
+      <Flex justifyContent='center'>
+        <IconButton
+          aria-label='edit'
+          size='sm'
+          icon={<EditIcon />}
+          {...getEditButtonProps()}
+        />
+      </Flex>
+    ) : (
       <ButtonGroup ms={4} justifyContent='center' size='sm'>
         <Button
           aria-label='submit'
           colorScheme='teal'
           variant='outline'
           {...getSubmitButtonProps()}
+          isLoading={isLoading}
         >
           Save
         </Button>
@@ -63,15 +73,6 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
           {...getCancelButtonProps()}
         />
       </ButtonGroup>
-    ) : (
-      <Flex justifyContent='center'>
-        <IconButton
-          aria-label='edit'
-          size='sm'
-          icon={<EditIcon />}
-          {...getEditButtonProps()}
-        />
-      </Flex>
     );
   }
 

@@ -15,6 +15,7 @@ export type EditableFieldsType<T> = {
   onSubmit: (formikProps: FormikProps<T>) => void;
   onAbort: (formikProps: FormikProps<T>) => void;
   onCancel: (formikProps: FormikProps<T>) => void;
+  isLoading?: boolean;
   helperText?: string;
   textarea?: boolean;
   editableProps?: EditableProps;
