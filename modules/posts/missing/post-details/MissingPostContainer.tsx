@@ -43,7 +43,6 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
         <Button
           aria-label='back'
           leftIcon={<FiArrowLeft />}
-          icon={<FiArrowLeft />}
           variant='ghost'
           size='sm'
           fontWeight={'normal'}

@@ -27,7 +27,7 @@ const authContext = createContext({} as ReturnType<typeof useProvideAuth>);
 function useProvideAuth() {
   const router = useRouter();
   const toaster = useToast();
-  const { data: userData, loading } = useMeQuery({});
+  const { data: userData, loading } = useMeQuery();
   const [user, setUser] = useState<MeQuery['me'] | null>(null);
   const [loginMutation] = useLoginMutation();
   const [externalLogin] = useLoginWithAuthProviderMutation();
@@ -132,7 +132,7 @@ function useProvideAuth() {
 
   // Return the user object and auth methods
   return {
-    user,
+    user: userData?.me || user,
     isLoadingUserInfo: loading,
     signin,
     signinWithAuthProvider,

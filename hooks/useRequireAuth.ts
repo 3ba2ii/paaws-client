@@ -1,9 +1,15 @@
+import { useAuth } from 'hooks/useAuth';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useAuth } from './useAuth';
 
 export const useRequireAuth = () => {
   const { user, isLoadingUserInfo: loading } = useAuth();
+  console.log(
+    `🚀 ~ file: useRequireAuth.ts ~ line 7 ~ useRequireAuth ~ data`,
+    user,
+    loading
+  );
+
   const router = useRouter();
 
   useEffect(() => {

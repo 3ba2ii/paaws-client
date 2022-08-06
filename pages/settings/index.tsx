@@ -10,7 +10,7 @@ import EmailSettings from './email-settings';
 
 interface SettingsPageProps {}
 
-const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
+const SettingsPage: React.FC<SettingsPageProps> = () => {
   const { user, loading } = useRequireAuth();
   const { data, loading: loadingSettings } = useMySettingsQuery();
   if (loading || loadingSettings) return <LoadingComponent />;
@@ -18,7 +18,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
 
   const settings = data?.mySettings;
 
-  if (!settings) return <Heading>404 Error occurred</Heading>;
+  if (!settings && !loadingSettings)
+    return <Heading>404 Error occurred</Heading>;
   return (
     <SettingsPageLayout user={user}>
       <VStack w='100%' h='100%' maxW='800px' gap={5}>

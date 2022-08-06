@@ -22,8 +22,7 @@ export const handleLogoutWithoutHook = () => {
 
   // do other stuff required when logout
   // eslint-disable-next-line no-restricted-globals
-  console.log(router);
-  location.replace('/login?next=' + router.pathname);
+  location.replace('/login?next=' + router.asPath);
 
   // location.reload() after token removed affects user redirect
   // when component is wrapped inside <ProtectedRoute> component
