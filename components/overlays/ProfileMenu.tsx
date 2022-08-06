@@ -25,8 +25,8 @@ import {
 import { LoadingComponent } from '../common/loading/LoadingSpinner';
 
 const ProfileMenu = () => {
-  const { user, loading } = useRequireAuth();
-  const { signout } = useAuth();
+  useRequireAuth();
+  const { signout, user, isLoadingUserInfo: loading } = useAuth();
   const { colorMode, toggleColorMode } = useColorMode();
 
   const onLogout = async () => {

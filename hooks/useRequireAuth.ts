@@ -4,11 +4,6 @@ import { useEffect } from 'react';
 
 export const useRequireAuth = () => {
   const { user, isLoadingUserInfo: loading } = useAuth();
-  console.log(
-    `🚀 ~ file: useRequireAuth.ts ~ line 7 ~ useRequireAuth ~ data`,
-    user,
-    loading
-  );
 
   const router = useRouter();
 

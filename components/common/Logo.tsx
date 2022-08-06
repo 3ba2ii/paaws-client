@@ -1,4 +1,5 @@
-import { Image, ImageProps, Link, useColorModeValue } from '@chakra-ui/react';
+import { Image, ImageProps, useColorModeValue } from '@chakra-ui/react';
+import Link from 'next/link';
 import React from 'react';
 import navbarStyles from 'styles/navbar.module.css';
 
@@ -11,7 +12,6 @@ const Logo: React.FC<LogoProps> = ({ imageProps }) => {
   return (
     <Link href='/'>
       <Image
-        tabIndex={0}
         role='img'
         className={navbarStyles['logo-container']}
         cursor='pointer'

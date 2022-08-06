@@ -1,6 +1,7 @@
 import { Heading, VStack } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { useMySettingsQuery } from 'generated/graphql';
+import { useAuth } from 'hooks/useAuth';
 import { useRequireAuth } from 'hooks/useRequireAuth';
 import AboutYouSettings from 'modules/settings/AboutYou';
 import SettingsPageLayout from 'modules/settings/layout';
@@ -11,10 +12,12 @@ import EmailSettings from './email-settings';
 interface SettingsPageProps {}
 
 const SettingsPage: React.FC<SettingsPageProps> = () => {
-  const { user, loading } = useRequireAuth();
+  useRequireAuth();
+  const { user, isLoadingUserInfo: loading } = useAuth();
   const { data, loading: loadingSettings } = useMySettingsQuery();
+  console.log(`🚀 ~ file: index.tsx ~ line 18 ~ data`, data);
+
   if (loading || loadingSettings) return <LoadingComponent />;
-  if (!user) return <Heading>You are not logged in</Heading>;
 
   const settings = data?.mySettings;
 
