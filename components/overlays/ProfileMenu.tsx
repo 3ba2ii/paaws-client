@@ -9,10 +9,8 @@ import {
   Switch,
   Text,
   useColorMode,
-  useToast,
 } from '@chakra-ui/react';
 import UserAvatar from 'components/common/UserAvatar';
-import { useLogoutMutation } from 'generated/graphql';
 import { useAuth } from 'hooks/useAuth';
 import { useIsAuth } from 'hooks/useIsAuth';
 import router from 'next/router';

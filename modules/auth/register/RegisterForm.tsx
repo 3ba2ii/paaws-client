@@ -7,6 +7,7 @@ import { Tooltip } from '@chakra-ui/tooltip';
 import InputField from 'components/input/InputField';
 import { Field, Form, Formik } from 'formik';
 import { useRegisterMutation } from 'generated/graphql';
+import { useAuth } from 'hooks/useAuth';
 import router from 'next/router';
 import styles from 'styles/register.module.css';
 import { toErrorMap } from 'utils/toErrorMap';
@@ -15,7 +16,7 @@ import { SignupSchema } from 'utils/yupSchemas/SignupSchema';
 export const RegisterForm = () => {
   /* Step 1 in registration - (in case of using username and password) */
   const toaster = useToast();
-  const [register] = useRegisterMutation();
+  const { signup } = useAuth();
 
   return (
     <Formik
@@ -38,16 +39,14 @@ export const RegisterForm = () => {
               agree:
                 'You must agree to the terms, conditions, and cookies policy',
             });
-          const { data } = await register({
-            variables: {
-              registerOptions: {
-                email,
-                password,
-                confirmPassword,
-                full_name,
-              },
-            },
+
+          const data = await signup({
+            email,
+            password,
+            full_name,
+            confirmPassword,
           });
+
           if (data?.register.errors?.length) {
             return setErrors(toErrorMap(data.register.errors));
           }

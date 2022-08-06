@@ -1,12 +1,17 @@
+import { ApolloCache } from '@apollo/client';
 import { useToast } from '@chakra-ui/react';
 import {
+  BaseRegisterInput,
   LoginInput,
   LoginMutationResult,
   MeQuery,
+  RegisterMutationResult,
   useLoginMutation,
   useLoginWithAuthProviderMutation,
   useLogoutMutation,
   useMeQuery,
+  User,
+  useRegisterMutation,
 } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -25,9 +30,15 @@ function useProvideAuth() {
   const [loginMutation] = useLoginMutation();
   const [externalLogin] = useLoginWithAuthProviderMutation();
   const [logout] = useLogoutMutation();
+  const [register] = useRegisterMutation();
 
   // Wrap any Firebase methods we want to use making sure ...
   // ... to save the user to state.
+  const handleUserChange = (cache: ApolloCache<any>, authedUser: User) => {
+    updateMeQueryCache(cache, authedUser);
+    setUser(authedUser);
+  };
+
   const signinWithAuthProvider = async (
     provider: ProviderTypes,
     tokenId: string
@@ -51,15 +62,35 @@ function useProvideAuth() {
     const { data } = await loginMutation({
       variables: { loginOptions: { identifier, password } },
       update: (cache, { data: returnedData }) => {
-        if (!returnedData) return;
-        const loggedInUser = returnedData.login.user;
-        updateMeQueryCache(cache, loggedInUser);
-        setUser(loggedInUser);
+        if (!returnedData || !returnedData.login.user) return;
+        handleUserChange(cache, returnedData.login.user as User);
       },
     });
     return data;
   };
-  const signup = () => {};
+  const signup = async ({
+    email,
+    password,
+    confirmPassword,
+    full_name,
+  }: BaseRegisterInput): Promise<RegisterMutationResult['data']> => {
+    const { data } = await register({
+      variables: {
+        registerOptions: {
+          email,
+          password,
+          confirmPassword,
+          full_name,
+        },
+      },
+      update: (cache, { data: returnedData }) => {
+        if (!returnedData || !returnedData.register.user) return;
+        handleUserChange(cache, returnedData.register.user as User);
+      },
+    });
+
+    return data;
+  };
   const signout = async () => {
     try {
       await logout({
