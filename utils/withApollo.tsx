@@ -22,6 +22,7 @@ export const handleLogoutWithoutHook = () => {
 
   // do other stuff required when logout
   // eslint-disable-next-line no-restricted-globals
+  console.log(router);
   location.replace('/login?next=' + router.pathname);
 
   // location.reload() after token removed affects user redirect
@@ -33,6 +34,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
       console.log(
         `❌ [GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
       );
+      console.log(message);
       if (message.includes('Not Authenticated')) {
         if (path && ['vote'].includes(path.toString()))
           return handleLogoutWithoutHook();
@@ -71,7 +73,7 @@ const cache = new InMemoryCache({
               ...incoming,
               missingPosts: [
                 ...(existing?.missingPosts || []),
-                ...incoming.missingPosts,
+                ...(incoming.missingPosts || []),
               ],
             };
           },
@@ -88,7 +90,7 @@ const cache = new InMemoryCache({
               ...incoming,
               ownedPets: [
                 ...(existing?.ownedPets || []),
-                ...incoming.ownedPets,
+                ...(incoming.ownedPets || []),
               ],
             };
           },
@@ -106,7 +108,7 @@ const cache = new InMemoryCache({
               ...incoming,
               missingPosts: [
                 ...(existing?.missingPosts || []),
-                ...incoming.missingPosts,
+                ...(incoming.missingPosts || []),
               ],
             };
           },
@@ -121,7 +123,10 @@ const cache = new InMemoryCache({
 
             return {
               ...incoming,
-              comments: [...(existing?.comments || []), ...incoming.comments],
+              comments: [
+                ...(existing?.comments || []),
+                ...(incoming.comments || []),
+              ],
             };
           },
         },
@@ -135,7 +140,7 @@ const cache = new InMemoryCache({
             let uniqueIds: { [key: string]: boolean } = {};
 
             const mergedReplies = [
-              ...incoming.comments,
+              ...(incoming.comments || []),
               ...(existing?.comments || []),
             ];
 

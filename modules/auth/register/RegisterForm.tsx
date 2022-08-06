@@ -6,7 +6,6 @@ import { useToast } from '@chakra-ui/react';
 import { Tooltip } from '@chakra-ui/tooltip';
 import InputField from 'components/input/InputField';
 import { Field, Form, Formik } from 'formik';
-import { useRegisterMutation } from 'generated/graphql';
 import { useAuth } from 'hooks/useAuth';
 import router from 'next/router';
 import styles from 'styles/register.module.css';
@@ -33,46 +32,24 @@ export const RegisterForm = () => {
         { email, agree, confirmPassword, full_name, password },
         { setErrors }
       ) => {
-        try {
-          if (!agree)
-            return setErrors({
-              agree:
-                'You must agree to the terms, conditions, and cookies policy',
-            });
-
-          const data = await signup({
-            email,
-            password,
-            full_name,
-            confirmPassword,
+        if (!agree)
+          return setErrors({
+            agree:
+              'You must agree to the terms, conditions, and cookies policy',
           });
 
-          if (data?.register.errors?.length) {
-            return setErrors(toErrorMap(data.register.errors));
-          }
+        const data = await signup({
+          email,
+          password,
+          full_name,
+          confirmPassword,
+        });
 
-          if (!data?.register.user) {
-            return toaster({
-              title: 'Something went wrong',
-              description:
-                'We could not create your account right now, Please try again later.',
-              status: 'error',
-              isClosable: true,
-              position: 'bottom-right',
-            });
-          }
+        if (data?.register.errors?.length) {
+          return setErrors(toErrorMap(data.register.errors));
+        }
 
-          const { phone, phoneVerified, lat, lng } = data.register.user;
-          if (!phoneVerified && !phone)
-            return router.push('/profile/complete-info/phone-number');
-
-          //redirect the user to the next step
-          if (!lat || !lng) {
-            return router.push('/profile/complete-info/location');
-          }
-
-          return router.push('/');
-        } catch (err) {
+        if (!data?.register.user) {
           return toaster({
             title: 'Something went wrong',
             description:
@@ -82,6 +59,17 @@ export const RegisterForm = () => {
             position: 'bottom-right',
           });
         }
+
+        const { phone, phoneVerified, lat, lng } = data.register.user;
+        if (!phoneVerified && !phone)
+          return router.push('/profile/complete-info/phone-number');
+
+        //redirect the user to the next step
+        if (!lat || !lng) {
+          return router.push('/profile/complete-info/location');
+        }
+
+        return router.push('/');
       }}
     >
       {({ errors, touched, isSubmitting }) => (

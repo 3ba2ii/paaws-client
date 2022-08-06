@@ -12,6 +12,7 @@ interface SettingsPageProps {}
 
 const SettingsPage: React.FC<SettingsPageProps> = ({}) => {
   const { user, loading } = useIsAuth();
+  console.log('heheheh');
   const { data, loading: loadingSettings } = useMySettingsQuery();
   if (loading || loadingSettings) return <LoadingComponent />;
   if (!user) return <Heading>You are not logged in</Heading>;

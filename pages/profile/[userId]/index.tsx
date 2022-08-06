@@ -1,24 +1,10 @@
-import {
-  Box,
-  Modal,
-  ModalCloseButton,
-  ModalContent,
-  ModalOverlay,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
 import { Layout } from 'components/common/Layout';
-import AddUserOwnedPetForm from 'modules/pet/AddUserPetForm';
 import { UserProfileHeader } from 'modules/profile/user/UserProfileHeader';
 import UserProfileTabs from 'modules/profile/user/UserProfileTabs';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { createContext, useState } from 'react';
 import withApollo from 'utils/withApollo';
-
-export const UserProfileContext = createContext<{
-  modals: { [key: string]: boolean };
-  setModal: (key: string, value: boolean) => void;
-}>({ modals: { addPet: false }, setModal: () => {} });
 
 const UserProfilePage: NextPage = () => {
   const router = useRouter();

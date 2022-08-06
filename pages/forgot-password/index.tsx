@@ -15,8 +15,9 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
   const [email, setEmail] = React.useState('');
   const [emailSent, setEmailSent] = useState(false);
 
-  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+  };
 
   const onSubmit = async () => {
     await sendPasswordResetEmail({
@@ -24,6 +25,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
     });
     setEmailSent(true);
   };
+
   const resetAll = () => {
     setEmailSent(false);
     setEmail('');

@@ -21,19 +21,19 @@ import {
   ProviderTypes,
 } from '../generated/graphql';
 
+const authContext = createContext({} as ReturnType<typeof useProvideAuth>);
+
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
-  const { data: userData, loading } = useMeQuery({});
   const router = useRouter();
   const toaster = useToast();
+  const { data: userData, loading } = useMeQuery({});
   const [user, setUser] = useState<MeQuery['me'] | null>(null);
   const [loginMutation] = useLoginMutation();
   const [externalLogin] = useLoginWithAuthProviderMutation();
   const [logout] = useLogoutMutation();
   const [register] = useRegisterMutation();
 
-  // Wrap any Firebase methods we want to use making sure ...
-  // ... to save the user to state.
   const handleUserChange = (cache: ApolloCache<any>, authedUser: User) => {
     updateMeQueryCache(cache, authedUser);
     setUser(authedUser);
@@ -87,6 +87,16 @@ function useProvideAuth() {
         if (!returnedData || !returnedData.register.user) return;
         handleUserChange(cache, returnedData.register.user as User);
       },
+      onError: (_err) => {
+        return toaster({
+          title: 'Something went wrong',
+          description:
+            'We could not create your account right now, Please try again later.',
+          status: 'error',
+          isClosable: true,
+          position: 'bottom-right',
+        });
+      },
     });
 
     return data;
@@ -111,13 +121,9 @@ function useProvideAuth() {
       });
     }
   };
-  const sendPasswordResetEmail = () => {};
+
   const confirmPasswordReset = () => {};
 
-  // Subscribe to user on mount
-  // Because this sets state in the callback it will cause any ...
-  // ... component that utilizes this hook to re-render with the ...
-  // ... latest auth object.
   useEffect(() => {
     if (!loading && userData?.me) {
       setUser(userData.me);
@@ -127,16 +133,14 @@ function useProvideAuth() {
   // Return the user object and auth methods
   return {
     user,
+    isLoadingUserInfo: loading,
     signin,
     signinWithAuthProvider,
     signup,
     signout,
-    sendPasswordResetEmail,
     confirmPasswordReset,
   };
 }
-
-const authContext = createContext({} as ReturnType<typeof useProvideAuth>);
 
 const ProviderAuth: React.FC = ({ children }) => {
   const auth = useProvideAuth();
