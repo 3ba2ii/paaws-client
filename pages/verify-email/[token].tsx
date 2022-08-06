@@ -2,15 +2,18 @@ import { Button, Heading, VStack } from '@chakra-ui/react';
 import { Layout } from 'components/common/Layout';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import { useVerifyUserEmailMutation } from 'generated/graphql';
+import useIsMounted from 'hooks/useIsMounted';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import withApollo from 'utils/withApollo';
 
 interface VerifyEmailProps {}
 
-const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
-  const { query } = useRouter();
+const VerifyEmail: React.FC<VerifyEmailProps> = () => {
+  const isMounted = useIsMounted();
   const router = useRouter();
+  const { query } = useRouter();
+
   const [verifyEmail, { loading }] = useVerifyUserEmailMutation();
   const [isVerified, setIsVerified] = useState(false);
 
@@ -26,11 +29,11 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({}) => {
 
   useEffect(() => {
     handleVerifyEmail();
-  }, [query]);
+  }, [query, isMounted]);
 
   return (
     <Layout title='Verify Email'>
-      {loading ? (
+      {loading || !isMounted() ? (
         <LoadingComponent />
       ) : isVerified ? (
         <VStack>
