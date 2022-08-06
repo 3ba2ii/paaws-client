@@ -2,12 +2,11 @@ import { Button } from '@chakra-ui/react';
 import {
   LoginWithAuthProviderMutationResult,
   ProviderTypes,
-  useLoginWithAuthProviderMutation,
 } from 'generated/graphql';
+import { useAuth } from 'hooks/useAuth';
 import React from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import { FcGoogle } from 'react-icons/fc';
-import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 
 interface LoginWithAuthProvidersProps {
   onSuccess: (data: LoginWithAuthProviderMutationResult['data']) => void;
@@ -18,18 +17,11 @@ const LoginWithAuthProviders: React.FC<LoginWithAuthProvidersProps> = ({
   onSuccess,
   onFailure,
 }) => {
-  const [externalLogin] = useLoginWithAuthProviderMutation();
-
+  const auth = useAuth();
+  console.log(auth);
   const handleSuccess = async (response: GoogleLoginResponse) => {
     const { tokenId } = response;
-
-    const { data } = await externalLogin({
-      variables: { provider: ProviderTypes.Google, providerId: tokenId },
-      update: (cache, { data: returnedData }) => {
-        if (!returnedData) return;
-        updateMeQueryCache(cache, returnedData?.loginWithAuthProvider?.user);
-      },
-    });
+    const data = await auth.extenrnalLogin(ProviderTypes.Google, tokenId);
 
     if (
       !data ||

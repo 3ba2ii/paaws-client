@@ -2,6 +2,7 @@ import { Heading } from '@chakra-ui/layout';
 import { useToast } from '@chakra-ui/react';
 import { Layout } from 'components/common/Layout';
 import { LoginWithAuthProviderMutationResult } from 'generated/graphql';
+import { useAuth } from 'hooks/useAuth';
 import LoginWithAuthProviders from 'modules/auth/login/LoginWithAuthProviders';
 import router from 'next/router';
 import React from 'react';
@@ -16,7 +17,6 @@ interface LoginPageProps {
 
 const LoginPage: React.FC<LoginPageProps> = ({ title }) => {
   const toaster = useToast();
-
   const onSuccess = async (
     data: LoginWithAuthProviderMutationResult['data']
   ) => {

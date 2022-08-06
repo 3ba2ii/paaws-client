@@ -1,14 +1,17 @@
 import { ChakraProvider } from '@chakra-ui/react';
+import ProviderAuth from 'hooks/useAuth';
 import type { AppProps } from 'next/app';
-import React from 'react';
+import withApollo from 'utils/withApollo';
 import '../styles/globals.css';
 import theme from '../theme';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider resetCSS theme={theme}>
-      <Component {...pageProps} />
+      <ProviderAuth>
+        <Component {...pageProps} />
+      </ProviderAuth>
     </ChakraProvider>
   );
 }
-export default MyApp;
+export default withApollo(MyApp);
