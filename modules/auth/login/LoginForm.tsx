@@ -29,7 +29,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         if (data?.login?.errors?.length || !data?.login.user) {
           const mappedErrors = toErrorMap(data?.login?.errors || []);
           setErrors(mappedErrors);
-          onFailure();
           return;
         }
 

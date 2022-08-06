@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import UserAvatar from 'components/common/UserAvatar';
 import { useLogoutMutation } from 'generated/graphql';
+import { useAuth } from 'hooks/useAuth';
 import { useIsAuth } from 'hooks/useIsAuth';
 import router from 'next/router';
 import {
@@ -27,30 +28,11 @@ import { LoadingComponent } from '../common/loading/LoadingSpinner';
 
 const ProfileMenu = () => {
   const { user, loading } = useIsAuth();
-  const toaster = useToast();
+  const { signout } = useAuth();
   const { colorMode, toggleColorMode } = useColorMode();
 
-  const [logout] = useLogoutMutation();
-
   const onLogout = async () => {
-    try {
-      await logout({
-        update: (cache, { data: res }) => {
-          if (!res) return;
-          cache.evict({});
-          router.reload();
-        },
-      });
-    } catch {
-      toaster({
-        title: 'We could not log you out right now',
-        description:
-          'An error occurred while logging you out, Please try again',
-        status: 'error',
-        position: 'bottom-right',
-        isClosable: true,
-      });
-    }
+    signout();
   };
   if (loading) return <LoadingComponent />;
   if (!user) return null;

@@ -1,11 +1,14 @@
+import { useToast } from '@chakra-ui/react';
 import {
   LoginInput,
   LoginMutationResult,
   MeQuery,
   useLoginMutation,
   useLoginWithAuthProviderMutation,
+  useLogoutMutation,
   useMeQuery,
 } from 'generated/graphql';
+import { useRouter } from 'next/router';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import {
@@ -16,9 +19,12 @@ import {
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
   const { data: userData, loading } = useMeQuery({});
+  const router = useRouter();
+  const toaster = useToast();
   const [user, setUser] = useState<MeQuery['me'] | null>(null);
   const [loginMutation] = useLoginMutation();
   const [externalLogin] = useLoginWithAuthProviderMutation();
+  const [logout] = useLogoutMutation();
 
   // Wrap any Firebase methods we want to use making sure ...
   // ... to save the user to state.
@@ -54,7 +60,26 @@ function useProvideAuth() {
     return data;
   };
   const signup = () => {};
-  const signout = () => {};
+  const signout = async () => {
+    try {
+      await logout({
+        update: (cache, { data: res }) => {
+          if (!res) return;
+          cache.evict({});
+          router.reload();
+        },
+      });
+    } catch {
+      toaster({
+        title: 'We could not log you out right now',
+        description:
+          'An error occurred while logging you out, Please try again',
+        status: 'error',
+        position: 'bottom-right',
+        isClosable: true,
+      });
+    }
+  };
   const sendPasswordResetEmail = () => {};
   const confirmPasswordReset = () => {};
 
