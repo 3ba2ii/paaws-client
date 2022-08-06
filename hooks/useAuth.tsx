@@ -12,6 +12,7 @@ import {
   useMeQuery,
   User,
   useRegisterMutation,
+  useRegisterWithProviderMutation,
 } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -36,6 +37,7 @@ function useProvideAuth() {
   const [externalLogin] = useLoginWithAuthProviderMutation();
   const [logout] = useLogoutMutation();
   const [register] = useRegisterMutation();
+  const [externalRegister] = useRegisterWithProviderMutation();
 
   const handleUserChange = (cache: ApolloCache<any>, authedUser: User) => {
     updateMeQueryCache(cache, authedUser);
@@ -67,6 +69,22 @@ function useProvideAuth() {
       update: (cache, { data: returnedData }) => {
         if (!returnedData || !returnedData.login.user) return;
         handleUserChange(cache, returnedData.login.user as User);
+      },
+    });
+    return data;
+  };
+  const signUpWithAuthProvider = async (
+    provider: ProviderTypes,
+    tokenId: string
+  ) => {
+    const { data } = await externalRegister({
+      variables: { provider, providerId: tokenId },
+      update: (cache, { data: returnedData }) => {
+        if (!returnedData) return;
+        handleUserChange(
+          cache,
+          returnedData?.registerWithAuthProvider?.user as User
+        );
       },
     });
     return data;
@@ -139,9 +157,10 @@ function useProvideAuth() {
     isLoadingUserInfo: loading,
     signin,
     signinWithAuthProvider,
+    confirmPasswordReset,
+    signUpWithAuthProvider,
     signup,
     signout,
-    confirmPasswordReset,
   };
 }
 
@@ -151,8 +170,6 @@ const ProviderAuth: React.FC = ({ children }) => {
   return <authContext.Provider value={auth}>{children}</authContext.Provider>;
 };
 
-// Hook for child components to get the auth object ...
-// ... and re-render when it changes.
 export const useAuth = () => {
   return useContext(authContext);
 };

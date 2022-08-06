@@ -1,13 +1,8 @@
 import { Button } from '@chakra-ui/button';
 import { Heading } from '@chakra-ui/layout';
 import { useToast } from '@chakra-ui/react';
-import {
-  MeDocument,
-  MeQuery,
-  ProviderTypes,
-  User,
-  useRegisterWithProviderMutation,
-} from 'generated/graphql';
+import { ProviderTypes } from 'generated/graphql';
+import { useAuth } from 'hooks/useAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -26,7 +21,7 @@ const RegisterPage: React.FC = () => {
     3. Step 3 -> Set the location (FIXED) -> update user info
   */
 
-  const [externalRegister] = useRegisterWithProviderMutation();
+  const { signUpWithAuthProvider } = useAuth();
   const toaster = useToast();
   const router = useRouter();
 
@@ -34,19 +29,7 @@ const RegisterPage: React.FC = () => {
     //send a registration request to the server with the google token
     const { tokenId } = response;
 
-    const { data } = await externalRegister({
-      variables: { provider: ProviderTypes.Google, providerId: tokenId },
-      update: (cache, { data: returnedData }) => {
-        if (!returnedData) return;
-
-        cache.writeQuery<MeQuery>({
-          query: MeDocument,
-          data: {
-            me: returnedData?.registerWithAuthProvider?.user as User | null,
-          },
-        });
-      },
-    });
+    const data = await signUpWithAuthProvider(ProviderTypes.Google, tokenId);
 
     if (
       !data ||

@@ -14,8 +14,8 @@ interface SettingsPageProps {}
 const SettingsPage: React.FC<SettingsPageProps> = () => {
   useRequireAuth();
   const { user, isLoadingUserInfo: loading } = useAuth();
+
   const { data, loading: loadingSettings } = useMySettingsQuery();
-  console.log(`🚀 ~ file: index.tsx ~ line 18 ~ data`, data);
 
   if (loading || loadingSettings) return <LoadingComponent />;
 
