@@ -1,5 +1,5 @@
 mutation SendEmailVerificationMail($email: String!) {
-  sendEmailVerification(email: $email) {
+  sendVerificationMail(email: $email) {
     errors {
       message
       field

@@ -40,7 +40,6 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
 
   const successToaster = () => {
     return toaster({
-      id: 'success-toast',
       title: 'Profile Updated Successfully 🚀',
       description: "If you didn't see updates, please refresh the page",
       variant: 'solid',
@@ -51,7 +50,6 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
   };
   const errorToaster = () => {
     return toaster({
-      id: 'success-toast',
       title: 'Something went wrong! 🙁',
       description: (
         <p>
@@ -71,10 +69,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
     const { full_name } = formikProps.values;
     const { full_name: initialFullName } = formikProps.initialValues;
 
-    if (initialFullName.trim() === full_name.trim()) {
-      return;
-    }
-    handleAbort(formikProps, 'full_name');
+    if (initialFullName.trim() === full_name.trim()) return;
 
     await editFullName({
       variables: { fullName: full_name },
@@ -180,7 +175,6 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
           } as UpdateUserDataType
         }
         onSubmit={() => {}}
-        validateOnBlur
       >
         {(formikProps) => (
           <Form
@@ -191,6 +185,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             }}
           >
             <VStack spacing={14} maxW='800px'>
+              <Text>{JSON.stringify(formikProps.values)}</Text>
               {SettingsFormFields.map(
                 ({
                   key,

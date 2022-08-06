@@ -41,7 +41,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
     await sendVerificationEmail({
       variables: { email: email.trim().toLowerCase() },
       update: (_cache, { data: result }) => {
-        if (result?.sendEmailVerification.success) {
+        if (result?.sendVerificationMail.success) {
           toaster({
             isClosable: true,
             position: 'top-right',
@@ -57,7 +57,9 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
     });
   };
 
-  const onChangeEmail = async () => {};
+  const onChangeEmail = async () => {
+    //check if email is already associated with an account
+  };
 
   useEffect(() => {
     if (timer <= 0) return;
@@ -80,13 +82,21 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
         initialValues={{
           email: user.email,
         }}
-        onSubmit={async ({ email }) => {
+        onSubmit={async ({ email }, { setFieldError }) => {
           console.log(`🚀 ~ file: email-settings.tsx ~ line 86 ~ email`, email);
           await new Promise((r) => setTimeout(r, 3000));
+          /* setFieldError(
+            'email',
+            'This email is associated with another account'
+          );
+          
+ */
+          setEmailVerifySent(true);
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('You should provide a valid email'),
+          email: Yup.string().email('Please provide a valid email'),
         })}
+        validateOnBlur
       >
         {(formikProps) => (
           <Form
@@ -96,7 +106,6 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
             }}
           >
             <Box w='100%' h='100%'>
-              <>{JSON.stringify(formikProps.isSubmitting)}</>
               <HStack
                 spacing={0}
                 h='fit-content'
@@ -120,6 +129,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
                 name={'email'}
                 type='email'
                 isLoading={formikProps.isSubmitting}
+                hasError={!!formikProps.errors.email}
                 editableProps={{
                   isPreviewFocusable: false,
                   submitOnBlur: false,

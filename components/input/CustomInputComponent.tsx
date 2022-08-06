@@ -22,10 +22,10 @@ export type GenericInputComponentProps = InputHTMLAttributes<
 
 const InputFieldWrapper: React.FC<GenericInputComponentProps> = ({
   label,
-  required = true,
   helperText,
   children,
   labelStyles,
+  required = true,
   ...props
 }) => {
   const [field, { error, touched }] = useField(props);

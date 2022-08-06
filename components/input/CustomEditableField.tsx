@@ -14,7 +14,7 @@ import {
   useEditableControls,
 } from '@chakra-ui/react';
 import { FastField, useField } from 'formik';
-import React, { InputHTMLAttributes } from 'react';
+import React, { InputHTMLAttributes, useEffect, useState } from 'react';
 
 export type CustomEditableFieldProps = InputHTMLAttributes<
   HTMLInputElement | HTMLTextAreaElement
@@ -24,6 +24,7 @@ export type CustomEditableFieldProps = InputHTMLAttributes<
   defaultValue: string;
   textarea?: boolean;
   isLoading?: boolean;
+  hasError?: boolean;
   editableProps?: EditableProps;
   editablePreviewProps?: EditablePreviewProps;
   editableInputProps?: EditableInputProps;
@@ -34,6 +35,7 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
   editableProps,
   editablePreviewProps,
   isLoading = false,
+  hasError = false,
   textarea = false,
   ...props
 }) => {
@@ -46,7 +48,7 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
       getEditButtonProps,
     } = useEditableControls();
 
-    return !isEditing && !isLoading ? (
+    return !isEditing && !isLoading && !hasError ? (
       <Flex justifyContent='center'>
         <IconButton
           aria-label='edit'
@@ -76,10 +78,14 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
     );
   }
 
-  const [field] = useField(props);
+  const [field, { error }] = useField(props);
+  console.log(`🚀 ~ file: CustomEditableField.tsx ~ line 82 ~ error`, error);
 
   return (
-    <Editable {...{ defaultValue, ...editableProps }}>
+    <Editable
+      {...{ defaultValue, ...editableProps }}
+      isPreviewFocusable={editableProps?.isPreviewFocusable || hasError}
+    >
       <Flex
         w='100%'
         flexDir={'row'}

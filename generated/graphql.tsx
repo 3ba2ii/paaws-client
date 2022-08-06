@@ -315,8 +315,9 @@ export type Mutation = {
   register: UserResponse;
   registerWithAuthProvider: UserResponse;
   removeAvatar: RegularResponse;
-  sendEmailVerification: RegularResponse;
+  sendChangeEmailVerificationMail: RegularResponse;
   sendOTP: RegularResponse;
+  sendVerificationMail: RegularResponse;
   updateAccountURL: RegularResponse;
   updateUser: Scalars['Boolean'];
   updateUserFullName: RegularResponse;
@@ -436,14 +437,14 @@ export type MutationRegisterWithAuthProviderArgs = {
 };
 
 
-export type MutationSendEmailVerificationArgs = {
-  email: Scalars['String'];
-};
-
-
 export type MutationSendOtpArgs = {
   email: Scalars['String'];
   phone: Scalars['String'];
+};
+
+
+export type MutationSendVerificationMailArgs = {
+  email: Scalars['String'];
 };
 
 
@@ -1096,7 +1097,7 @@ export type SendEmailVerificationMailMutationVariables = Exact<{
 }>;
 
 
-export type SendEmailVerificationMailMutation = { __typename?: 'Mutation', sendEmailVerification: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string, code: number }>> } };
+export type SendEmailVerificationMailMutation = { __typename?: 'Mutation', sendVerificationMail: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, field: string, code: number }>> } };
 
 export type SendOtpMutationVariables = Exact<{
   sendOtpPhone: Scalars['String'];
@@ -2024,7 +2025,7 @@ export type RemoveUserAvatarMutationResult = Apollo.MutationResult<RemoveUserAva
 export type RemoveUserAvatarMutationOptions = Apollo.BaseMutationOptions<RemoveUserAvatarMutation, RemoveUserAvatarMutationVariables>;
 export const SendEmailVerificationMailDocument = gql`
     mutation SendEmailVerificationMail($email: String!) {
-  sendEmailVerification(email: $email) {
+  sendVerificationMail(email: $email) {
     errors {
       message
       field

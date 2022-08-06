@@ -1,84 +1,16 @@
 import { Button } from '@chakra-ui/button';
 import { Checkbox } from '@chakra-ui/checkbox';
 import { ChevronRightIcon } from '@chakra-ui/icons';
-import {
-  Box,
-  Heading,
-  HStack,
-  Text,
-  VStack,
-  WrapItem,
-} from '@chakra-ui/layout';
-import {
-  ModalProps,
-  PinInput,
-  PinInputField,
-  useToast,
-} from '@chakra-ui/react';
+import { Text, WrapItem } from '@chakra-ui/layout';
+import { useToast } from '@chakra-ui/react';
 import { Tooltip } from '@chakra-ui/tooltip';
 import InputField from 'components/input/InputField';
-import GenericModal from 'components/overlays/CustomModal';
 import { Field, Form, Formik } from 'formik';
 import { useRegisterMutation } from 'generated/graphql';
 import router from 'next/router';
-import React from 'react';
 import styles from 'styles/register.module.css';
 import { toErrorMap } from 'utils/toErrorMap';
 import { SignupSchema } from 'utils/yupSchemas/SignupSchema';
-
-const VerifyEmailComponent: React.FC<{
-  handleChange: (val: string) => void;
-  isOpen: boolean;
-  setIsOpen: (val: boolean) => void;
-}> = ({ handleChange, isOpen, setIsOpen }) => {
-  return (
-    <GenericModal
-      title={
-        <Box w='100%' textAlign={'left'}>
-          <Heading w='100%' size='md' fontWeight='semibold'>
-            Verify your Email
-          </Heading>
-        </Box>
-      }
-      body={
-        <VStack w='100%' spacing={5}>
-          <Text>
-            We have sent a 6-digit code to your email. Please enter the code
-            below to verify your email.
-          </Text>
-          <HStack>
-            <PinInput
-              otp
-              size='lg'
-              placeholder='🔢'
-              onChange={(val) => handleChange(val.toString())}
-            >
-              <PinInputField />
-              <PinInputField />
-              <PinInputField />
-              <PinInputField />
-              <PinInputField />
-              <PinInputField />
-            </PinInput>
-          </HStack>
-        </VStack>
-      }
-      modalProps={{ size: 'md' } as ModalProps}
-      footer={
-        <HStack pt={4}>
-          <Button variant='ghost' color='gray.500'>
-            Cancel
-          </Button>
-          <Button px={5} colorScheme='teal'>
-            Verify Email 🙌
-          </Button>
-        </HStack>
-      }
-      isOpen={isOpen}
-      onClose={() => setIsOpen(false)}
-    />
-  );
-};
 
 export const RegisterForm = () => {
   /* Step 1 in registration - (in case of using username and password) */
@@ -153,7 +85,7 @@ export const RegisterForm = () => {
         }
       }}
     >
-      {({ setFieldValue, values, errors, touched, isSubmitting }) => (
+      {({ errors, touched, isSubmitting }) => (
         <Form className={styles['register-form']}>
           <InputField
             name='email'

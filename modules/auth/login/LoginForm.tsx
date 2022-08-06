@@ -1,15 +1,22 @@
-import { Button, Checkbox, Text } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import InputField from 'components/input/InputField';
 import { Form, Formik } from 'formik';
-import { MeDocument, MeQuery, useLoginMutation, User } from 'generated/graphql';
+import { useLoginMutation } from 'generated/graphql';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import React from 'react';
 import styles from 'styles/login.module.css';
+import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import { toErrorMap } from 'utils/toErrorMap';
 
-export const LoginForm: React.FC = () => {
-  const router = useRouter();
+interface LoginFormProps {
+  onSuccess: Function;
+  onFailure: Function;
+}
+
+export const LoginForm: React.FC<LoginFormProps> = ({
+  onSuccess,
+  onFailure,
+}) => {
   const [loginMutation] = useLoginMutation();
 
   return (
@@ -17,7 +24,6 @@ export const LoginForm: React.FC = () => {
       initialValues={{
         identifier: '',
         password: '',
-        remember: false,
       }}
       onSubmit={async ({ identifier, password }, { setErrors }) => {
         const { data } = await loginMutation({
@@ -25,25 +31,18 @@ export const LoginForm: React.FC = () => {
           update: (cache, { data: returnedData }) => {
             if (!returnedData) return;
 
-            cache.writeQuery<MeQuery>({
-              query: MeDocument,
-              data: {
-                me: returnedData?.login?.user as User | null,
-              },
-            });
+            updateMeQueryCache(cache, returnedData.login.user);
           },
         });
 
-        if (data?.login?.errors?.length) {
-          const mappedErrors = toErrorMap(data?.login?.errors);
-          return setErrors(mappedErrors);
-        } else if (data?.login?.user) {
-          if (router.query.next) {
-            router.replace(router.query.next + '');
-          } else {
-            router.push('/');
-          }
+        if (data?.login?.errors?.length || !data?.login.user) {
+          const mappedErrors = toErrorMap(data?.login?.errors || []);
+          setErrors(mappedErrors);
+          onFailure();
+          return;
         }
+
+        onSuccess();
       }}
     >
       {({ isSubmitting }) => (
