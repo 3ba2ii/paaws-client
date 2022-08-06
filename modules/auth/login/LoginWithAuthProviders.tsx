@@ -18,10 +18,12 @@ const LoginWithAuthProviders: React.FC<LoginWithAuthProvidersProps> = ({
   onFailure,
 }) => {
   const auth = useAuth();
-  console.log(auth);
   const handleSuccess = async (response: GoogleLoginResponse) => {
     const { tokenId } = response;
-    const data = await auth.extenrnalLogin(ProviderTypes.Google, tokenId);
+    const data = await auth.signinWithAuthProvider(
+      ProviderTypes.Google,
+      tokenId
+    );
 
     if (
       !data ||

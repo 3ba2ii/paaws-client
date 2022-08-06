@@ -1,11 +1,10 @@
 import { Button } from '@chakra-ui/react';
 import InputField from 'components/input/InputField';
 import { Form, Formik } from 'formik';
-import { useLoginMutation } from 'generated/graphql';
+import { useAuth } from 'hooks/useAuth';
 import Link from 'next/link';
 import React from 'react';
 import styles from 'styles/login.module.css';
-import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import { toErrorMap } from 'utils/toErrorMap';
 
 interface LoginFormProps {
@@ -17,8 +16,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   onSuccess,
   onFailure,
 }) => {
-  const [loginMutation] = useLoginMutation();
-
+  const auth = useAuth();
   return (
     <Formik
       initialValues={{
@@ -26,14 +24,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
         password: '',
       }}
       onSubmit={async ({ identifier, password }, { setErrors }) => {
-        const { data } = await loginMutation({
-          variables: { loginOptions: { identifier, password } },
-          update: (cache, { data: returnedData }) => {
-            if (!returnedData) return;
-
-            updateMeQueryCache(cache, returnedData.login.user);
-          },
-        });
+        const data = await auth.signin({ identifier, password });
 
         if (data?.login?.errors?.length || !data?.login.user) {
           const mappedErrors = toErrorMap(data?.login?.errors || []);

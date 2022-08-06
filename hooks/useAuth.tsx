@@ -1,11 +1,13 @@
 import {
+  LoginInput,
+  LoginMutationResult,
   MeQuery,
+  useLoginMutation,
   useLoginWithAuthProviderMutation,
   useMeQuery,
 } from 'generated/graphql';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
-import withApollo from 'utils/withApollo';
 import {
   LoginWithAuthProviderMutationResult,
   ProviderTypes,
@@ -15,11 +17,12 @@ import {
 function useProvideAuth() {
   const { data: userData, loading } = useMeQuery({});
   const [user, setUser] = useState<MeQuery['me'] | null>(null);
+  const [loginMutation] = useLoginMutation();
   const [externalLogin] = useLoginWithAuthProviderMutation();
 
   // Wrap any Firebase methods we want to use making sure ...
   // ... to save the user to state.
-  const extenrnalLogin = async (
+  const signinWithAuthProvider = async (
     provider: ProviderTypes,
     tokenId: string
   ): Promise<LoginWithAuthProviderMutationResult['data']> => {
@@ -35,7 +38,21 @@ function useProvideAuth() {
 
     return data;
   };
-  const signin = () => {};
+  const signin = async ({
+    identifier,
+    password,
+  }: LoginInput): Promise<LoginMutationResult['data']> => {
+    const { data } = await loginMutation({
+      variables: { loginOptions: { identifier, password } },
+      update: (cache, { data: returnedData }) => {
+        if (!returnedData) return;
+        const loggedInUser = returnedData.login.user;
+        updateMeQueryCache(cache, loggedInUser);
+        setUser(loggedInUser);
+      },
+    });
+    return data;
+  };
   const signup = () => {};
   const signout = () => {};
   const sendPasswordResetEmail = () => {};
@@ -55,7 +72,7 @@ function useProvideAuth() {
   return {
     user,
     signin,
-    extenrnalLogin,
+    signinWithAuthProvider,
     signup,
     signout,
     sendPasswordResetEmail,
