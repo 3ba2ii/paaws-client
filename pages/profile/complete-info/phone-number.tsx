@@ -1,5 +1,5 @@
 import { Button, Heading, Text, VStack } from '@chakra-ui/react';
-import { useIsAuth } from 'hooks/useIsAuth';
+import { useRequireAuth } from 'hooks/useRequireAuth';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import SendOTPComponent from 'modules/profile/complete-info/SendOTP';
 import VerifyOTPComponent from 'modules/profile/complete-info/VerifyPhoneNumber';
@@ -23,7 +23,7 @@ const AlreadyVerifiedComponent = () => {
 };
 
 const VerifyPhoneNumberPage: React.FC = () => {
-  const { user } = useIsAuth();
+  const { user } = useRequireAuth();
 
   const [step, setStep] = useState<'send-otp' | 'verify-otp'>('send-otp');
   const [phone, setPhone] = useState<string | null>(null);

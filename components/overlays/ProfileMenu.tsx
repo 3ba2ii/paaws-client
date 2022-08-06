@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react';
 import UserAvatar from 'components/common/UserAvatar';
 import { useAuth } from 'hooks/useAuth';
-import { useIsAuth } from 'hooks/useIsAuth';
+import { useRequireAuth } from 'hooks/useRequireAuth';
 import router from 'next/router';
 import {
   BiChevronDown,
@@ -25,7 +25,7 @@ import {
 import { LoadingComponent } from '../common/loading/LoadingSpinner';
 
 const ProfileMenu = () => {
-  const { user, loading } = useIsAuth();
+  const { user, loading } = useRequireAuth();
   const { signout } = useAuth();
   const { colorMode, toggleColorMode } = useColorMode();
 

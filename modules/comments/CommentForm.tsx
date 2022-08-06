@@ -15,7 +15,7 @@ import {
   MissingPostCommentsDocument,
   useAddMpCommentMutation,
 } from 'generated/graphql';
-import { useIsAuth } from 'hooks/useIsAuth';
+import { useRequireAuth } from 'hooks/useRequireAuth';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { FiSend } from 'react-icons/fi';
@@ -33,7 +33,7 @@ const CommentForm: React.FC<CommentFormProps> = ({
   avatarProps,
   inputGroupProps,
 }) => {
-  const { user, loading } = useIsAuth();
+  const { user, loading } = useRequireAuth();
   const [commentText, setCommentText] = React.useState('');
   const [addComment] = useAddMpCommentMutation();
   const router = useRouter();

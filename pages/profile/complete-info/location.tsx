@@ -8,7 +8,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useUpdateUserInfoMutation } from 'generated/graphql';
-import { useIsAuth } from 'hooks/useIsAuth';
+import { useRequireAuth } from 'hooks/useRequireAuth';
 import { UserLocationStep } from 'modules/auth/register/UserLocationStep';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import { useRouter } from 'next/router';
@@ -18,7 +18,7 @@ import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
 import withApollo from 'utils/withApollo';
 
 const SelectLocationPage: React.FC = () => {
-  const { user } = useIsAuth();
+  const { user } = useRequireAuth();
   const router = useRouter();
   const toaster = useToast();
   const [coords, setCoords] = useState<LocationType>();

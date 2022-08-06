@@ -10,7 +10,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
-import { useIsAuth } from 'hooks/useIsAuth';
+import { useRequireAuth } from 'hooks/useRequireAuth';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -69,7 +69,7 @@ const completeInfoSteps: StepsComponentsData = [
 ];
 
 const CompleteInfo: React.FC = () => {
-  const { user, loading } = useIsAuth();
+  const { user, loading } = useRequireAuth();
   const router = useRouter();
   const [steps, setSteps] = React.useState<{
     [key in CompleteInfoSteps]: boolean;

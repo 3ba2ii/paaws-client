@@ -13,7 +13,7 @@ import InputField from 'components/input/InputField';
 import { SegmentedControl } from 'components/input/SegmentedControl';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { UserGender, useUpdateUserInfoMutation } from 'generated/graphql';
-import { useIsAuth } from 'hooks/useIsAuth';
+import { useRequireAuth } from 'hooks/useRequireAuth';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -28,7 +28,7 @@ type FormValuesType = {
 };
 
 const PersonalInfoStep: React.FC = () => {
-  const { user, loading } = useIsAuth();
+  const { user, loading } = useRequireAuth();
   const [updateUser] = useUpdateUserInfoMutation();
   const { colorMode } = useColorMode();
   const router = useRouter();

@@ -9,7 +9,7 @@ import {
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import SelectAvatarComponent from 'components/avatar/SelectAvatarComponent';
 import { useAddUserAvatarMutation } from 'generated/graphql';
-import { useIsAuth } from 'hooks/useIsAuth';
+import { useRequireAuth } from 'hooks/useRequireAuth';
 import CompleteInfoLayout from 'modules/profile/complete-info/layout';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -19,7 +19,7 @@ import { createFileWithURL } from 'utils/createFilewithURL';
 import withApollo from 'utils/withApollo';
 
 const SelectAvatar: React.FC = () => {
-  const { user, loading } = useIsAuth();
+  const { user, loading } = useRequireAuth();
   const [userAvatar, setUserAvatar] = React.useState<File | null>(null);
   const [uploadUserAvatar, { loading: uploadLoading }] =
     useAddUserAvatarMutation();

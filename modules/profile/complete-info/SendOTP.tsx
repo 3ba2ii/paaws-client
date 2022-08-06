@@ -2,7 +2,7 @@ import { Button, HStack, VStack } from '@chakra-ui/react';
 import InputField from 'components/input/InputField';
 import { Form, Formik } from 'formik';
 import { useSendOtpMutation } from 'generated/graphql';
-import { useIsAuth } from 'hooks/useIsAuth';
+import { useRequireAuth } from 'hooks/useRequireAuth';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { toErrorMap } from 'utils/toErrorMap';
@@ -12,7 +12,7 @@ interface SendOTPProps {
 }
 
 const SendOTPComponent: React.FC<SendOTPProps> = ({ onSuccess }) => {
-  const { user } = useIsAuth();
+  const { user } = useRequireAuth();
   const [sendOTP] = useSendOtpMutation();
   const router = useRouter();
 

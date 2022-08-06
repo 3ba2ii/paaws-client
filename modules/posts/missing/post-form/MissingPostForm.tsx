@@ -10,7 +10,7 @@ import {
   useCreateMissingPostMutation,
   useEditMissingPostMutation,
 } from 'generated/graphql';
-import { useIsAuth } from 'hooks/useIsAuth';
+import { useRequireAuth } from 'hooks/useRequireAuth';
 import React, { useRef, useState } from 'react';
 import { PostInputType } from 'types';
 import { addNewMissingPostToCache } from 'utils/cache/addNewMissingPost';
@@ -42,7 +42,7 @@ export const MissingPostForm: React.FC<MPFormProps> = ({
   missingPost,
   editMode = false,
 }) => {
-  const { user, loading } = useIsAuth();
+  const { user, loading } = useRequireAuth();
 
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
   const formRef = useRef(null);

@@ -15,14 +15,14 @@ import {
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
 import UserAvatar from 'components/common/UserAvatar';
 import { useUserProfilePageQuery } from 'generated/graphql';
-import { useIsAuth } from 'hooks/useIsAuth';
+import { useRequireAuth } from 'hooks/useRequireAuth';
 import AddUserOwnedPetForm from 'modules/pet/AddUserPetForm';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import UserProfileStats from './UserProfileStats';
 
 export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
-  const { user: loggedInUser, loading: loggedInUserLoading } = useIsAuth();
+  const { user: loggedInUser, loading: loggedInUserLoading } = useRequireAuth();
   const { data, loading } = useUserProfilePageQuery({
     variables: { userId },
   });

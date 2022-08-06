@@ -9,7 +9,7 @@ import {
 import { Layout } from 'components/common/Layout';
 import Logo from 'components/common/Logo';
 import ProfileMenu from 'components/overlays/ProfileMenu';
-import { useIsAuth } from 'hooks/useIsAuth';
+import { useRequireAuth } from 'hooks/useRequireAuth';
 import router, { useRouter } from 'next/router';
 import React from 'react';
 import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
@@ -43,7 +43,7 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
   pageTitle,
   children,
 }) => {
-  const { user } = useIsAuth();
+  const { user } = useRequireAuth();
   const { pathname } = useRouter();
 
   const isCompleteInfoPage = pathname === '/profile/complete-info';
