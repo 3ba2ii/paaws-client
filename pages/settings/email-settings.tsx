@@ -7,7 +7,6 @@ import {
   Heading,
   HStack,
   Text,
-  useToast,
   VStack,
 } from '@chakra-ui/react';
 import CustomEditableField from 'components/input/CustomEditableField';
@@ -16,10 +15,10 @@ import {
   MeQuery,
   MySettingsQuery,
   useSendChangeUserEmailEmailMutation,
-  useSendEmailVerificationMailMutation,
 } from 'generated/graphql';
 import * as Yup from 'yup';
 
+import { useAuth } from 'hooks/useAuth';
 import useTimer from 'hooks/useTimer';
 import ConfirmPassword from 'pages/confirm-password';
 import React, { useState } from 'react';
@@ -32,37 +31,26 @@ interface EmailSettingsProps {
 const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
   const [verifyEmailSent, setEmailVerifySent] = useState(false);
   const [redirectToAuth, setRedirectToAuth] = useState(false);
+  const [loading, setLoading] = useState({
+    sendingEmail: false,
+    sendEmailVerification: false,
+  });
   const [newEmail, setNewEmail] = useState('');
+
   const { start, countdown } = useTimer();
-
-  const [sendVerificationEmail, { loading: isSendingVerificationEmail }] =
-    useSendEmailVerificationMailMutation();
-
-  const [sendChangeEmailMail, { loading: isSendingChangeEmail }] =
-    useSendChangeUserEmailEmailMutation();
-
-  const toaster = useToast();
+  const auth = useAuth();
 
   const onSendEmailVerification = async (email: string) => {
     if (!email) return;
-    await sendVerificationEmail({
-      variables: { email: email.trim().toLowerCase() },
-      update: (_cache, { data: result }) => {
-        if (result?.sendVerificationMail.success) {
-          start(60);
-
-          toaster({
-            isClosable: true,
-            position: 'top-right',
-            status: 'success',
-            variant: 'subtle',
-            title: 'Email sent 💌',
-            description: 'Please check your inbox for a message from us',
-          });
-          setEmailVerifySent(true);
-        }
-      },
-    });
+    setEmailVerifySent(true);
+    setLoading({ ...loading, sendEmailVerification: true });
+    const data = await auth.sendVerifyEmail();
+    if (!data) return;
+    if (data.sendVerificationMail.success) {
+      start(60);
+      setEmailVerifySent(true);
+    }
+    setLoading({ ...loading, sendEmailVerification: false });
   };
 
   const onChangeEmail = async () => {
@@ -73,11 +61,9 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
     authToken: string,
     authAction: string
   ) => {
+    /* send change email mail */
+    const data = await auth.sendChangeEmail(authToken, authAction, newEmail);
     setRedirectToAuth(false);
-    const { data } = await sendChangeEmailMail({
-      variables: { email: newEmail, authAction, authToken },
-    });
-    console.log(`🚀 ~ file: email-settings.tsx ~ line 79 ~ data`, data);
   };
 
   if (redirectToAuth) {
@@ -182,8 +168,8 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
                     onClick={() =>
                       onSendEmailVerification(formikProps.values.email)
                     }
-                    isLoading={isSendingVerificationEmail}
-                    isDisabled={isSendingVerificationEmail || countdown > 0}
+                    isLoading={loading.sendEmailVerification}
+                    isDisabled={loading.sendEmailVerification || countdown > 0}
                   >
                     {verifyEmailSent
                       ? `You can resend another verification email ${

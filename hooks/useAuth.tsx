@@ -6,6 +6,8 @@ import {
   LoginMutationResult,
   MeQuery,
   RegisterMutationResult,
+  SendChangeUserEmailEmailMutation,
+  SendChangeUserEmailEmailMutationResult,
   SendEmailVerificationMailMutationResult,
   useLoginMutation,
   useLoginWithAuthProviderMutation,
@@ -14,6 +16,7 @@ import {
   User,
   useRegisterMutation,
   useRegisterWithProviderMutation,
+  useSendChangeUserEmailEmailMutation,
   useSendEmailVerificationMailMutation,
 } from 'generated/graphql';
 import { useRouter } from 'next/router';
@@ -41,8 +44,9 @@ function useProvideAuth() {
   const [logout] = useLogoutMutation();
   const [register] = useRegisterMutation();
   const [externalRegister] = useRegisterWithProviderMutation();
-  const [sendVerificationEmail, { loading: isSendingVerificationEmail }] =
-    useSendEmailVerificationMailMutation();
+  const [sendVerificationEmail] = useSendEmailVerificationMailMutation();
+
+  const [sendChangeEmailMailMutation] = useSendChangeUserEmailEmailMutation();
 
   const handleUserChange = (cache: ApolloCache<any>, authedUser: User) => {
     updateMeQueryCache(cache, authedUser);
@@ -174,6 +178,38 @@ function useProvideAuth() {
     return data;
   };
 
+  const sendChangeEmail = async (
+    authToken: string,
+    authAction: string,
+    email: string
+  ): Promise<SendChangeUserEmailEmailMutationResult['data']> => {
+    const { data } = await sendChangeEmailMailMutation({
+      variables: { email, authAction, authToken },
+    });
+
+    if (data?.sendChangeUserEmailEmail.response) {
+      toaster({
+        isClosable: true,
+        position: 'top-right',
+        status: 'success',
+        variant: 'subtle',
+        title: 'Email sent 💌',
+        description: 'Please check your inbox for a message from us',
+      });
+    } else {
+      toaster({
+        isClosable: true,
+        position: 'top-right',
+        status: 'error',
+        variant: 'subtle',
+        title: 'Email not sent',
+        description: 'Please check your inbox for a message from us',
+      });
+    }
+
+    return data;
+  };
+
   useEffect(() => {
     if (!loading && userData?.me) {
       setUser(userData.me);
@@ -191,6 +227,7 @@ function useProvideAuth() {
     signup,
     signout,
     sendVerifyEmail,
+    sendChangeEmail,
   };
 }
 
