@@ -1,0 +1,10 @@
+mutation GenerateAuthToken($authAction: String!) {
+  generateAuthToken(authAction: $authAction) {
+    errors {
+      field
+      message
+      code
+    }
+    authToken
+  }
+}

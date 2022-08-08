@@ -15,11 +15,14 @@ import { Form, Formik } from 'formik';
 import {
   MeQuery,
   MySettingsQuery,
+  useSendChangeUserEmailEmailMutation,
   useSendEmailVerificationMailMutation,
 } from 'generated/graphql';
 import * as Yup from 'yup';
 
-import React, { useEffect, useRef, useState } from 'react';
+import useTimer from 'hooks/useTimer';
+import ConfirmPassword from 'pages/confirm-password';
+import React, { useState } from 'react';
 
 interface EmailSettingsProps {
   user: MeQuery['me'];
@@ -27,12 +30,16 @@ interface EmailSettingsProps {
 }
 
 const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
-  const [timer, setTimer] = useState(0);
   const [verifyEmailSent, setEmailVerifySent] = useState(false);
-  const intervalId = useRef<NodeJS.Timer | null>(null);
+  const [redirectToAuth, setRedirectToAuth] = useState(false);
+  const [newEmail, setNewEmail] = useState('');
+  const { start, countdown } = useTimer();
 
-  const [sendVerificationEmail, { loading: isSending }] =
+  const [sendVerificationEmail, { loading: isSendingVerificationEmail }] =
     useSendEmailVerificationMailMutation();
+
+  const [sendChangeEmailMail, { loading: isSendingChangeEmail }] =
+    useSendChangeUserEmailEmailMutation();
 
   const toaster = useToast();
 
@@ -42,6 +49,8 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
       variables: { email: email.trim().toLowerCase() },
       update: (_cache, { data: result }) => {
         if (result?.sendVerificationMail.success) {
+          start(60);
+
           toaster({
             isClosable: true,
             position: 'top-right',
@@ -51,7 +60,6 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
             description: 'Please check your inbox for a message from us',
           });
           setEmailVerifySent(true);
-          setTimer(60);
         }
       },
     });
@@ -59,14 +67,31 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
 
   const onChangeEmail = async () => {
     //check if email is already associated with an account
+    setRedirectToAuth(true);
+  };
+  const onAuthorizationSuccess = async (
+    authToken: string,
+    authAction: string
+  ) => {
+    setRedirectToAuth(false);
+    const { data } = await sendChangeEmailMail({
+      variables: { email: newEmail, authAction, authToken },
+    });
+    console.log(`🚀 ~ file: email-settings.tsx ~ line 79 ~ data`, data);
   };
 
-  useEffect(() => {
-    if (timer <= 0) return;
-
-    if (intervalId.current) clearInterval(intervalId.current);
-    intervalId.current = setInterval(() => setTimer(timer - 1), 1000);
-  }, [timer]);
+  if (redirectToAuth) {
+    return (
+      <ConfirmPassword
+        isOpen={redirectToAuth}
+        onSuccess={onAuthorizationSuccess}
+        onFailure={() => {
+          console.log('failure');
+        }}
+        authAction='change-email'
+      />
+    );
+  }
 
   if (!user || !settings) return <Heading>You are not logged in</Heading>;
 
@@ -83,14 +108,8 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
           email: user.email,
         }}
         onSubmit={async ({ email }, { setFieldError }) => {
-          console.log(`🚀 ~ file: email-settings.tsx ~ line 86 ~ email`, email);
-          await new Promise((r) => setTimeout(r, 3000));
-          /* setFieldError(
-            'email',
-            'This email is associated with another account'
-          );
-          
- */
+          setNewEmail(email);
+          onChangeEmail();
           setEmailVerifySent(true);
         }}
         validationSchema={Yup.object().shape({
@@ -159,16 +178,16 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
                     size='sm'
                     fontSize='sm'
                     fontWeight='regular'
-                    colorScheme={timer !== 0 ? 'gray' : 'blue'}
+                    colorScheme={countdown !== 0 ? 'gray' : 'blue'}
                     onClick={() =>
                       onSendEmailVerification(formikProps.values.email)
                     }
-                    isLoading={isSending}
-                    isDisabled={isSending || timer !== 0}
+                    isLoading={isSendingVerificationEmail}
+                    isDisabled={isSendingVerificationEmail || countdown > 0}
                   >
                     {verifyEmailSent
                       ? `You can resend another verification email ${
-                          timer === 0 ? 'now' : `in ${timer}`
+                          countdown === 0 ? 'now' : `in ${countdown}`
                         }`
                       : 'Send verification email'}
                   </Button>

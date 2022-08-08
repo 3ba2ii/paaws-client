@@ -209,6 +209,12 @@ export type FindUserByTokenIdResponse = {
   user?: Maybe<User>;
 };
 
+export type GenerateAuthTokenResponse = {
+  __typename?: 'GenerateAuthTokenResponse';
+  authToken?: Maybe<Scalars['String']>;
+  errors?: Maybe<Array<FieldError>>;
+};
+
 export type LocationFilterComponents = {
   lat?: Maybe<Scalars['Float']>;
   lng?: Maybe<Scalars['Float']>;
@@ -307,6 +313,7 @@ export type Mutation = {
   editComment: CommentResponse;
   editMissingPost: EditMissingPostResponse;
   forgotPassword: Scalars['Boolean'];
+  generateAuthToken: GenerateAuthTokenResponse;
   isUserRegistered: FindUserByTokenIdResponse;
   isValidAccountURL: Scalars['Boolean'];
   login: UserResponse;
@@ -315,7 +322,7 @@ export type Mutation = {
   register: UserResponse;
   registerWithAuthProvider: UserResponse;
   removeAvatar: RegularResponse;
-  sendChangeEmailVerificationMail: RegularResponse;
+  sendChangeUserEmailEmail: BooleanResponseType;
   sendOTP: RegularResponse;
   sendVerificationMail: RegularResponse;
   updateAccountURL: RegularResponse;
@@ -404,6 +411,11 @@ export type MutationForgotPasswordArgs = {
 };
 
 
+export type MutationGenerateAuthTokenArgs = {
+  authAction: Scalars['String'];
+};
+
+
 export type MutationIsUserRegisteredArgs = {
   idToken: Scalars['String'];
   provider: Scalars['String'];
@@ -434,6 +446,13 @@ export type MutationRegisterArgs = {
 export type MutationRegisterWithAuthProviderArgs = {
   provider: ProviderTypes;
   providerId: Scalars['String'];
+};
+
+
+export type MutationSendChangeUserEmailEmailArgs = {
+  authAction: Scalars['String'];
+  authToken: Scalars['String'];
+  email: Scalars['String'];
 };
 
 
@@ -1044,6 +1063,13 @@ export type ForgotPasswordMutationVariables = Exact<{
 
 export type ForgotPasswordMutation = { __typename?: 'Mutation', forgotPassword: boolean };
 
+export type GenerateAuthTokenMutationVariables = Exact<{
+  authAction: Scalars['String'];
+}>;
+
+
+export type GenerateAuthTokenMutation = { __typename?: 'Mutation', generateAuthToken: { __typename?: 'GenerateAuthTokenResponse', authToken?: Maybe<string>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+
 export type LoginMutationVariables = Exact<{
   loginOptions: LoginInput;
 }>;
@@ -1091,6 +1117,15 @@ export type RemoveUserAvatarMutationVariables = Exact<{ [key: string]: never; }>
 
 
 export type RemoveUserAvatarMutation = { __typename?: 'Mutation', removeAvatar: { __typename?: 'RegularResponse', success?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
+
+export type SendChangeUserEmailEmailMutationVariables = Exact<{
+  authToken: Scalars['String'];
+  email: Scalars['String'];
+  authAction: Scalars['String'];
+}>;
+
+
+export type SendChangeUserEmailEmailMutation = { __typename?: 'Mutation', sendChangeUserEmailEmail: { __typename?: 'BooleanResponseType', response?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', field: string, message: string, code: number }>> } };
 
 export type SendEmailVerificationMailMutationVariables = Exact<{
   email: Scalars['String'];
@@ -1749,6 +1784,44 @@ export function useForgotPasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type ForgotPasswordMutationHookResult = ReturnType<typeof useForgotPasswordMutation>;
 export type ForgotPasswordMutationResult = Apollo.MutationResult<ForgotPasswordMutation>;
 export type ForgotPasswordMutationOptions = Apollo.BaseMutationOptions<ForgotPasswordMutation, ForgotPasswordMutationVariables>;
+export const GenerateAuthTokenDocument = gql`
+    mutation GenerateAuthToken($authAction: String!) {
+  generateAuthToken(authAction: $authAction) {
+    errors {
+      field
+      message
+      code
+    }
+    authToken
+  }
+}
+    `;
+export type GenerateAuthTokenMutationFn = Apollo.MutationFunction<GenerateAuthTokenMutation, GenerateAuthTokenMutationVariables>;
+
+/**
+ * __useGenerateAuthTokenMutation__
+ *
+ * To run a mutation, you first call `useGenerateAuthTokenMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGenerateAuthTokenMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [generateAuthTokenMutation, { data, loading, error }] = useGenerateAuthTokenMutation({
+ *   variables: {
+ *      authAction: // value for 'authAction'
+ *   },
+ * });
+ */
+export function useGenerateAuthTokenMutation(baseOptions?: Apollo.MutationHookOptions<GenerateAuthTokenMutation, GenerateAuthTokenMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GenerateAuthTokenMutation, GenerateAuthTokenMutationVariables>(GenerateAuthTokenDocument, options);
+      }
+export type GenerateAuthTokenMutationHookResult = ReturnType<typeof useGenerateAuthTokenMutation>;
+export type GenerateAuthTokenMutationResult = Apollo.MutationResult<GenerateAuthTokenMutation>;
+export type GenerateAuthTokenMutationOptions = Apollo.BaseMutationOptions<GenerateAuthTokenMutation, GenerateAuthTokenMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($loginOptions: LoginInput!) {
   login(options: $loginOptions) {
@@ -2023,6 +2096,50 @@ export function useRemoveUserAvatarMutation(baseOptions?: Apollo.MutationHookOpt
 export type RemoveUserAvatarMutationHookResult = ReturnType<typeof useRemoveUserAvatarMutation>;
 export type RemoveUserAvatarMutationResult = Apollo.MutationResult<RemoveUserAvatarMutation>;
 export type RemoveUserAvatarMutationOptions = Apollo.BaseMutationOptions<RemoveUserAvatarMutation, RemoveUserAvatarMutationVariables>;
+export const SendChangeUserEmailEmailDocument = gql`
+    mutation SendChangeUserEmailEmail($authToken: String!, $email: String!, $authAction: String!) {
+  sendChangeUserEmailEmail(
+    authToken: $authToken
+    email: $email
+    authAction: $authAction
+  ) {
+    errors {
+      field
+      message
+      code
+    }
+    response
+  }
+}
+    `;
+export type SendChangeUserEmailEmailMutationFn = Apollo.MutationFunction<SendChangeUserEmailEmailMutation, SendChangeUserEmailEmailMutationVariables>;
+
+/**
+ * __useSendChangeUserEmailEmailMutation__
+ *
+ * To run a mutation, you first call `useSendChangeUserEmailEmailMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSendChangeUserEmailEmailMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [sendChangeUserEmailEmailMutation, { data, loading, error }] = useSendChangeUserEmailEmailMutation({
+ *   variables: {
+ *      authToken: // value for 'authToken'
+ *      email: // value for 'email'
+ *      authAction: // value for 'authAction'
+ *   },
+ * });
+ */
+export function useSendChangeUserEmailEmailMutation(baseOptions?: Apollo.MutationHookOptions<SendChangeUserEmailEmailMutation, SendChangeUserEmailEmailMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SendChangeUserEmailEmailMutation, SendChangeUserEmailEmailMutationVariables>(SendChangeUserEmailEmailDocument, options);
+      }
+export type SendChangeUserEmailEmailMutationHookResult = ReturnType<typeof useSendChangeUserEmailEmailMutation>;
+export type SendChangeUserEmailEmailMutationResult = Apollo.MutationResult<SendChangeUserEmailEmailMutation>;
+export type SendChangeUserEmailEmailMutationOptions = Apollo.BaseMutationOptions<SendChangeUserEmailEmailMutation, SendChangeUserEmailEmailMutationVariables>;
 export const SendEmailVerificationMailDocument = gql`
     mutation SendEmailVerificationMail($email: String!) {
   sendVerificationMail(email: $email) {

@@ -1,30 +1,30 @@
 import { Heading } from '@chakra-ui/layout';
 import { useToast } from '@chakra-ui/react';
 import { Layout } from 'components/common/Layout';
-import { LoginWithAuthProviderMutationResult } from 'generated/graphql';
-import { useAuth } from 'hooks/useAuth';
+import { LoginResponseType } from 'modules/auth/login/login.types';
 import LoginWithAuthProviders from 'modules/auth/login/LoginWithAuthProviders';
 import router from 'next/router';
 import React from 'react';
 import styles from 'styles/login.module.css';
 import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
-import withApollo from 'utils/withApollo';
 import { LoginForm } from '../../modules/auth/login/LoginForm';
 
 interface LoginPageProps {
   title?: string;
+  onSuccess?: (data: LoginResponseType) => void;
+  onLoginFailure?: Function;
 }
 
-const LoginPage: React.FC<LoginPageProps> = ({ title }) => {
+const LoginPage: React.FC<LoginPageProps> = ({ title, onSuccess }) => {
   const toaster = useToast();
-  const onSuccess = async (
-    data: LoginWithAuthProviderMutationResult['data']
-  ) => {
+
+  const onLoginWithAuthProviderSuccess = async (data: LoginResponseType) => {
     if (!data) return onFailure();
-    const redirectURL = getUrlBaseOnUserInfo(
-      data.loginWithAuthProvider.user,
-      'login'
-    );
+    if (onSuccess) {
+      onSuccess(data);
+      return;
+    }
+    const redirectURL = getUrlBaseOnUserInfo(data.data?.user, 'login');
     return router.push(redirectURL);
   };
 
@@ -43,7 +43,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ title }) => {
   return (
     <Layout title='Welcome Back - Paaws'>
       <div className={styles['login-page-container']}>
-        <Heading size='xl'>
+        <Heading size='lg'>
           {title ? (
             title
           ) : (
@@ -52,12 +52,23 @@ const LoginPage: React.FC<LoginPageProps> = ({ title }) => {
             </span>
           )}
         </Heading>
-        <LoginWithAuthProviders {...{ onSuccess, onFailure }} />
+        <LoginWithAuthProviders
+          {...{ onSuccess: onLoginWithAuthProviderSuccess, onFailure }}
+        />
 
         <p className='divider-with-centered-value'>or</p>
-        <LoginForm onSuccess={navigateToURL} onFailure={onFailure} />
+        <LoginForm
+          onSuccess={(data) => {
+            if (onSuccess) {
+              onSuccess(data);
+              return;
+            }
+            navigateToURL();
+          }}
+          onFailure={onFailure}
+        />
       </div>
     </Layout>
   );
 };
-export default withApollo(LoginPage);
+export default LoginPage;

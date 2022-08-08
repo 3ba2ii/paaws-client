@@ -10,9 +10,9 @@ const useTimer = () => {
     if (status === 'ON' || intervalId.current !== null) {
       throw new Error('Timer is already running');
     }
-
+    setCountdown(durationInSeconds);
     const newIntervalId = setInterval(() => {
-      setCountdown(durationInSeconds);
+      setCountdown(durationInSeconds - 1);
 
       if (--durationInSeconds < 0) {
         clear();

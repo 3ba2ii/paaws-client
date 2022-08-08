@@ -1,0 +1,18 @@
+mutation SendChangeUserEmailEmail(
+  $authToken: String!
+  $email: String!
+  $authAction: String!
+) {
+  sendChangeUserEmailEmail(
+    authToken: $authToken
+    email: $email
+    authAction: $authAction
+  ) {
+    errors {
+      field
+      message
+      code
+    }
+    response
+  }
+}

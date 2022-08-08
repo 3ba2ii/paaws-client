@@ -8,7 +8,7 @@ const RegisterViaEmail = () => {
   return (
     <Layout title='Join us Now'>
       <main>
-        <Heading fit='cover'>
+        <Heading>
           Sign up and join{' '}
           <Text as='span' color='teal.400'>
             pet lovers

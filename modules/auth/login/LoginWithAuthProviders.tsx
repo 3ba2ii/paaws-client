@@ -1,5 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import {
+  LoginMutation,
+  LoginWithAuthProviderMutation,
   LoginWithAuthProviderMutationResult,
   ProviderTypes,
 } from 'generated/graphql';
@@ -7,9 +9,11 @@ import { useAuth } from 'hooks/useAuth';
 import React from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import { FcGoogle } from 'react-icons/fc';
+import { LoginResponseType } from './login.types';
 
 interface LoginWithAuthProvidersProps {
-  onSuccess: (data: LoginWithAuthProviderMutationResult['data']) => void;
+  onSuccess?: (data: LoginResponseType) => void;
+
   onFailure: Function;
 }
 
@@ -33,7 +37,7 @@ const LoginWithAuthProviders: React.FC<LoginWithAuthProvidersProps> = ({
       onFailure();
       return;
     }
-    onSuccess && onSuccess(data);
+    onSuccess && onSuccess({ data: data.loginWithAuthProvider });
   };
 
   return (

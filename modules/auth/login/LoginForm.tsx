@@ -6,9 +6,10 @@ import Link from 'next/link';
 import React from 'react';
 import styles from 'styles/login.module.css';
 import { toErrorMap } from 'utils/toErrorMap';
+import { LoginResponseType } from './login.types';
 
 interface LoginFormProps {
-  onSuccess: Function;
+  onSuccess?: (data: LoginResponseType) => void;
   onFailure: Function;
 }
 
@@ -32,7 +33,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           return;
         }
 
-        onSuccess();
+        onSuccess && onSuccess({ data: data.login });
       }}
     >
       {({ isSubmitting }) => (

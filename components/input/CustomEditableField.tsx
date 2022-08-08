@@ -79,7 +79,6 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
   }
 
   const [field, { error }] = useField(props);
-  console.log(`🚀 ~ file: CustomEditableField.tsx ~ line 82 ~ error`, error);
 
   return (
     <Editable
