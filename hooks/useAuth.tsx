@@ -203,7 +203,7 @@ function useProvideAuth() {
         status: 'error',
         variant: 'subtle',
         title: 'Email not sent',
-        description: 'Please check your inbox for a message from us',
+        description: 'Please try again later',
       });
     }
 

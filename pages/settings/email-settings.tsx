@@ -7,15 +7,12 @@ import {
   Heading,
   HStack,
   Text,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import CustomEditableField from 'components/input/CustomEditableField';
 import { Form, Formik } from 'formik';
-import {
-  MeQuery,
-  MySettingsQuery,
-  useSendChangeUserEmailEmailMutation,
-} from 'generated/graphql';
+import { MeQuery, MySettingsQuery } from 'generated/graphql';
 import * as Yup from 'yup';
 
 import { useAuth } from 'hooks/useAuth';
@@ -31,14 +28,15 @@ interface EmailSettingsProps {
 const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
   const [verifyEmailSent, setEmailVerifySent] = useState(false);
   const [redirectToAuth, setRedirectToAuth] = useState(false);
+  const [newEmail, setNewEmail] = useState('');
   const [loading, setLoading] = useState({
     sendingEmail: false,
     sendEmailVerification: false,
   });
-  const [newEmail, setNewEmail] = useState('');
 
-  const { start, countdown } = useTimer();
   const auth = useAuth();
+  const toaster = useToast();
+  const { start, countdown } = useTimer();
 
   const onSendEmailVerification = async (email: string) => {
     if (!email) return;
@@ -53,8 +51,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
     setLoading({ ...loading, sendEmailVerification: false });
   };
 
-  const onChangeEmail = async () => {
-    //check if email is already associated with an account
+  const openAuthorizationModal = () => {
     setRedirectToAuth(true);
   };
   const onAuthorizationSuccess = async (
@@ -62,22 +59,19 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
     authAction: string
   ) => {
     /* send change email mail */
-    const data = await auth.sendChangeEmail(authToken, authAction, newEmail);
+    await auth.sendChangeEmail(authToken, authAction, newEmail);
     setRedirectToAuth(false);
   };
-
-  if (redirectToAuth) {
-    return (
-      <ConfirmPassword
-        isOpen={redirectToAuth}
-        onSuccess={onAuthorizationSuccess}
-        onFailure={() => {
-          console.log('failure');
-        }}
-        authAction='change-email'
-      />
-    );
-  }
+  const failedToaster = (message: string) => {
+    toaster({
+      isClosable: true,
+      position: 'top-right',
+      status: 'error',
+      variant: 'subtle',
+      title: 'Failed',
+      description: message,
+    });
+  };
 
   if (!user || !settings) return <Heading>You are not logged in</Heading>;
 
@@ -93,9 +87,9 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
         initialValues={{
           email: user.email,
         }}
-        onSubmit={async ({ email }, { setFieldError }) => {
+        onSubmit={async ({ email }) => {
           setNewEmail(email);
-          onChangeEmail();
+          openAuthorizationModal();
           setEmailVerifySent(true);
         }}
         validationSchema={Yup.object().shape({
@@ -170,6 +164,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
                     }
                     isLoading={loading.sendEmailVerification}
                     isDisabled={loading.sendEmailVerification || countdown > 0}
+                    loadingText={'Sending verification email'}
                   >
                     {verifyEmailSent
                       ? `You can resend another verification email ${
@@ -183,6 +178,13 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
           </Form>
         )}
       </Formik>
+      <ConfirmPassword
+        isOpen={redirectToAuth}
+        onSuccess={onAuthorizationSuccess}
+        onFailure={failedToaster}
+        authAction='change-email'
+        onClose={() => setRedirectToAuth(false)}
+      />
     </VStack>
   );
 };

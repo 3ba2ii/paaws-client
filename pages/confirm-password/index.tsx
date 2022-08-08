@@ -1,12 +1,15 @@
+import { Heading, VStack } from '@chakra-ui/react';
 import GenericModal from 'components/overlays/CustomModal';
 import { useGenerateAuthTokenMutation } from 'generated/graphql';
 import { useAuth } from 'hooks/useAuth';
 import { LoginResponseType } from 'modules/auth/login/login.types';
-import LoginPage from 'pages/login';
+import { LoginForm } from 'modules/auth/login/LoginForm';
+import LoginWithAuthProviders from 'modules/auth/login/LoginWithAuthProviders';
 import React from 'react';
 interface ConfirmPasswordPageProps {
   onSuccess: (authToken: string, authAction: string) => void;
   onFailure: Function;
+  onClose: VoidFunction;
   isOpen: boolean;
   authAction: string;
 }
@@ -16,15 +19,10 @@ const ConfirmPasswordPage: React.FC<ConfirmPasswordPageProps> = ({
   onFailure,
   isOpen,
   authAction,
+  onClose,
 }) => {
   const { user } = useAuth();
-  /* This flows like this
-        1. User enters his password
-        2. If correct -> call onSuccess callback function
-        3. If not -> call onFailure callback function
-    
-    */
-  /* This page will be shown on changing critical information, Like changing account email, deleting account, and so on */
+
   const [generateAuthToken] = useGenerateAuthTokenMutation();
 
   const onLoginSuccess = async ({ data: loginResponse }: LoginResponseType) => {
@@ -37,13 +35,7 @@ const ConfirmPasswordPage: React.FC<ConfirmPasswordPageProps> = ({
       return onFailure();
     }
 
-    /* 2. if yes -> 
-          a.generate an AuthToken
-          b. call onSuccess callback function with the AuthToken and the authAction
-    */
-
     const { data } = await generateAuthToken({ variables: { authAction } });
-    console.log(`🚀 ~ file: index.tsx ~ line 29 ~ onLoginSuccess ~ data`, data);
 
     if (!data?.generateAuthToken.authToken) {
       return onFailure();
@@ -54,14 +46,31 @@ const ConfirmPasswordPage: React.FC<ConfirmPasswordPageProps> = ({
   return (
     <GenericModal
       body={
-        <LoginPage
-          title='This action requires you to confirm your password'
-          onSuccess={onLoginSuccess}
-          onLoginFailure={onFailure}
-        />
+        <VStack>
+          <LoginWithAuthProviders
+            {...{ onSuccess: onLoginSuccess, onFailure }}
+          />
+
+          <p className='divider-with-centered-value'>or</p>
+          <LoginForm
+            onSuccess={(data) => {
+              if (onLoginSuccess) {
+                onLoginSuccess(data);
+                return;
+              }
+            }}
+            onFailure={onFailure}
+          />
+        </VStack>
       }
+      title={
+        <Heading mt={5} mb={3} size='md' w='100%' textAlign={'left'}>
+          This action requires authentication
+        </Heading>
+      }
+      footer={<></>}
       isOpen={isOpen}
-      onClose={() => {}}
+      onClose={onClose}
     />
   );
 };
