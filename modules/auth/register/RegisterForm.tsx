@@ -9,7 +9,7 @@ import { Field, Form, Formik } from 'formik';
 import { useAuth } from 'hooks/useAuth';
 import router from 'next/router';
 import styles from 'styles/register.module.css';
-import { toErrorMap } from 'utils/toErrorMap';
+import { toErrorMap } from 'utils/helpers/toErrorMap';
 import { SignupSchema } from 'utils/yupSchemas/SignupSchema';
 
 export const RegisterForm = () => {

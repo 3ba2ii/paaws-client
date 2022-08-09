@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { BiBell } from 'react-icons/bi';
 import { FaHeart } from 'react-icons/fa';
 import navbarStyles from 'styles/navbar.module.css';
-import { isServer } from 'utils/isServer';
+import { isServer } from 'utils/helpers/isServer';
 import { LoadingComponent } from '../common/loading/LoadingSpinner';
 import ProfileMenu from '../overlays/ProfileMenu';
 import { DarkModeSwitch } from '../common/DarkModeSwitch';

@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { BiCloudUpload, BiUpload } from 'react-icons/bi';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
-import { createFileWithURL } from 'utils/createFilewithURL';
+import { createFileWithURL } from 'utils/helpers/createFilewithURL';
 import withApollo from 'utils/withApollo';
 
 const SelectAvatar: React.FC = () => {

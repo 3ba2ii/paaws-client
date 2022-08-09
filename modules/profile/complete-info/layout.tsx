@@ -12,8 +12,8 @@ import ProfileMenu from 'components/overlays/ProfileMenu';
 import { useRequireAuth } from 'hooks/useRequireAuth';
 import router, { useRouter } from 'next/router';
 import React from 'react';
-import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
-import { isCompleteProfile } from 'utils/isCompletedProfile';
+import { getUrlBaseOnUserInfo } from 'utils/helpers/getUrlBasedOnUserInfo';
+import { isCompleteProfile } from 'utils/helpers/isCompletedProfile';
 
 interface CompleteInfoProps {
   pageTitle: string;

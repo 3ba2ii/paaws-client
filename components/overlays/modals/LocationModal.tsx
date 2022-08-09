@@ -14,7 +14,7 @@ import {
 } from '@react-google-maps/api';
 import React, { useState } from 'react';
 import { Libraries, LocationType } from 'types';
-import { isProduction } from 'utils/isProduction';
+import { isProduction } from 'utils/helpers/isProduction';
 import { MapLoadingComponent } from '../../location/MapLoadingComponent';
 import GenericModal from '../CustomModal';
 import GoogleMapComponent from '../../GoogleMapComponent';

@@ -3,7 +3,7 @@ import React from 'react';
 import Select, { GroupBase, Props, StylesConfig } from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { MyOptionType } from 'types';
-import { getSelectStyle } from 'utils/getSelectStyle';
+import { getSelectStyle } from 'utils/helpers/getSelectStyle';
 
 const animatedComponents = makeAnimated();
 

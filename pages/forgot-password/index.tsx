@@ -4,7 +4,7 @@ import Logo from 'components/common/Logo';
 import { useForgotPasswordMutation } from 'generated/graphql';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
-import { isValidEmail } from 'utils/isValidEmail';
+import { isValidEmail } from 'utils/helpers/isValidEmail';
 import withApollo from 'utils/withApollo';
 
 interface ForgotPasswordPageProps {}

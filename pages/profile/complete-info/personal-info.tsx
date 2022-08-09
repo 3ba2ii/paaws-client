@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { OptionTypeWithEnums } from 'types';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
-import { convertDateFormat } from 'utils/convertDateFormat';
+import { convertDateFormat } from 'utils/helpers/convertDateFormat';
 import withApollo from 'utils/withApollo';
 type FormValuesType = {
   bio: string;

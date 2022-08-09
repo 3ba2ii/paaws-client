@@ -11,7 +11,7 @@ import {
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
-import { toErrorMap } from 'utils/toErrorMap';
+import { toErrorMap } from 'utils/helpers/toErrorMap';
 import { EditableFieldsType, UpdateUserDataType } from './_types';
 
 interface AboutYouProps {

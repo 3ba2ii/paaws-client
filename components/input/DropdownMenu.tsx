@@ -10,7 +10,7 @@ import {
   MenuProps,
   Text,
 } from '@chakra-ui/react';
-import { capitalizeFirstLetterOfEachWord } from 'utils/capitalizeString';
+import { capitalizeFirstLetterOfEachWord } from 'utils/helpers/capitalizeString';
 
 type DropdownMenuProps = {
   options: Array<{ key: string; value: string }>;

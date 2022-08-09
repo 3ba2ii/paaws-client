@@ -6,7 +6,7 @@ import { MissingPostsQuery } from 'generated/graphql';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { fallbackSrc } from 'utils/constants';
-import { rgbDataURL } from 'utils/rgbDataURL';
+import { rgbDataURL } from 'utils/helpers/rgbDataURL';
 import { PostOwner } from '../../../components/PostOwner';
 import { PostTags } from '../common/PostTags';
 import { PostActions } from './PostActions';

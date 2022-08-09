@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
 import { FcGoogle } from 'react-icons/fc';
-import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
+import { getUrlBaseOnUserInfo } from 'utils/helpers/getUrlBasedOnUserInfo';
 import withApollo from 'utils/withApollo';
 import { Layout } from '../../components/common/Layout';
 import styles from '../../styles/register.module.css';

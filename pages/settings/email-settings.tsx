@@ -20,7 +20,7 @@ import { useRequireAuth } from 'hooks/useRequireAuth';
 import useTimer from 'hooks/useTimer';
 import AuthModal from 'modules/auth/login/AuthModal';
 import React, { useState } from 'react';
-import areTwoStringsEqual from 'utils/areTwoStringsEqual';
+import areTwoStringsEqual from 'utils/helpers/areTwoStringsEqual';
 
 interface EmailSettingsProps {
   user: MeQuery['me'];

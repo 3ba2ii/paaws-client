@@ -14,7 +14,7 @@ import {
 } from 'generated/graphql';
 import nextWithApollo from 'next-with-apollo';
 import router, { useRouter } from 'next/router';
-import { isServer } from './isServer';
+import { isServer } from './helpers/isServer';
 
 // Use this inside error-link
 export const handleLogoutWithoutHook = () => {

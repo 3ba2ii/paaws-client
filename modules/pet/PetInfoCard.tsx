@@ -1,6 +1,6 @@
 import { VStack, Heading, Text } from '@chakra-ui/react';
 import React from 'react';
-import { capitalizeString } from 'utils/capitalizeString';
+import { capitalizeString } from 'utils/helpers/capitalizeString';
 
 interface PetInfoCardProps {
   label: string;

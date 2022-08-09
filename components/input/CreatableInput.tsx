@@ -9,8 +9,8 @@ import {
 } from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 import { MyOptionType } from 'types';
-import { createOption } from 'utils/createOption';
-import { getSelectStyle } from 'utils/getSelectStyle';
+import { createOption } from 'utils/helpers/createOption';
+import { getSelectStyle } from 'utils/helpers/getSelectStyle';
 
 interface CreatableInputProps {
   options: MyOptionType[];

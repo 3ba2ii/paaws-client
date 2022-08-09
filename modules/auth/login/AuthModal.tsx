@@ -8,7 +8,7 @@ import { LoginResponseType } from 'modules/auth/login/login.types';
 import LoginWithAuthProviders from 'modules/auth/login/LoginWithAuthProviders';
 import React from 'react';
 import { GoogleLoginProps } from 'react-google-login';
-import { toErrorMap } from 'utils/toErrorMap';
+import { toErrorMap } from 'utils/helpers/toErrorMap';
 
 interface AuthModalProps {
   onSuccess: (authToken: string, authAction: string) => void;

@@ -1,4 +1,4 @@
-import { createObjFromEnum } from './../createObjectFromEnum';
+import { createObjFromEnum } from '../helpers/createObjectFromEnum';
 import {
   PrivacyType,
   DateFilters,

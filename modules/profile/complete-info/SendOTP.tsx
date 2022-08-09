@@ -5,7 +5,7 @@ import { useSendOtpMutation } from 'generated/graphql';
 import { useRequireAuth } from 'hooks/useRequireAuth';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { toErrorMap } from 'utils/toErrorMap';
+import { toErrorMap } from 'utils/helpers/toErrorMap';
 
 interface SendOTPProps {
   onSuccess: (phone: string) => void;

@@ -3,7 +3,7 @@ import GoogleMapComponent from 'components/GoogleMapComponent';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Libraries, LocationType } from 'types';
 import { SelectLocationOptions } from 'utils/constants/enums';
-import { isProduction } from 'utils/isProduction';
+import { isProduction } from 'utils/helpers/isProduction';
 import { CustomLocationAutocomplete } from './LocationAutoComplete';
 import { MapLoadingComponent } from './MapLoadingComponent';
 

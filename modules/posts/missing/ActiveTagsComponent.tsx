@@ -18,7 +18,7 @@ import {
   FiMapPin,
 } from 'react-icons/fi';
 import { FiltersTypes, FiltersTypeString } from 'types';
-import { capitalizeFirstLetterOfEachWord } from 'utils/capitalizeString';
+import { capitalizeFirstLetterOfEachWord } from 'utils/helpers/capitalizeString';
 
 export const ActiveTagsComponent: React.FC<{
   type: FiltersTypeString;

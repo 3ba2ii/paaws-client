@@ -1,6 +1,6 @@
 import { VStack, Text, Heading, Button } from '@chakra-ui/react';
 import React from 'react';
-import { focusOnElement } from 'utils/focusOnElement';
+import { focusOnElement } from 'utils/helpers/focusOnElement';
 
 const NoComments: React.FC = () => {
   return (

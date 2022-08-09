@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react';
 import { UserOwnedPetQuery } from 'generated/graphql';
 import React from 'react';
-import { capitalizeFirstLetterOfEachWord } from 'utils/capitalizeString';
+import { capitalizeFirstLetterOfEachWord } from 'utils/helpers/capitalizeString';
 import { PetInfoCardsRow } from './PetInfoCardsRow';
 
 interface UserPetInfoColumnProps {

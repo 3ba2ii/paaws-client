@@ -6,8 +6,8 @@ import LoginWithAuthProviders from 'modules/auth/login/LoginWithAuthProviders';
 import router from 'next/router';
 import React from 'react';
 import styles from 'styles/login.module.css';
-import { getUrlBaseOnUserInfo } from 'utils/getUrlBasedOnUserInfo';
-import { LoginForm } from '../../modules/auth/login/LoginForm';
+import { getUrlBaseOnUserInfo } from 'utils/helpers/getUrlBasedOnUserInfo';
+import { LoginForm } from 'modules/auth/login/LoginForm';
 
 interface LoginPageProps {
   title?: string;

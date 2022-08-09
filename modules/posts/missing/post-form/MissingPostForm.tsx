@@ -14,7 +14,7 @@ import { useRequireAuth } from 'hooks/useRequireAuth';
 import React, { useRef, useState } from 'react';
 import { PostInputType } from 'types';
 import { addNewMissingPostToCache } from 'utils/cache/addNewMissingPost';
-import { toErrorMap } from 'utils/toErrorMap';
+import { toErrorMap } from 'utils/helpers/toErrorMap';
 import { CreateMPSchema } from 'utils/yupSchemas/CreateMPSchema';
 import { CustomAlertDialog } from 'components/overlays/AlertDialog';
 import { NotAuthenticatedComponent } from 'components/errors/NotAuthenticatedComponent';

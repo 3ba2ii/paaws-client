@@ -14,7 +14,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import React, { useState } from 'react';
 import { GoChevronDown } from 'react-icons/go';
 import { PostInputType } from 'types';
-import { capitalizeString } from 'utils/capitalizeString';
+import { capitalizeString } from 'utils/helpers/capitalizeString';
 import {
   MP_POST_TYPES,
   PrivacyTypeCustomized,

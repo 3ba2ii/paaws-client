@@ -21,7 +21,7 @@ import {
 import { useRouter } from 'next/router';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
-import { capitalizeString } from 'utils/capitalizeString';
+import { capitalizeString } from 'utils/helpers/capitalizeString';
 import {
   LoginWithAuthProviderMutationResult,
   ProviderTypes,

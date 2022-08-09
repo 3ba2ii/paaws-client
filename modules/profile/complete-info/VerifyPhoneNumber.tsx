@@ -12,7 +12,7 @@ import { MeQuery, useVerifyPhoneNumberMutation } from 'generated/graphql';
 import router from 'next/router';
 import React from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
-import { toErrorMap } from 'utils/toErrorMap';
+import { toErrorMap } from 'utils/helpers/toErrorMap';
 
 interface IVerifyOTPProps {
   phone: string;

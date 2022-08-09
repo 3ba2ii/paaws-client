@@ -5,7 +5,7 @@ import { useAuth } from 'hooks/useAuth';
 import Link from 'next/link';
 import React from 'react';
 import styles from 'styles/login.module.css';
-import { toErrorMap } from 'utils/toErrorMap';
+import { toErrorMap } from 'utils/helpers/toErrorMap';
 import { LoginResponseType } from './login.types';
 
 interface LoginFormProps {
