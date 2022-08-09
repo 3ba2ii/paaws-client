@@ -11,6 +11,7 @@ import {
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
+import areTwoStringsEqual from 'utils/helpers/areTwoStringsEqual';
 import { toErrorMap } from 'utils/helpers/toErrorMap';
 import { EditableFieldsType, UpdateUserDataType } from './_types';
 
@@ -69,7 +70,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
     const { full_name } = formikProps.values;
     const { full_name: initialFullName } = formikProps.initialValues;
 
-    if (initialFullName.trim() === full_name.trim()) return;
+    if (areTwoStringsEqual(initialFullName, full_name)) return;
 
     await editFullName({
       variables: { fullName: full_name },
@@ -94,7 +95,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
   };
   const onUpdateInfo = async (formikProps: FormikProps<UpdateUserDataType>) => {
     const { values, initialValues } = formikProps;
-    if (values.bio.trim() === initialValues.bio.trim()) {
+    if (areTwoStringsEqual(values?.bio, initialValues?.bio)) {
       //show warning that its the same value
       return;
     }
@@ -149,6 +150,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
         helperText:
           'This bio will appear on your profile page, so make it short and sweet!',
         name: 'bio',
+        placeholder: 'Tell us a little about yourself',
         isLoading: editUserInfoLoading,
         onSubmit: (fp) => onUpdateInfo(fp),
         onAbort: (fp) => handleAbort(fp, 'bio'),
@@ -185,7 +187,6 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
             }}
           >
             <VStack spacing={14} maxW='800px'>
-              <Text>{JSON.stringify(formikProps.values)}</Text>
               {SettingsFormFields.map(
                 ({
                   key,
@@ -196,10 +197,11 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                   onAbort,
                   isLoading = false,
                   helperText = '',
+                  placeholder,
                 }) => {
                   return (
                     <InputFieldWrapper
-                      {...{ key, label, name, helperText }}
+                      {...{ key, label, name, helperText, placeholder }}
                       labelStyles={{ fontSize: 'md', fontWeight: 'bold' }}
                       required={false}
                     >
@@ -210,6 +212,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
                           name,
                           textarea,
                           isLoading,
+                          placeholder,
                         }}
                         editableProps={{
                           isPreviewFocusable: false,

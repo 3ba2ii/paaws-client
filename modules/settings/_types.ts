@@ -17,6 +17,7 @@ export type EditableFieldsType<T> = {
   onCancel: (formikProps: FormikProps<T>) => void;
   isLoading?: boolean;
   helperText?: string;
+  placeholder?: string;
   textarea?: boolean;
   editableProps?: EditableProps;
 };

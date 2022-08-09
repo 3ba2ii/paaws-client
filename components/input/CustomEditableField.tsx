@@ -84,12 +84,15 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
     <Editable
       {...{ defaultValue, ...editableProps }}
       isPreviewFocusable={editableProps?.isPreviewFocusable || hasError}
+      placeholder={editableProps?.placeholder || props.placeholder}
     >
       <Flex
         w='100%'
         flexDir={'row'}
         justifyContent='space-between'
-        style={{ wordBreak: 'break-all' }}
+        style={{
+          wordBreak: 'break-all',
+        }}
       >
         <EditablePreview {...editablePreviewProps} />
         {/* Here is the custom input */}
