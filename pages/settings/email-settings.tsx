@@ -16,8 +16,9 @@ import { MeQuery, MySettingsQuery } from 'generated/graphql';
 import * as Yup from 'yup';
 
 import { useAuth } from 'hooks/useAuth';
+import { useRequireAuth } from 'hooks/useRequireAuth';
 import useTimer from 'hooks/useTimer';
-import ConfirmPassword from 'pages/confirm-password';
+import AuthModal from 'modules/auth/login/AuthModal';
 import React, { useState } from 'react';
 
 interface EmailSettingsProps {
@@ -26,6 +27,8 @@ interface EmailSettingsProps {
 }
 
 const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
+  useRequireAuth();
+
   const [verifyEmailSent, setEmailVerifySent] = useState(false);
   const [redirectToAuth, setRedirectToAuth] = useState(false);
   const [newEmail, setNewEmail] = useState('');
@@ -73,8 +76,6 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
     });
   };
 
-  if (!user || !settings) return <Heading>You are not logged in</Heading>;
-
   const isVerified = settings?.emailVerified;
 
   return (
@@ -85,7 +86,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
       <Divider maxW='800px' />
       <Formik
         initialValues={{
-          email: user.email,
+          email: user?.email || '',
         }}
         onSubmit={async ({ email }) => {
           setNewEmail(email);
@@ -180,7 +181,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
         )}
       </Formik>
       {redirectToAuth ? (
-        <ConfirmPassword
+        <AuthModal
           isOpen={redirectToAuth}
           onSuccess={onAuthorizationSuccess}
           onFailure={failedToaster}

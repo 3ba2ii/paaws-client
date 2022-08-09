@@ -9,7 +9,8 @@ import LoginWithAuthProviders from 'modules/auth/login/LoginWithAuthProviders';
 import React from 'react';
 import { GoogleLoginProps } from 'react-google-login';
 import { toErrorMap } from 'utils/toErrorMap';
-interface ConfirmPasswordPageProps {
+
+interface AuthModalProps {
   onSuccess: (authToken: string, authAction: string) => void;
   onFailure: Function;
   onClose: VoidFunction;
@@ -17,7 +18,7 @@ interface ConfirmPasswordPageProps {
   authAction: string;
 }
 
-const ConfirmPasswordPage: React.FC<ConfirmPasswordPageProps> = ({
+const AuthModal: React.FC<AuthModalProps> = ({
   onSuccess,
   onFailure,
   isOpen,
@@ -28,8 +29,15 @@ const ConfirmPasswordPage: React.FC<ConfirmPasswordPageProps> = ({
 
   const [generateAuthToken] = useGenerateAuthTokenMutation();
 
+  const handleGenerateAuthToken = async () => {
+    const { data } = await generateAuthToken({ variables: { authAction } });
+
+    const authToken = data?.generateAuthToken?.authToken;
+
+    return authToken ? onSuccess(authToken, authAction) : onFailure();
+  };
+
   const onLoginSuccess = async ({ data: loginResponse }: LoginResponseType) => {
-    /* 1. check whether the logged in user is the same as the user returned form login response */
     if (
       !loginResponse ||
       !loginResponse.user ||
@@ -37,13 +45,7 @@ const ConfirmPasswordPage: React.FC<ConfirmPasswordPageProps> = ({
     ) {
       return onFailure();
     }
-
-    const { data } = await generateAuthToken({ variables: { authAction } });
-
-    if (!data?.generateAuthToken.authToken) {
-      return onFailure();
-    }
-    onSuccess(data.generateAuthToken.authToken, authAction);
+    handleGenerateAuthToken();
   };
   return (
     <GenericModal
@@ -135,4 +137,4 @@ const ConfirmPasswordPage: React.FC<ConfirmPasswordPageProps> = ({
     />
   );
 };
-export default ConfirmPasswordPage;
+export default AuthModal;
