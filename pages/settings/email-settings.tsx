@@ -20,6 +20,7 @@ import { useRequireAuth } from 'hooks/useRequireAuth';
 import useTimer from 'hooks/useTimer';
 import AuthModal from 'modules/auth/login/AuthModal';
 import React, { useState } from 'react';
+import areTwoStringsEqual from 'utils/areTwoStringsEqual';
 
 interface EmailSettingsProps {
   user: MeQuery['me'];
@@ -133,7 +134,12 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
                 editableProps={{
                   isPreviewFocusable: false,
                   submitOnBlur: false,
-                  onSubmit: () => formikProps.submitForm(),
+                  onSubmit: () => {
+                    !areTwoStringsEqual(
+                      formikProps.values.email,
+                      formikProps.initialValues.email
+                    ) && formikProps.submitForm();
+                  },
                   onAbort: () => formikProps.resetForm(),
                   onCancel: () => formikProps.resetForm(),
                 }}

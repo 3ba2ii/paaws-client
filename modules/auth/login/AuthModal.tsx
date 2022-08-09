@@ -88,7 +88,7 @@ const AuthModal: React.FC<AuthModalProps> = ({
                     label='Password'
                     name='password'
                     type='password'
-                    placeholder='Password'
+                    placeholder='**********'
                     value={values.password}
                     autoComplete='new-password'
                   />
