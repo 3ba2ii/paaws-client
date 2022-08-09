@@ -31,7 +31,7 @@ export const PostLocationFields: React.FC<PostLocFieldProps> = ({
           required={false}
         />
 
-        <HStack w='100%' align='center' spacing={2}>
+        <HStack w='100%' alignItems='center' spacing={2}>
           <DropdownMenu
             options={SelectLocationObj}
             menuButtonText={

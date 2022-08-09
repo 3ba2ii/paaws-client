@@ -20,7 +20,7 @@ const ChangePasswordPage: React.FC = ({}) => {
     document.title = 'Change your Password - Paaws';
   }, []);
   return (
-    <VStack w='100%' h='100vh' py={10} justify='space-between'>
+    <VStack w='100%' h='100vh' py={10} justifyContent='space-between'>
       <VStack
         w='100%'
         maxW={'450px'}

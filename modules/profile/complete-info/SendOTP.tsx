@@ -17,7 +17,7 @@ const SendOTPComponent: React.FC<SendOTPProps> = ({ onSuccess }) => {
   const router = useRouter();
 
   return (
-    <VStack align='flex-start' flex={['1', '.75', '.75', '.75']} w='100%'>
+    <VStack alignItems='flex-start' flex={['1', '.75', '.75', '.75']} w='100%'>
       <Formik
         initialValues={{ phone: '' }}
         onSubmit={async ({ phone }, { setErrors }) => {
@@ -39,7 +39,7 @@ const SendOTPComponent: React.FC<SendOTPProps> = ({ onSuccess }) => {
       >
         {({ isSubmitting }) => (
           <Form style={{ width: '100%' }}>
-            <VStack w='100%' align='flex-start' spacing={5}>
+            <VStack w='100%' alignItems='flex-start' spacing={5}>
               <InputField
                 label='Phone Number'
                 name='phone'
@@ -47,7 +47,7 @@ const SendOTPComponent: React.FC<SendOTPProps> = ({ onSuccess }) => {
                 helperText='Your phone number will be visible just for you and you can use it to login anytime after verification'
                 required
               />
-              <HStack w='100%' justify='flex-end'>
+              <HStack w='100%' justifyContent='flex-end'>
                 <Button
                   variant='ghost'
                   fontSize='sm'

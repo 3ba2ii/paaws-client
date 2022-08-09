@@ -4,7 +4,7 @@ import React from 'react';
 const ModalHeader: React.FC<{ title: string; subtitle: string }> = React.memo(
   ({ title, subtitle }) => {
     return (
-      <VStack align='flex-start' mt={4}>
+      <VStack alignItems='flex-start' mt={4}>
         <Heading size='md'>{title}</Heading>
         <Text
           fontSize='.875rem'

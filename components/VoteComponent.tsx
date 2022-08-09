@@ -135,7 +135,7 @@ export const VoteComponent: React.FC<VoteComponentProps> = ({
     }
   };
   return (
-    <Flex align={'center'} sx={{ gap: '8px' }} {...flexProps}>
+    <Flex alignItems={'center'} sx={{ gap: '8px' }} {...flexProps}>
       <Tooltip label='Upvote'>
         <IconButton
           onClick={() => onVote(1)}

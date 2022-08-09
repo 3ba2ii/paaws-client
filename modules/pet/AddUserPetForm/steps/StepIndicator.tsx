@@ -47,7 +47,7 @@ export const StepIndicator: React.FC<{
         bg='whiteAlpha.800'
         _dark={{ bg: 'gray.900' }}
       >
-        <VStack w='100%' align={'flex-start'} spacing={1}>
+        <VStack w='100%' alignItems={'flex-start'} spacing={1}>
           <Text lineHeight={'1.5'} fontWeight={'semibold'} fontSize='16px'>
             {title}
           </Text>

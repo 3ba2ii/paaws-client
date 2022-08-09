@@ -49,12 +49,12 @@ export const LocationModal: React.FC<LocationModalProps> = ({
       }}
       title={
         <Box
-          align={'flex-start'}
-          justify={'flex-start'}
+          alignItems={'flex-start'}
+          justifyContent={'flex-start'}
           textAlign={'start'}
           pt={4}
         >
-          <HStack w='100%' align={'flex-start'} mb={2}>
+          <HStack w='100%' alignItems={'flex-start'} mb={2}>
             <Heading size='md'>🗺 Location on Map</Heading>
           </HStack>
           <Text textStyle='p1' fontSize='.825rem' maxW={'60ch'} mb={3}>

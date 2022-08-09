@@ -41,13 +41,13 @@ const SettingsPageLayout: React.FC<SettingsPageLayoutProps> = ({
         <VStack
           w='100%'
           h='100%'
-          align='flex-start'
+          alignItems='flex-start'
           spacing={8}
           pos='fixed'
           maxWidth='265px'
         >
           <Heading fontSize='22px'>Settings</Heading>
-          <VStack align='flex-start' spacing={4}>
+          <VStack alignItems='flex-start' spacing={4}>
             {SettingsTabsList.map(({ key, title, url }) => (
               <Button
                 height={'fit-content'}
@@ -68,7 +68,7 @@ const SettingsPageLayout: React.FC<SettingsPageLayoutProps> = ({
           <SideFooter />
         </VStack>
         <VStack
-          align='flex-start'
+          alignItems='flex-start'
           w='100%'
           h='100%'
           spacing={5}

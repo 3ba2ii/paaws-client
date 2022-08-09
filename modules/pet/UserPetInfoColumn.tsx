@@ -29,15 +29,20 @@ const UserPetInfoColumn: React.FC<UserPetInfoColumnProps> = ({
       flexDir='column'
       w='100%'
       h='100%'
-      align='flex-start'
+      alignItems='flex-start'
       p={4}
       py={10}
       css={{ gap: '40px' }}
       overflowY='scroll'
     >
-      <VStack w='100%' align='flex-start'>
+      <VStack w='100%' alignItems='flex-start'>
         <Heading size='lg'>{pet.name}</Heading>
-        <HStack fontSize='14px' align='center' justify='center' spacing='4px'>
+        <HStack
+          fontSize='14px'
+          alignItems='center'
+          justifyContent='center'
+          spacing='4px'
+        >
           <Text as={Link} textStyle='link' fontWeight={'semibold'}>
             {capitalizeFirstLetterOfEachWord(pet.type)} -{' '}
           </Text>
@@ -59,12 +64,12 @@ const UserPetInfoColumn: React.FC<UserPetInfoColumnProps> = ({
           })}
         </HStack>
       </VStack>
-      <VStack w='100%' align='flex-start' spacing={4}>
+      <VStack w='100%' alignItems='flex-start' spacing={4}>
         <Heading size='md'>Pet Information</Heading>
         <PetInfoCardsRow userPet={userOwnedPet} />
       </VStack>
 
-      <VStack align='flex-start'>
+      <VStack alignItems='flex-start'>
         <Heading size='md'>About {pet.name.split(' ')[0]}</Heading>
         <Text textStyle={'p1'} maxW='70ch' wordBreak={'break-all'}>
           {userOwnedPet.about}Quis anim exercitation est in id. Quis id

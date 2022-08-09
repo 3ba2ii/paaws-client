@@ -79,7 +79,7 @@ const ChangeAvatarComponents: React.FC<ChangeAvatarComponentsProps> = ({
   );
 
   return (
-    <HStack align='center' spacing={5}>
+    <HStack alignItems='center' spacing={5}>
       <SelectAvatarComponent
         user={user}
         avatarURL={

@@ -5,11 +5,11 @@ import React from 'react';
 
 export const PostsLoadingSkeleton: React.FC = () => (
   <VStack w='100%'>
-    <VStack w='100%' align='flex-start' spacing={4}>
+    <VStack w='100%' alignItems='flex-start' spacing={4}>
       <HStack
         w='100%'
         alignSelf={'flex-end'}
-        justify='flex-end'
+        justifyContent='flex-end'
         position='relative'
         wrap={['wrap', 'unset']}
       >

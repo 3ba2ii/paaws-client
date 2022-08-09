@@ -1,18 +1,16 @@
-import { Box, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 import ImageWithFallback from 'components/media/ImageWithFallback';
 import { formatDistanceToNow } from 'date-fns';
-import { UserOwnedPetsQuery } from 'generated/graphql';
 import React from 'react';
+import { OwnedPetType } from './pet.types';
+
 interface IOwnedPetCardProps {
-  pet: UserOwnedPetsQuery['userOwnedPets']['ownedPets'][0]['pet'];
+  pet: OwnedPetType['pet'];
 }
 
 export const OwnedPetCard: React.FC<IOwnedPetCardProps> = ({ pet }) => {
   const age = formatDistanceToNow(new Date(pet.birthDate));
-  console.log(
-    `🚀 ~ file: OwnedPetCard.tsx ~ line 12 ~ pet.thumbnail?.url`,
-    pet.thumbnail?.url
-  );
+
   return (
     <Box
       w='100%'

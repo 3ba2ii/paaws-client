@@ -10,7 +10,13 @@ interface UploadPetImagesStepProps {
 
 const UploadPetImagesStep: React.FC<UploadPetImagesStepProps> = ({}) => {
   return (
-    <VStack w='100%' h='100%' align={'flex-start'} p='32px' spacing={'24px'}>
+    <VStack
+      w='100%'
+      h='100%'
+      alignItems={'flex-start'}
+      p='32px'
+      spacing={'24px'}
+    >
       <Box>
         <Heading fontSize={'24px'} size='lg' color='gray.700'>
           Upload your Pet’s Images

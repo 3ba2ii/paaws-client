@@ -21,7 +21,7 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
     notifyOnNetworkStatusChange: true,
   });
 
-  const noComments = !loading && data?.comments.comments.length === 0;
+  const noComments = !loading && data?.comments?.comments?.length === 0;
 
   /* On this module we should implement the following features (all features require the user to be logged in)
     1. Add new comment
@@ -30,10 +30,11 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
     4. reply to a comment
   */
   const fetchMoreComments = async () => {
-    if (!data?.comments) return;
+    if (!data?.comments.comments) return;
     const { comments, hasMore } = data.comments;
 
     if (!hasMore) return;
+
     setPaginationLoading(true);
 
     const { createdAt: cursor } = comments[comments.length - 1];
@@ -61,7 +62,7 @@ const CommentsSection: React.FC<CommentsProps> = ({ postId }) => {
       ) : (
         <VStack w='100%'>
           <VStack w='100%' divider={<Divider />} py={5}>
-            {data?.comments.comments.map((comment) => (
+            {data?.comments?.comments?.map((comment) => (
               <Comment
                 key={comment.id}
                 comment={comment as CommentFragmentFragment}

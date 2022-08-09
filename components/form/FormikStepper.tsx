@@ -42,7 +42,7 @@ const FormikStepper: React.FC<FormikStepperProps> = ({
       <HStack
         w='100%'
         p='32px'
-        justify={'flex-end'}
+        justifyContent={'flex-end'}
         pos='absolute'
         left='0'
         bottom={0}

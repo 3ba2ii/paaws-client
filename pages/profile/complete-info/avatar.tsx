@@ -89,14 +89,14 @@ const SelectAvatar: React.FC = () => {
   return (
     <CompleteInfoLayout pageTitle='Set your profile picture'>
       <VStack w='100%' maxW='600px'>
-        <VStack align='flex-start' w='100%'>
+        <VStack alignItems='flex-start' w='100%'>
           <Heading size='md'>Set your profile picture</Heading>
           <Text color='gray.500' fontSize='md' maxW='45ch'>
             We would 💖 to see your face. Your photo will make it easier for
             your friends to recognize you
           </Text>
         </VStack>
-        <VStack w='100%' spacing={10} align='flex-start' py='4'>
+        <VStack w='100%' spacing={10} alignItems='flex-start' py='4'>
           <SelectAvatarComponent
             user={user}
             onChange={(newURL) => {
@@ -104,7 +104,7 @@ const SelectAvatar: React.FC = () => {
             }}
             avatarURL={userAvatar ? URL.createObjectURL(userAvatar) : ''}
           />
-          <HStack w='100%' justify={'flex-end'}>
+          <HStack w='100%' justifyContent={'flex-end'}>
             <Button variant='ghost' fontSize='sm' onClick={() => router.back()}>
               Back
             </Button>

@@ -80,7 +80,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
   const isVerified = settings?.emailVerified;
 
   return (
-    <VStack w='100%' h='100%' align='flex-start' spacing={5}>
+    <VStack w='100%' h='100%' alignItems='flex-start' spacing={5}>
       <Heading fontSize='24px' fontWeight={'bold'}>
         Email Settings
       </Heading>
@@ -110,7 +110,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
                 spacing={0}
                 h='fit-content'
                 w='fit-content'
-                align='center'
+                alignItems='center'
                 mb='4'
               >
                 <FormLabel mb='0' fontSize='16px' fontWeight='bold'>

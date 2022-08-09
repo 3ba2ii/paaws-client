@@ -82,7 +82,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
       onClose={onClose}
       title={
         <>
-          <HStack w='100%' align={'flex-start'} pb={3}>
+          <HStack w='100%' alignItems={'flex-start'} pb={3}>
             <Text>Share Post</Text>
           </HStack>
           <Divider />
@@ -90,7 +90,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
       }
       body={
         <VStack w='100%' divider={<Divider />} spacing={5}>
-          <VStack w='100%' align='flex-start'>
+          <VStack w='100%' alignItems='flex-start'>
             <Box>
               <Heading fontWeight={'semibold'} size='sm'>
                 Direct Link
@@ -119,7 +119,7 @@ const ShareModal: React.FC<ShareModalProps> = ({
               </Button>
             </HStack>
           </VStack>
-          <VStack w='100%' align='flex-start'>
+          <VStack w='100%' alignItems='flex-start'>
             <Box>
               <Heading fontWeight={'semibold'} size='sm' mb={1}>
                 Share to Social Media
@@ -131,8 +131,8 @@ const ShareModal: React.FC<ShareModalProps> = ({
             </Box>
             <HStack
               w='100%'
-              align={'flex-start'}
-              justify={'flex-start'}
+              alignItems={'flex-start'}
+              justifyContent={'flex-start'}
               wrap={'wrap'}
               pt={2}
             >

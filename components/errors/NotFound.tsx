@@ -25,8 +25,8 @@ const NotFound: React.FC<NotFoundProps> = ({
     <VStack
       w='100%'
       h='100%'
-      justify={'center'}
-      align='center'
+      justifyContent={'center'}
+      alignItems='center'
       {...containerProps}
     >
       <Heading size='xl'>{title}</Heading>

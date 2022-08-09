@@ -67,7 +67,7 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
         {({ isSubmitting, setFieldValue }) => (
           <Form>
             <VStack
-              align='flex-start'
+              alignItems='flex-start'
               spacing={6}
               minW='370px'
               maxW='fit-content'
@@ -93,7 +93,7 @@ const VerifyOTPComponent: React.FC<IVerifyOTPProps> = ({ phone, user }) => {
                   </PinInput>
                 </HStack>
               </InputFieldWrapper>
-              <HStack w='100%' justify={'flex-end'}>
+              <HStack w='100%' justifyContent={'flex-end'}>
                 <Button
                   fontSize='sm'
                   variant='ghost'

@@ -47,8 +47,8 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
     <Flex
       w='100%'
       flexDir={['column', 'column', 'column', 'row']}
-      align={['flex-start', 'center', 'center', 'center']}
-      justify={['flex-start', 'center', 'center', 'center']}
+      alignItems={['flex-start', 'center', 'center', 'center']}
+      justifyContent={['flex-start', 'center', 'center', 'center']}
       css={{ gap: '16px' }}
     >
       <Box h='100%'>
@@ -58,8 +58,13 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
           avatarProps={{ size: '2xl' }}
         />
       </Box>
-      <VStack h='100%' w='100%' align='flex-start' justify='flex-start'>
-        <HStack w='100%' align='center' justify={'space-between'}>
+      <VStack
+        h='100%'
+        w='100%'
+        alignItems='flex-start'
+        justifyContent='flex-start'
+      >
+        <HStack w='100%' alignItems='center' justifyContent={'space-between'}>
           <Heading size='lg'>{full_name}</Heading>
           {isProfileOwner() && (
             <HStack>

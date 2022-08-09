@@ -58,7 +58,7 @@ export const DeleteCommentPopover: React.FC<{
           will also delete all of its <strong>replies</strong> as well.
         </PopoverBody>
         <PopoverFooter>
-          <HStack w='100%' justify='flex-end'>
+          <HStack w='100%' justifyContent='flex-end'>
             <Button size='sm' variant='ghost' onClick={togglePopOver}>
               Cancel
             </Button>

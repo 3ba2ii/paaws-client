@@ -69,7 +69,7 @@ const ProfileMenu = () => {
             onClick={toggleColorMode}
             closeOnSelect={false}
           >
-            <HStack w='100%' justify='space-between'>
+            <HStack w='100%' justifyContent='space-between'>
               <Text>Dark Mode</Text>
               <Switch
                 id='toggle-dark-mode-switch'

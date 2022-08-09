@@ -12,8 +12,8 @@ export const RecommendAdoptionCard = () => {
       display={['none', 'none', 'flex']}
       flexDir={'column'}
       width='fit-content'
-      align='center'
-      justify='flex-start'
+      alignItems='center'
+      justifyContent='flex-start'
     >
       <Image
         src='/illustrations/CTA.svg'
@@ -59,8 +59,8 @@ export const SideFiltersColumn: React.FC<{
       w='100%'
       flexDirection={['row', 'column']}
       h={['fit-content', 'calc(100vh - 8rem)']}
-      align='flex-start'
-      justify='space-between'
+      alignItems='flex-start'
+      justifyContent='space-between'
       maxW={['100%', '200px']}
       position={['relative', 'relative', 'relative', 'relative', 'fixed']}
     >
@@ -84,14 +84,14 @@ export const SideFiltersColumn: React.FC<{
             cursor='pointer'
             onClick={() => router.push('/profile')}
           >
-            <HStack w='100%' justify={'space-evenly'}>
+            <HStack w='100%' justifyContent={'space-evenly'}>
               <UserAvatar
                 avatarProps={{ size: 'sm' }}
                 name={user.displayName}
                 avatarURL={user.avatar?.url}
               />
               <VStack
-                align='flex-start'
+                alignItems='flex-start'
                 spacing={1}
                 display={['none', 'none', 'none', 'flex']}
               >

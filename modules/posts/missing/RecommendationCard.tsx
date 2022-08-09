@@ -14,10 +14,10 @@ import { FiChevronRight } from 'react-icons/fi';
 
 const RecommendationCard: React.FC = () => {
   return (
-    <HStack w='100%' align='flex-start'>
+    <HStack w='100%' alignItems='flex-start'>
       <Avatar name='Katy Katy' src='/illustrations/loading-lazy-cat.gif' />
-      <VStack w='100%' align='flex-start'>
-        <HStack w='100%' justify={'space-between'}>
+      <VStack w='100%' alignItems='flex-start'>
+        <HStack w='100%' justifyContent={'space-between'}>
           <Box>
             <HStack>
               <Heading as='h4' size='xs' fontWeight='semibold'>
@@ -65,7 +65,7 @@ const RecommendationCard: React.FC = () => {
 
 const NoAdoptionPostsContainer: React.FC = () => {
   return (
-    <VStack align='center' textAlign={'center'} spacing={2}>
+    <VStack alignItems='center' textAlign={'center'} spacing={2}>
       <Image
         src='/illustrations/cat-sleeping.svg'
         width='250px'
@@ -146,7 +146,13 @@ export const RecommendationCardContainer: React.FC = () => {
       >
         Pets for Adoption
       </Heading>
-      <VStack w='100%' h='100%' align='center' justify={'center'} mt={5}>
+      <VStack
+        w='100%'
+        h='100%'
+        alignItems='center'
+        justifyContent={'center'}
+        mt={5}
+      >
         {displayContent()}
       </VStack>
     </Box>

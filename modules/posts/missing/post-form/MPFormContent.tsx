@@ -65,13 +65,13 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
     <Form id='form-drawer'>
       <VStack spacing={5} mb={5}>
         {/* Avatar, name and  */}
-        <HStack w='100%' align='center'>
+        <HStack w='100%' alignItems='center'>
           <UserAvatar
             name={user?.displayName}
             avatarURL={user?.avatar?.url}
             avatarProps={{ w: '42px', h: '42px', fontSize: '.5rem' }}
           />
-          <VStack align={'flex-start'} spacing={0}>
+          <VStack alignItems={'flex-start'} spacing={0}>
             <Heading mb={1} fontSize={'sm'} fontWeight={'semibold'}>
               {user?.displayName}
             </Heading>
@@ -97,7 +97,7 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
             />
           </VStack>
         </HStack>
-        <VStack w='100%' align='flex-start' spacing={3}>
+        <VStack w='100%' alignItems='flex-start' spacing={3}>
           <Tooltip
             label='Let people know more information about your missing/found pet'
             placement='top'
@@ -141,7 +141,7 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
           {!isEditModeOn && <MyDropzone label='Pet Images' name='images' />}
         </VStack>
 
-        <VStack w='100%' align='flex-start' spacing={4}>
+        <VStack w='100%' alignItems='flex-start' spacing={4}>
           <Tooltip
             label='Showing your contact information will help us connect you with the person who lost/found their/your pet'
             placement='top'
@@ -169,7 +169,7 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
           </VStack>
         </VStack>
         {!isEditModeOn && (
-          <VStack w='100%' align='flex-start' spacing={4}>
+          <VStack w='100%' alignItems='flex-start' spacing={4}>
             <Tooltip
               label='We will send notifications to nearby users to help you finding the pet'
               placement='bottom'
@@ -201,7 +201,7 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
       </VStack>
       {/* The pet is rescued section (the pet owner gets his pet back) */}
       {isEditModeOn && (
-        <VStack align='flex-start' spacing={10} pos='relative'>
+        <VStack alignItems='flex-start' spacing={10} pos='relative'>
           <Button
             variant='link'
             size='sm'
@@ -233,7 +233,7 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
             isOpen={rescuePetPopover}
             onClose={toggleRescuePetPopover}
             footer={
-              <HStack justify='flex-end'>
+              <HStack justifyContent='flex-end'>
                 <Button
                   size='sm'
                   variant='ghost'
@@ -251,7 +251,7 @@ const MPFormContent: React.FC<MPFormContentProps> = ({
         </VStack>
       )}
       {/* Footer */}
-      <HStack mt={4} w='100%' align='center' justify='flex-end'>
+      <HStack mt={4} w='100%' alignItems='center' justifyContent='flex-end'>
         <Button
           fontSize='.9rem'
           height={'32px'}

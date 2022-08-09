@@ -34,12 +34,12 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
     <VStack
       w='100%'
       h='100%'
-      align={'flex-start'}
+      alignItems={'flex-start'}
       spacing={8}
       px={['3%', '5%', '8%']}
       maxW='8xl'
     >
-      <HStack w='100%' justify={'space-between'}>
+      <HStack w='100%' justifyContent={'space-between'}>
         <Button
           aria-label='back'
           leftIcon={<FiArrowLeft />}
@@ -53,7 +53,12 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
         <InnerPostActions {...{ isOwner, missingPost }} />
       </HStack>
 
-      <Flex w='100%' h='100%' align={'flex-start'} justifyContent={'center'}>
+      <Flex
+        w='100%'
+        h='100%'
+        alignItems={'flex-start'}
+        justifyContent={'center'}
+      >
         {!missingPost ? (
           <NotFound
             title='📭 404 Not Found'
@@ -63,7 +68,7 @@ const MissingPostContainer: React.FC<MissingPostContainerProps> = ({
         ) : (
           <>
             <Box flex='auto' w='100%' maxW='3xl'>
-              <HStack w='100%' align='flex-start' spacing={4}>
+              <HStack w='100%' alignItems='flex-start' spacing={4}>
                 <VoteComponent
                   {...{
                     ...missingPost,

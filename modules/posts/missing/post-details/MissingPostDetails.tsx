@@ -44,8 +44,8 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
   };
 
   return (
-    <VStack w='100%' h='100%' align='flex-start' spacing={3}>
-      <HStack w='100%' justify={'space-between'}>
+    <VStack w='100%' h='100%' alignItems='flex-start' spacing={3}>
+      <HStack w='100%' justifyContent={'space-between'}>
         <Heading size='lg' maxW='50ch' wordBreak={'break-all'}>
           {title}
         </Heading>
@@ -63,7 +63,7 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
         </Text>
       </HStack>
       {address && address.formatted_address && (
-        <HStack color='gray.500' align='center'>
+        <HStack color='gray.500' alignItems='center'>
           <FiGlobe color='inherit' />
           <Button
             variant='link'
@@ -115,15 +115,15 @@ const MissingPostDetails: React.FC<MissingPostProps> = ({ post }) => {
         />
       </Box>
       {/* Missing Post Actions  */}
-      <VStack w='100%' align='flex-start'>
+      <VStack w='100%' alignItems='flex-start'>
         <HStack
           w='100%'
-          align='center'
+          alignItems='center'
           borderTop={'1px solid'}
           borderBottom={'1px solid'}
           borderColor={useColorModeValue('gray.200', 'gray.700')}
           py={1.5}
-          justify={'space-evenly'}
+          justifyContent={'space-evenly'}
         >
           <ResponsiveButton
             {...{

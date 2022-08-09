@@ -52,12 +52,12 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
   }, [emailSent, resendCounter]);
 
   return (
-    <VStack w='100%' h='100vh' justify={'space-between'} px='8rem'>
+    <VStack w='100%' h='100vh' justifyContent={'space-between'} px='8rem'>
       <VStack
         w='100%'
         h='100%'
-        align='center'
-        justify={'flex-start'}
+        alignItems='center'
+        justifyContent={'flex-start'}
         py={8}
         spacing={5}
       >
@@ -70,7 +70,7 @@ const ForgotPasswordPage: React.FC<ForgotPasswordPageProps> = ({}) => {
           px={5}
           py={8}
         >
-          <VStack align='center' justify={'center'} spacing={5}>
+          <VStack alignItems='center' justifyContent={'center'} spacing={5}>
             <Logo imageProps={{ maxW: '110px' }} />
 
             <Heading fontSize='xl' mb={4}>

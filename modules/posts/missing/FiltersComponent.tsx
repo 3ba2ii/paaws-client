@@ -198,7 +198,12 @@ export const FiltersComponent: React.FC = () => {
     );
   };
   return (
-    <HStack w='100%' wrap='wrap' sx={{ gap: '8px' }} justify={'flex-start'}>
+    <HStack
+      w='100%'
+      wrap='wrap'
+      sx={{ gap: '8px' }}
+      justifyContent={'flex-start'}
+    >
       <FiltersMenu />
       <Center height='25px'>
         <Divider orientation='vertical' />
@@ -213,8 +218,8 @@ export const FiltersComponent: React.FC = () => {
               marginInlineStart: '0 !important',
             },
           }}
-          align='center'
-          justify={'flex-start'}
+          alignItems='center'
+          justifyContent={'flex-start'}
         >
           {Object.entries(tags)
             .filter(([key, value]) => value !== null && { key, value })
@@ -269,7 +274,7 @@ export const FiltersComponent: React.FC = () => {
           </Box>
         }
         footer={
-          <HStack align='flex-start'>
+          <HStack alignItems='flex-start'>
             <Button
               h='38px'
               mr={3}
@@ -311,7 +316,7 @@ export const FiltersComponent: React.FC = () => {
         onClose={() => setOpenUpdateLocationDialog(false)}
         modalProps={{ size: 'md' } as ModalProps}
         footer={
-          <HStack align='flex-start'>
+          <HStack alignItems='flex-start'>
             <Button
               mr={3}
               variant='ghost'

@@ -80,7 +80,7 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
       h='100%'
       borderRadius={'6px'}
       overflow='hidden'
-      align={['unset', 'center']}
+      alignItems={['unset', 'center']}
       sx={{ gap: ['10px', '0px'] }}
       cursor={'pointer'}
       transition={'all 0.2s ease-in-out'}
@@ -113,8 +113,8 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
       </Box>
       <VStack
         w='100%'
-        align='flex-start'
-        justify='space-between'
+        alignItems='flex-start'
+        justifyContent='space-between'
         overflow='hidden'
         p={['16px', '0 0 0 16px']}
         sx={{ gap: ['24px', '18px'] }}
@@ -123,13 +123,13 @@ export const SinglePostCard: React.FC<SinglePostCardProps> = ({
           w='100%'
           pr={[1, 2, 4]}
           spacing='6px'
-          align='flex-start'
+          alignItems='flex-start'
           onClick={redirectToPost}
         >
           <HStack
             w='100%'
             h='inherit'
-            justify='space-between'
+            justifyContent='space-between'
             flexWrap={'wrap'}
           >
             <HStack spacing={4}>

@@ -4,7 +4,7 @@ import { focusOnElement } from 'utils/helpers/focusOnElement';
 
 const NoComments: React.FC = () => {
   return (
-    <VStack h='200px' justify={'center'}>
+    <VStack h='200px' justifyContent={'center'}>
       <Heading fontSize={'28px'} mb={1}>
         No Comments
       </Heading>

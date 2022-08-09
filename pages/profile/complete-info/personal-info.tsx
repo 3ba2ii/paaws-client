@@ -95,8 +95,8 @@ const PersonalInfoStep: React.FC = () => {
               paddingInline: '1rem',
             }}
           >
-            <VStack w='100%' h='100%' align='flex-start' spacing={5}>
-              <VStack align='flex-start' w='100%' mb={5}>
+            <VStack w='100%' h='100%' alignItems='flex-start' spacing={5}>
+              <VStack alignItems='flex-start' w='100%' mb={5}>
                 <Heading size='md'>Personalize your profile</Heading>
                 <Text color='gray.500' fontSize='sm' maxW='65ch'>
                   Tell us a bit about yourself. We will give you more
@@ -146,7 +146,7 @@ const PersonalInfoStep: React.FC = () => {
                   style={{ colorScheme: colorMode, cursor: 'text' }}
                 />
               </VStack>
-              <HStack w='100%' justify='flex-end'>
+              <HStack w='100%' justifyContent='flex-end'>
                 <Button
                   onClick={() => router.back()}
                   type='reset'

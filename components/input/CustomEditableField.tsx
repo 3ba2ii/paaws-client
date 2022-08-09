@@ -88,7 +88,7 @@ const CustomEditableField: React.FC<CustomEditableFieldProps> = ({
       <Flex
         w='100%'
         flexDir={'row'}
-        justify='space-between'
+        justifyContent='space-between'
         style={{ wordBreak: 'break-all' }}
       >
         <EditablePreview {...editablePreviewProps} />

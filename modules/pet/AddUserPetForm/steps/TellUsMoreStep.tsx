@@ -21,7 +21,7 @@ export interface StepProps {
 
 const TellUsMoreStep: React.FC<StepProps> = ({ formik }) => {
   return (
-    <VStack align={'flex-start'} w='100%' p='32px' spacing={'32px'}>
+    <VStack alignItems={'flex-start'} w='100%' p='32px' spacing={'32px'}>
       <Box>
         <Heading fontSize={'24px'} size='lg' color='gray.700'>
           Tell us more about your pet

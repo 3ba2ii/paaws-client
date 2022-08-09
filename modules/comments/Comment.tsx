@@ -22,22 +22,23 @@ interface CommentProps {
   comment: CommentFragmentFragment & { replies?: CommentFragmentFragment[] };
 }
 
-const CommentOwnerHeader: React.FC<{ user: CommentFragmentFragment['user'] }> =
-  ({ user }) => {
-    return (
-      <HStack>
-        <Avatar name={user.displayName} src={user.avatar?.url + ''} size='xs' />
-        <Button
-          size='sm'
-          fontWeight={'medium'}
-          colorScheme={'blue'}
-          variant='link'
-        >
-          {user.displayName}
-        </Button>
-      </HStack>
-    );
-  };
+const CommentOwnerHeader: React.FC<{
+  user: CommentFragmentFragment['user'];
+}> = ({ user }) => {
+  return (
+    <HStack>
+      <Avatar name={user.displayName} src={user.avatar?.url + ''} size='xs' />
+      <Button
+        size='sm'
+        fontWeight={'medium'}
+        colorScheme={'blue'}
+        variant='link'
+      >
+        {user.displayName}
+      </Button>
+    </HStack>
+  );
+};
 
 const Comment: React.FC<CommentProps> = ({ comment }) => {
   const [mode, setMode] = useState<'edit' | 'view'>('view');
@@ -78,7 +79,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
   return (
     <VStack
       w='100%'
-      align='flex-start'
+      alignItems='flex-start'
       py={2}
       pos='relative'
       _before={
@@ -97,7 +98,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
           : {}
       }
     >
-      <HStack w='100%' align='flex-start' justify={'space-between'}>
+      <HStack w='100%' alignItems='flex-start' justifyContent={'space-between'}>
         <CommentOwnerHeader user={user} />
         <Text textStyle={'p3'}>
           {createdAtDistance} - {id}
@@ -115,7 +116,7 @@ const Comment: React.FC<CommentProps> = ({ comment }) => {
       ) : (
         <EditCommentForm {...{ commentId: id, text, toggleMode }} />
       )}
-      <HStack w='100%' justify='space-center' spacing={4}>
+      <HStack w='100%' justifyContent='space-center' spacing={4}>
         <VoteComponent
           {...{
             id,

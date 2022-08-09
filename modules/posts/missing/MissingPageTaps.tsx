@@ -44,7 +44,7 @@ export const MissingPageTaps: React.FC<{
       w='100%'
       display={'flex'}
       flexDir={['row', 'column']}
-      align='flex-start'
+      alignItems='flex-start'
       justifyContent={['center', 'flex-start']}
       flexWrap='wrap'
       sx={{ gap: '12px' }}

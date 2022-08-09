@@ -70,7 +70,7 @@ export const NavBarItems = () => {
   body = (
     <Box as='main' className={navbarStyles['nav-items-container']}>
       <Box className={navbarStyles['search-input-field-styles']}>
-        <InputGroup alignItems='center' justify='center' maxW={420}>
+        <InputGroup alignItems='center' justifyContent='center' maxW={420}>
           <InputLeftElement px={7} pb={1} pointerEvents='none'>
             <SearchIcon color='gray.500' />
           </InputLeftElement>

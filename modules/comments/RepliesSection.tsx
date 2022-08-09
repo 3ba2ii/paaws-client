@@ -43,14 +43,19 @@ const RepliesSection: React.FC<RepliesProps> = React.memo(
     }, [parentId]);
 
     return (
-      <VStack w='100%' spacing={5} align='flex-start'>
+      <VStack w='100%' spacing={5} alignItems='flex-start'>
         {loading ? (
-          <HStack w='100%' align={'center'} justify={'center'}>
+          <HStack w='100%' alignItems={'center'} justifyContent={'center'}>
             <LoadingComponent progressProps={{ trackColor: 'gray.500' }} />
           </HStack>
         ) : (
           <>
-            <VStack w='100%' pl='10%' align={'flex-end'} divider={<Divider />}>
+            <VStack
+              w='100%'
+              pl='10%'
+              alignItems={'flex-end'}
+              divider={<Divider />}
+            >
               {comments
                 .filter(({ parentId: pID }) => parentId === pID)
                 .map((reply) => (

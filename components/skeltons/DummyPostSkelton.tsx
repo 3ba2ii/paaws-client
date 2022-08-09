@@ -32,16 +32,16 @@ const SingleDummySkeleton = (): JSX.Element => {
 
       <Flex
         flexDirection='column'
-        align='flex-start'
-        justify='space-between'
+        alignItems='flex-start'
+        justifyContent='space-between'
         w='100%'
         h='100%'
         overflow='hidden'
         p={['16px', '10px 0']}
         sx={{ gap: ['24px', '18px'] }}
       >
-        <VStack spacing='8px' align='flex-start' w='95%'>
-          <HStack w='100%' justify='space-between'>
+        <VStack spacing='8px' alignItems='flex-start' w='95%'>
+          <HStack w='100%' justifyContent='space-between'>
             <HStack spacing={4} w='100%'>
               <Skeleton h='20px'>
                 Esse ut elit minim veniam. elit minim veniam.

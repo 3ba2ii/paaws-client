@@ -20,6 +20,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { BsThreeDots } from 'react-icons/bs';
 import { OwnedPetCard } from './OwnedPetCard';
+import { OwnedPetType } from './pet.types';
 import UserPetContainer from './UserPetContainer';
 
 interface OwnedPetsGridProps {
@@ -36,7 +37,7 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
   });
 
   const fetchMorePets = async () => {
-    if (!data) return;
+    if (!data || !data.userOwnedPets || !data.userOwnedPets.ownedPets) return;
     const {
       userOwnedPets: { ownedPets, hasMore },
     } = data;
@@ -58,7 +59,7 @@ const OwnedPetsGrid: React.FC<OwnedPetsGridProps> = ({ userId }) => {
     );
   }
 
-  if (!loading && (!data || !data?.userOwnedPets.ownedPets.length)) {
+  if (!loading && (!data || !data?.userOwnedPets?.ownedPets?.length)) {
     return (
       <Center py={50}>
         <Heading size='md'>There is no owned pets for this user yet</Heading>

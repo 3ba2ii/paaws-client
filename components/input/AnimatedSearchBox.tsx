@@ -27,8 +27,8 @@ export const AnimatedSearchBox = () => {
       position='relative'
       w='100%'
       display='flex'
-      align='flex-start'
-      justify='flex-start'
+      alignItems='flex-start'
+      justifyContent='flex-start'
       overflow='hidden'
     >
       <IconButton

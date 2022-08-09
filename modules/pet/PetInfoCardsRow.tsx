@@ -35,8 +35,8 @@ export const PetInfoCardsRow: React.FC<{
     <HStack
       h='88px'
       w='100%'
-      justify={'flex-start'}
-      align='flex-start'
+      justifyContent={'flex-start'}
+      alignItems='flex-start'
       overflow='auto'
     >
       {cardsInfo?.map((ci, index) => (

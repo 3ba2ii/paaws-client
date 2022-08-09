@@ -13,8 +13,8 @@ export const FixedAnnouncementIndication: React.FC = () => {
       top='5.2rem'
       px={'150px'}
       color='white'
-      align={'center'}
-      justify={'center'}
+      alignItems={'center'}
+      justifyContent={'center'}
     >
       <Text fontWeight={'medium'} fontSize={'sm'}>
         The location results for nearby posts are shown based on your saved

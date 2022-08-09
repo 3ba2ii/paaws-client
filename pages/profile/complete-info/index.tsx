@@ -114,8 +114,8 @@ const CompleteInfo: React.FC = () => {
       <VStack
         w='100%'
         h='100%'
-        justify='center'
-        align='flex-start'
+        justifyContent='center'
+        alignItems='flex-start'
         maxW='600px'
         spacing={'24px'}
         px='24px'
@@ -157,7 +157,7 @@ const CompleteInfo: React.FC = () => {
               }}
             >
               {steps[id] ? <BiCheck size='32px' color='teal' /> : Icon}
-              <VStack w='100%' align='flex-start' spacing={'4px'}>
+              <VStack w='100%' alignItems='flex-start' spacing={'4px'}>
                 <Heading size='sm' color={'blue.500'} fontWeight='semibold'>
                   {title}
                 </Heading>

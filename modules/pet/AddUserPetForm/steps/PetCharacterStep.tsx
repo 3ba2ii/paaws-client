@@ -9,7 +9,7 @@ import { StepProps } from './TellUsMoreStep';
 
 const PetCharacterStep: React.FC<StepProps> = ({ formik }) => {
   return (
-    <VStack align='flex-start' w='100%' h='100%' p={'32px'} spacing='24px'>
+    <VStack alignItems='flex-start' w='100%' h='100%' p={'32px'} spacing='24px'>
       <Box>
         <Heading fontSize={'24px'} size='lg' color='gray.700'>
           Add character to your pet

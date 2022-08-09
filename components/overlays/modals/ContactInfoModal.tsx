@@ -51,7 +51,12 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
       onClose={onClose}
       title={
         <>
-          <VStack w='100%' align={'flex-start'} justify={'flex-start'} py={3}>
+          <VStack
+            w='100%'
+            alignItems={'flex-start'}
+            justifyContent={'flex-start'}
+            py={3}
+          >
             <Heading size='md'> Contact Information</Heading>
             <Text textAlign={'left'} fontWeight={'medium'} textStyle={'p2'}>
               If you got any information about this missing/found pet, please
@@ -68,12 +73,12 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
           ) : data?.user ? (
             <VStack
               w='100%'
-              align='flex-start'
+              alignItems='flex-start'
               spacing={4}
               divider={<Divider w='90%' />}
             >
               {missingPost?.showPhoneNumber && data.user.phone && (
-                <VStack align={'flex-start'}>
+                <VStack alignItems={'flex-start'}>
                   <Heading fontWeight={'medium'} size='xs' opacity={0.5}>
                     Phone Number
                   </Heading>
@@ -88,7 +93,7 @@ const ContactInfoModal: React.FC<ContactInfoModalProps> = ({
                 </VStack>
               )}
               {missingPost?.showEmail && (
-                <VStack w='100%' align='flex-start'>
+                <VStack w='100%' alignItems='flex-start'>
                   <Heading fontWeight={'medium'} size='xs' opacity={0.5}>
                     Email Address
                   </Heading>

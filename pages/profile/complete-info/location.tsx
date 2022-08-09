@@ -70,10 +70,10 @@ const SelectLocationPage: React.FC = () => {
       <VStack
         flex={['1', '.75', '.75', '.75']}
         w='100%'
-        align={'flex-start'}
+        alignItems={'flex-start'}
         spacing={5}
       >
-        <VStack align='flex-start' w='100%'>
+        <VStack alignItems='flex-start' w='100%'>
           <Heading size='md'>Set your location</Heading>
           <Text color='gray.500' fontSize='sm' maxW='65ch'>
             We will be using your location to send you notifications if a pet
@@ -91,7 +91,7 @@ const SelectLocationPage: React.FC = () => {
         >
           <UserLocationStep handleChange={handleChange} />
         </Box>
-        <HStack w='80%' justify={'flex-end'}>
+        <HStack w='80%' justifyContent={'flex-end'}>
           <Button variant='ghost' fontSize='sm' onClick={() => router.back()}>
             Back
           </Button>

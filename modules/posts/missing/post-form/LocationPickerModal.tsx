@@ -25,7 +25,7 @@ are used to send notifications and alerts to nearby users'
         />
       }
       footer={
-        <HStack align='flex-start'>
+        <HStack alignItems='flex-start'>
           <Button h='38px' mr={3} variant='ghost' size='sm' onClick={onClose}>
             Cancel
           </Button>

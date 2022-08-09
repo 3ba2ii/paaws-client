@@ -25,7 +25,7 @@ export const DeletePostModal: React.FC<{
       isOpen={isOpen}
       onClose={onClose}
       title={
-        <VStack align='flex-start' spacing={6}>
+        <VStack alignItems='flex-start' spacing={6}>
           <Heading size='md'>🗑 Delete Post</Heading>
           <Divider />
         </VStack>

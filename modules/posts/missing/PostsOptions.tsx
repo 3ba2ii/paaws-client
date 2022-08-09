@@ -32,7 +32,7 @@ export const PostsOptions: React.FC = () => {
     <VStack spacing={2}>
       <HStack
         w='100%'
-        justify='flex-end'
+        justifyContent='flex-end'
         position='relative'
         wrap={['wrap', 'unset']}
         sx={{ rowGap: '1rem' }}

@@ -34,7 +34,7 @@ export const EditCommentForm: React.FC<{
               required
               mb={4}
             />
-            <HStack w='100%' justify='flex-end'>
+            <HStack w='100%' justifyContent='flex-end'>
               <Button size='sm' variant='ghost' onClick={toggleMode}>
                 Cancel
               </Button>

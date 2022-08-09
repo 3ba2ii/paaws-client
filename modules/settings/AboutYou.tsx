@@ -160,7 +160,7 @@ const AboutYouSettings: React.FC<AboutYouProps> = ({ user }) => {
   );
 
   return (
-    <VStack align='flex-start' w='100%' spacing={5}>
+    <VStack alignItems='flex-start' w='100%' spacing={5}>
       <Heading fontSize='24px' fontWeight={'bold'}>
         About you
       </Heading>

@@ -75,7 +75,7 @@ const MissingPage = () => {
           flexDirection={['column', 'row', 'row']}
           alignItems='flex-start'
           justifyContent={'center'}
-          justify='center'
+          justifyContent='center'
           sx={{ gap: '1.5rem' }}
         >
           <Box w={['100%', '220px', '230px']} flex='.175'>

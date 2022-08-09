@@ -26,8 +26,8 @@ const CompleteInfoStaticComponent = () => {
       w='100%'
       h='100%'
       flex='.3'
-      align={'flex-start'}
-      justify='center'
+      alignItems={'flex-start'}
+      justifyContent='center'
       px='3%'
       bg={bgColor}
       display={['none', 'none', 'flex', 'flex']}
@@ -63,7 +63,7 @@ const CompleteInfoLayout: React.FC<CompleteInfoProps> = ({
         w='100%'
         px={['3%']}
         top={['48px', '48px', '65px']}
-        justify={'space-between'}
+        justifyContent={'space-between'}
         zIndex={2}
       >
         <Logo imageProps={{ maxW: '90px' }} />

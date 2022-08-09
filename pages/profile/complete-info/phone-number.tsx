@@ -11,7 +11,11 @@ const AlreadyVerifiedComponent = () => {
   const router = useRouter();
 
   return (
-    <VStack align='flex-start' flex={['1', '.75', '.75', '.75']} spacing={5}>
+    <VStack
+      alignItems='flex-start'
+      flex={['1', '.75', '.75', '.75']}
+      spacing={5}
+    >
       <Heading size='sm' maxW='50ch' lineHeight={'1.5'} my={2}>
         ✅ You already have a verified phone number, If you want to change it,
         Please head to the settings page and delete your phone number and come
@@ -37,7 +41,7 @@ const VerifyPhoneNumberPage: React.FC = () => {
   return (
     <CompleteInfoLayout pageTitle='Verify Phone Number - Paaws'>
       <VStack w='100%' maxW={['unset', '450px', '450px']} spacing='32px'>
-        <VStack align='flex-start' w='100%'>
+        <VStack alignItems='flex-start' w='100%'>
           <Heading size='md'>Verify your Phone Number</Heading>
           <Text color='gray.500' fontSize='sm' maxW='65ch'>
             Help us secure your account by verifying your phone

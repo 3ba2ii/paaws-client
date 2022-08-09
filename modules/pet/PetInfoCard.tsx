@@ -10,13 +10,13 @@ interface PetInfoCardProps {
 const PetInfoCard: React.FC<PetInfoCardProps> = ({ label, value }) => {
   return (
     <VStack
-      align='flex-start'
+      alignItems='flex-start'
       border='1px solid'
       borderColor='gray.300'
       borderRadius={'14px'}
       minW='95px'
       h='100%'
-      justify={'center'}
+      justifyContent={'center'}
       spacing={0}
       pl={2}
       css={{ aspectRatio: '1' }}

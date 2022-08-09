@@ -67,7 +67,7 @@ export const UserGeneralInfoStep: React.FC<Step1Props> = ({
   );
   return (
     <section className={styles['step-container']}>
-      <Flex align='center' justify='center' mb={4}>
+      <Flex alignItems='center' justifyContent='center' mb={4}>
         {/* Avatar Input */}
         <MyAvatarInputField />
         {AvatarImage}
