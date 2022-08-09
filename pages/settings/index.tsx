@@ -1,5 +1,6 @@
 import { Heading, VStack } from '@chakra-ui/react';
 import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
+import SomethingWentWrong from 'components/errors/SomethingWentWrong';
 import { useMySettingsQuery } from 'generated/graphql';
 import { useAuth } from 'hooks/useAuth';
 import { useRequireAuth } from 'hooks/useRequireAuth';
@@ -9,26 +10,26 @@ import React from 'react';
 import withApollo from 'utils/withApollo';
 import EmailSettings from './email-settings';
 
-interface SettingsPageProps {}
-
-const SettingsPage: React.FC<SettingsPageProps> = () => {
+const SettingsPage: React.FC = () => {
   useRequireAuth();
-  const { user, isLoadingUserInfo: loading } = useAuth();
+  const { user } = useAuth();
 
-  const { data, loading: loadingSettings } = useMySettingsQuery();
-
-  if (loading || loadingSettings) return <LoadingComponent />;
+  const { data, loading } = useMySettingsQuery();
 
   const settings = data?.mySettings;
 
-  if (!settings && !loadingSettings)
-    return <Heading>404 Error occurred</Heading>;
   return (
     <SettingsPageLayout user={user}>
-      <VStack w='100%' h='100%' maxW='800px' gap={5}>
-        <AboutYouSettings user={user} />
-        <EmailSettings {...{ user, settings }} />
-      </VStack>
+      {loading ? (
+        <LoadingComponent />
+      ) : settings && user ? (
+        <VStack w='100%' h='100%' maxW='800px' gap={5}>
+          <AboutYouSettings user={user} />
+          <EmailSettings {...{ user, settings }} />
+        </VStack>
+      ) : (
+        <SomethingWentWrong />
+      )}
     </SettingsPageLayout>
   );
 };

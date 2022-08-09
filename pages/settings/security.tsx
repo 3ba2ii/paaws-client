@@ -1,6 +1,5 @@
-import { Box, Heading } from '@chakra-ui/react';
-import { LoadingComponent } from 'components/common/loading/LoadingSpinner';
-import { useRequireAuth } from 'hooks/useRequireAuth';
+import { Box } from '@chakra-ui/react';
+import { useAuth } from 'hooks/useAuth';
 import SettingsPageLayout from 'modules/settings/layout';
 import React from 'react';
 import withApollo from 'utils/withApollo';
@@ -8,9 +7,7 @@ import withApollo from 'utils/withApollo';
 interface SecuritySettingsProps {}
 
 const SecuritySettings: React.FC<SecuritySettingsProps> = ({}) => {
-  const { user, loading } = useRequireAuth();
-  if (loading) return <LoadingComponent />;
-  if (!user) return <Heading>You are not logged in</Heading>;
+  const { user } = useAuth();
   /* What should be in this components
   
     1. Sign out of all the sessions
