@@ -90,7 +90,6 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
         onSubmit={async ({ email }) => {
           setNewEmail(email);
           openAuthorizationModal();
-          setEmailVerifySent(true);
         }}
         validationSchema={Yup.object().shape({
           email: Yup.string().email('Please provide a valid email'),
@@ -122,6 +121,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
                   {isVerified ? 'Verified' : 'Not Verified'}
                 </Badge>
               </HStack>
+
               <CustomEditableField
                 defaultValue={formikProps.values.email || ''}
                 label={'Your email'}
@@ -151,6 +151,7 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
                   {formikProps.errors.email}
                 </Text>
               ) : null}
+
               <Box my={1}>
                 {!isVerified ? (
                   <Button
@@ -178,13 +179,15 @@ const EmailSettings: React.FC<EmailSettingsProps> = ({ user, settings }) => {
           </Form>
         )}
       </Formik>
-      <ConfirmPassword
-        isOpen={redirectToAuth}
-        onSuccess={onAuthorizationSuccess}
-        onFailure={failedToaster}
-        authAction='change-email'
-        onClose={() => setRedirectToAuth(false)}
-      />
+      {redirectToAuth ? (
+        <ConfirmPassword
+          isOpen={redirectToAuth}
+          onSuccess={onAuthorizationSuccess}
+          onFailure={failedToaster}
+          authAction='change-email'
+          onClose={() => setRedirectToAuth(false)}
+        />
+      ) : null}
     </VStack>
   );
 };

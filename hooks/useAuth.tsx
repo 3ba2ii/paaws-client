@@ -61,8 +61,7 @@ function useProvideAuth() {
       update: (cache, { data: returnedData }) => {
         if (!returnedData) return;
         const loggedInUser = returnedData.loginWithAuthProvider.user;
-        updateMeQueryCache(cache, loggedInUser);
-        setUser(loggedInUser);
+        loggedInUser && handleUserChange(cache, loggedInUser as User);
       },
     });
 

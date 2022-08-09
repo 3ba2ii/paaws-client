@@ -55,6 +55,7 @@ const ConfirmPasswordPage: React.FC<ConfirmPasswordPageProps> = ({
               onFailure,
               googleLoginProps: {
                 loginHint: user?.email || 'undefined',
+                prompt: 'select_account',
               } as GoogleLoginProps,
             }}
           />
@@ -90,7 +91,13 @@ const ConfirmPasswordPage: React.FC<ConfirmPasswordPageProps> = ({
                     autoComplete='new-password'
                   />
                   <HStack w='100%'>
-                    <Button flex='.25' variant='ghost' w='100%' type='reset'>
+                    <Button
+                      onClick={onClose}
+                      flex='.25'
+                      variant='ghost'
+                      w='100%'
+                      type='reset'
+                    >
                       Cancel
                     </Button>
                     <Button
