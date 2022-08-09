@@ -6,7 +6,6 @@ import {
   LoginMutationResult,
   MeQuery,
   RegisterMutationResult,
-  SendChangeUserEmailEmailMutation,
   SendChangeUserEmailEmailMutationResult,
   SendEmailVerificationMailMutationResult,
   useLoginMutation,
@@ -22,6 +21,7 @@ import {
 import { useRouter } from 'next/router';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { updateMeQueryCache } from 'utils/cache/updateMeQueryCache';
+import { capitalizeString } from 'utils/capitalizeString';
 import {
   LoginWithAuthProviderMutationResult,
   ProviderTypes,
@@ -31,13 +31,12 @@ const authContext = createContext({} as ReturnType<typeof useProvideAuth>);
 
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
-  const router = useRouter();
-  const toaster = useToast();
   const { data: userData, loading } = useMeQuery({
     fetchPolicy: 'cache-first',
   });
+  const router = useRouter();
+  const toaster = useToast();
 
-  const [actionLoading, setActionLoading] = useState(false);
   const [user, setUser] = useState<MeQuery['me'] | null>(null);
   const [loginMutation] = useLoginMutation();
   const [externalLogin] = useLoginWithAuthProviderMutation();
@@ -144,7 +143,7 @@ function useProvideAuth() {
       toaster({
         title: 'We could not log you out right now',
         description:
-          'An error occurred while logging you out, Please try again',
+          'An error occurred while logging you out, Please try again!',
         status: 'error',
         position: 'bottom-right',
         isClosable: true,
@@ -152,13 +151,10 @@ function useProvideAuth() {
     }
   };
 
-  const confirmPasswordReset = () => {};
-
   const sendVerifyEmail = async (): Promise<
     SendEmailVerificationMailMutationResult['data']
   > => {
     if (!user) return null;
-    setActionLoading(true);
     const { data } = await sendVerificationEmail({
       variables: { email: user.email.trim().toLowerCase() },
       update: (_cache, { data: result }) => {
@@ -168,13 +164,12 @@ function useProvideAuth() {
             position: 'top-right',
             status: 'success',
             variant: 'subtle',
-            title: 'Email sent 💌',
+            title: 'Email sent with love 💌',
             description: 'Please check your inbox for a message from us',
           });
         }
       },
     });
-    setActionLoading(false);
     return data;
   };
 
@@ -183,6 +178,7 @@ function useProvideAuth() {
     authAction: string,
     email: string
   ): Promise<SendChangeUserEmailEmailMutationResult['data']> => {
+    if (!email) return null;
     const { data } = await sendChangeEmailMailMutation({
       variables: { email, authAction, authToken },
     });
@@ -193,17 +189,20 @@ function useProvideAuth() {
         position: 'top-right',
         status: 'success',
         variant: 'subtle',
-        title: 'Email sent 💌',
+        title: 'Email sent with love 💌',
         description: 'Please check your inbox for a message from us',
       });
     } else {
+      const description =
+        `${data?.sendChangeUserEmailEmail.errors?.[0].message}, Please try a different email address` ||
+        'An error occurred while trying to perform this action, Please try again later';
       toaster({
         isClosable: true,
         position: 'top-right',
         status: 'error',
         variant: 'subtle',
-        title: 'Email not sent',
-        description: 'Please try again later',
+        title: 'Email not sent 😵',
+        description: capitalizeString(description),
       });
     }
 
@@ -222,7 +221,6 @@ function useProvideAuth() {
     isLoadingUserInfo: loading,
     signin,
     signinWithAuthProvider,
-    confirmPasswordReset,
     signUpWithAuthProvider,
     signup,
     signout,
