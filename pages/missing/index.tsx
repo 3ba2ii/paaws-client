@@ -50,7 +50,7 @@ const MissingPage = () => {
     });
   };
   const fetchMorePosts = async () => {
-    if (!data?.missingPosts) return;
+    if (!data?.missingPosts || !data.missingPosts.missingPosts) return;
     const { missingPosts, hasMore } = data.missingPosts;
     if (!hasMore) return;
     const { createdAt: cursor } = missingPosts[missingPosts.length - 1];
@@ -75,7 +75,6 @@ const MissingPage = () => {
           flexDirection={['column', 'row', 'row']}
           alignItems='flex-start'
           justifyContent={'center'}
-          justifyContent='center'
           sx={{ gap: '1.5rem' }}
         >
           <Box w={['100%', '220px', '230px']} flex='.175'>

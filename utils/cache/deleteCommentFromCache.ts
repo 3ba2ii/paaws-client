@@ -36,12 +36,11 @@ export const deleteCommentFromCache = (
       comments: {
         ...(cachedComments?.comments || []),
         /* Filter comments by id or parentId */
-        comments: cachedComments.comments.comments.filter(
-          ({ id, parentId }) => {
+        comments:
+          cachedComments?.comments?.comments?.filter(({ id, parentId }) => {
             //filter the comment in case of deleting a direct comment
             return id !== commentId && parentId !== commentId;
-          }
-        ),
+          }) || [],
       },
     },
     overwrite: true,
@@ -60,9 +59,10 @@ export const deleteCommentFromCache = (
 
       getCommentReplies: {
         ...cachedReplies.getCommentReplies,
-        comments: cachedReplies.getCommentReplies.comments.filter(
-          ({ id }) => id !== commentId
-        ),
+        comments:
+          cachedReplies?.getCommentReplies?.comments?.filter(
+            ({ id }) => id !== commentId
+          ) || [],
       },
     },
     overwrite: true,

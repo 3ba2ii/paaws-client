@@ -20,14 +20,12 @@ export const mergeRepliesInCache = (
     return;
   }
 
-  const newReplies = data.getCommentReplies.comments;
-
   const cachedData = cache.readQuery<MissingPostCommentsQuery>({
     query: MissingPostCommentsDocument,
   });
 
   const updatedComments =
-    cachedData?.comments.comments.map((comment) => {
+    cachedData?.comments?.comments?.map((comment) => {
       if (parentId === comment.id) {
         return {
           ...comment,

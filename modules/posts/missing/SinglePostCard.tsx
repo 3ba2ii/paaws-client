@@ -10,9 +10,10 @@ import { rgbDataURL } from 'utils/helpers/rgbDataURL';
 import { PostOwner } from '../../../components/PostOwner';
 import { PostTags } from '../common/PostTags';
 import { PostActions } from './PostActions';
+import { MissingPostType } from './posts.types';
 
 interface SinglePostCardProps {
-  post: MissingPostsQuery['missingPosts']['missingPosts'][0];
+  post: MissingPostType;
 }
 export const SinglePostCard: React.FC<SinglePostCardProps> = ({
   post: {

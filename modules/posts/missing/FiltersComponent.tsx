@@ -239,7 +239,7 @@ export const FiltersComponent: React.FC = () => {
             colorScheme={'red'}
             onClick={handleClearAll}
             aria-label='Clear Filters'
-            icon={<CloseIcon />}
+            leftIcon={<CloseIcon />}
           >
             Clear
           </Button>

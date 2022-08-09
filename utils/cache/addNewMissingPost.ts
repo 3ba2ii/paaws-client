@@ -37,7 +37,10 @@ export const addNewMissingPostToCache = (
     data: {
       missingPosts: {
         ...cachedData!.missingPosts,
-        missingPosts: [newPost, ...cachedData!.missingPosts.missingPosts],
+        missingPosts: [
+          newPost,
+          ...(cachedData!.missingPosts.missingPosts || []),
+        ],
       },
     },
     overwrite: true,

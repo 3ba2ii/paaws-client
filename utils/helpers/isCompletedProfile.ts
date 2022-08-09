@@ -1,4 +1,5 @@
-import { MeQuery } from './../generated/graphql';
+import { MeQuery } from 'generated/graphql';
+
 export function isCompleteProfile(user: MeQuery['me']) {
   if (!user) return false;
 

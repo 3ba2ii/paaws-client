@@ -34,7 +34,7 @@ export const updateCommentsCache = (
     data: {
       comments: {
         ...(cachedData?.comments || []),
-        comments: [newComment, ...cachedData!.comments.comments],
+        comments: [newComment, ...(cachedData?.comments?.comments || [])],
       },
     },
     overwrite: true,
