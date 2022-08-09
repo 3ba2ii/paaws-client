@@ -1,25 +1,24 @@
 import { Button } from '@chakra-ui/react';
-import {
-  LoginMutation,
-  LoginWithAuthProviderMutation,
-  LoginWithAuthProviderMutationResult,
-  ProviderTypes,
-} from 'generated/graphql';
+import { ProviderTypes } from 'generated/graphql';
 import { useAuth } from 'hooks/useAuth';
 import React from 'react';
-import GoogleLogin, { GoogleLoginResponse } from 'react-google-login';
+import GoogleLogin, {
+  GoogleLoginProps,
+  GoogleLoginResponse,
+} from 'react-google-login';
 import { FcGoogle } from 'react-icons/fc';
 import { LoginResponseType } from './login.types';
 
 interface LoginWithAuthProvidersProps {
   onSuccess?: (data: LoginResponseType) => void;
-
-  onFailure: Function;
+  onFailure?: Function;
+  googleLoginProps?: GoogleLoginProps;
 }
 
 const LoginWithAuthProviders: React.FC<LoginWithAuthProvidersProps> = ({
   onSuccess,
   onFailure,
+  googleLoginProps,
 }) => {
   const auth = useAuth();
   const handleSuccess = async (response: GoogleLoginResponse) => {
@@ -34,7 +33,7 @@ const LoginWithAuthProviders: React.FC<LoginWithAuthProvidersProps> = ({
       !data.loginWithAuthProvider.user ||
       data.loginWithAuthProvider.errors?.length
     ) {
-      onFailure();
+      onFailure && onFailure();
       return;
     }
     onSuccess && onSuccess({ data: data.loginWithAuthProvider });
@@ -58,8 +57,9 @@ const LoginWithAuthProviders: React.FC<LoginWithAuthProvidersProps> = ({
       )}
       buttonText='Login'
       onSuccess={(response) => handleSuccess(response as GoogleLoginResponse)}
-      onFailure={() => onFailure()}
+      onFailure={() => onFailure && onFailure()}
       cookiePolicy={'single_host_origin'}
+      {...googleLoginProps}
     />
   );
 };
