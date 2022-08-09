@@ -1,0 +1,10 @@
+mutation ChangeEmail($token: String!) {
+  changeUserEmail(token: $token) {
+    errors {
+      field
+      message
+      code
+    }
+    response
+  }
+}
