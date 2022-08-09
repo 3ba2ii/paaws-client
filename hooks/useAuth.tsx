@@ -2,12 +2,14 @@ import { ApolloCache } from '@apollo/client';
 import { useToast } from '@chakra-ui/react';
 import {
   BaseRegisterInput,
+  ChangeEmailMutationResult,
   LoginInput,
   LoginMutationResult,
   MeQuery,
   RegisterMutationResult,
   SendChangeUserEmailEmailMutationResult,
   SendEmailVerificationMailMutationResult,
+  useChangeEmailMutation,
   useLoginMutation,
   useLoginWithAuthProviderMutation,
   useLogoutMutation,
@@ -44,8 +46,8 @@ function useProvideAuth() {
   const [register] = useRegisterMutation();
   const [externalRegister] = useRegisterWithProviderMutation();
   const [sendVerificationEmail] = useSendEmailVerificationMailMutation();
-
   const [sendChangeEmailMailMutation] = useSendChangeUserEmailEmailMutation();
+  const [changeEmailMutation] = useChangeEmailMutation();
 
   const handleUserChange = (cache: ApolloCache<any>, authedUser: User) => {
     updateMeQueryCache(cache, authedUser);
@@ -208,6 +210,21 @@ function useProvideAuth() {
     return data;
   };
 
+  const changeEmail = async (
+    token: string
+  ): Promise<ChangeEmailMutationResult['data']> => {
+    if (!token)
+      return {
+        changeUserEmail: {
+          response: false,
+          errors: [{ code: 400, field: 'token', message: 'Invalid token' }],
+        },
+      };
+    const { data } = await changeEmailMutation({ variables: { token } });
+
+    return data;
+  };
+
   useEffect(() => {
     if (!loading && userData?.me) {
       setUser(userData.me);
@@ -225,6 +242,7 @@ function useProvideAuth() {
     signout,
     sendVerifyEmail,
     sendChangeEmail,
+    changeEmail,
   };
 }
 
