@@ -1,0 +1,10 @@
+mutation UpdateUserSlug($newSlug: String!) {
+  updateSlug(newSlug: $newSlug) {
+    errors {
+      message
+      code
+      field
+    }
+    response
+  }
+}

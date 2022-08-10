@@ -5,6 +5,7 @@ import { useMySettingsQuery } from 'generated/graphql';
 import { useAuth } from 'hooks/useAuth';
 import { useRequireAuth } from 'hooks/useRequireAuth';
 import AboutYouSettings from 'modules/settings/AboutYou';
+import AccountSettings from 'modules/settings/AccountSettings';
 import SettingsPageLayout from 'modules/settings/layout';
 import React from 'react';
 import withApollo from 'utils/withApollo';
@@ -26,6 +27,7 @@ const SettingsPage: React.FC = () => {
         <VStack w='100%' h='100%' maxW='800px' gap={5}>
           <AboutYouSettings user={user} />
           <EmailSettings {...{ user, settings }} />
+          <AccountSettings {...{ user, settings }} />
         </VStack>
       ) : (
         <SomethingWentWrong />

@@ -12,9 +12,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
   DateTime: any;
-  /** The `Upload` scalar type represents a file upload. */
   Upload: any;
 };
 
@@ -327,6 +325,7 @@ export type Mutation = {
   sendOTP: RegularResponse;
   sendVerificationMail: RegularResponse;
   updateAccountURL: RegularResponse;
+  updateSlug: BooleanResponseType;
   updateUser: Scalars['Boolean'];
   updateUserFullName: RegularResponse;
   updateUserSettings: RegularResponse;
@@ -475,6 +474,11 @@ export type MutationSendVerificationMailArgs = {
 
 export type MutationUpdateAccountUrlArgs = {
   accountURL: Scalars['String'];
+};
+
+
+export type MutationUpdateSlugArgs = {
+  newSlug: Scalars['String'];
 };
 
 
@@ -1161,6 +1165,13 @@ export type AddUserAvatarMutationVariables = Exact<{
 
 
 export type AddUserAvatarMutation = { __typename?: 'Mutation', addUserAvatar: boolean };
+
+export type UpdateUserSlugMutationVariables = Exact<{
+  newSlug: Scalars['String'];
+}>;
+
+
+export type UpdateUserSlugMutation = { __typename?: 'Mutation', updateSlug: { __typename?: 'BooleanResponseType', response?: Maybe<boolean>, errors?: Maybe<Array<{ __typename?: 'FieldError', message: string, code: number, field: string }>> } };
 
 export type UpdateUserInfoMutationVariables = Exact<{
   updateUserUpdateOptions: UpdateUserInfo;
@@ -2299,6 +2310,44 @@ export function useAddUserAvatarMutation(baseOptions?: Apollo.MutationHookOption
 export type AddUserAvatarMutationHookResult = ReturnType<typeof useAddUserAvatarMutation>;
 export type AddUserAvatarMutationResult = Apollo.MutationResult<AddUserAvatarMutation>;
 export type AddUserAvatarMutationOptions = Apollo.BaseMutationOptions<AddUserAvatarMutation, AddUserAvatarMutationVariables>;
+export const UpdateUserSlugDocument = gql`
+    mutation UpdateUserSlug($newSlug: String!) {
+  updateSlug(newSlug: $newSlug) {
+    errors {
+      message
+      code
+      field
+    }
+    response
+  }
+}
+    `;
+export type UpdateUserSlugMutationFn = Apollo.MutationFunction<UpdateUserSlugMutation, UpdateUserSlugMutationVariables>;
+
+/**
+ * __useUpdateUserSlugMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserSlugMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserSlugMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserSlugMutation, { data, loading, error }] = useUpdateUserSlugMutation({
+ *   variables: {
+ *      newSlug: // value for 'newSlug'
+ *   },
+ * });
+ */
+export function useUpdateUserSlugMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserSlugMutation, UpdateUserSlugMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserSlugMutation, UpdateUserSlugMutationVariables>(UpdateUserSlugDocument, options);
+      }
+export type UpdateUserSlugMutationHookResult = ReturnType<typeof useUpdateUserSlugMutation>;
+export type UpdateUserSlugMutationResult = Apollo.MutationResult<UpdateUserSlugMutation>;
+export type UpdateUserSlugMutationOptions = Apollo.BaseMutationOptions<UpdateUserSlugMutation, UpdateUserSlugMutationVariables>;
 export const UpdateUserInfoDocument = gql`
     mutation updateUserInfo($updateUserUpdateOptions: UpdateUserInfo!) {
   updateUser(updateOptions: $updateUserUpdateOptions)
