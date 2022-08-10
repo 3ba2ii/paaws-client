@@ -8,7 +8,7 @@ import AboutYouSettings from 'modules/settings/AboutYou';
 import SettingsPageLayout from 'modules/settings/layout';
 import React from 'react';
 import withApollo from 'utils/withApollo';
-import EmailSettings from './email-settings';
+import EmailSettings from '../../modules/settings/EmailSettings';
 
 const SettingsPage: React.FC = () => {
   useRequireAuth();
