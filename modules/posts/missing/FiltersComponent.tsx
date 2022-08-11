@@ -331,7 +331,9 @@ export const FiltersComponent: React.FC = () => {
               colorScheme='teal'
               rightIcon={<FiChevronRight />}
               onClick={() =>
-                router.replace('/settings/location?next=' + router.pathname)
+                router.replace(
+                  '/profile/complete-info/location?next=' + router.pathname
+                )
               }
             >
               Set my location

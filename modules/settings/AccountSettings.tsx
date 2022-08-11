@@ -1,4 +1,14 @@
-import { Box, Divider, Heading, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Divider,
+  Heading,
+  Input,
+  InputGroup,
+  InputLeftAddon,
+  InputRightAddon,
+  useToast,
+  VStack,
+} from '@chakra-ui/react';
 import CustomEditableField from 'components/input/CustomEditableField';
 import InputFieldWrapper from 'components/input/CustomInputComponent';
 import { Form, Formik } from 'formik';
@@ -8,16 +18,23 @@ import {
   useUpdateUserSlugMutation,
 } from 'generated/graphql';
 import React from 'react';
+import { toErrorMap } from 'utils/helpers/toErrorMap';
 
 interface AccountSettingsProps {
   user: MeQuery['me'];
   settings: MySettingsQuery['mySettings'];
 }
 
-const AccountSettings: React.FC<AccountSettingsProps> = ({
-  user,
-  settings,
-}) => {
+const InputComponent: React.FC = () => {
+  return (
+    <InputGroup size='sm' w='50%'>
+      <InputLeftAddon children='https://' />
+      <Input placeholder='mysite' />
+      <InputRightAddon children='.com' />
+    </InputGroup>
+  );
+};
+const AccountSettings: React.FC<AccountSettingsProps> = ({ settings }) => {
   /* This will have the following settings
     1. change your url -slug- (string)
     2. change your email (string)
@@ -26,6 +43,7 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
     5. change your avatar (string)
     6. change your bio (string)
   */
+  const toaster = useToast();
   const [updateSlugMutation] = useUpdateUserSlugMutation();
   return (
     <VStack w='100%' h='100%' alignItems='flex-start' spacing={5}>
@@ -37,20 +55,24 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
         initialValues={{
           slug: settings?.slug || '',
         }}
-        onSubmit={async ({ slug }) => {
-          const separatedSlug = slug.split(
-            `${process.env.NEXT_PUBLIC_HOST_URL}/`
-          );
-
-          if (separatedSlug.length > 1 && separatedSlug[1] !== '') {
-            const newSlug = separatedSlug[1]?.trim()?.toLowerCase() || '';
-
-            await updateSlugMutation({
-              variables: {
-                newSlug,
-              },
-            });
+        onSubmit={async ({ slug }, { setErrors }) => {
+          const newSlug = slug?.trim()?.toLowerCase() || '';
+          const { data } = await updateSlugMutation({
+            variables: {
+              newSlug,
+            },
+          });
+          if (data?.updateSlug.errors?.length || !data?.updateSlug.response) {
+            const errorMap = toErrorMap(data?.updateSlug?.errors || []);
+            setErrors(errorMap);
+            return;
           }
+          toaster({
+            title: 'Success',
+            description: 'Your slug has been updated',
+            status: 'success',
+            isClosable: true,
+          });
         }}
       >
         {(formikProps) => (
@@ -65,16 +87,16 @@ const AccountSettings: React.FC<AccountSettingsProps> = ({
                 label='Account URL'
                 name='slug'
                 labelStyles={{ fontSize: 'md', fontWeight: 'bold', mb: 5 }}
+                helperText='Your account URL is your unique identifier for your account.'
                 required={false}
               >
                 <CustomEditableField
-                  defaultValue={`${process.env.NEXT_PUBLIC_HOST_URL}/${
-                    formikProps?.values?.slug || ''
-                  }`}
+                  defaultValue={formikProps?.values?.slug || ''}
                   label={'Account URL'}
                   name={'slug'}
                   isLoading={formikProps.isSubmitting}
                   hasError={!!formikProps.errors.slug}
+                  maxLength={60}
                   editableProps={{
                     isPreviewFocusable: false,
                     submitOnBlur: false,

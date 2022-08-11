@@ -71,7 +71,7 @@ export const UserProfileHeader: React.FC<{ userId: number }> = ({ userId }) => {
               <Button
                 variant='outline'
                 size='sm'
-                onClick={() => router.push('/settings/profile')}
+                onClick={() => router.push('/settings')}
               >
                 Edit Profile
               </Button>
